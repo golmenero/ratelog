@@ -5,8 +5,7 @@ import org.raterr.TmdbTvShow
 import org.raterr.follow.FollowRepository
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
-import org.raterr.user.UserRepository
-import org.springframework.security.core.context.SecurityContextHolder
+import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -18,7 +17,7 @@ class AddTvRatingController(
     private val tvShowRepository: TvShowRepository,
     private val tvRatingRepository: TvRatingRepository,
     private val followRepository: FollowRepository,
-    private val userRepository: UserRepository
+    private val userService: UserService
 ) {
 
     @PostMapping("/tv/rate")
@@ -42,10 +41,7 @@ class AddTvRatingController(
                 require(value >= 1.0 && value <= 10.0) { "Field $field must be between 1 and 10" }
             }
 
-            val authentication = SecurityContextHolder.getContext().authentication
-            val username = authentication.name
-            val user = userRepository.findByUsername(username)
-                .orElseThrow { IllegalArgumentException("User not found") }
+            val user = userService.getRequiredCurrentUser()
 
             val show = tvShowRepository.findByTmdbId(tmdbId).orElse(null)
                 ?: upsertTvShow(tmdbClient.tvShowDetails(tmdbId))

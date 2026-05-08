@@ -1,7 +1,7 @@
 package org.raterr.rating
 
 import org.raterr.movie.MovieRepository
-import org.springframework.security.core.context.SecurityContextHolder
+import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
@@ -13,7 +13,7 @@ import java.util.NoSuchElementException
 class DeleteRatingController(
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
-    private val userRepository: org.raterr.user.UserRepository
+    private val userService: UserService
 ) {
 
     @PostMapping("/movie/top/delete/{id}")
@@ -23,10 +23,7 @@ class DeleteRatingController(
         redirectAttributes: RedirectAttributes
     ): String {
         return try {
-            val authentication = SecurityContextHolder.getContext().authentication
-            val username = authentication.name
-            val user = userRepository.findByUsername(username)
-                .orElseThrow { NoSuchElementException("User not found") }
+            val user = userService.getRequiredCurrentUser()
 
             val movie = movieRepository.findByTmdbId(tmdbId)
                 .orElseThrow { NoSuchElementException("Movie not found") }

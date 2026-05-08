@@ -2,8 +2,7 @@ package org.raterr.premieres
 
 import org.raterr.TmdbClient
 import org.raterr.follow.FollowRepository
-import org.raterr.user.UserRepository
-import org.springframework.security.core.Authentication
+import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,12 +12,12 @@ import java.time.LocalDate
 class PremieresController(
     private val tmdbClient: TmdbClient,
     private val followRepository: FollowRepository,
-    private val userRepository: UserRepository
+    private val userService: UserService
 ) {
 
     @GetMapping("/premieres")
-    fun premieresPage(model: Model, authentication: Authentication?): String {
-        val currentUser = authentication?.name?.let { userRepository.findByUsername(it).orElse(null) }
+    fun premieresPage(model: Model): String {
+        val currentUser = userService.getCurrentUser()
         if (currentUser != null) {
             val (released, upcoming, noDate) = getFollowedPremieres(currentUser)
             model.addAttribute("releasedPremieres", released)

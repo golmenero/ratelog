@@ -2,8 +2,7 @@ package org.raterr.movie
 
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository
-import org.raterr.user.UserRepository
-import org.springframework.security.core.context.SecurityContextHolder
+import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam
 class GetTopMoviesController(
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
-    private val userRepository: UserRepository
+    private val userService: UserService
 ) {
 
     @GetMapping("/movie/top")
@@ -24,9 +23,7 @@ class GetTopMoviesController(
         model: Model
     ): String {
         try {
-            val authentication = SecurityContextHolder.getContext().authentication
-            val username = authentication.name
-            val user = userRepository.findByUsername(username).orElse(null)
+            val user = userService.getCurrentUser()
 
             if (user == null) {
                 model.addAttribute("tops", emptyList<GetTopMoviesResponse>())

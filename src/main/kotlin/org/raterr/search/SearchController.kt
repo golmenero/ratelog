@@ -6,8 +6,7 @@ import org.raterr.movie.MovieRepository
 import org.raterr.rating.RatingRepository
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvrating.TvRatingRepository
-import org.raterr.user.UserRepository
-import org.springframework.security.core.Authentication
+import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,12 +21,12 @@ class SearchController(
     private val tvShowRepository: TvShowRepository,
     private val tvRatingRepository: TvRatingRepository,
     private val followRepository: FollowRepository,
-    private val userRepository: UserRepository
+    private val userService: UserService
 ) {
 
     @GetMapping("/")
-    fun searchPage(@RequestParam("q", required = false) query: String?, model: Model, authentication: Authentication?): String {
-        val currentUser = authentication?.name?.let { userRepository.findByUsername(it).orElse(null) }
+    fun searchPage(@RequestParam("q", required = false) query: String?, model: Model): String {
+        val currentUser = userService.getCurrentUser()
         if (!query.isNullOrBlank()) {
             val movies = searchMovies(query, currentUser).take(6)
             val shows = searchTvShows(query, currentUser).take(6)

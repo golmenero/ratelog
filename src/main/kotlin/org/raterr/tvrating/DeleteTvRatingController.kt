@@ -1,7 +1,7 @@
 ﻿package org.raterr.tvrating
 
 import org.raterr.tvshow.TvShowRepository
-import org.springframework.security.core.context.SecurityContextHolder
+import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
@@ -13,7 +13,7 @@ import java.util.NoSuchElementException
 class DeleteTvRatingController(
     private val tvShowRepository: TvShowRepository,
     private val tvRatingRepository: TvRatingRepository,
-    private val userRepository: org.raterr.user.UserRepository
+    private val userService: UserService
 ) {
 
     @PostMapping("/tv/top/delete/{id}")
@@ -23,10 +23,7 @@ class DeleteTvRatingController(
         redirectAttributes: RedirectAttributes
     ): String {
         return try {
-            val authentication = SecurityContextHolder.getContext().authentication
-            val username = authentication.name
-            val user = userRepository.findByUsername(username)
-                .orElseThrow { NoSuchElementException("User not found") }
+            val user = userService.getRequiredCurrentUser()
 
             val show = tvShowRepository.findByTmdbId(tmdbId)
                 .orElseThrow { NoSuchElementException("TV show not found") }
