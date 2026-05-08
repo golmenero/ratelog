@@ -1,45 +1,67 @@
 # Raterr
 
-Web app to search for movies on TMDB, rate them by categories, and generate top lists.
+Web app to search for movies and TV shows on TMDB, rate them by categories, and generate ranked top lists. Supports multi-user accounts with authentication.
 
 ## Stack
-- Backend: Kotlin + Ktor
-- DB: SQLite (local file)
-- Frontend: Pure HTML/CSS/JS
+- **Backend:** Kotlin 2.3.10 + Spring Boot 3.4.5
+- **DB:** PostgreSQL 17 (with Flyway migrations)
+- **Frontend:** Thymeleaf server-rendered HTML + CSS (dark theme, responsive)
+- **Auth:** Spring Security (BCrypt, form login)
+- **Caching:** Caffeine (in-memory, TMDB responses)
 
 ## Features
-- Movie search on TMDB
-- Rating by categories:
-  - Direction
-  - Photography
+- Search movies and TV shows on TMDB
+- Follow content to track upcoming releases
+- Premieres page: followed content grouped by Released / Upcoming / No Date
+- Rating by categories (1-10, step 0.25):
+  - Directing
+  - Cinematography
   - Acting
   - Soundtrack
-  - Script
-- Average score calculation per movie
-- Maximum one rating per movie (if you make a mistake, it's deleted from Tops)
+  - Screenplay
+- Average score calculation per title (mean of all 5 categories)
+- One rating per user per title (delete first to re-rate)
 - Tops:
-  - General
-  - By year
+  - Movies and TV shows (separate pages)
+  - Filterable by year and category
+  - Configurable limit
 
 ## Data Model
-- `movie` table: TMDB metadata
-- `rating` table: ratings per category
+- `users` — user accounts (username, email, password hash)
+- `movies` — TMDB movie metadata
+- `tv_shows` — TMDB TV show metadata
+- `ratings` — movie ratings per user per category
+- `tv_ratings` — TV show ratings per user per category
+- `follows` — user follows (content type + TMDB ID)
 
 ## Environment Variables
-- `TMDB_API_KEY` (required to query TMDB)
-- `PORT` (optional, default `8080`)
-- `SQLITE_DB_PATH` (optional, default `raterr.db`)
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `TMDB_API_KEY` | Yes | — | TMDB API key |
+| `PORT` | No | `8080` | HTTP port |
+| `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
+| `POSTGRES_PORT` | No | `5432` | PostgreSQL port |
+| `POSTGRES_DB` | No | `raterr` | Database name |
+| `POSTGRES_USER` | No | `raterr` | Database user |
+| `POSTGRES_PASSWORD` | No | `raterr` | Database password |
 
-## Run
+## Run Locally
+
+### Prerequisites
+- JDK 21
+- PostgreSQL running locally (or adjust connection vars)
+
+### Steps
 ```powershell
+# 1. Create .env or set variables
 $env:TMDB_API_KEY="YOUR_API_KEY"
+
+# 2. Run
 mvn clean compile exec:java
 ```
 
 Open in browser:
 - `http://localhost:8080/`
-- `http://localhost:8080/top`
-
 ## Docker
 
 ### Build Image
@@ -47,73 +69,72 @@ Open in browser:
 docker build -t raterr .
 ```
 
-### Run Container
+### Run with Docker Compose
+Includes PostgreSQL service:
 ```powershell
-docker run --name raterr -p 8080:8080 -e TMDB_API_KEY="YOUR_API_KEY" -e PORT="8080" -e SQLITE_DB_PATH="/data/raterr.db" -v raterr_data:/data raterr
-```
-
-### Docker Compose
-```powershell
-# Option A: variable in session
+# Option A: variables in session
 $env:TMDB_API_KEY="YOUR_API_KEY"
+docker compose up --build
+
+# Option B: .env file in project root (copy from .env.example)
 docker compose up --build
 ```
 
-You can also use a `.env` file in the project root (you can start from `.env.example`):
-
-```env
-TMDB_API_KEY=YOUR_API_KEY
-PORT=8080
-SQLITE_DB_PATH=/data/raterr.db
-```
-
-Compose injects these variables into the container in `docker-compose.yml`.
-
-The SQLite database is persisted in the Docker volume `raterr_data`.
+Compose services:
+- **postgres** — PostgreSQL 17 (port 5432, volume `pgdata`)
+- **raterr** — App (port 8080, depends on healthy postgres)
 
 ## Endpoints
-- `GET /api/health`
-- `GET /api/search?q=...`
-- `GET /api/search/suggestions?q=...&limit=5`
-- `GET /api/movie/{id}`
-- `POST /api/rate`
-- `DELETE /api/movie/{id}/rating`
-- `GET /api/tops?year=2024` (without `limit` returns all)
 
-Example payload for `POST /api/rate`:
-```json
-{
-  "tmdbId": 603,
-  "directing": 9,
-  "cinematography": 8,
-  "acting": 9,
-  "soundtrack": 8,
-  "screenplay": 9
-}
-```
+### Pages (auth required unless noted)
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/` | Search movies & TV shows |
+| `GET` | `/login` | Login page (public) |
+| `POST` | `/login/process` | Login form processing (public) |
+| `GET` | `/register` | Registration page (public) |
+| `POST` | `/register` | Create account (public) |
+| `POST` | `/logout` | Logout |
+| `GET` | `/movie/rate?id=X` | Movie rating page |
+| `POST` | `/movie/rate` | Submit movie rating |
+| `POST` | `/movie/top/delete/{id}` | Delete movie rating |
+| `GET` | `/movie/top` | Top movies (query: `limit`, `year`, `category`) |
+| `GET` | `/tv/rate?id=X` | TV show rating page |
+| `POST` | `/tv/rate` | Submit TV show rating |
+| `POST` | `/tv/top/delete/{id}` | Delete TV show rating |
+| `GET` | `/tv/top` | Top TV shows (query: `limit`, `year`, `category`) |
+| `POST` | `/follow` | Toggle follow/unfollow (params: `tmdbId`, `type`, `q`) |
+| `GET` | `/premieres` | Followed content timeline |
 
-## Dockge on TrueNAS SCALE (lightweight)
-Ready-to-use files:
-- `deploy/dockge/compose.yaml` (recommended: published image)
-- `deploy/dockge/compose.build.yaml` (alternative: build on NAS)
-- `deploy/dockge/.env.example` (stack variables)
-- `docs/DEPLOY_DOCKGE.md` (quick steps)
+### API
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/health` | Health check — `{"status":"ok"}` (public) |
 
-Minimal flow:
-1. Copy `deploy/dockge/.env.example` to `.env` in your Dockge stack.
-2. Adjust `TMDB_API_KEY` and `RATERR_DATA_DIR` (path `/mnt/<pool>/...`).
-3. Deploy with one of the above `compose` files.
-4. Verify at `http://IP_TRUENAS:8080/api/health`.
+## CI/CD
 
-### Publishing Image to GHCR (tags)
-When you create a tag `v*`, the `release.yml` workflow publishes to GHCR:
-- `ghcr.io/<owner>/raterr:vX.Y.Z`
-- `ghcr.io/<owner>/raterr:latest`
+### GitHub Actions
+- **`ci.yml`** — Runs on push/PR to `master`: tests, package, Docker build
+- **`release.yml`** — Runs on tag `v*` or manual dispatch: builds and pushes to GHCR
 
-Example commands:
+### Publish Image to GHCR
 ```powershell
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-On TrueNAS/Dockge use `RATERR_IMAGE=ghcr.io/<owner>/raterr:vX.Y.Z`.
+Produces:
+- `ghcr.io/<owner>/raterr:vX.Y.Z`
+- `ghcr.io/<owner>/raterr:latest`
+
+## Deploy to TrueNAS SCALE (Dockge)
+
+Files in `deploy/dockge/`:
+- `.env.example` — Stack variables template
+
+Minimal flow:
+1. Copy `deploy/dockge/.env.example` to `.env` in your Dockge stack
+2. Set `TMDB_API_KEY` and `POSTGRES_DATA_DIR` (path `/mnt/<pool>/...`)
+3. Set `RATERR_IMAGE=ghcr.io/<owner>/raterr:latest` (or specific version)
+4. Deploy with compose
+5. Verify at `http://IP_TRUENAS:8080/api/health`
