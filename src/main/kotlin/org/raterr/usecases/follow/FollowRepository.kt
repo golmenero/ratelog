@@ -17,4 +17,6 @@ interface FollowRepository : CrudRepository<Follow, Long> {
         contentType: String,
         contentTmdbId: Int
     ): Boolean
+
+    fun findByUserId(userId: Long): List<Follow>
 }

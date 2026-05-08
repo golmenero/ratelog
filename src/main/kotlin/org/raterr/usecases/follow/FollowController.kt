@@ -41,6 +41,6 @@ class FollowController(
             followRepository.save(follow)
         }
 
-        return if (!query.isNullOrBlank()) "redirect:/search?q=${query}" else "redirect:/search"
+        return if (!query.isNullOrBlank()) "redirect:/?q=${query}" else "redirect:/"
     }
 }

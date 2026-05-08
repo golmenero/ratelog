@@ -103,6 +103,7 @@ input {
     letter-spacing: -0.04em;
     line-height: 1;
     flex-shrink: 0;
+    text-decoration: none;
 }
 
 .nav-monogram-link {
@@ -1359,6 +1360,136 @@ input[type="range"] {
 
 .spacer-top {
     margin-top: 18px;
+}
+
+.premieres-section {
+    display: grid;
+    gap: 24px;
+}
+
+.premieres-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.premieres-title {
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
+    letter-spacing: -0.04em;
+    font-family: var(--font-serif);
+}
+
+.premieres-group {
+    display: grid;
+    gap: 12px;
+}
+
+.premieres-group-label {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-soft);
+    font-weight: 700;
+    font-family: var(--font-ui);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+}
+
+.premiere-timeline {
+    display: grid;
+    gap: 10px;
+}
+
+.premiere-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-soft);
+}
+
+.premiere-card.premiere-released {
+    background: var(--surface-muted);
+}
+
+.premiere-poster {
+    width: 48px;
+    height: 72px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #312924, #1e1916);
+}
+
+.premiere-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.premiere-poster-fallback {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: hsl(var(--_brand-clay) / 0.75);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    font-family: var(--font-serif);
+}
+
+.premiere-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+}
+
+.premiere-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.premiere-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-family: var(--font-serif);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.premiere-date {
+    font-size: 0.84rem;
+    color: var(--text-soft);
+    font-family: var(--font-ui);
+}
+
+.premiere-date.premiere-date-released {
+    color: var(--success-text);
+}
+
+.premiere-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.premiere-empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 0.92rem;
 }
 
 @media (max-width: 900px) {

@@ -3,7 +3,7 @@
 <body>
 <header class="site-header" th:fragment="nav(active)">
     <div class="nav-brand">
-        <span class="nav-monogram" aria-hidden="true">R</span>
+        <a href="/" class="nav-monogram" aria-label="Home">R</a>
     </div>
     <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
         <span class="hamburger-line"></span>
@@ -12,7 +12,7 @@
     </button>
     <div class="nav-mobile-menu">
         <nav class="nav-links" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
-            <a class="nav-link" th:classappend="${active == 'search'} ? ' active'" href="/search">Search</a>
+            <a class="nav-link" th:classappend="${active == 'premieres'} ? ' active'" href="/premieres">Premieres</a>
             <a class="nav-link" href="/movie/top">Movies</a>
             <a class="nav-link" href="/tv/top">TV Shows</a>
         </nav>

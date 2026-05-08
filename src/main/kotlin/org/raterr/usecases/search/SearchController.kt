@@ -25,7 +25,7 @@ class SearchController(
     private val userRepository: UserRepository
 ) {
 
-    @GetMapping("/search")
+    @GetMapping("/")
     fun searchPage(@RequestParam("q", required = false) query: String?, model: Model, authentication: Authentication?): String {
         val currentUser = authentication?.name?.let { userRepository.findByUsername(it).orElse(null) }
         if (!query.isNullOrBlank()) {
@@ -70,7 +70,7 @@ class SearchController(
                 type = "movie",
                 isFollowed = isFollowed,
                 canRate = isReleased,
-                canFollow = !isReleased
+                canFollow = stats.ratingsCount == 0
             )
         }
     }
@@ -83,9 +83,6 @@ class SearchController(
             val isFollowed = currentUser?.let {
                 followRepository.existsByUserIdAndContentTypeAndContentTmdbId(it.id!!, "tvshow", tmdbShow.id)
             } ?: false
-            val isReleased = tmdbShow.firstAirDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
-            val details = tmdbClient.tvShowDetails(tmdbShow.id)
-            val hasEnded = details.status in listOf("Ended", "Canceled")
             SearchResultItem(
                 tmdbId = tmdbShow.id,
                 title = tmdbShow.name,
@@ -97,8 +94,8 @@ class SearchController(
                 ratingsCount = stats.ratingsCount,
                 type = "tvshow",
                 isFollowed = isFollowed,
-                canRate = isReleased && hasEnded,
-                canFollow = !isReleased || !hasEnded
+                canRate = true,
+                canFollow = stats.ratingsCount == 0
             )
         }
     }
