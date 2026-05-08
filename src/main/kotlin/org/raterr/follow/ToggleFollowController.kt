@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class FollowController(
+class ToggleFollowController(
     private val followRepository: FollowRepository,
     private val userService: UserService
 ) {
