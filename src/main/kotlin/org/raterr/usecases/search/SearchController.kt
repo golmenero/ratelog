@@ -25,7 +25,7 @@ class SearchController(
     private val userRepository: UserRepository
 ) {
 
-    @GetMapping("/search")
+    @GetMapping("/")
     fun searchPage(@RequestParam("q", required = false) query: String?, model: Model, authentication: Authentication?): String {
         val currentUser = authentication?.name?.let { userRepository.findByUsername(it).orElse(null) }
         if (!query.isNullOrBlank()) {

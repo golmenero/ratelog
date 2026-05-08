@@ -103,6 +103,7 @@ input {
     letter-spacing: -0.04em;
     line-height: 1;
     flex-shrink: 0;
+    text-decoration: none;
 }
 
 .nav-monogram-link {
