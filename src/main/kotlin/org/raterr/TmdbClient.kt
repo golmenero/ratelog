@@ -3,6 +3,7 @@
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
@@ -18,6 +19,7 @@ class TmdbClient(
         .baseUrl(baseUrl)
         .build()
 
+    @Cacheable(value = ["tmdb-search-movies"], key = "#query")
     fun searchMovies(query: String): List<TmdbMovie> {
         if (query.isBlank()) return emptyList()
         requireApiKey()
@@ -38,6 +40,7 @@ class TmdbClient(
             ?: emptyList()
     }
 
+    @Cacheable(value = ["tmdb-movie-details"], key = "#tmdbId")
     fun movieDetails(tmdbId: Int): TmdbMovie {
         requireApiKey()
 
@@ -53,6 +56,7 @@ class TmdbClient(
             ?: throw RuntimeException("Could not fetch movie details")
     }
 
+    @Cacheable(value = ["tmdb-search-tvshows"], key = "#query")
     fun searchTvShows(query: String): List<TmdbTvShow> {
         if (query.isBlank()) return emptyList()
         requireApiKey()
@@ -73,6 +77,7 @@ class TmdbClient(
             ?: emptyList()
     }
 
+    @Cacheable(value = ["tmdb-tvshow-details"], key = "#tmdbId")
     fun tvShowDetails(tmdbId: Int): TmdbTvShow {
         requireApiKey()
 

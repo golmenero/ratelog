@@ -42,3 +42,18 @@ jobs:
             ${{ steps.prep.outputs.image }}:${{ github.ref_name }}
             ${{ steps.prep.outputs.image }}:latest
 
+  cleanup-old-versions:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
+    steps:
+      - name: Delete old container versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ github.event.repository.name }}
+          package-type: container
+          min-versions-to-keep: 3
+          delete-only-untagged-versions: false
+
