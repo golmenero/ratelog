@@ -2,6 +2,7 @@ package org.raterr.usecases.movie.rating
 
 import org.raterr.TmdbClient
 import org.raterr.TmdbMovie
+import org.raterr.usecases.follow.FollowRepository
 import org.raterr.usecases.movie.Movie
 import org.raterr.usecases.movie.MovieRepository
 import org.raterr.usecases.user.UserRepository
@@ -16,6 +17,7 @@ class AddRatingController(
     private val tmdbClient: TmdbClient,
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
+    private val followRepository: FollowRepository,
     private val userRepository: UserRepository
 ) {
 
@@ -66,6 +68,10 @@ class AddRatingController(
                 createdAtEpochMs = System.currentTimeMillis()
             )
             ratingRepository.save(newRating)
+
+            followRepository.findByUserIdAndContentTypeAndContentTmdbId(user.id!!, "movie", tmdbId).ifPresent { follow ->
+                followRepository.delete(follow)
+            }
 
             redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
             "redirect:/movie/top"

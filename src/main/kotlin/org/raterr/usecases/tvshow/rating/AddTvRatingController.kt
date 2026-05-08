@@ -2,6 +2,7 @@
 
 import org.raterr.TmdbClient
 import org.raterr.TmdbTvShow
+import org.raterr.usecases.follow.FollowRepository
 import org.raterr.usecases.tvshow.TvShow
 import org.raterr.usecases.tvshow.TvShowRepository
 import org.raterr.usecases.user.UserRepository
@@ -16,6 +17,7 @@ class AddTvRatingController(
     private val tmdbClient: TmdbClient,
     private val tvShowRepository: TvShowRepository,
     private val tvRatingRepository: TvRatingRepository,
+    private val followRepository: FollowRepository,
     private val userRepository: UserRepository
 ) {
 
@@ -66,6 +68,10 @@ class AddTvRatingController(
                 createdAtEpochMs = System.currentTimeMillis()
             )
             tvRatingRepository.save(newRating)
+
+            followRepository.findByUserIdAndContentTypeAndContentTmdbId(user.id!!, "tvshow", tmdbId).ifPresent { follow ->
+                followRepository.delete(follow)
+            }
 
             redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
             "redirect:/tv/top"
