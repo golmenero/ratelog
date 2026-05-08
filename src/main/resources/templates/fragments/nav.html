@@ -12,6 +12,7 @@
     </button>
     <div class="nav-mobile-menu">
         <nav class="nav-links" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
+            <a class="nav-link" th:classappend="${active == 'premieres'} ? ' active'" href="/premieres">Premieres</a>
             <a class="nav-link" href="/movie/top">Movies</a>
             <a class="nav-link" href="/tv/top">TV Shows</a>
         </nav>

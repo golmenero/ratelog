@@ -48,7 +48,7 @@
                     <div class="result-content">
                         <div class="tag-row result-meta-row">
                             <span th:if="${item.type == 'movie'}" class="tag tag-movie">Movie</span>
-                            <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow">TV Show</span>
+                            <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow">TV</span>
                             <span class="tag" th:text="${item.year != null} ? ${item.year} : 'Unknown year'">Year</span>
                         </div>
                         <h3 class="result-title" th:text="${item.title}">Title</h3>
