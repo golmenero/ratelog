@@ -10,6 +10,8 @@ interface RatingRepository : CrudRepository<Rating, Long> {
     fun findByMovieId(movieId: Long): List<Rating>
     fun findByMovieIdAndUserId(movieId: Long, userId: Long): List<Rating>
     fun findByUserId(userId: Long): List<Rating>
+
+    @Query("SELECT * FROM ratings WHERE user_id IS NULL")
     fun findAllWithoutUser(): List<Rating>
 
     @Modifying
