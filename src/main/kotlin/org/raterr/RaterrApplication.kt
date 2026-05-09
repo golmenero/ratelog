@@ -1,9 +1,12 @@
 package org.raterr
 
+import org.raterr.annotations.CurrentUserArgumentResolver
+import org.raterr.user.UserService
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -17,7 +20,9 @@ fun main(args: Array<String>) {
 }
 
 @Configuration
-class WebConfig : WebMvcConfigurer {
+class WebConfig(
+    private val userService: UserService
+) : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
@@ -31,5 +36,9 @@ class WebConfig : WebMvcConfigurer {
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/**")
             .addResourceLocations("classpath:/static/")
+    }
+
+    override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
+        resolvers.add(CurrentUserArgumentResolver(userService))
     }
 }
