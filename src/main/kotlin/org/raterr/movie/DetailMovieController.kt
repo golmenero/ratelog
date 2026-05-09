@@ -4,27 +4,33 @@ import org.raterr.TmdbClient
 import org.raterr.TmdbMovie
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository
+import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 
+data class GetMovieDetailsResponse(
+    val tmdbId: Int,
+    val title: String,
+    val overview: String?,
+    val releaseDate: String?,
+    val releaseYear: Int?,
+    val posterPath: String?,
+    val tmdbVoteAverage: Double?,
+)
+
 @Controller
 class GetMovieDetailsController(
     private val tmdbClient: TmdbClient,
     private val movieRepository: MovieRepository,
-    private val ratingRepository: RatingRepository
 ) {
 
     @GetMapping("/movie/rate")
     fun ratePage(@RequestParam("id") tmdbId: Int, model: Model): String {
         try {
-            val movie = getOrFetchMovie(tmdbId)
-            val ratings = ratingRepository.findByMovieId(movie.id!!)
-            val alreadyRated = ratings.isNotEmpty()
-
-            model.addAttribute("movie", buildResponse(movie, ratings))
-            model.addAttribute("alreadyRated", alreadyRated)
+            val movie = getOrCreateMovie(tmdbId)
+            model.addAttribute("movie", buildResponse(movie))
             return "rate"
         } catch (e: Exception) {
             model.addAttribute("error", "Could not load the movie.")
@@ -32,17 +38,14 @@ class GetMovieDetailsController(
         }
     }
 
-    private fun getOrFetchMovie(tmdbId: Int): Movie {
-        val localMovie = movieRepository.findByTmdbId(tmdbId).orElse(null)
-        return localMovie ?: upsertMovie(tmdbClient.movieDetails(tmdbId))
-    }
-
-    private fun upsertMovie(tmdbMovie: TmdbMovie): Movie {
-        val existing = movieRepository.findByTmdbId(tmdbMovie.id).orElse(null)
+    private fun getOrCreateMovie(tmdbId: Int): Movie {
+        val tmdbMovie = tmdbClient.movieDetails(tmdbId)
         val genres = tmdbMovie.genres.joinToString(",") { it.name }
 
-        return if (existing != null) {
-            val updated = existing.copy(
+        val movie = tmdbId
+            .let(movieRepository::findByTmdbId)
+            .orElse(null)
+            ?.copy(
                 title = tmdbMovie.title,
                 originalTitle = tmdbMovie.originalTitle,
                 overview = tmdbMovie.overview,
@@ -52,9 +55,7 @@ class GetMovieDetailsController(
                 tmdbVoteAverage = tmdbMovie.voteAverage,
                 genres = genres
             )
-            movieRepository.save(updated)
-        } else {
-            val newMovie = Movie(
+            ?: Movie(
                 tmdbId = tmdbMovie.id,
                 title = tmdbMovie.title,
                 originalTitle = tmdbMovie.originalTitle,
@@ -65,14 +66,12 @@ class GetMovieDetailsController(
                 tmdbVoteAverage = tmdbMovie.voteAverage,
                 genres = genres
             )
-            movieRepository.save(newMovie)
-        }
+
+        return movie.let(movieRepository::save)
     }
 
-    private fun buildResponse(movie: Movie, ratings: List<Rating>): GetMovieDetailsResponse {
-        val stats = calculateStats(ratings)
-
-        return GetMovieDetailsResponse(
+    private fun buildResponse(movie: Movie): GetMovieDetailsResponse =
+        GetMovieDetailsResponse(
             tmdbId = movie.tmdbId,
             title = movie.title,
             overview = movie.overview,
@@ -80,37 +79,5 @@ class GetMovieDetailsController(
             releaseYear = movie.releaseYear,
             posterPath = movie.posterPath,
             tmdbVoteAverage = movie.tmdbVoteAverage,
-            averageScore = stats.averageScore,
-            ratingsCount = stats.ratingsCount
         )
-    }
-
-    private fun calculateStats(ratings: List<Rating>): GetMovieScoreStats {
-        if (ratings.isEmpty()) {
-            return GetMovieScoreStats(averageScore = 0.0, ratingsCount = 0)
-        }
-
-        val avg = ratings.map { rating ->
-            (rating.directing + rating.cinematography + rating.acting + rating.soundtrack + rating.screenplay) / 5.0
-        }.average()
-
-        return GetMovieScoreStats(averageScore = avg, ratingsCount = ratings.size)
-    }
 }
-
-private data class GetMovieScoreStats(
-    val averageScore: Double,
-    val ratingsCount: Int
-)
-
-data class GetMovieDetailsResponse(
-    val tmdbId: Int,
-    val title: String,
-    val overview: String?,
-    val releaseDate: String?,
-    val releaseYear: Int?,
-    val posterPath: String?,
-    val tmdbVoteAverage: Double?,
-    val averageScore: Double,
-    val ratingsCount: Int
-)

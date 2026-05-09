@@ -30,6 +30,8 @@ class AddTvRatingController(
         @RequestParam("screenplay") screenplay: Double,
         redirectAttributes: RedirectAttributes
     ): String {
+        val userId = userService.getCurrentUserId()!!
+
         return try {
             listOf(
                 "directing" to directing,
@@ -41,12 +43,10 @@ class AddTvRatingController(
                 require(value >= 1.0 && value <= 10.0) { "Field $field must be between 1 and 10" }
             }
 
-            val user = userService.getRequiredCurrentUser()
-
             val show = tvShowRepository.findByTmdbId(tmdbId).orElse(null)
                 ?: upsertTvShow(tmdbClient.tvShowDetails(tmdbId))
 
-            val existingRating = tvRatingRepository.findByTvShowIdAndUserId(show.id!!, user.id!!).firstOrNull()
+            val existingRating = tvRatingRepository.findByTvShowIdAndUserId(show.id!!, userId).firstOrNull()
             if (existingRating != null) {
                 redirectAttributes.addAttribute("id", tmdbId)
                 redirectAttributes.addFlashAttribute("error", "A rating already exists for this TV show.")
@@ -54,8 +54,8 @@ class AddTvRatingController(
             }
 
             val newRating = TvRating(
-                tvShowId = show.id!!,
-                userId = user.id!!,
+                tvShowId = show.id,
+                userId = userId,
                 directing = directing,
                 cinematography = cinematography,
                 acting = acting,
@@ -65,7 +65,7 @@ class AddTvRatingController(
             )
             tvRatingRepository.save(newRating)
 
-            followRepository.findByUserIdAndContentTypeAndContentTmdbId(user.id!!, "tvshow", tmdbId).ifPresent { follow ->
+            followRepository.findByUserIdAndContentTypeAndContentTmdbId(userId, "tvshow", tmdbId).ifPresent { follow ->
                 followRepository.delete(follow)
             }
 

@@ -8,17 +8,15 @@ import java.util.NoSuchElementException
 class UserService(
     private val userRepository: UserRepository
 ) {
+    fun getCurrentUserId(): Long? {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val username = authentication?.name ?: return null
+        return userRepository.findByUsername(username).orElse(null)?.id
+    }
 
     fun getCurrentUser(): User? {
         val authentication = SecurityContextHolder.getContext().authentication
         val username = authentication?.name ?: return null
         return userRepository.findByUsername(username).orElse(null)
-    }
-
-    fun getRequiredCurrentUser(): User {
-        val authentication = SecurityContextHolder.getContext().authentication
-        val username = authentication.name
-        return userRepository.findByUsername(username)
-            .orElseThrow { NoSuchElementException("User not found") }
     }
 }

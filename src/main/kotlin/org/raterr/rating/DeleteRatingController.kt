@@ -22,13 +22,14 @@ class DeleteRatingController(
         @PathVariable("id") tmdbId: Int,
         redirectAttributes: RedirectAttributes
     ): String {
+        val userId = userService.getCurrentUserId()!!
+
         return try {
-            val user = userService.getRequiredCurrentUser()
 
             val movie = movieRepository.findByTmdbId(tmdbId)
                 .orElseThrow { NoSuchElementException("Movie not found") }
 
-            val deletedCount = ratingRepository.deleteByMovieIdAndUserId(movie.id!!, user.id!!)
+            val deletedCount = ratingRepository.deleteByMovieIdAndUserId(movie.id!!, userId)
 
             if (deletedCount == 0) {
                 throw NoSuchElementException("Rating not found")

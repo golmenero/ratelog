@@ -17,21 +17,19 @@ class ToggleFollowController(
         @RequestParam("type") type: String,
         @RequestParam("q", required = false) query: String?
     ): String {
-        val user = userService.getCurrentUser() ?: return "redirect:/login"
+        val userId = userService.getCurrentUserId()!!
 
         val existingFollow = followRepository.findByUserIdAndContentTypeAndContentTmdbId(
-            user.id!!, type, tmdbId
+            userId, type, tmdbId
         )
 
-        if (existingFollow.isPresent) {
-            followRepository.delete(existingFollow.get())
-        } else {
-            val follow = Follow(
-                userId = user.id!!,
+        if (existingFollow.isPresent) followRepository.delete(existingFollow.get())
+        else {
+            Follow(
+                userId = userId,
                 contentType = type,
                 contentTmdbId = tmdbId
-            )
-            followRepository.save(follow)
+            ).let(followRepository::save)
         }
 
         return if (!query.isNullOrBlank()) "redirect:/?q=${query}" else "redirect:/"
