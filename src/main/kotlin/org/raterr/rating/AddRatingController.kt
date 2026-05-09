@@ -5,7 +5,8 @@ import org.raterr.TmdbMovie
 import org.raterr.follow.FollowRepository
 import org.raterr.movie.Movie
 import org.raterr.movie.MovieRepository
-import org.raterr.user.UserService
+import org.raterr.annotations.CurrentUser
+import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -16,12 +17,12 @@ class AddRatingController(
     private val tmdbClient: TmdbClient,
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
-    private val followRepository: FollowRepository,
-    private val userService: UserService
+    private val followRepository: FollowRepository
 ) {
 
     @PostMapping("/movie/rate")
     fun saveRating(
+        @CurrentUser user: User,
         @RequestParam("tmdbId") tmdbId: Int,
         @RequestParam("directing") directing: Double,
         @RequestParam("cinematography") cinematography: Double,
@@ -30,7 +31,7 @@ class AddRatingController(
         @RequestParam("screenplay") screenplay: Double,
         redirectAttributes: RedirectAttributes
     ): String {
-        val userId = userService.getCurrentUserId()!!
+        val userId = user.id!!
 
         return try {
             listOf(

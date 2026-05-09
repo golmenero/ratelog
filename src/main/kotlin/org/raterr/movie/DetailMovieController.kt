@@ -1,10 +1,6 @@
 package org.raterr.movie
 
 import org.raterr.TmdbClient
-import org.raterr.TmdbMovie
-import org.raterr.rating.Rating
-import org.raterr.rating.RatingRepository
-import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,7 +23,10 @@ class GetMovieDetailsController(
 ) {
 
     @GetMapping("/movie/rate")
-    fun ratePage(@RequestParam("id") tmdbId: Int, model: Model): String {
+    fun ratePage(
+        @RequestParam("id") tmdbId: Int,
+        model: Model
+    ): String {
         try {
             val movie = getOrCreateMovie(tmdbId)
             model.addAttribute("movie", buildResponse(movie))

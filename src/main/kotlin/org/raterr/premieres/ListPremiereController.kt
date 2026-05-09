@@ -1,34 +1,45 @@
 package org.raterr.premieres
 
 import org.raterr.TmdbClient
+import org.raterr.annotations.CurrentUser
 import org.raterr.follow.FollowRepository
+import org.raterr.user.User
 import org.raterr.user.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import java.time.LocalDate
 
+data class PremiereItem(
+    val tmdbId: Int,
+    val title: String,
+    val releaseDate: LocalDate,
+    val type: String,
+    val posterPath: String?,
+    val isReleased: Boolean,
+    val hasDate: Boolean = true
+)
+
 @Controller
 class PremieresController(
     private val tmdbClient: TmdbClient,
     private val followRepository: FollowRepository,
-    private val userService: UserService
 ) {
 
     @GetMapping("/premieres")
-    fun premieresPage(model: Model): String {
-        val currentUser = userService.getCurrentUser()
-        if (currentUser != null) {
-            val (released, upcoming, noDate) = getFollowedPremieres(currentUser)
-            model.addAttribute("releasedPremieres", released)
-            model.addAttribute("upcomingPremieres", upcoming)
-            model.addAttribute("noDatePremieres", noDate)
-        }
+    fun premieresPage(
+        @CurrentUser user: User,
+        model: Model
+    ): String {
+        val (released, upcoming, noDate) = getFollowedPremieres(user.id!!)
+        model.addAttribute("releasedPremieres", released)
+        model.addAttribute("upcomingPremieres", upcoming)
+        model.addAttribute("noDatePremieres", noDate)
         return "premieres"
     }
 
-    private fun getFollowedPremieres(user: org.raterr.user.User): Triple<List<PremiereItem>, List<PremiereItem>, List<PremiereItem>> {
-        val follows = followRepository.findByUserId(user.id!!)
+    private fun getFollowedPremieres(userId: Long): Triple<List<PremiereItem>, List<PremiereItem>, List<PremiereItem>> {
+        val follows = followRepository.findByUserId(userId)
         val released = mutableListOf<PremiereItem>()
         val upcoming = mutableListOf<PremiereItem>()
         val noDate = mutableListOf<PremiereItem>()
@@ -47,7 +58,7 @@ class PremieresController(
                 else -> Triple(null, "Unknown", null)
             }
 
-            if (releaseDateStr != null && releaseDateStr.isNotBlank()) {
+            if (!releaseDateStr.isNullOrBlank()) {
                 val date = LocalDate.parse(releaseDateStr)
                 val item = PremiereItem(
                     tmdbId = follow.contentTmdbId,
@@ -80,13 +91,3 @@ class PremieresController(
         )
     }
 }
-
-data class PremiereItem(
-    val tmdbId: Int,
-    val title: String,
-    val releaseDate: LocalDate,
-    val type: String,
-    val posterPath: String?,
-    val isReleased: Boolean,
-    val hasDate: Boolean = true
-)

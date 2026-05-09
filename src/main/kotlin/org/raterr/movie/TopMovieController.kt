@@ -3,7 +3,8 @@ package org.raterr.movie
 import org.raterr.rating.RatingScoreService
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository
-import org.raterr.user.UserService
+import org.raterr.annotations.CurrentUser
+import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,19 +28,17 @@ data class GetTopMoviesResponse(
 class GetTopMoviesController(
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
-    private val userService: UserService,
 ) {
 
     @GetMapping("/movie/top")
     fun topsPage(
+        @CurrentUser user: User,
         @RequestParam("year", required = false) year: Int?,
         @RequestParam("category", required = false) category: String?,
         model: Model
     ): String {
-        val userId = userService.getCurrentUserId()!!
-
         try {
-            val tops = ratingRepository.findByUserIdWithFilters(userId, year, category)
+            val tops = ratingRepository.findByUserIdWithFilters(user.id!!, year, category)
                 .map { it to  it.movieId.let(movieRepository::findById).getOrNull()!! }
                 .top()
 

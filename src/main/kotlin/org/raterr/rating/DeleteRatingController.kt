@@ -1,7 +1,8 @@
 package org.raterr.rating
 
 import org.raterr.movie.MovieRepository
-import org.raterr.user.UserService
+import org.raterr.annotations.CurrentUser
+import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,17 +13,17 @@ import java.util.NoSuchElementException
 @Controller
 class DeleteRatingController(
     private val movieRepository: MovieRepository,
-    private val ratingRepository: RatingRepository,
-    private val userService: UserService
+    private val ratingRepository: RatingRepository
 ) {
 
     @PostMapping("/movie/top/delete/{id}")
     @Transactional
     fun deleteRating(
+        @CurrentUser user: User,
         @PathVariable("id") tmdbId: Int,
         redirectAttributes: RedirectAttributes
     ): String {
-        val userId = userService.getCurrentUserId()!!
+        val userId = user.id!!
 
         return try {
 
