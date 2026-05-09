@@ -1,7 +1,7 @@
 ﻿package org.raterr.tvshow
 
-import org.raterr.TmdbClient
-import org.raterr.TmdbTvShow
+import org.raterr.tmdb.TmdbClient
+import org.raterr.tmdb.TmdbTvShow
 import org.raterr.tvrating.TvRating
 import org.raterr.tvrating.TvRatingRepository
 import org.springframework.stereotype.Controller

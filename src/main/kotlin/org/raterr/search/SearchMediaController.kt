@@ -1,6 +1,6 @@
 package org.raterr.search
 
-import org.raterr.TmdbClient
+import org.raterr.tmdb.TmdbClient
 import org.raterr.follow.FollowRepository
 import org.raterr.movie.MovieRepository
 import org.raterr.rating.RatingRepository

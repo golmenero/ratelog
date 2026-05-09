@@ -1,5 +1,8 @@
-﻿package org.raterr
+﻿package org.raterr.tmdb
 
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Value
@@ -20,11 +23,11 @@ class TmdbClient(
         .build()
 
     @Cacheable(value = ["tmdb-search-movies"], key = "#query")
-    fun searchMovies(query: String): List<TmdbMovie> {
-        if (query.isBlank()) return emptyList()
+    fun searchMovies(query: String): Either<TmdbError, List<TmdbMovie>> {
+        if (query.isBlank()) return emptyList<TmdbMovie>().right()
         requireApiKey()
 
-        return restClient.get()
+        val results = restClient.get()
             .uri { builder ->
                 builder.path("/search/movie")
                     .queryParam("api_key", apiKey)
@@ -38,10 +41,12 @@ class TmdbClient(
             .body(TmdbSearchResponse::class.java)
             ?.results
             ?: emptyList()
+
+        return results.right()
     }
 
     @Cacheable(value = ["tmdb-movie-details"], key = "#tmdbId")
-    fun movieDetails(tmdbId: Int): TmdbMovie {
+    fun movieDetails(tmdbId: Int): Either<TmdbError, TmdbMovie> {
         requireApiKey()
 
         return restClient.get()
@@ -53,15 +58,16 @@ class TmdbClient(
             }
             .retrieve()
             .body(TmdbMovie::class.java)
-            ?: throw RuntimeException("Could not fetch movie details")
+            ?.right()
+            ?: TmdbError.MovieNotFound.left()
     }
 
     @Cacheable(value = ["tmdb-search-tvshows"], key = "#query")
-    fun searchTvShows(query: String): List<TmdbTvShow> {
-        if (query.isBlank()) return emptyList()
+    fun searchTvShows(query: String): Either<TmdbError, List<TmdbTvShow>> {
+        if (query.isBlank()) return emptyList<TmdbTvShow>().right()
         requireApiKey()
 
-        return restClient.get()
+        val results = restClient.get()
             .uri { builder ->
                 builder.path("/search/tv")
                     .queryParam("api_key", apiKey)
@@ -75,10 +81,12 @@ class TmdbClient(
             .body(TmdbTvShowSearchResponse::class.java)
             ?.results
             ?: emptyList()
+
+        return results.right()
     }
 
     @Cacheable(value = ["tmdb-tvshow-details"], key = "#tmdbId")
-    fun tvShowDetails(tmdbId: Int): TmdbTvShow {
+    fun tvShowDetails(tmdbId: Int): Either<TmdbError, TmdbTvShow> {
         requireApiKey()
 
         return restClient.get()
@@ -90,7 +98,8 @@ class TmdbClient(
             }
             .retrieve()
             .body(TmdbTvShow::class.java)
-            ?: throw RuntimeException("Could not fetch TV show details")
+            ?.right()
+            ?: TmdbError.TvShowNotFound.left()
     }
 
     private fun requireApiKey() {

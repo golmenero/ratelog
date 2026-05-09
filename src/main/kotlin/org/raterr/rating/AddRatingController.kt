@@ -1,7 +1,7 @@
 package org.raterr.rating
 
-import org.raterr.TmdbClient
-import org.raterr.TmdbMovie
+import org.raterr.tmdb.TmdbClient
+import org.raterr.tmdb.TmdbMovie
 import org.raterr.follow.FollowRepository
 import org.raterr.movie.Movie
 import org.raterr.movie.MovieRepository
@@ -31,8 +31,6 @@ class AddRatingController(
         @RequestParam("screenplay") screenplay: Double,
         redirectAttributes: RedirectAttributes
     ): String {
-        val userId = user.id!!
-
         return try {
             listOf(
                 "directing" to directing,
@@ -41,14 +39,14 @@ class AddRatingController(
                 "soundtrack" to soundtrack,
                 "screenplay" to screenplay
             ).forEach { (field, value) ->
-                require(value >= 1.0 && value <= 10.0) { "Field $field must be between 1 and 10" }
+                require(value in 1.0..10.0) { "Field $field must be between 1 and 10" }
             }
 
 
             val movie = movieRepository.findByTmdbId(tmdbId).orElse(null)
                 ?: upsertMovie(tmdbClient.movieDetails(tmdbId))
 
-            val existingRating = ratingRepository.findByMovieIdAndUserId(movie.id!!, userId).firstOrNull()
+            val existingRating = ratingRepository.findByMovieIdAndUserId(movie.id!!, user.id!!).firstOrNull()
             if (existingRating != null) {
                 redirectAttributes.addAttribute("id", tmdbId)
                 redirectAttributes.addFlashAttribute("error", "A rating already exists for this movie.")
@@ -57,7 +55,7 @@ class AddRatingController(
 
             val newRating = Rating(
                 movieId = movie.id,
-                userId = userId,
+                userId = user.id,
                 directing = directing,
                 cinematography = cinematography,
                 acting = acting,
@@ -67,7 +65,7 @@ class AddRatingController(
             )
             ratingRepository.save(newRating)
 
-            followRepository.findByUserIdAndContentTypeAndContentTmdbId(userId, "movie", tmdbId).ifPresent { follow ->
+            followRepository.findByUserIdAndContentTypeAndContentTmdbId(user.id, "movie", tmdbId).ifPresent { follow ->
                 followRepository.delete(follow)
             }
 

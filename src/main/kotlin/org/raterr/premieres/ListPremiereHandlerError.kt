@@ -1,0 +1,3 @@
+package org.raterr.premieres
+
+interface ListPremiereHandlerError

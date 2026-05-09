@@ -1,7 +1,7 @@
 ﻿package org.raterr.tvrating
 
-import org.raterr.TmdbClient
-import org.raterr.TmdbTvShow
+import org.raterr.tmdb.TmdbClient
+import org.raterr.tmdb.TmdbTvShow
 import org.raterr.follow.FollowRepository
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
