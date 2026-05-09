@@ -1,6 +1,11 @@
-package org.raterr.follow
+package org.raterr.follow.toggle
 
+import org.raterr.MediaType
+import org.raterr.TmdbId
+import org.raterr.UserId
 import org.raterr.annotations.CurrentUser
+import org.raterr.follow.Follow
+import org.raterr.follow.FollowRepository
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
@@ -8,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class ToggleFollowController(
-    private val followRepository: FollowRepository,
+    private val handler: ToggleFollowHandler,
 ) {
 
     @PostMapping("/follow")
@@ -18,18 +23,11 @@ class ToggleFollowController(
         @RequestParam("type") type: String,
         @RequestParam("q", required = false) query: String?
     ): String {
-        val existingFollow = followRepository.findByUserIdAndContentTypeAndContentTmdbId(
-            user.id!!, type, tmdbId
-        )
-
-        if (existingFollow.isPresent) followRepository.delete(existingFollow.get())
-        else {
-            Follow(
-                userId = user.id,
-                contentType = type,
-                contentTmdbId = tmdbId
-            ).let(followRepository::save)
-        }
+        ToggleFollow(
+            tmdbId = tmdbId.let(::TmdbId),
+            userId = user.id!!.let(::UserId),
+            type = type.let(MediaType::valueOf),
+        ).let(handler::handle)
 
         return if (!query.isNullOrBlank()) "redirect:/?q=${query}" else "redirect:/"
     }
