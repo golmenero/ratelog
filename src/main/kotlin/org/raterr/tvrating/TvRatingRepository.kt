@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TvRatingRepository : CrudRepository<TvRating, Long> {
-    fun findByTvShowId(tvShowId: Long): List<TvRating>
+    fun findFirstByTvShowId(tvShowId: Long): TvRating?
     fun findByTvShowIdAndUserId(tvShowId: Long, userId: Long): List<TvRating>
     fun findByUserId(userId: Long): List<TvRating>
 

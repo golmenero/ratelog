@@ -40,7 +40,7 @@
             <div th:if="${results != null}" id="results" class="results-grid">
                 <div th:if="${#lists.isEmpty(results)}" class="empty-state">Try with another title, year or original name.</div>
                 
-                <article th:each="item : ${results}" th:class="'result-card' + (${item.ratingsCount > 0} ? ' result-card-disabled' : '')">
+                <article th:each="item : ${results}" th:class="'result-card' + (${item.canRate} ? ' result-card-disabled' : '')">
                     <div class="poster-frame">
                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                         <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
@@ -54,10 +54,10 @@
                         <h3 class="result-title" th:text="${item.title}">Title</h3>
                         <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : 'No synopsis available right now.'">Overview</p>
                         <div class="result-actions">
-                            <a th:if="${item.type == 'movie' && item.ratingsCount == 0 && item.canRate}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="rate-btn">
+                            <a th:if="${item.type == 'movie' && item.canRate}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="rate-btn">
                                 <i data-lucide="star"></i>
                             </a>
-                            <a th:if="${item.type == 'tvshow' && item.ratingsCount == 0 && item.canRate}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="rate-btn">
+                            <a th:if="${item.type == 'tvshow' && item.canRate}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="rate-btn">
                                 <i data-lucide="star"></i>
                             </a>
                             <form th:if="${item.canFollow}" th:action="@{/follow}" method="post" style="display: inline;">

@@ -1,4 +1,4 @@
-package org.raterr.movie.detail
+package org.raterr.movie.get
 
 import arrow.core.Either
 import arrow.core.raise.either
@@ -6,16 +6,16 @@ import org.raterr.tmdb.TmdbClient
 import org.raterr.TmdbId
 import org.raterr.movie.Movie
 import org.raterr.movie.MovieRepository
-import org.springframework.stereotype.Controller
+import org.springframework.stereotype.Component
 
-data class DetailMovie(val tmdbId: TmdbId)
+data class GetMovie(val tmdbId: TmdbId)
 
-@Controller
-class DetailMovieHandler(
+@Component
+class GetMovieHandler(
     private val tmdbClient: TmdbClient,
     private val movieRepository: MovieRepository,
 ) {
-    fun handle(query: DetailMovie): Either<DetailMovieHandlerError, Movie> = either {
+    fun handle(query: GetMovie): Either<GetMovieHandlerError, Movie> = either {
         val tmdbMovie = query.tmdbId.value.let(tmdbClient::movieDetails).bind()
         val genres = tmdbMovie.genres.joinToString(",") { it.name }
 

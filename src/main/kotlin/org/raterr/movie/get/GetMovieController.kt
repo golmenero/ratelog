@@ -1,4 +1,4 @@
-package org.raterr.movie.detail
+package org.raterr.movie.get
 
 import org.raterr.TmdbId
 import org.raterr.movie.Movie
@@ -18,8 +18,8 @@ data class GetMovieDetailsResponse(
 )
 
 @Controller
-class GetMovieDetailsController(
-    private val handler: DetailMovieHandler,
+class GetMovieController(
+    private val handler: GetMovieHandler,
 ) {
 
     @GetMapping("/movie/rate")
@@ -27,7 +27,7 @@ class GetMovieDetailsController(
         @RequestParam("id") tmdbId: Int,
         model: Model
     ): String =
-        DetailMovie(tmdbId = tmdbId.let(::TmdbId))
+        GetMovie(tmdbId = tmdbId.let(::TmdbId))
             .let(handler::handle)
             .fold(
                 {
