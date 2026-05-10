@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
 class SearchController(
@@ -17,17 +18,23 @@ class SearchController(
     fun searchPage(
         @CurrentUser user: User?,
         @RequestParam("q", required = false) query: String?,
-        model: Model
+        model: Model,
+        redirectAttributes: RedirectAttributes
     ): String {
         if (!query.isNullOrBlank()) {
-            val results = SearchQuery(
+            SearchQuery(
                 query = query,
                 userId = user?.id?.let(::UserId),
             ).let(handler::handle)
-
-            model.addAttribute("query", query)
-            model.addAttribute("results", results)
-            model.addAttribute("currentUser", user)
+            .fold(
+                {
+                    redirectAttributes.addFlashAttribute("error", it)
+                },
+                {
+                    model.addAttribute("query", query)
+                    model.addAttribute("results", it)
+                }
+            )
         }
         return "search"
     }
