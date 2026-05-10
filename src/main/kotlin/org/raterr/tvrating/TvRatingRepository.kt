@@ -14,4 +14,19 @@ interface TvRatingRepository : CrudRepository<TvRating, Long> {
     @Modifying
     @Query("DELETE FROM tv_ratings WHERE tv_show_id = :tvShowId AND user_id = :userId")
     fun deleteByTvShowIdAndUserId(tvShowId: Long, userId: Long): Int
+
+    @Query(
+        """
+        SELECT r.* FROM tv_ratings r
+        JOIN tv_shows t ON r.tv_show_id = t.id
+        WHERE r.user_id = :userId
+          AND (:year IS NULL OR t.first_air_year = :year)
+          AND (:category IS NULL OR LOWER(t.genres) LIKE '%' || LOWER(:category) || '%')
+        """
+    )
+    fun findByUserIdWithFilters(
+        userId: Long,
+        year: Int?,
+        category: String?
+    ): List<TvRating>
 }

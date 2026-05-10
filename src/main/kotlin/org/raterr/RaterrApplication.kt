@@ -1,7 +1,7 @@
 package org.raterr
 
 import org.raterr.annotations.CurrentUserArgumentResolver
-import org.raterr.user.UserService
+import org.raterr.user.UserDetailsService
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cache.annotation.EnableCaching
@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
 
 @Configuration
 class WebConfig(
-    private val userService: UserService
+    private val userService: UserDetailsService
 ) : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {

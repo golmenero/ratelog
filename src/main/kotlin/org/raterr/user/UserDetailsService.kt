@@ -1,6 +1,7 @@
 package org.raterr.user
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -20,5 +21,11 @@ class UserDetailsService(
             user.passwordHash,
             listOf(SimpleGrantedAuthority("ROLE_USER"))
         )
+    }
+
+    fun getCurrentUser(): User? {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val username = authentication?.name ?: return null
+        return userRepository.findByUsername(username).orElse(null)
     }
 }

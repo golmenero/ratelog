@@ -34,7 +34,7 @@
             </div>
         </article>
 
-        <section th:if="${show != null and !alreadyRated}" class="panel score-panel">
+        <section th:if="${show != null}" class="panel score-panel">
             <form th:action="@{/tv/rate}" method="post" class="scores-grid">
                 <input type="hidden" name="tmdbId" th:value="${show.tmdbId}">
                 
@@ -84,12 +84,7 @@
             </form>
         </section>
 
-        <div th:if="${alreadyRated}" class="panel score-panel">
-            <p class="movie-inline-overview muted">This TV show already has a rating. If you want to change it, delete it first from Tops.</p>
-        </div>
-
         <div th:if="${error}" id="msg" class="feedback error" th:text="${error}"></div>
-        <div th:if="${success}" id="msg" class="feedback success" th:text="${success}"></div>
     </main>
 </div>
 </body>
