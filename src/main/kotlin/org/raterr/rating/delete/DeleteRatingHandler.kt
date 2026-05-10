@@ -3,9 +3,16 @@ package org.raterr.rating.delete
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import org.raterr.TmdbId
+import org.raterr.UserId
 import org.raterr.movie.MovieRepository
 import org.raterr.rating.RatingRepository
 import org.springframework.stereotype.Component
+
+data class DeleteRating(
+    val tmdbId: TmdbId,
+    val userId: UserId,
+)
 
 @Component
 class DeleteRatingHandler(
