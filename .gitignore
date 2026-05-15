@@ -39,3 +39,6 @@ build/
 .env
 .env.*
 !.env.example
+
+### AI Agents ###
+AGENTS.md
