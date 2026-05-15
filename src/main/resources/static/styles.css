@@ -158,8 +158,6 @@ input {
 .nav-link {
     padding: 12px 24px;
     border-radius: 0;
-    border-top: 1px solid var(--accent);
-    border-bottom: 1px solid var(--accent);
     border-left: none;
     border-right: none;
     text-decoration: none;
