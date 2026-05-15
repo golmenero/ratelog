@@ -12,11 +12,13 @@
     </button>
     <div class="nav-mobile-menu">
         <nav class="nav-links" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
-            <a class="nav-link" th:classappend="${active == 'premieres'} ? ' active'" href="/premieres">Premieres</a>
             <a class="nav-link" href="/movie/top">Movies</a>
             <a class="nav-link" href="/tv/top">TV Shows</a>
         </nav>
         <div class="nav-auth" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
+            <a href="/profile" class="nav-link profile-button" aria-label="Profile">
+                <i data-lucide="user" aria-hidden="true"></i>
+            </a>
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="nav-link logout-button" aria-label="Logout">
                     <i data-lucide="log-out" aria-hidden="true"></i>
