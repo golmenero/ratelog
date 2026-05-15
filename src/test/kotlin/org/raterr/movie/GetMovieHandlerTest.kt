@@ -1,0 +1,106 @@
+package org.raterr.movie
+
+import arrow.core.left
+import arrow.core.right
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import org.raterr.TmdbId
+import org.raterr.movie.get.GetMovie
+import org.raterr.movie.get.GetMovieHandler
+import org.raterr.movie.InMemoryMovieRepository
+import org.raterr.tmdb.TmdbClient
+import org.raterr.tmdb.TmdbError
+import org.raterr.tmdb.TmdbGenre
+import org.raterr.tmdb.TmdbMovie
+
+class GetMovieHandlerTest {
+
+    private val tmdbClient: TmdbClient = mock()
+    private val movieRepository = InMemoryMovieRepository()
+    private val handler = GetMovieHandler(tmdbClient, movieRepository)
+
+    @BeforeEach
+    fun setUp() {
+        movieRepository.clear()
+    }
+
+    @Test
+    fun `creates new movie when not in repo`() {
+        val tmdbMovie = TmdbMovie(
+            id = 123,
+            title = "Test Movie",
+            originalTitle = "Original",
+            overview = "Overview",
+            releaseDate = "2024-01-01",
+            posterPath = "/poster.jpg",
+            voteAverage = 7.5,
+            genres = listOf(TmdbGenre(1, "Action"))
+        )
+        whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
+
+        val result = handler.handle(GetMovie(TmdbId(123)))
+
+        assertTrue(result.isRight())
+        val saved = movieRepository.findByTmdbId(123).get()
+        assertEquals(123, saved.tmdbId)
+        assertEquals("Test Movie", saved.title)
+        assertEquals("Original", saved.originalTitle)
+        assertEquals("Overview", saved.overview)
+        assertEquals("2024-01-01", saved.releaseDate)
+        assertEquals(2024, saved.releaseYear)
+        assertEquals("/poster.jpg", saved.posterPath)
+        assertEquals(7.5, saved.tmdbVoteAverage)
+        assertEquals("Action", saved.genres)
+    }
+
+    @Test
+    fun `updates existing movie when in repo`() {
+        movieRepository.save(
+            Movie(
+                id = 5,
+                tmdbId = 123,
+                title = "Old Title",
+                originalTitle = "Old Original",
+                overview = "Old Overview",
+                releaseDate = "2020-01-01",
+                releaseYear = 2020,
+                posterPath = "/old.jpg",
+                tmdbVoteAverage = 5.0,
+                genres = "Drama"
+            )
+        )
+        val tmdbMovie = TmdbMovie(
+            id = 123,
+            title = "New Title",
+            originalTitle = "New Original",
+            overview = "New Overview",
+            releaseDate = "2024-06-01",
+            posterPath = "/new.jpg",
+            voteAverage = 8.0,
+            genres = listOf(TmdbGenre(2, "Comedy"))
+        )
+        whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
+
+        val result = handler.handle(GetMovie(TmdbId(123)))
+
+        assertTrue(result.isRight())
+        val saved = movieRepository.findByTmdbId(123).get()
+        assertEquals(5, saved.id)
+        assertEquals("New Title", saved.title)
+        assertEquals("Comedy", saved.genres)
+    }
+
+    @Test
+    fun `returns MovieNotFound when TMDB fails`() {
+        whenever(tmdbClient.movieDetails(123)).thenReturn(TmdbError.MovieNotFound.left())
+
+        val result = handler.handle(GetMovie(TmdbId(123)))
+
+        assertTrue(result.isLeft())
+    }
+}

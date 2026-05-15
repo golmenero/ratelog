@@ -42,6 +42,7 @@ class SearchHandler(
     private val followRepository: FollowRepository,
 ) {
     fun handle(query: SearchQuery): Either<SearchHandlerError, List<SearchResultItem>> = either {
+        if (query.query.isBlank()) return@either emptyList()
         val movies = searchMovies(query.query, query.userId).bind().take(6)
         val shows = searchTvShows(query.query, query.userId).bind().take(6)
 
