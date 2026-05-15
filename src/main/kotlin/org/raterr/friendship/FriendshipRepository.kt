@@ -8,18 +8,7 @@ import java.util.Optional
 @Repository
 interface FriendshipRepository : CrudRepository<Friendship, Long> {
 
-    fun findByUserIdAndFriendId(userId: Long, friendId: Long): Optional<Friendship>
-
     fun existsByUserIdAndFriendId(userId: Long, friendId: Long): Boolean
-
-    @Query(
-        """
-        SELECT f.* FROM friendships f
-        WHERE (f.user_id = :userId OR f.friend_id = :userId)
-          AND f.status = 'accepted'
-        """
-    )
-    fun findAcceptedByUserId(userId: Long): List<Friendship>
 
     @Query(
         """
@@ -31,18 +20,16 @@ interface FriendshipRepository : CrudRepository<Friendship, Long> {
     )
     fun findPendingRequest(requesterId: Long, receiverId: Long): Optional<Friendship>
 
-    fun findByUserIdAndStatus(userId: Long, status: String): List<Friendship>
-
     @Query(
         """
-        SELECT f.friend_id FROM friendships f
-        WHERE f.user_id = :userId
-          AND f.status = 'accepted'
-        UNION
-        SELECT f.user_id FROM friendships f
-        WHERE f.friend_id = :userId
-          AND f.status = 'accepted'
+        SELECT u.id, u.username FROM users u
+        WHERE u.id IN (
+            SELECT f.friend_id FROM friendships f WHERE f.user_id = :userId AND f.status = 'accepted'
+            UNION
+            SELECT f.user_id FROM friendships f WHERE f.friend_id = :userId AND f.status = 'accepted'
+        )
+        ORDER BY u.username
         """
     )
-    fun findFriendIdsByUserId(userId: Long): List<Long>
+    fun findAllFriendsByUserId(userId: Long): List<Friendship>
 }
