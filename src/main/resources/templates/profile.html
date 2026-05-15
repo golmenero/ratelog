@@ -11,127 +11,141 @@
 <div class="page-shell">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='profile')}"></header>
 
-    <main class="main-stack">
-        <section class="hero-card">
-            <div class="hero-content">
-                <div>
-                    <h1 class="hero-title">Your Profile</h1>
+    <div class="profile-layout">
+        <div class="profile-main">
+            <div class="profile-header">
+                <div class="profile-avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
+                <div class="profile-details">
+                    <h2 class="profile-username" th:text="${username}">Username</h2>
+                    <p class="profile-email" th:text="${email}">email@example.com</p>
+                    <p class="profile-since" th:text="'Member since ' + ${memberSince}">Member since 2024-01-01</p>
                 </div>
             </div>
-        </section>
 
-        <div class="profile-header">
-            <div class="profile-avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
-            <div class="profile-details">
-                <h2 class="profile-username" th:text="${username}">Username</h2>
-                <p class="profile-email" th:text="${email}">email@example.com</p>
-                <p class="profile-since" th:text="'Member since ' + ${memberSince}">Member since 2024-01-01</p>
-            </div>
+            <div class="profile-divider"></div>
+
+            <section class="premieres-section" th:if="${(releasedPremieres != null and !#lists.isEmpty(releasedPremieres)) or (upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)) or (noDatePremieres != null and !#lists.isEmpty(noDatePremieres))}">
+                <h2 class="premieres-heading">Your Premieres</h2>
+                
+                <div class="premieres-group" th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
+                    <div class="premieres-group-label">Released</div>
+                    <div class="premiere-timeline">
+                        <div th:each="item : ${releasedPremieres}" class="premiere-card premiere-released">
+                            <div class="premiere-poster">
+                                <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                                <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                            </div>
+                            <div class="premiere-info">
+                                <div class="premiere-title-row">
+                                    <span class="premiere-name" th:text="${item.title}">Title</span>
+                                    <span th:if="${item.type == 'movie'}" class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
+                                    <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow" style="font-size: 0.72rem; padding: 4px 8px;">TV</span>
+                                </div>
+                                <span class="premiere-date premiere-date-released" th:text="'Released ' + ${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
+                            </div>
+                            <div class="premiere-actions">
+                                <a th:if="${item.type == 'movie'}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="rate-btn" title="Rate">
+                                    <i data-lucide="star"></i>
+                                </a>
+                                <a th:if="${item.type == 'tvshow'}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="rate-btn" title="Rate">
+                                    <i data-lucide="star"></i>
+                                </a>
+                                <form th:action="@{/follow}" method="post" style="display: inline;">
+                                    <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
+                                    <input type="hidden" name="type" th:value="${item.type}" />
+                                    <button type="submit" class="follow-btn is-followed" title="Unfollow">
+                                        <i data-lucide="heart"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="premieres-group" th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
+                    <div class="premieres-group-label">Upcoming</div>
+                    <div class="premiere-timeline">
+                        <div th:each="item : ${upcomingPremieres}" class="premiere-card">
+                            <div class="premiere-poster">
+                                <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                                <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                            </div>
+                            <div class="premiere-info">
+                                <div class="premiere-title-row">
+                                    <span class="premiere-name" th:text="${item.title}">Title</span>
+                                    <span th:if="${item.type == 'movie'}" class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
+                                    <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow" style="font-size: 0.72rem; padding: 4px 8px;">TV</span>
+                                </div>
+                                <span class="premiere-date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Date</span>
+                            </div>
+                            <div class="premiere-actions">
+                                <form th:action="@{/follow}" method="post" style="display: inline;">
+                                    <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
+                                    <input type="hidden" name="type" th:value="${item.type}" />
+                                    <button type="submit" class="follow-btn is-followed" title="Unfollow">
+                                        <i data-lucide="heart"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="premieres-group" th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
+                    <div class="premieres-group-label">No release date yet</div>
+                    <div class="premiere-timeline">
+                        <div th:each="item : ${noDatePremieres}" class="premiere-card">
+                            <div class="premiere-poster">
+                                <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                                <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                            </div>
+                            <div class="premiere-info">
+                                <div class="premiere-title-row">
+                                    <span class="premiere-name" th:text="${item.title}">Title</span>
+                                    <span th:if="${item.type == 'movie'}" class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
+                                    <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow" style="font-size: 0.72rem; padding: 4px 8px;">TV</span>
+                                </div>
+                                <span class="premiere-date">TBA</span>
+                            </div>
+                            <div class="premiere-actions">
+                                <form th:action="@{/follow}" method="post" style="display: inline;">
+                                    <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
+                                    <input type="hidden" name="type" th:value="${item.type}" />
+                                    <button type="submit" class="follow-btn is-followed" title="Unfollow">
+                                        <i data-lucide="heart"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="premieres-section" th:if="${(releasedPremieres == null or #lists.isEmpty(releasedPremieres)) and (upcomingPremieres == null or #lists.isEmpty(upcomingPremieres)) and (noDatePremieres == null or #lists.isEmpty(noDatePremieres))}">
+                <div class="empty-state">No followed titles yet. Search for movies or TV shows and follow them to see upcoming premieres here.</div>
+            </section>
         </div>
 
-        <div class="profile-divider"></div>
-
-        <section class="premieres-section" th:if="${(releasedPremieres != null and !#lists.isEmpty(releasedPremieres)) or (upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)) or (noDatePremieres != null and !#lists.isEmpty(noDatePremieres))}">
-            <h2 class="premieres-heading">Your Premieres</h2>
-            
-            <div class="premieres-group" th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
-                <div class="premieres-group-label">Released</div>
-                <div class="premiere-timeline">
-                    <div th:each="item : ${releasedPremieres}" class="premiere-card premiere-released">
-                        <div class="premiere-poster">
-                            <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
-                            <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
-                        </div>
-                        <div class="premiere-info">
-                            <div class="premiere-title-row">
-                                <span class="premiere-name" th:text="${item.title}">Title</span>
-                                <span th:if="${item.type == 'movie'}" class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
-                                <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow" style="font-size: 0.72rem; padding: 4px 8px;">TV</span>
-                            </div>
-                            <span class="premiere-date premiere-date-released" th:text="'Released ' + ${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
-                        </div>
-                        <div class="premiere-actions">
-                            <a th:if="${item.type == 'movie'}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="rate-btn" title="Rate">
-                                <i data-lucide="star"></i>
-                            </a>
-                            <a th:if="${item.type == 'tvshow'}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="rate-btn" title="Rate">
-                                <i data-lucide="star"></i>
-                            </a>
-                            <form th:action="@{/follow}" method="post" style="display: inline;">
-                                <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
-                                <input type="hidden" name="type" th:value="${item.type}" />
-                                <button type="submit" class="follow-btn is-followed" title="Unfollow">
-                                    <i data-lucide="heart"></i>
-                                </button>
-                            </form>
-                        </div>
+        <aside class="profile-sidebar">
+            <div class="friends-section">
+                <h3 class="friends-title">Friends</h3>
+                <div th:if="${friendError}" class="add-friend-feedback error" th:text="${friendError}"></div>
+                <div th:if="${friendSuccess}" class="add-friend-feedback success" th:text="${friendSuccess}"></div>
+                <form th:action="@{/friends/request}" method="post" class="add-friend-form">
+                    <input type="text" name="username" class="friends-search" placeholder="Add friend" autocomplete="off" />
+                    <button type="submit" class="add-friend-btn" title="Send friend request">
+                        <i data-lucide="user-plus"></i>
+                    </button>
+                </form>
+                <div id="friendsList" class="friends-list">
+                    <div th:each="friend : ${friends}" class="friend-item">
+                        <div class="friend-avatar" th:text="${#strings.toUpperCase(#strings.substring(friend.username, 0, 1))}">F</div>
+                        <span class="friend-name" th:text="${friend.username}">Friend</span>
                     </div>
                 </div>
             </div>
-
-            <div class="premieres-group" th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
-                <div class="premieres-group-label">Upcoming</div>
-                <div class="premiere-timeline">
-                    <div th:each="item : ${upcomingPremieres}" class="premiere-card">
-                        <div class="premiere-poster">
-                            <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
-                            <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
-                        </div>
-                        <div class="premiere-info">
-                            <div class="premiere-title-row">
-                                <span class="premiere-name" th:text="${item.title}">Title</span>
-                                <span th:if="${item.type == 'movie'}" class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
-                                <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow" style="font-size: 0.72rem; padding: 4px 8px;">TV</span>
-                            </div>
-                            <span class="premiere-date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Date</span>
-                        </div>
-                        <div class="premiere-actions">
-                            <form th:action="@{/follow}" method="post" style="display: inline;">
-                                <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
-                                <input type="hidden" name="type" th:value="${item.type}" />
-                                <button type="submit" class="follow-btn is-followed" title="Unfollow">
-                                    <i data-lucide="heart"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="premieres-group" th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
-                <div class="premieres-group-label">No release date yet</div>
-                <div class="premiere-timeline">
-                    <div th:each="item : ${noDatePremieres}" class="premiere-card">
-                        <div class="premiere-poster">
-                            <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
-                            <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
-                        </div>
-                        <div class="premiere-info">
-                            <div class="premiere-title-row">
-                                <span class="premiere-name" th:text="${item.title}">Title</span>
-                                <span th:if="${item.type == 'movie'}" class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
-                                <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow" style="font-size: 0.72rem; padding: 4px 8px;">TV</span>
-                            </div>
-                            <span class="premiere-date">TBA</span>
-                        </div>
-                        <div class="premiere-actions">
-                            <form th:action="@{/follow}" method="post" style="display: inline;">
-                                <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
-                                <input type="hidden" name="type" th:value="${item.type}" />
-                                <button type="submit" class="follow-btn is-followed" title="Unfollow">
-                                    <i data-lucide="heart"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="premieres-section" th:if="${(releasedPremieres == null or #lists.isEmpty(releasedPremieres)) and (upcomingPremieres == null or #lists.isEmpty(upcomingPremieres)) and (noDatePremieres == null or #lists.isEmpty(noDatePremieres))}">
-            <div class="empty-state">No followed titles yet. Search for movies or TV shows and follow them to see upcoming premieres here.</div>
-        </section>
-    </main>
+        </aside>
+    </div>
 </div>
 </body>
 <script>

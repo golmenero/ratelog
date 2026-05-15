@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
 class ProfileController(
-    private val handler: ProfileHandler,
+    private val handler: ProfileHandler
 ) {
 
     @GetMapping("/profile")
@@ -33,6 +33,7 @@ class ProfileController(
                     model.addAttribute("releasedPremieres", it.premieres.released)
                     model.addAttribute("upcomingPremieres", it.premieres.upcoming)
                     model.addAttribute("noDatePremieres", it.premieres.noDate)
+                    model.addAttribute("friends", it.friends)
                     "profile"
                 }
             )
