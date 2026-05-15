@@ -13,6 +13,8 @@ data class TopTvShow(
     val userId: UserId,
     val year: Int?,
     val category: String?,
+    val limit: Int = 10,
+    val name: String?
 )
 
 @Controller
@@ -21,7 +23,6 @@ class TopTvShowHandler(
     private val tvRatingRepository: TvRatingRepository,
 ) {
     fun handle(query: TopTvShow): List<Pair<TvRating, TvShow>> =
-        tvRatingRepository.findByUserIdWithFilters(query.userId.value, query.year, query.category)
+        tvRatingRepository.findByUserIdWithFilters(query.userId.value, query.year, query.category, query.limit, query.name)
             .map { it to it.tvShowId.let(tvShowRepository::findById).getOrNull()!! }
-            .sortedByDescending { TvRatingScoreService.score(it.first) }
 }

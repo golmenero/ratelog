@@ -13,6 +13,8 @@ data class TopMovie(
     val userId: UserId,
     val year: Int?,
     val category: String?,
+    val limit: Int = 10,
+    val name: String?
 )
 
 @Controller
@@ -21,7 +23,6 @@ class TopMovieHandler(
     private val ratingRepository: RatingRepository,
 ) {
     fun handle(query: TopMovie): List<Pair<Rating, Movie>> =
-        ratingRepository.findByUserIdWithFilters(query.userId.value, query.year, query.category)
+        ratingRepository.findByUserIdWithFilters(query.userId.value, query.year, query.category, query.limit, query.name)
             .map { it to  it.movieId.let(movieRepository::findById).getOrNull()!! }
-            .sortedByDescending { RatingScoreService.score(it.first) }
 }

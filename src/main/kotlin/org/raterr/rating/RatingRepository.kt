@@ -25,11 +25,16 @@ interface RatingRepository : CrudRepository<Rating, Long> {
         WHERE r.user_id = :userId
           AND (:year IS NULL OR m.release_year = :year)
           AND (:category IS NULL OR LOWER(m.genres) LIKE '%' || LOWER(:category) || '%')
+          AND (:name IS NULL OR LOWER(m.title) LIKE '%' || LOWER(:name) || '%')
+        ORDER BY (r.directing + r.cinematography + r.acting + r.soundtrack + r.screenplay) DESC
+        LIMIT :limit
         """
     )
     fun findByUserIdWithFilters(
         userId: Long,
         year: Int?,
-        category: String?
+        category: String?,
+        limit: Int,
+        name: String?
     ): List<Rating>
 }

@@ -47,6 +47,14 @@
                             <option value="Western" th:selected="${selectedCategory == 'Western'}">Western</option>
                         </select>
                         <input id="year" name="year" type="number" min="1900" max="2100" th:value="${selectedYear}" placeholder="Year" aria-label="Filter by year">
+                        <input id="name" name="name" type="text" th:value="${selectedName}" placeholder="Search by name" aria-label="Filter by name">
+                        <select id="limit" name="limit" aria-label="Number of items">
+                            <option value="5" th:selected="${selectedLimit == 5}">5</option>
+                            <option value="10" th:selected="${selectedLimit == null || selectedLimit == 10}">10</option>
+                            <option value="25" th:selected="${selectedLimit == 25}">25</option>
+                            <option value="50" th:selected="${selectedLimit == 50}">50</option>
+                            <option value="100" th:selected="${selectedLimit == 100}">100</option>
+                        </select>
                         <button class="primary-button icon-button icon-only-button" type="submit" aria-label="Refresh ranking">
                             <span class="button-icon" aria-hidden="true">↻</span>
                         </button>
