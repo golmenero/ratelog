@@ -68,4 +68,7 @@ class InMemoryUserRepository : UserRepository {
     override fun existsByUsername(username: String): Boolean = storage.any { it.username == username }
 
     override fun existsByEmail(email: String): Boolean = storage.any { it.email == email }
+
+    override fun findByUsernameContaining(username: String): List<User> =
+        storage.filter { it.username.contains(username, ignoreCase = true) }
 }
