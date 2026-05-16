@@ -32,7 +32,6 @@ class ToggleUserFollowController(
                         "redirect:/profile"
                     },
                     {
-                        redirectAttributes.addFlashAttribute("followSuccess", "Follow status updated")
                         "redirect:/profile"
                     }
                 )
