@@ -25,7 +25,7 @@
                 <div class="heading-filter search-inline">
                     <form th:action="@{/}" method="get" style="display: contents;">
                         <input id="q" name="q" type="text" th:value="${query}" placeholder="Search movies & TV shows" autocomplete="off" aria-label="Search">
-                        <button class="primary-button icon-button icon-only-button" type="submit" aria-label="Search" title="Search">
+                        <button class="raterr-btn primary" type="submit" aria-label="Search" title="Search">
                             <i data-lucide="search" aria-hidden="true"></i>
                         </button>
                     </form>
@@ -49,17 +49,17 @@
                         <h3 class="result-title" th:text="${item.title}">Title</h3>
                         <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : 'No synopsis available right now.'">Overview</p>
                         <div class="result-actions">
-                            <a th:if="${item.type == 'movie' && item.canRate}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="rate-btn">
+                            <a th:if="${item.type == 'movie' && item.canRate}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="raterr-btn">
                                 <i data-lucide="star"></i>
                             </a>
-                            <a th:if="${item.type == 'tvshow' && item.canRate}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="rate-btn">
+                            <a th:if="${item.type == 'tvshow' && item.canRate}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="raterr-btn">
                                 <i data-lucide="star"></i>
                             </a>
                             <form th:if="${item.canFollow}" th:action="@{/follow}" method="post" style="display: inline;">
                                 <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
                                 <input type="hidden" name="type" th:value="${item.type}" />
                                 <input type="hidden" name="q" th:value="${query}" />
-                                <button type="submit" th:class="${item.isFollowed} ? 'follow-btn is-followed' : 'follow-btn'">
+                                <button type="submit" th:class="${item.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
                                     <i data-lucide="heart"></i>
                                 </button>
                             </form>

@@ -38,16 +38,16 @@
                             <span class="premiere-date premiere-date-released" th:text="'Released ' + ${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                         </div>
                         <div class="premiere-actions">
-                            <a th:if="${item.type == 'movie'}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="rate-btn" title="Rate">
+                            <a th:if="${item.type == 'movie'}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="raterr-btn" title="Rate">
                                 <i data-lucide="star"></i>
                             </a>
-                            <a th:if="${item.type == 'tvshow'}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="rate-btn" title="Rate">
+                            <a th:if="${item.type == 'tvshow'}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="raterr-btn" title="Rate">
                                 <i data-lucide="star"></i>
                             </a>
                             <form th:action="@{/follow}" method="post" style="display: inline;">
                                 <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
                                 <input type="hidden" name="type" th:value="${item.type}" />
-                                <button type="submit" class="follow-btn is-followed" title="Unfollow">
+                                <button type="submit" class="raterr-btn green" title="Unfollow">
                                     <i data-lucide="heart"></i>
                                 </button>
                             </form>
@@ -76,7 +76,7 @@
                             <form th:action="@{/follow}" method="post" style="display: inline;">
                                 <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
                                 <input type="hidden" name="type" th:value="${item.type}" />
-                                <button type="submit" class="follow-btn is-followed" title="Unfollow">
+                                <button type="submit" class="raterr-btn green" title="Unfollow">
                                     <i data-lucide="heart"></i>
                                 </button>
                             </form>
@@ -104,7 +104,7 @@
                             <form th:action="@{/follow}" method="post" style="display: inline;">
                                 <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
                                 <input type="hidden" name="type" th:value="${item.type}" />
-                                <button type="submit" class="follow-btn is-followed" title="Unfollow">
+                                <button type="submit" class="raterr-btn green" title="Unfollow">
                                     <i data-lucide="heart"></i>
                                 </button>
                             </form>
