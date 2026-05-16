@@ -7,33 +7,40 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
-class UserSearchController(
-    private val handler: UserSearchHandler
+class FeedController(
+    private val feedHandler: FeedHandler,
+    private val userSearchHandler: UserSearchHandler,
 ) {
 
     @GetMapping("/community")
     fun communityPage(
         @CurrentUser user: User?,
         @RequestParam("username", required = false) username: String?,
-        model: Model,
-        redirectAttributes: RedirectAttributes
+        model: Model
     ): String {
-        if (!username.isNullOrBlank()) {
+        if (user != null) {
+            FeedQuery(UserId(user.id!!)).let(feedHandler::handle)
+                .fold(
+                    { },
+                    { model.addAttribute("feed", it) }
+                )
+        }
+
+        if (!username.isNullOrBlank() && user != null) {
             UserSearchQuery(
                 username = username,
-                followerId = user?.id?.let(::UserId)
-            ).let(handler::handle)
+                followerId = UserId(user.id!!)
+            ).let(userSearchHandler::handle)
                 .fold(
                     {
                         when (it) {
                             is UserSearchHandlerError.EmptyQuery -> {
-                                redirectAttributes.addFlashAttribute("error", "Query cannot be empty")
+                                model.addAttribute("followError", "Query cannot be empty")
                             }
                             is UserSearchHandlerError.NoUsersFound -> {
-                                redirectAttributes.addFlashAttribute("error", "No users found for '${it.username}'")
+                                model.addAttribute("followError", "No users found for '${it.username}'")
                             }
                         }
                     },

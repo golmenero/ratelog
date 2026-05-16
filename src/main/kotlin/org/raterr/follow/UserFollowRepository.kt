@@ -33,6 +33,13 @@ interface UserFollowRepository : CrudRepository<UserFollow, Long> {
         """
     )
     fun findFollowersByUserId(userId: Long): List<UserFollow>
+
+    @Query(
+        """
+        SELECT fu.followed_id FROM follows_users fu WHERE fu.follower_id = :userId
+        """
+    )
+    fun findFollowedUserIds(userId: Long): List<Long>
 }
 
 data class UserFollowWithUsername(

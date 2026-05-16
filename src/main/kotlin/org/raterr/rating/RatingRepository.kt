@@ -37,4 +37,28 @@ interface RatingRepository : CrudRepository<Rating, Long> {
         limit: Int,
         name: String?
     ): List<Rating>
+
+    @Query(
+        """
+        SELECT r.*, u.username AS username FROM ratings r
+        JOIN users u ON u.id = r.user_id
+        WHERE r.user_id IN (:userIds)
+          AND r.created_at_epoch_ms >= :sinceEpochMs
+        ORDER BY r.created_at_epoch_ms DESC
+        """
+    )
+    fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<RatingWithUsername>
 }
+
+data class RatingWithUsername(
+    val id: Long? = null,
+    val movieId: Long,
+    val userId: Long,
+    val directing: Double,
+    val cinematography: Double,
+    val acting: Double,
+    val soundtrack: Double,
+    val screenplay: Double,
+    val createdAtEpochMs: Long,
+    val username: String
+)
