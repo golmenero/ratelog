@@ -179,19 +179,11 @@
 }
 
 .profile-layout {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 32px;
-  align-items: start;
+  width: 100%;
 }
 
 .profile-main {
   min-width: 0;
-}
-
-.profile-sidebar {
-  position: sticky;
-  top: 80px;
 }
 
 .friends-section {

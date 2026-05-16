@@ -125,19 +125,6 @@
                 <div class="empty-state">No followed titles yet. Search for movies or TV shows and follow them to see upcoming premieres here.</div>
             </section>
         </div>
-
-        <aside class="profile-sidebar">
-            <div class="friends-section">
-                <h3 class="friends-title">Search Users</h3>
-                <div th:if="${followError}" class="add-friend-feedback error" th:text="${followError}"></div>
-                <form th:action="@{/user/search}" method="get" class="add-friend-form">
-                    <input type="text" name="username" class="friends-search" placeholder="Search user" autocomplete="off" />
-                    <button type="submit" class="raterr-btn primary" title="Search user">
-                        <i data-lucide="search" aria-hidden="true"></i>
-                    </button>
-                </form>
-            </div>
-        </aside>
     </div>
 </div>
 </body>

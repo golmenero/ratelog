@@ -17,8 +17,10 @@ class ToggleUserFollowController(
     fun toggleUserFollow(
         @CurrentUser user: User,
         @RequestParam("username") username: String,
+        @RequestParam(value = "from", required = false) from: String?,
         redirectAttributes: RedirectAttributes
     ): String {
+        val redirectUrl = if (from == "community") "redirect:/community?username=$username" else "redirect:/profile"
         return user.id?.let { userId ->
             ToggleUserFollow(UserId(userId), username)
                 .let(handler::handle)
@@ -29,12 +31,12 @@ class ToggleUserFollowController(
                             is ToggleUserFollowHandlerError.CannotFollowYourself -> "Cannot follow yourself"
                         }
                         redirectAttributes.addFlashAttribute("followError", message)
-                        "redirect:/profile"
+                        redirectUrl
                     },
                     {
-                        "redirect:/profile"
+                        redirectUrl
                     }
                 )
-        } ?: "redirect:/profile"
+        } ?: redirectUrl
     }
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raterr - Community</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/community.css">
+    <script src="/lucide.min.js"></script>
+</head>
+<body>
+<div class="page-shell">
+    <header class="site-header" th:replace="~{fragments/nav :: nav(active='community')}"></header>
+
+    <main class="main-stack">
+        <section class="hero-card">
+            <div class="hero-content">
+                <div>
+                    <h1 class="hero-title">Community.</h1>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="community-search-section">
+                <form th:action="@{/community}" method="get" class="community-search-form">
+                    <input type="text" name="username" class="community-search-input" placeholder="Search users..." autocomplete="off" th:value="${searchedUsername}" />
+                    <button type="submit" class="raterr-btn primary" title="Search users">
+                        <i data-lucide="search" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div th:if="${error}" class="community-feedback error" th:text="${error}"></div>
+            <div th:if="${followError}" class="community-feedback error" th:text="${followError}"></div>
+
+            <div th:if="${users != null and !#lists.isEmpty(users)}" class="users-list">
+                <div th:each="user : ${users}" class="user-card">
+                    <div class="user-avatar" th:text="${#strings.toUpperCase(#strings.substring(user.username, 0, 1))}">U</div>
+                    <span class="user-username" th:text="${user.username}">Username</span>
+                    <form th:action="@{/user/follow}" method="post" class="user-follow-form">
+                        <input type="hidden" name="username" th:value="${user.username}" />
+                        <input type="hidden" name="from" value="community" />
+                        <button type="submit" class="raterr-btn primary" th:title="${user.isFollowed} ? 'Unfollow' : 'Follow'">
+                            <i th:data-lucide="${user.isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+<script>
+    lucide.createIcons();
+</script>
+</html>
