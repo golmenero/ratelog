@@ -33,7 +33,6 @@ class ProfileController(
                     model.addAttribute("releasedPremieres", it.premieres.released)
                     model.addAttribute("upcomingPremieres", it.premieres.upcoming)
                     model.addAttribute("noDatePremieres", it.premieres.noDate)
-                    model.addAttribute("following", it.following)
                     "profile"
                 }
             )

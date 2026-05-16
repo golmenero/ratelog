@@ -3,8 +3,6 @@ package org.raterr.profile
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.UserId
-import org.raterr.follow.UserFollowRepository
-import org.raterr.follow.UserFollowWithUsername
 import org.raterr.premieres.ListPremiere
 import org.raterr.premieres.ListPremiereHandler
 import org.raterr.premieres.Premieres
@@ -20,14 +18,12 @@ data class Profile(
     val email: String,
     val memberSince: String,
     val premieres: Premieres,
-    val following: List<UserFollowWithUsername>,
 )
 
 @Service
 class ProfileHandler(
     private val userRepository: UserRepository,
     private val premiereHandler: ListPremiereHandler,
-    private val userFollowRepository: UserFollowRepository,
 ) {
 
     fun handle(query: GetProfile): Either<ProfileHandlerError, Profile> = either {
@@ -40,14 +36,11 @@ class ProfileHandler(
                 { it }
             )
 
-        val following = userFollowRepository.findFollowingByUserId(query.userId.value)
-
         Profile(
             username = user.username,
             email = user.email,
             memberSince = LocalDate.ofEpochDay(user.createdAtEpochMs / 86400000).toString(),
             premieres = premieres,
-            following = following,
         )
     }
 }

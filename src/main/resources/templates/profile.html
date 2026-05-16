@@ -128,27 +128,14 @@
 
         <aside class="profile-sidebar">
             <div class="friends-section">
-                <h3 class="friends-title">Following</h3>
+                <h3 class="friends-title">Search Users</h3>
                 <div th:if="${followError}" class="add-friend-feedback error" th:text="${followError}"></div>
-                <div th:if="${followSuccess}" class="add-friend-feedback success" th:text="${followSuccess}"></div>
-                <form th:action="@{/user/follow}" method="post" class="add-friend-form">
-                    <input type="text" name="username" class="friends-search" placeholder="Follow user" autocomplete="off" />
-                    <button type="submit" class="raterr-btn primary" title="Toggle follow">
-                        <i data-lucide="user-round-plus" aria-hidden="true"></i>
+                <form th:action="@{/user/search}" method="get" class="add-friend-form">
+                    <input type="text" name="username" class="friends-search" placeholder="Search user" autocomplete="off" />
+                    <button type="submit" class="raterr-btn primary" title="Search user">
+                        <i data-lucide="search" aria-hidden="true"></i>
                     </button>
                 </form>
-                <div id="friendsList" class="friends-list">
-                    <div th:each="follow : ${following}" class="friend-item">
-                        <div class="friend-avatar" th:text="${#strings.toUpperCase(#strings.substring(follow.followedUsername, 0, 1))}">F</div>
-                        <span class="friend-name" th:text="${follow.followedUsername}">User</span>
-                        <form th:action="@{/user/follow}" method="post" class="unfollow-form">
-                            <input type="hidden" name="username" th:value="${follow.followedUsername}" />
-                            <button type="submit" class="raterr-btn icon-btn" title="Unfollow">
-                                <i data-lucide="user-round-x" aria-hidden="true"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </aside>
     </div>
