@@ -10,8 +10,7 @@ import org.mockito.kotlin.whenever
 import org.raterr.UserId
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
-import org.raterr.friendship.Friendship
-import org.raterr.friendship.InMemoryFriendshipRepository
+import org.raterr.follow.InMemoryUserFollowRepository
 import org.raterr.premieres.ListPremiereHandler
 import org.raterr.tmdb.TmdbClient
 import org.raterr.tmdb.TmdbMovie
@@ -24,14 +23,14 @@ class ProfileHandlerTest {
     private val tmdbClient: TmdbClient = mock()
     private val followRepository = InMemoryFollowRepository()
     private val userRepository: UserRepository = mock()
-    private val friendshipRepository = InMemoryFriendshipRepository()
+    private val userFollowRepository = InMemoryUserFollowRepository()
     private val premiereHandler = ListPremiereHandler(tmdbClient, followRepository)
-    private val handler = ProfileHandler(userRepository, premiereHandler, friendshipRepository)
+    private val handler = ProfileHandler(userRepository, premiereHandler, userFollowRepository)
 
     @BeforeEach
     fun setUp() {
         followRepository.clear()
-        friendshipRepository.clear()
+        userFollowRepository.clear()
     }
 
     @Test
@@ -48,7 +47,7 @@ class ProfileHandlerTest {
         assertEquals(0, profile.premieres.released.size)
         assertEquals(0, profile.premieres.upcoming.size)
         assertEquals(0, profile.premieres.noDate.size)
-        assertEquals(0, profile.friends.size)
+        assertEquals(0, profile.following.size)
     }
 
     @Test
@@ -70,17 +69,19 @@ class ProfileHandlerTest {
     }
 
     @Test
-    fun `returns profile with friends when user has friendships`() {
+    fun `returns profile with following when user follows other users`() {
         val user = User(id = 1, username = "testuser", email = "test@example.com", passwordHash = "hash", createdAtEpochMs = 1700000000000)
         whenever(userRepository.findById(1)).thenReturn(Optional.of(user))
-        friendshipRepository.save(Friendship(userId = 1, friendId = 2, status = "accepted"))
-        friendshipRepository.save(Friendship(userId = 1, friendId = 3, status = "accepted"))
+        userFollowRepository.addUser(2, "user2")
+        userFollowRepository.addUser(3, "user3")
+        userFollowRepository.save(org.raterr.follow.UserFollow(followerId = 1, followedId = 2))
+        userFollowRepository.save(org.raterr.follow.UserFollow(followerId = 1, followedId = 3))
 
         val result = handler.handle(GetProfile(UserId(1)))
 
         assertTrue(result.isRight())
         val profile = (result as arrow.core.Either.Right).value
-        assertEquals(2, profile.friends.size)
+        assertEquals(2, profile.following.size)
     }
 
     @Test

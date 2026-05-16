@@ -128,19 +128,19 @@
 
         <aside class="profile-sidebar">
             <div class="friends-section">
-                <h3 class="friends-title">Friends</h3>
-                <div th:if="${friendError}" class="add-friend-feedback error" th:text="${friendError}"></div>
-                <div th:if="${friendSuccess}" class="add-friend-feedback success" th:text="${friendSuccess}"></div>
-                <form th:action="@{/friends/request}" method="post" class="add-friend-form">
-                    <input type="text" name="username" class="friends-search" placeholder="Add friend" autocomplete="off" />
-                    <button type="submit" class="add-friend-btn" title="Send friend request">
-                        <i data-lucide="user-plus"></i>
+                <h3 class="friends-title">Following</h3>
+                <div th:if="${followError}" class="add-friend-feedback error" th:text="${followError}"></div>
+                <div th:if="${followSuccess}" class="add-friend-feedback success" th:text="${followSuccess}"></div>
+                <form th:action="@{/user/follow}" method="post" class="add-friend-form">
+                    <input type="text" name="username" class="friends-search" placeholder="Follow user" autocomplete="off" />
+                    <button type="submit" class="add-friend-btn" title="Toggle follow">
+                        <i data-lucide="user-round-plus" aria-hidden="true"></i>
                     </button>
                 </form>
                 <div id="friendsList" class="friends-list">
-                    <div th:each="friend : ${friends}" class="friend-item">
-                        <div class="friend-avatar" th:text="${#strings.toUpperCase(#strings.substring(friend.username, 0, 1))}">F</div>
-                        <span class="friend-name" th:text="${friend.username}">Friend</span>
+                    <div th:each="follow : ${following}" class="friend-item">
+                        <div class="friend-avatar" th:text="${#strings.toUpperCase(#strings.substring(follow.followedUsername, 0, 1))}">F</div>
+                        <span class="friend-name" th:text="${follow.followedUsername}">User</span>
                     </div>
                 </div>
             </div>
