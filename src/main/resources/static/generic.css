@@ -1,0 +1,144 @@
+:root {
+  --_brand-clay: 14.8 63.1% 59.6%;
+  --bg: #141210;
+  --bg-soft: #1a1715;
+  --surface: rgba(31, 27, 24, 0.82);
+  --surface-strong: #211c19;
+  --surface-muted: #2a2421;
+  --text: #f5eee5;
+  --text-soft: #c5b3a2;
+  --border: rgba(255, 241, 230, 0.08);
+  --border-strong: rgba(255, 241, 230, 0.14);
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.24);
+  --accent: hsl(var(--_brand-clay));
+  --accent-strong: hsl(14.8 63.1% 52%);
+  --accent-soft: hsl(var(--_brand-clay) / 0.16);
+  --danger: #c76767;
+  --danger-strong: #ad4d4d;
+  --success-bg: rgba(71, 114, 87, 0.22);
+  --success-text: #d4ead6;
+  --error-bg: rgba(161, 86, 86, 0.22);
+  --error-text: #ffd9d3;
+  --info-bg: rgba(135, 110, 177, 0.22);
+  --info-text: #ece2ff;
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --max-width: 1180px;
+  --font-serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--font-ui);
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 28%),
+    radial-gradient(circle at top right, hsl(var(--_brand-clay) / 0.12), transparent 22%),
+    linear-gradient(180deg, #181412 0%, var(--bg) 100%);
+  padding: 24px;
+}
+
+a {
+  color: inherit;
+}
+
+.page-shell {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.main-stack {
+  display: grid;
+  gap: 20px;
+}
+
+.panel {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.result-card,
+.top-card,
+.movie-summary,
+.score-field,
+.empty-state,
+.feedback {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+}
+
+.feedback {
+  padding: 16px 18px;
+  border-radius: 18px;
+  line-height: 1.6;
+
+  &.success {
+    background: var(--success-bg);
+    color: var(--success-text);
+    border-color: rgba(40, 84, 59, 0.12);
+  }
+
+  &.error {
+    background: var(--error-bg);
+    color: var(--error-text);
+    border-color: rgba(126, 47, 47, 0.12);
+  }
+
+  &.info {
+    background: var(--info-bg);
+    color: var(--info-text);
+    border-color: rgba(83, 56, 122, 0.12);
+  }
+}
+
+.empty-state {
+  padding: 28px;
+  text-align: center;
+  color: var(--text-soft);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.spacer-top {
+  margin-top: 18px;
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: 16px;
+  }
+
+  .panel {
+    padding: 0;
+  }
+}

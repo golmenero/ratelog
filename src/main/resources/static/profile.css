@@ -1,0 +1,252 @@
+.auth-card {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-family: var(--font-serif);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 20px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+
+  label {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--text-soft);
+    font-family: var(--font-ui);
+  }
+
+  input {
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: var(--font-ui);
+
+    &:focus {
+      border-color: rgba(230, 120, 60, 0.45);
+      box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
+    }
+
+    &::placeholder {
+      color: rgba(245, 238, 229, 0.48);
+    }
+  }
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+
+  a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.error-message {
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: var(--error-bg);
+  color: var(--error-text);
+  border: 1px solid rgba(126, 47, 47, 0.12);
+  margin-bottom: 20px;
+  font-size: 0.92rem;
+}
+
+.success-message {
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid rgba(40, 84, 59, 0.12);
+  margin-bottom: 20px;
+  font-size: 0.92rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 0;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, hsl(var(--_brand-clay)), hsl(8 54% 68%));
+  color: white;
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: var(--font-serif);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-username {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-family: var(--font-serif);
+}
+
+.profile-email {
+  color: var(--text-soft);
+  font-size: 1rem;
+  font-family: var(--font-ui);
+}
+
+.profile-since {
+  color: var(--text-soft);
+  font-size: 0.88rem;
+  font-family: var(--font-ui);
+}
+
+.profile-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.profile-main {
+  min-width: 0;
+}
+
+.profile-sidebar {
+  position: sticky;
+  top: 80px;
+}
+
+.friends-section {
+  display: grid;
+  gap: 16px;
+}
+
+.friends-title {
+  font-size: 1.4rem;
+  letter-spacing: -0.04em;
+  font-family: var(--font-serif);
+}
+
+.friends-search {
+  width: 100%;
+}
+
+.add-friend-form {
+  display: flex;
+  gap: 8px;
+}
+
+.friends-list {
+  display: grid;
+  gap: 10px;
+}
+
+.friend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.unfollow-form {
+  margin-left: auto;
+}
+
+.unfollow-form .raterr-btn {
+  padding: 6px;
+}
+
+.unfollow-form .raterr-btn:hover {
+  color: var(--danger);
+}
+
+.friend-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, hsl(var(--_brand-clay)), hsl(8 54% 68%));
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-family: var(--font-serif);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.friend-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.add-friend-feedback {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 720px) {
+  .auth-card {
+    padding: 28px;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-sidebar {
+    position: static;
+  }
+}
