@@ -26,12 +26,7 @@
                     <form th:action="@{/}" method="get" style="display: contents;">
                         <input id="q" name="q" type="text" th:value="${query}" placeholder="Search movies & TV shows" autocomplete="off" aria-label="Search">
                         <button class="primary-button icon-button icon-only-button" type="submit" aria-label="Search" title="Search">
-                            <span class="button-icon" aria-hidden="true">
-                                <svg class="button-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                    <circle cx="11" cy="11" r="6.5"></circle>
-                                    <line x1="16" y1="16" x2="21" y2="21"></line>
-                                </svg>
-                            </span>
+                            <i data-lucide="search" aria-hidden="true"></i>
                         </button>
                     </form>
                 </div>
