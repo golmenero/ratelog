@@ -22,7 +22,7 @@ Web app to search for movies and TV shows on TMDB, rate them by categories, and 
 - Average score calculation per title (mean of all 5 categories)
 - One rating per user per title (delete first to re-rate)
 - Tops:
-  - Movies and TV shows (separate pages)
+  - Movies and TV shows (separate pages with integrated premieres)
   - Filterable by year and category
   - Configurable limit
 
@@ -98,13 +98,12 @@ Compose services:
 | `GET` | `/movie/rate?id=X` | Movie rating page |
 | `POST` | `/movie/rate` | Submit movie rating |
 | `POST` | `/movies/delete/{id}` | Delete movie rating |
-| `GET` | `/movies` | Top movies (query: `limit`, `year`, `category`) |
+| `GET` | `/movies` | Top movies + premieres (query: `limit`, `year`, `category`) |
 | `GET` | `/tv/rate?id=X` | TV show rating page |
 | `POST` | `/tv/rate` | Submit TV show rating |
 | `POST` | `/tvshows/delete/{id}` | Delete TV show rating |
-| `GET` | `/tvshows` | Top TV shows (query: `limit`, `year`, `category`) |
+| `GET` | `/tvshows` | Top TV shows + premieres (query: `limit`, `year`, `category`) |
 | `POST` | `/follow` | Toggle follow/unfollow (params: `tmdbId`, `type`, `q`) |
-| `GET` | `/premieres` | Followed content timeline |
 
 ### API
 | Method | Path | Description |

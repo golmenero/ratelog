@@ -30,9 +30,6 @@ class ProfileController(
                     model.addAttribute("username", it.username)
                     model.addAttribute("email", it.email)
                     model.addAttribute("memberSince", it.memberSince)
-                    model.addAttribute("releasedPremieres", it.premieres.released)
-                    model.addAttribute("upcomingPremieres", it.premieres.upcoming)
-                    model.addAttribute("noDatePremieres", it.premieres.noDate)
                     "profile"
                 }
             )

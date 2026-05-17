@@ -4,6 +4,8 @@ import org.raterr.UserId
 import org.raterr.tvrating.TvRatingScoreService
 import org.raterr.tvrating.TvRating
 import org.raterr.annotations.CurrentUser
+import org.raterr.tvshow.premieres.TvShowPremieresHandler
+import org.raterr.tvshow.premieres.TvShowPremieresQuery
 import org.raterr.tvshow.TvShow
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
@@ -27,6 +29,7 @@ data class GetTopTvShowsResponse(
 @Controller
 class TopTvShowController(
     private val handler: TopTvShowHandler,
+    private val tvShowPremieresHandler: TvShowPremieresHandler,
 ) {
 
     @GetMapping("/tvshows")
@@ -52,7 +55,17 @@ class TopTvShowController(
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        return "tv-top"
+        TvShowPremieresQuery(UserId(user.id!!)).let(tvShowPremieresHandler::handle)
+            .fold(
+                { },
+                {
+                    model.addAttribute("releasedPremieres", it.released)
+                    model.addAttribute("upcomingPremieres", it.upcoming)
+                    model.addAttribute("noDatePremieres", it.noDate)
+                }
+            )
+
+        return "tvshows"
     }
 
     private fun map(list: List<Pair<TvRating, TvShow>>): List<GetTopTvShowsResponse> =

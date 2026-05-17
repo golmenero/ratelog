@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raterr - Tops</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/lucide.min.js"></script>
+</head>
+<body>
+<div class="page-shell">
+    <header class="site-header" th:replace="~{fragments/nav :: nav(active='movies')}"></header>
+
+    <main class="main-stack">
+        <section class="hero-card">
+            <div class="hero-content">
+                <div>
+                    <h1 class="hero-title">Movies.</h1>
+                </div>
+            </div>
+        </section>
+
+        <div class="tops-premieres-grid">
+            <section class="panel tops-panel">
+                <div class="section-heading">
+                    <div class="heading-filter">
+                        <form th:action="@{/movies}" method="get" style="display: contents;">
+                            <select id="category" name="category" aria-label="Filter by category">
+                                <option value="">All categories</option>
+                                <option value="Action" th:selected="${selectedCategory == 'Action'}">Action</option>
+                                <option value="Adventure" th:selected="${selectedCategory == 'Adventure'}">Adventure</option>
+                                <option value="Animation" th:selected="${selectedCategory == 'Animation'}">Animation</option>
+                                <option value="Comedy" th:selected="${selectedCategory == 'Comedy'}">Comedy</option>
+                                <option value="Crime" th:selected="${selectedCategory == 'Crime'}">Crime</option>
+                                <option value="Documentary" th:selected="${selectedCategory == 'Documentary'}">Documentary</option>
+                                <option value="Drama" th:selected="${selectedCategory == 'Drama'}">Drama</option>
+                                <option value="Family" th:selected="${selectedCategory == 'Family'}">Family</option>
+                                <option value="Fantasy" th:selected="${selectedCategory == 'Fantasy'}">Fantasy</option>
+                                <option value="History" th:selected="${selectedCategory == 'History'}">History</option>
+                                <option value="Horror" th:selected="${selectedCategory == 'Horror'}">Horror</option>
+                                <option value="Music" th:selected="${selectedCategory == 'Music'}">Music</option>
+                                <option value="Mystery" th:selected="${selectedCategory == 'Mystery'}">Mystery</option>
+                                <option value="Romance" th:selected="${selectedCategory == 'Romance'}">Romance</option>
+                                <option value="Science Fiction" th:selected="${selectedCategory == 'Science Fiction'}">Science Fiction</option>
+                                <option value="Thriller" th:selected="${selectedCategory == 'Thriller'}">Thriller</option>
+                                <option value="TV Movie" th:selected="${selectedCategory == 'TV Movie'}">TV Movie</option>
+                                <option value="War" th:selected="${selectedCategory == 'War'}">War</option>
+                                <option value="Western" th:selected="${selectedCategory == 'Western'}">Western</option>
+                            </select>
+                            <input id="year" name="year" type="number" min="1900" max="2100" th:value="${selectedYear}" placeholder="Year" aria-label="Filter by year">
+                            <input id="name" name="name" type="text" th:value="${selectedName}" placeholder="Search by name" aria-label="Filter by name">
+                            <select id="limit" name="limit" aria-label="Number of items">
+                                <option value="5" th:selected="${selectedLimit == 5}">5</option>
+                                <option value="10" th:selected="${selectedLimit == null || selectedLimit == 10}">10</option>
+                                <option value="25" th:selected="${selectedLimit == 25}">25</option>
+                                <option value="50" th:selected="${selectedLimit == 50}">50</option>
+                                <option value="100" th:selected="${selectedLimit == 100}">100</option>
+                            </select>
+                            <button class="raterr-btn primary" type="submit" aria-label="Refresh ranking">
+                                <span class="button-icon" aria-hidden="true">↻</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div th:if="${error}" id="msg" class="feedback error spacer-top" th:text="${error}"></div>
+                <div th:if="${success}" id="msg" class="feedback success spacer-top" th:text="${success}"></div>
+                
+                <div th:if="${tops != null}" id="list" class="top-list spacer-top">
+                    <div th:if="${#lists.isEmpty(tops)}" class="empty-state">No rated movies yet for this filter.</div>
+                    <article th:each="m, iterStat : ${tops}" th:class="'top-card list-poster-card' + (${iterStat.index < 3 and m.posterPath != null} ? '' : ' no-poster')">
+                        <div th:if="${iterStat.index < 3 and m.posterPath != null}" class="top-poster poster-frame">
+                            <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${m.posterPath}}" th:alt="'Poster of ' + ${m.title}">
+                        </div>
+                        <div class="top-info">
+                            <div class="tag-row top-tag-row">
+                                <span class="tag" th:text="'#' + ${iterStat.index + 1}">#1</span>
+                                <span class="tag" th:text="${m.releaseYear != null} ? ${m.releaseYear} : 'Unknown year'">Year</span>
+                            </div>
+                            <h3 class="top-title" th:text="${m.title}">Title</h3>
+                            <div th:replace="~{fragments/score :: scoreBlock(${m.averageScore}, ${m.directing}, ${m.cinematography}, ${m.acting}, ${m.soundtrack}, ${m.screenplay})}"></div>
+                        </div>
+                        <div class="top-actions">
+                            <form th:action="@{'/movies/delete/' + ${m.tmdbId}}" method="post">
+                                <button class="top-delete-button" type="submit" aria-label="Delete rating">
+                                    <i data-lucide="trash-2" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+                </div>
+                <div th:unless="${tops != null}" id="list" class="top-list spacer-top"></div>
+            </section>
+
+            <aside class="premieres-sidebar">
+                <section class="panel">
+                    <h2 class="section-heading-title">Premieres</h2>
+
+                    <div th:if="${(releasedPremieres != null and !#lists.isEmpty(releasedPremieres)) or (upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)) or (noDatePremieres != null and !#lists.isEmpty(noDatePremieres))}">
+                        <div class="premieres-group" th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
+                            <div class="premieres-group-label">Released</div>
+                            <div class="premiere-timeline">
+                                <div th:each="item : ${releasedPremieres}" class="premiere-card premiere-released">
+                                    <div class="premiere-poster">
+                                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                                        <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                                    </div>
+                                    <div class="premiere-info">
+                                        <div class="premiere-title-row">
+                                            <span class="premiere-name" th:text="${item.title}">Title</span>
+                                            <span class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
+                                        </div>
+                                        <span class="premiere-date premiere-date-released" th:text="'Released ' + ${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
+                                    </div>
+                                    <div class="premiere-actions">
+                                        <a th:href="@{/movie/rate(id=${item.tmdbId})}" class="raterr-btn" title="Rate">
+                                            <i data-lucide="star"></i>
+                                        </a>
+                                        <form th:action="@{/follow}" method="post" style="display: inline;">
+                                            <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
+                                            <input type="hidden" name="type" value="movie" />
+                                            <button type="submit" class="raterr-btn green" title="Unfollow">
+                                                <i data-lucide="heart"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="premieres-group" th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
+                            <div class="premieres-group-label">Upcoming</div>
+                            <div class="premiere-timeline">
+                                <div th:each="item : ${upcomingPremieres}" class="premiere-card">
+                                    <div class="premiere-poster">
+                                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                                        <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                                    </div>
+                                    <div class="premiere-info">
+                                        <div class="premiere-title-row">
+                                            <span class="premiere-name" th:text="${item.title}">Title</span>
+                                            <span class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
+                                        </div>
+                                        <span class="premiere-date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Date</span>
+                                    </div>
+                                    <div class="premiere-actions">
+                                        <form th:action="@{/follow}" method="post" style="display: inline;">
+                                            <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
+                                            <input type="hidden" name="type" value="movie" />
+                                            <button type="submit" class="raterr-btn green" title="Unfollow">
+                                                <i data-lucide="heart"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="premieres-group" th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
+                            <div class="premieres-group-label">No release date yet</div>
+                            <div class="premiere-timeline">
+                                <div th:each="item : ${noDatePremieres}" class="premiere-card">
+                                    <div class="premiere-poster">
+                                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                                        <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                                    </div>
+                                    <div class="premiere-info">
+                                        <div class="premiere-title-row">
+                                            <span class="premiere-name" th:text="${item.title}">Title</span>
+                                            <span class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
+                                        </div>
+                                        <span class="premiere-date">TBA</span>
+                                    </div>
+                                    <div class="premiere-actions">
+                                        <form th:action="@{/follow}" method="post" style="display: inline;">
+                                            <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
+                                            <input type="hidden" name="type" value="movie" />
+                                            <button type="submit" class="raterr-btn green" title="Unfollow">
+                                                <i data-lucide="heart"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${(releasedPremieres == null or #lists.isEmpty(releasedPremieres)) and (upcomingPremieres == null or #lists.isEmpty(upcomingPremieres)) and (noDatePremieres == null or #lists.isEmpty(noDatePremieres))}">
+                        <div class="empty-state">No followed movies yet.</div>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </main>
+</div>
+</body>
+<script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.top-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            lucide.createIcons();
+        });
+    });
+</script>
+</html>
+
+

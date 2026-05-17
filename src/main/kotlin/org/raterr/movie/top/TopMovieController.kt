@@ -3,16 +3,15 @@ package org.raterr.movie.top
 import org.raterr.UserId
 import org.raterr.rating.RatingScoreService
 import org.raterr.rating.Rating
-import org.raterr.rating.RatingRepository
 import org.raterr.annotations.CurrentUser
 import org.raterr.movie.Movie
-import org.raterr.movie.MovieRepository
+import org.raterr.movie.premieres.MoviePremieresHandler
+import org.raterr.movie.premieres.MoviePremieresQuery
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
-import kotlin.jvm.optionals.getOrNull
 
 data class GetTopMoviesResponse(
     val tmdbId: Int,
@@ -30,6 +29,7 @@ data class GetTopMoviesResponse(
 @Controller
 class TopMovieController(
     private val handler: TopMovieHandler,
+    private val moviePremieresHandler: MoviePremieresHandler,
 ) {
 
     @GetMapping("/movies")
@@ -55,7 +55,17 @@ class TopMovieController(
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        return "top"
+        MoviePremieresQuery(UserId(user.id!!)).let(moviePremieresHandler::handle)
+            .fold(
+                { },
+                {
+                    model.addAttribute("releasedPremieres", it.released)
+                    model.addAttribute("upcomingPremieres", it.upcoming)
+                    model.addAttribute("noDatePremieres", it.noDate)
+                }
+            )
+
+        return "movies"
     }
 
     private fun map(list: List<Pair<Rating, Movie>>): List<GetTopMoviesResponse> =

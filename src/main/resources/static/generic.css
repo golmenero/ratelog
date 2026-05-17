@@ -133,6 +133,28 @@ a {
   margin-top: 18px;
 }
 
+.tops-premieres-grid {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.premieres-sidebar {
+  position: sticky;
+  top: 80px;
+}
+
+@media (max-width: 900px) {
+  .tops-premieres-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .premieres-sidebar {
+    position: static;
+  }
+}
+
 @media (max-width: 720px) {
   body {
     padding: 16px;
