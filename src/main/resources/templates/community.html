@@ -32,20 +32,25 @@
                             <div th:unless="${item.posterPath != null}" class="feed-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                         </div>
                         <div class="feed-info">
-                            <div class="feed-user">
-                                <div class="feed-user-avatar" th:text="${#strings.toUpperCase(#strings.substring(item.username, 0, 1))}">U</div>
-                                <span class="feed-user-name" th:text="${item.username}">Username</span>
+                            <div class="feed-user-row">
+                                <div class="feed-user">
+                                    <div class="feed-user-avatar" th:text="${#strings.toUpperCase(#strings.substring(item.username, 0, 1))}">U</div>
+                                    <span class="feed-user-name" th:text="${item.username}">Username</span>
+                                </div>
+                                <div class="feed-rating">
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                        <span th:if="${item.score >= i * 2}" class="feed-star-filled">★</span>
+                                        <span th:unless="${item.score >= i * 2}" class="feed-star-empty">☆</span>
+                                    </span>
+                                    <span class="feed-score-value" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.0</span>
+                                </div>
                             </div>
-                            <div class="feed-content">
+                            <div class="feed-content-row">
                                 <span class="feed-title" th:text="${item.title}">Title</span>
                                 <span th:if="${item.type == 'movie'}" class="tag tag-movie">Movie</span>
                                 <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow">TV</span>
+                                <span class="feed-date" th:text="${item.ratedAt}">Date</span>
                             </div>
-                            <span class="feed-date" th:text="${item.ratedAt}">Date</span>
-                        </div>
-                        <div class="feed-score">
-                            <i data-lucide="star" class="feed-star-icon"></i>
-                            <span th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.0</span>
                         </div>
                     </div>
                 </div>
@@ -77,7 +82,6 @@
                                 <input type="hidden" name="from" value="community" />
                                 <button type="submit" class="raterr-btn primary" th:title="${user.isFollowed} ? 'Unfollow' : 'Follow'">
                                     <i th:data-lucide="${user.isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
-                                    <span th:text="${user.isFollowed} ? 'Unfollow' : 'Follow'"></span>
                                 </button>
                             </form>
                         </div>
