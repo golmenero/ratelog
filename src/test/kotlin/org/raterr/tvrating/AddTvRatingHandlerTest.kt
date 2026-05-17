@@ -1,13 +1,18 @@
 package org.raterr.tvrating
 
+import arrow.core.left
+import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.raterr.TmdbId
 import org.raterr.UserId
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
-import org.raterr.tmdb.FakeTmdbClient
+import org.raterr.tmdb.TmdbClient
+import org.raterr.tmdb.TmdbError
 import org.raterr.tmdb.TmdbTvShow
 import org.raterr.tvrating.add.AddTvRating
 import org.raterr.tvrating.add.AddTvRatingHandler
@@ -17,6 +22,7 @@ import org.raterr.tvshow.get.GetTvShowHandler
 
 class AddTvRatingHandlerTest {
 
+    private val tmdbClient: TmdbClient = mock()
     private val tvRatingRepository = InMemoryTvRatingRepository()
     private val followRepository = InMemoryFollowRepository()
     private val tvShowRepository = InMemoryTvShowRepository()
@@ -31,7 +37,7 @@ class AddTvRatingHandlerTest {
     }
 
     private fun setupShow(tmdbId: Int) {
-        val tmdbClient = FakeTmdbClient(tvShows = mapOf(tmdbId to TmdbTvShow(id = tmdbId, name = "Show", firstAirDate = "2024-01-01")))
+        whenever(tmdbClient.tvShowDetails(tmdbId)).thenReturn(TmdbTvShow(id = tmdbId, name = "Show", firstAirDate = "2024-01-01").right())
         getTvShowHandler = GetTvShowHandler(tmdbClient, tvShowRepository)
         handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository)
     }
@@ -202,7 +208,7 @@ class AddTvRatingHandlerTest {
 
     @Test
     fun `tvshow not found returns TvShowNotFound`() {
-        val tmdbClient = FakeTmdbClient()
+        whenever(tmdbClient.tvShowDetails(200)).thenReturn(TmdbError.TvShowNotFound.left())
         getTvShowHandler = GetTvShowHandler(tmdbClient, tvShowRepository)
         handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository)
 

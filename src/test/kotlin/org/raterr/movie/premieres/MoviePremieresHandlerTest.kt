@@ -1,20 +1,24 @@
 package org.raterr.movie.premieres
 
+import arrow.core.left
+import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.raterr.UserId
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
-import org.raterr.tmdb.FakeTmdbClient
+import org.raterr.tmdb.TmdbClient
 import org.raterr.tmdb.TmdbMovie
 import java.time.LocalDate
 
 class MoviePremieresHandlerTest {
 
     private val followRepository = InMemoryFollowRepository()
-    private lateinit var tmdbClient: FakeTmdbClient
+    private val tmdbClient: TmdbClient = mock()
     private lateinit var handler: MoviePremieresHandler
 
     private val today = LocalDate.now()
@@ -26,7 +30,6 @@ class MoviePremieresHandlerTest {
 
     @Test
     fun `returns empty premieres when no follows`() {
-        tmdbClient = FakeTmdbClient()
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
         val result = handler.handle(MoviePremieresQuery(UserId(1)))
@@ -45,9 +48,7 @@ class MoviePremieresHandlerTest {
     @Test
     fun `returns released movies when release date is in the past`() {
         val pastDate = today.minusDays(5).toString()
-        tmdbClient = FakeTmdbClient(movies = mapOf(
-            100 to TmdbMovie(id = 100, title = "Past Movie", releaseDate = pastDate, posterPath = "/poster.jpg")
-        ))
+        whenever(tmdbClient.movieDetails(100)).thenReturn(TmdbMovie(id = 100, title = "Past Movie", releaseDate = pastDate, posterPath = "/poster.jpg").right())
         followRepository.save(Follow(userId = 1, contentType = "movie", contentTmdbId = 100, createdAtEpochMs = System.currentTimeMillis()))
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
@@ -67,9 +68,7 @@ class MoviePremieresHandlerTest {
     @Test
     fun `returns upcoming movies when release date is in the future`() {
         val futureDate = today.plusDays(30).toString()
-        tmdbClient = FakeTmdbClient(movies = mapOf(
-            101 to TmdbMovie(id = 101, title = "Future Movie", releaseDate = futureDate)
-        ))
+        whenever(tmdbClient.movieDetails(101)).thenReturn(TmdbMovie(id = 101, title = "Future Movie", releaseDate = futureDate).right())
         followRepository.save(Follow(userId = 1, contentType = "movie", contentTmdbId = 101, createdAtEpochMs = System.currentTimeMillis()))
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
@@ -88,9 +87,7 @@ class MoviePremieresHandlerTest {
 
     @Test
     fun `returns noDate movies when release date is null`() {
-        tmdbClient = FakeTmdbClient(movies = mapOf(
-            102 to TmdbMovie(id = 102, title = "TBA Movie", releaseDate = null)
-        ))
+        whenever(tmdbClient.movieDetails(102)).thenReturn(TmdbMovie(id = 102, title = "TBA Movie", releaseDate = null).right())
         followRepository.save(Follow(userId = 1, contentType = "movie", contentTmdbId = 102, createdAtEpochMs = System.currentTimeMillis()))
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
@@ -109,7 +106,6 @@ class MoviePremieresHandlerTest {
 
     @Test
     fun `filters out tvshow follows`() {
-        tmdbClient = FakeTmdbClient()
         followRepository.save(Follow(userId = 1, contentType = "tvshow", contentTmdbId = 200, createdAtEpochMs = System.currentTimeMillis()))
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 

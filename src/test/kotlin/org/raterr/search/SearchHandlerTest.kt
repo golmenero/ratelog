@@ -1,9 +1,13 @@
 package org.raterr.search
 
+import arrow.core.left
+import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.raterr.MediaType
 import org.raterr.UserId
 import org.raterr.follow.Follow
@@ -12,7 +16,8 @@ import org.raterr.movie.InMemoryMovieRepository
 import org.raterr.movie.Movie
 import org.raterr.rating.InMemoryRatingRepository
 import org.raterr.rating.Rating
-import org.raterr.tmdb.FakeTmdbClient
+import org.raterr.tmdb.TmdbClient
+import org.raterr.tmdb.TmdbError
 import org.raterr.tmdb.TmdbMovie
 import org.raterr.tmdb.TmdbTvShow
 import org.raterr.tvrating.InMemoryTvRatingRepository
@@ -21,13 +26,13 @@ import java.time.LocalDate
 
 class SearchHandlerTest {
 
+    private val tmdbClient: TmdbClient = mock()
     private val tvShowRepository = InMemoryTvShowRepository()
     private val movieRepository = InMemoryMovieRepository()
     private val ratingRepository = InMemoryRatingRepository()
     private val tvRatingRepository = InMemoryTvRatingRepository()
     private val followRepository = InMemoryFollowRepository()
-    private lateinit var tmdbClient: FakeTmdbClient
-    private lateinit var handler: SearchHandler
+    private val handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
 
     @BeforeEach
     fun setUp() {
@@ -40,11 +45,8 @@ class SearchHandlerTest {
 
     @Test
     fun `happy path returns interleaved results`() {
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(1 to TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")),
-            tvShows = mapOf(2 to TmdbTvShow(id = 2, name = "Show", firstAirDate = "2024-01-01"))
-        )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(listOf(TmdbTvShow(id = 2, name = "Show", firstAirDate = "2024-01-01")).right())
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -61,10 +63,8 @@ class SearchHandlerTest {
 
     @Test
     fun `only movies returns movie results`() {
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(1 to TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01"))
-        )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -80,10 +80,8 @@ class SearchHandlerTest {
 
     @Test
     fun `only tvshows returns show results`() {
-        tmdbClient = FakeTmdbClient(
-            tvShows = mapOf(2 to TmdbTvShow(id = 2, name = "Show", firstAirDate = "2024-01-01"))
-        )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        whenever(tmdbClient.searchMovies("test")).thenReturn(emptyList<TmdbMovie>().right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(listOf(TmdbTvShow(id = 2, name = "Show", firstAirDate = "2024-01-01")).right())
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -99,18 +97,17 @@ class SearchHandlerTest {
 
     @Test
     fun `interleaves 3 movies and 2 shows correctly`() {
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(
-                1 to TmdbMovie(id = 1, title = "M1", releaseDate = "2024-01-01"),
-                2 to TmdbMovie(id = 2, title = "M2", releaseDate = "2024-01-01"),
-                3 to TmdbMovie(id = 3, title = "M3", releaseDate = "2024-01-01")
-            ),
-            tvShows = mapOf(
-                10 to TmdbTvShow(id = 10, name = "S1", firstAirDate = "2024-01-01"),
-                11 to TmdbTvShow(id = 11, name = "S2", firstAirDate = "2024-01-01")
-            )
+        val movies = listOf(
+            TmdbMovie(id = 1, title = "M1", releaseDate = "2024-01-01"),
+            TmdbMovie(id = 2, title = "M2", releaseDate = "2024-01-01"),
+            TmdbMovie(id = 3, title = "M3", releaseDate = "2024-01-01")
         )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        val shows = listOf(
+            TmdbTvShow(id = 10, name = "S1", firstAirDate = "2024-01-01"),
+            TmdbTvShow(id = 11, name = "S2", firstAirDate = "2024-01-01")
+        )
+        whenever(tmdbClient.searchMovies("test")).thenReturn(movies.right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(shows.right())
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -130,9 +127,6 @@ class SearchHandlerTest {
 
     @Test
     fun `blank query returns empty list`() {
-        tmdbClient = FakeTmdbClient()
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
-
         val result = handler.handle(SearchQuery("", UserId(1)))
 
         assertTrue(result.isRight())
@@ -144,11 +138,9 @@ class SearchHandlerTest {
 
     @Test
     fun `isFollowed true when user follows movie`() {
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(1 to TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01"))
-        )
+        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
         followRepository.save(Follow(userId = 1, contentType = MediaType.movie.name, contentTmdbId = 1, createdAtEpochMs = System.currentTimeMillis()))
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -162,10 +154,8 @@ class SearchHandlerTest {
     @Test
     fun `canRate false for future release date`() {
         val futureDate = LocalDate.now().plusYears(1).toString()
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(1 to TmdbMovie(id = 1, title = "Movie", releaseDate = futureDate))
-        )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = futureDate)).right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -178,10 +168,8 @@ class SearchHandlerTest {
 
     @Test
     fun `canRate true for past release date`() {
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(1 to TmdbMovie(id = 1, title = "Movie", releaseDate = "2020-01-01"))
-        )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2020-01-01")).right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -208,10 +196,8 @@ class SearchHandlerTest {
                 createdAtEpochMs = System.currentTimeMillis()
             )
         )
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(1 to TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01"))
-        )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -225,10 +211,8 @@ class SearchHandlerTest {
     @Test
     fun `canFollow true when no rating exists`() {
         movieRepository.save(Movie(id = 5, tmdbId = 1, title = "Movie"))
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(1 to TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01"))
-        )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
         val result = handler.handle(SearchQuery("test", UserId(1)))
 
@@ -241,10 +225,8 @@ class SearchHandlerTest {
 
     @Test
     fun `userId null means isFollowed false`() {
-        tmdbClient = FakeTmdbClient(
-            movies = mapOf(1 to TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01"))
-        )
-        handler = SearchHandler(tmdbClient, tvShowRepository, movieRepository, ratingRepository, tvRatingRepository, followRepository)
+        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
         val result = handler.handle(SearchQuery("test", null))
 

@@ -1,20 +1,24 @@
 package org.raterr.tvshow.premieres
 
+import arrow.core.left
+import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.raterr.UserId
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
-import org.raterr.tmdb.FakeTmdbClient
+import org.raterr.tmdb.TmdbClient
 import org.raterr.tmdb.TmdbTvShow
 import java.time.LocalDate
 
 class TvShowPremieresHandlerTest {
 
     private val followRepository = InMemoryFollowRepository()
-    private lateinit var tmdbClient: FakeTmdbClient
+    private val tmdbClient: TmdbClient = mock()
     private lateinit var handler: TvShowPremieresHandler
 
     private val today = LocalDate.now()
@@ -26,7 +30,6 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `returns empty premieres when no follows`() {
-        tmdbClient = FakeTmdbClient()
         handler = TvShowPremieresHandler(tmdbClient, followRepository)
 
         val result = handler.handle(TvShowPremieresQuery(UserId(1)))
@@ -45,9 +48,7 @@ class TvShowPremieresHandlerTest {
     @Test
     fun `returns released shows when first air date is in the past`() {
         val pastDate = today.minusDays(5).toString()
-        tmdbClient = FakeTmdbClient(tvShows = mapOf(
-            200 to TmdbTvShow(id = 200, name = "Past Show", firstAirDate = pastDate, posterPath = "/poster.jpg")
-        ))
+        whenever(tmdbClient.tvShowDetails(200)).thenReturn(TmdbTvShow(id = 200, name = "Past Show", firstAirDate = pastDate, posterPath = "/poster.jpg").right())
         followRepository.save(Follow(userId = 1, contentType = "tvshow", contentTmdbId = 200, createdAtEpochMs = System.currentTimeMillis()))
         handler = TvShowPremieresHandler(tmdbClient, followRepository)
 
@@ -67,9 +68,7 @@ class TvShowPremieresHandlerTest {
     @Test
     fun `returns upcoming shows when first air date is in the future`() {
         val futureDate = today.plusDays(30).toString()
-        tmdbClient = FakeTmdbClient(tvShows = mapOf(
-            201 to TmdbTvShow(id = 201, name = "Future Show", firstAirDate = futureDate)
-        ))
+        whenever(tmdbClient.tvShowDetails(201)).thenReturn(TmdbTvShow(id = 201, name = "Future Show", firstAirDate = futureDate).right())
         followRepository.save(Follow(userId = 1, contentType = "tvshow", contentTmdbId = 201, createdAtEpochMs = System.currentTimeMillis()))
         handler = TvShowPremieresHandler(tmdbClient, followRepository)
 
@@ -88,9 +87,7 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `returns noDate shows when first air date is null`() {
-        tmdbClient = FakeTmdbClient(tvShows = mapOf(
-            202 to TmdbTvShow(id = 202, name = "TBA Show", firstAirDate = null)
-        ))
+        whenever(tmdbClient.tvShowDetails(202)).thenReturn(TmdbTvShow(id = 202, name = "TBA Show", firstAirDate = null).right())
         followRepository.save(Follow(userId = 1, contentType = "tvshow", contentTmdbId = 202, createdAtEpochMs = System.currentTimeMillis()))
         handler = TvShowPremieresHandler(tmdbClient, followRepository)
 
@@ -109,7 +106,6 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `filters out movie follows`() {
-        tmdbClient = FakeTmdbClient()
         followRepository.save(Follow(userId = 1, contentType = "movie", contentTmdbId = 100, createdAtEpochMs = System.currentTimeMillis()))
         handler = TvShowPremieresHandler(tmdbClient, followRepository)
 

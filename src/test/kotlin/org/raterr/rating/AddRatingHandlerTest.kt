@@ -1,8 +1,12 @@
 package org.raterr.rating
 
+import arrow.core.left
+import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.raterr.TmdbId
 import org.raterr.UserId
 import org.raterr.follow.Follow
@@ -12,11 +16,13 @@ import org.raterr.movie.get.GetMovieHandler
 import org.raterr.rating.add.AddRating
 import org.raterr.rating.add.AddRatingHandler
 import org.raterr.rating.add.AddRatingHandlerError
-import org.raterr.tmdb.FakeTmdbClient
+import org.raterr.tmdb.TmdbClient
+import org.raterr.tmdb.TmdbError
 import org.raterr.tmdb.TmdbMovie
 
 class AddRatingHandlerTest {
 
+    private val tmdbClient: TmdbClient = mock()
     private val ratingRepository = InMemoryRatingRepository()
     private val followRepository = InMemoryFollowRepository()
     private val movieRepository = InMemoryMovieRepository()
@@ -31,7 +37,7 @@ class AddRatingHandlerTest {
     }
 
     private fun setupMovie(tmdbId: Int) {
-        val tmdbClient = FakeTmdbClient(movies = mapOf(tmdbId to TmdbMovie(id = tmdbId, title = "Movie", releaseDate = "2024-01-01")))
+        whenever(tmdbClient.movieDetails(tmdbId)).thenReturn(TmdbMovie(id = tmdbId, title = "Movie", releaseDate = "2024-01-01").right())
         getMovieHandler = GetMovieHandler(tmdbClient, movieRepository)
         handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository)
     }
@@ -271,7 +277,7 @@ class AddRatingHandlerTest {
 
     @Test
     fun `movie not found returns MovieNotFound`() {
-        val tmdbClient = FakeTmdbClient()
+        whenever(tmdbClient.movieDetails(100)).thenReturn(TmdbError.MovieNotFound.left())
         getMovieHandler = GetMovieHandler(tmdbClient, movieRepository)
         handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository)
 
