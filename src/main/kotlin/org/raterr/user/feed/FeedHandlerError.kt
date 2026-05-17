@@ -1,3 +1,3 @@
-package org.raterr.community
+package org.raterr.user.feed
 
 sealed interface FeedHandlerError

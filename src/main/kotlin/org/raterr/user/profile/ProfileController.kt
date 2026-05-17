@@ -1,4 +1,4 @@
-package org.raterr.profile
+package org.raterr.user.profile
 
 import org.raterr.UserId
 import org.raterr.annotations.CurrentUser

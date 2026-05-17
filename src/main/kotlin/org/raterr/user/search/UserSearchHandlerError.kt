@@ -1,4 +1,4 @@
-package org.raterr.community
+package org.raterr.user.search
 
 sealed interface UserSearchHandlerError {
     data object EmptyQuery : UserSearchHandlerError

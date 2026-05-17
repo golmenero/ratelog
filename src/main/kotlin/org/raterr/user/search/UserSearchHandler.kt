@@ -1,4 +1,4 @@
-package org.raterr.community
+package org.raterr.user.search
 
 import arrow.core.Either
 import arrow.core.raise.either

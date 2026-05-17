@@ -15,6 +15,8 @@ import org.raterr.tmdb.TmdbClient
 import org.raterr.tmdb.TmdbMovie
 import org.raterr.user.User
 import org.raterr.user.UserRepository
+import org.raterr.user.profile.GetProfile
+import org.raterr.user.profile.ProfileHandler
 import java.util.Optional
 
 class ProfileHandlerTest {

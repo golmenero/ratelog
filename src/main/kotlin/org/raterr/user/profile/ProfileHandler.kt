@@ -1,4 +1,4 @@
-package org.raterr.profile
+package org.raterr.user.profile
 
 import arrow.core.Either
 import arrow.core.raise.either

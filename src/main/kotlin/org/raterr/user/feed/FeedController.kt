@@ -1,8 +1,11 @@
-package org.raterr.community
+package org.raterr.user.feed
 
 import org.raterr.UserId
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
+import org.raterr.user.search.UserSearchHandler
+import org.raterr.user.search.UserSearchHandlerError
+import org.raterr.user.search.UserSearchQuery
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
