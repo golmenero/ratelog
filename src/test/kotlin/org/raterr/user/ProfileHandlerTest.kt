@@ -1,11 +1,8 @@
-package org.raterr.profile
+package org.raterr.user
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.raterr.UserId
-import org.raterr.user.User
-import org.raterr.user.InMemoryUserRepository
 import org.raterr.user.profile.GetProfile
 import org.raterr.user.profile.ProfileHandler
 
@@ -20,12 +17,12 @@ class ProfileHandlerTest {
 
         val result = handler.handle(GetProfile(UserId(1)))
 
-        assertTrue(result.isRight())
+        Assertions.assertTrue(result.isRight())
         result.fold(
             { },
             {
-                assertEquals("testuser", it.username)
-                assertEquals("test@example.com", it.email)
+                Assertions.assertEquals("testuser", it.username)
+                Assertions.assertEquals("test@example.com", it.email)
             }
         )
     }
@@ -34,6 +31,6 @@ class ProfileHandlerTest {
     fun `UserNotFound returns Left when user does not exist`() {
         val result = handler.handle(GetProfile(UserId(999)))
 
-        assertTrue(result.isLeft())
+        Assertions.assertTrue(result.isLeft())
     }
 }
