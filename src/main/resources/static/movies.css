@@ -511,6 +511,11 @@
 .premieres-group {
   display: grid;
   gap: 12px;
+  margin-bottom: 24px;
+}
+
+.premieres-group:last-child {
+  margin-bottom: 0;
 }
 
 .premieres-group-label {

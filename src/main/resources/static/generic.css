@@ -140,6 +140,11 @@ a {
   align-items: start;
 }
 
+.tops-premieres-grid > .tops-panel,
+.tops-premieres-grid > .premieres-sidebar {
+  min-width: 0;
+}
+
 .premieres-sidebar {
   position: sticky;
   top: 80px;

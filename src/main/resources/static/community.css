@@ -209,6 +209,50 @@
   gap: 8px;
 }
 
+.followed-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.followed-user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.followed-user-item:last-child {
+  border-bottom: none;
+}
+
+.followed-user-username {
+  font-weight: 600;
+  font-size: 0.95rem;
+  font-family: var(--font-ui);
+}
+
+.followed-user-form {
+  display: flex;
+  align-items: center;
+}
+
+.followed-user-unfollow {
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.followed-user-unfollow:hover {
+  color: var(--danger);
+}
+
 @media (max-width: 720px) {
   .community-search-form {
     flex-direction: column;
