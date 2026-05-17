@@ -97,6 +97,10 @@
   }
 }
 
+.tops-panel .heading-filter {
+  flex-wrap: wrap;
+}
+
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
