@@ -81,6 +81,28 @@
                         </div>
                     </div>
                 </section>
+
+                <div class="sidebar-separator"></div>
+
+                <section class="panel">
+                    <h2 class="section-heading-title">Followed Users</h2>
+
+                    <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}" class="users-list">
+                        <div th:each="followedUser : ${followedUsers}" class="user-card">
+                            <div class="user-avatar" th:text="${#strings.toUpperCase(#strings.substring(followedUser.username, 0, 1))}">U</div>
+                            <span class="user-username" th:text="${followedUser.username}">Username</span>
+                            <form th:action="@{/user/follow}" method="post" class="user-follow-form">
+                                <input type="hidden" name="username" th:value="${followedUser.username}" />
+                                <input type="hidden" name="from" value="followed" />
+                                <button type="submit" class="raterr-btn primary" title="Unfollow">
+                                    <i data-lucide="user-round-x" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${followedUsers != null and #lists.isEmpty(followedUsers)}" class="empty-state">You are not following anyone yet.</div>
+                </section>
             </aside>
         </div>
     </main>

@@ -3,6 +3,8 @@ package org.raterr.user.feed
 import org.raterr.UserId
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
+import org.raterr.user.followed.FollowedUsersHandler
+import org.raterr.user.followed.FollowedUsersQuery
 import org.raterr.user.search.UserSearchHandler
 import org.raterr.user.search.UserSearchHandlerError
 import org.raterr.user.search.UserSearchQuery
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam
 class FeedController(
     private val feedHandler: FeedHandler,
     private val userSearchHandler: UserSearchHandler,
+    private val followedUsersHandler: FollowedUsersHandler,
 ) {
 
     @GetMapping("/community")
@@ -28,6 +31,12 @@ class FeedController(
                 .fold(
                     { },
                     { model.addAttribute("feed", it) }
+                )
+
+            FollowedUsersQuery(UserId(user.id!!)).let(followedUsersHandler::handle)
+                .fold(
+                    { },
+                    { model.addAttribute("followedUsers", it) }
                 )
         }
 

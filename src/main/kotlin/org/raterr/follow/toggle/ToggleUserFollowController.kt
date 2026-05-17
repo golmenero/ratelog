@@ -20,7 +20,7 @@ class ToggleUserFollowController(
         @RequestParam(value = "from", required = false) from: String?,
         redirectAttributes: RedirectAttributes
     ): String {
-        val redirectUrl = if (from == "community") "redirect:/community?username=$username" else "redirect:/profile"
+        val redirectUrl = if (from == "community") "redirect:/community?username=$username" else "redirect:/community"
         return user.id?.let { userId ->
             ToggleUserFollow(UserId(userId), username)
                 .let(handler::handle)

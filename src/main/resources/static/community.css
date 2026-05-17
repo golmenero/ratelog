@@ -18,6 +18,12 @@
   top: 80px;
 }
 
+.sidebar-separator {
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0;
+}
+
 .feed-list {
   display: grid;
   gap: 16px;
