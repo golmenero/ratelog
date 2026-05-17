@@ -1,35 +1,27 @@
 package org.raterr.tvrating
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import org.junit.jupiter.api.Test
 import org.raterr.TmdbId
 import org.raterr.UserId
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
-import org.raterr.tmdb.TmdbError
-import org.raterr.tvrating.InMemoryTvRatingRepository
-import org.raterr.tvshow.InMemoryTvShowRepository
+import org.raterr.tmdb.FakeTmdbClient
+import org.raterr.tmdb.TmdbTvShow
 import org.raterr.tvrating.add.AddTvRating
 import org.raterr.tvrating.add.AddTvRatingHandler
 import org.raterr.tvrating.add.AddTvRatingHandlerError
-import org.raterr.tvshow.TvShow
+import org.raterr.tvshow.InMemoryTvShowRepository
 import org.raterr.tvshow.get.GetTvShowHandler
-import org.raterr.tvshow.get.GetTvShowHandlerError
-import kotlin.test.Test
 
 class AddTvRatingHandlerTest {
 
-    private val getTvShowHandler: GetTvShowHandler = mock()
     private val tvRatingRepository = InMemoryTvRatingRepository()
     private val followRepository = InMemoryFollowRepository()
     private val tvShowRepository = InMemoryTvShowRepository()
-    private val handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository)
+    private lateinit var getTvShowHandler: GetTvShowHandler
+    private lateinit var handler: AddTvRatingHandler
 
     @BeforeEach
     fun setUp() {
@@ -38,21 +30,15 @@ class AddTvRatingHandlerTest {
         tvShowRepository.clear()
     }
 
+    private fun setupShow(tmdbId: Int) {
+        val tmdbClient = FakeTmdbClient(tvShows = mapOf(tmdbId to TmdbTvShow(id = tmdbId, name = "Show", firstAirDate = "2024-01-01")))
+        getTvShowHandler = GetTvShowHandler(tmdbClient, tvShowRepository)
+        handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository)
+    }
+
     @Test
     fun `happy path returns Right and saves rating`() {
-        val show = TvShow(
-            id = 1,
-            tmdbId = 200,
-            name = "Show",
-            originalName = null,
-            overview = null,
-            firstAirDate = "2024-01-01",
-            firstAirYear = 2024,
-            posterPath = null,
-            tmdbVoteAverage = 7.0,
-            genres = "Drama"
-        )
-        whenever(getTvShowHandler.handle(any())).thenReturn(show.right())
+        setupShow(200)
 
         val result = handler.handle(
             AddTvRating(
@@ -72,6 +58,8 @@ class AddTvRatingHandlerTest {
 
     @Test
     fun `directing below 1 returns InvalidRatingValue`() {
+        setupShow(200)
+
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
@@ -85,11 +73,16 @@ class AddTvRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddTvRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddTvRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `cinematography above 10 returns InvalidRatingValue`() {
+        setupShow(200)
+
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
@@ -103,11 +96,16 @@ class AddTvRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddTvRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddTvRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `acting at 0 returns InvalidRatingValue`() {
+        setupShow(200)
+
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
@@ -121,13 +119,15 @@ class AddTvRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddTvRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddTvRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `all values at 1_0 is valid`() {
-        val show = TvShow(id = 1, tmdbId = 200, name = "Show")
-        whenever(getTvShowHandler.handle(any())).thenReturn(show.right())
+        setupShow(200)
 
         val result = handler.handle(
             AddTvRating(
@@ -146,8 +146,7 @@ class AddTvRatingHandlerTest {
 
     @Test
     fun `all values at 10_0 is valid`() {
-        val show = TvShow(id = 1, tmdbId = 200, name = "Show")
-        whenever(getTvShowHandler.handle(any())).thenReturn(show.right())
+        setupShow(200)
 
         val result = handler.handle(
             AddTvRating(
@@ -166,8 +165,8 @@ class AddTvRatingHandlerTest {
 
     @Test
     fun `existing rating returns RatingAlreadyExists`() {
-        val show = TvShow(id = 1, tmdbId = 200, name = "Show")
-        whenever(getTvShowHandler.handle(any())).thenReturn(show.right())
+        setupShow(200)
+        tvShowRepository.save(org.raterr.tvshow.TvShow(id = 1, tmdbId = 200, name = "Show"))
         tvRatingRepository.save(
             TvRating(
                 id = 1,
@@ -195,12 +194,17 @@ class AddTvRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddTvRatingHandlerError.RatingAlreadyExists)
+        result.fold(
+            { assertTrue(it is AddTvRatingHandlerError.RatingAlreadyExists) },
+            { }
+        )
     }
 
     @Test
     fun `tvshow not found returns TvShowNotFound`() {
-        whenever(getTvShowHandler.handle(any())).thenReturn(TmdbError.TvShowNotFound.left())
+        val tmdbClient = FakeTmdbClient()
+        getTvShowHandler = GetTvShowHandler(tmdbClient, tvShowRepository)
+        handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository)
 
         val result = handler.handle(
             AddTvRating(
@@ -215,13 +219,15 @@ class AddTvRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddTvRatingHandlerError.TvShowNotFound)
+        result.fold(
+            { assertTrue(it is AddTvRatingHandlerError.TvShowNotFound) },
+            { }
+        )
     }
 
     @Test
     fun `auto-unfollows tvshow after rating`() {
-        val show = TvShow(id = 1, tmdbId = 200, name = "Show")
-        whenever(getTvShowHandler.handle(any())).thenReturn(show.right())
+        setupShow(200)
         val existingFollow = followRepository.save(
             Follow(
                 userId = 1,

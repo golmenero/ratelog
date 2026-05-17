@@ -1,62 +1,44 @@
 package org.raterr.rating
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import org.junit.jupiter.api.Test
 import org.raterr.TmdbId
 import org.raterr.UserId
 import org.raterr.follow.Follow
-import org.raterr.movie.Movie
+import org.raterr.follow.InMemoryFollowRepository
+import org.raterr.movie.InMemoryMovieRepository
 import org.raterr.movie.get.GetMovieHandler
-import org.raterr.movie.get.GetMovieHandlerError
 import org.raterr.rating.add.AddRating
 import org.raterr.rating.add.AddRatingHandler
 import org.raterr.rating.add.AddRatingHandlerError
-import org.raterr.follow.InMemoryFollowRepository
-import org.raterr.rating.InMemoryRatingRepository
-import org.raterr.movie.InMemoryMovieRepository
-import org.raterr.tmdb.TmdbError
-import org.raterr.user.InMemoryUserRepository
-import java.util.Optional
-import kotlin.test.Test
+import org.raterr.tmdb.FakeTmdbClient
+import org.raterr.tmdb.TmdbMovie
 
 class AddRatingHandlerTest {
 
-    private val getMovieHandler: GetMovieHandler = mock()
     private val ratingRepository = InMemoryRatingRepository()
     private val followRepository = InMemoryFollowRepository()
     private val movieRepository = InMemoryMovieRepository()
-    private val userRepository = InMemoryUserRepository()
-    private val handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository)
+    private lateinit var getMovieHandler: GetMovieHandler
+    private lateinit var handler: AddRatingHandler
 
     @BeforeEach
     fun setUp() {
         ratingRepository.clear()
         followRepository.clear()
         movieRepository.clear()
-        userRepository.clear()
+    }
+
+    private fun setupMovie(tmdbId: Int) {
+        val tmdbClient = FakeTmdbClient(movies = mapOf(tmdbId to TmdbMovie(id = tmdbId, title = "Movie", releaseDate = "2024-01-01")))
+        getMovieHandler = GetMovieHandler(tmdbClient, movieRepository)
+        handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository)
     }
 
     @Test
     fun `happy path returns Right and saves rating`() {
-        val movie = Movie(
-            id = 1,
-            tmdbId = 100,
-            title = "Movie",
-            originalTitle = null,
-            overview = null,
-            releaseDate = "2024-01-01",
-            releaseYear = 2024,
-            posterPath = null,
-            tmdbVoteAverage = 7.0,
-            genres = "Action"
-        )
-        whenever(getMovieHandler.handle(any())).thenReturn(movie.right())
+        setupMovie(100)
 
         val result = handler.handle(
             AddRating(
@@ -76,6 +58,8 @@ class AddRatingHandlerTest {
 
     @Test
     fun `directing below 1 returns InvalidRatingValue`() {
+        setupMovie(100)
+
         val result = handler.handle(
             AddRating(
                 tmdbId = TmdbId(100),
@@ -89,11 +73,16 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `directing above 10 returns InvalidRatingValue`() {
+        setupMovie(100)
+
         val result = handler.handle(
             AddRating(
                 tmdbId = TmdbId(100),
@@ -107,11 +96,16 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `cinematography at 0 returns InvalidRatingValue`() {
+        setupMovie(100)
+
         val result = handler.handle(
             AddRating(
                 tmdbId = TmdbId(100),
@@ -125,11 +119,16 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `acting above 10 returns InvalidRatingValue`() {
+        setupMovie(100)
+
         val result = handler.handle(
             AddRating(
                 tmdbId = TmdbId(100),
@@ -143,11 +142,16 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `soundtrack negative returns InvalidRatingValue`() {
+        setupMovie(100)
+
         val result = handler.handle(
             AddRating(
                 tmdbId = TmdbId(100),
@@ -161,11 +165,16 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `screenplay at 0_5 returns InvalidRatingValue`() {
+        setupMovie(100)
+
         val result = handler.handle(
             AddRating(
                 tmdbId = TmdbId(100),
@@ -179,13 +188,15 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddRatingHandlerError.InvalidRatingValue)
+        result.fold(
+            { assertTrue(it is AddRatingHandlerError.InvalidRatingValue) },
+            { }
+        )
     }
 
     @Test
     fun `all values at 1_0 is valid`() {
-        val movie = Movie(id = 1, tmdbId = 100, title = "Movie")
-        whenever(getMovieHandler.handle(any())).thenReturn(movie.right())
+        setupMovie(100)
 
         val result = handler.handle(
             AddRating(
@@ -204,8 +215,7 @@ class AddRatingHandlerTest {
 
     @Test
     fun `all values at 10_0 is valid`() {
-        val movie = Movie(id = 1, tmdbId = 100, title = "Movie")
-        whenever(getMovieHandler.handle(any())).thenReturn(movie.right())
+        setupMovie(100)
 
         val result = handler.handle(
             AddRating(
@@ -224,8 +234,8 @@ class AddRatingHandlerTest {
 
     @Test
     fun `existing rating returns RatingAlreadyExists`() {
-        val movie = Movie(id = 1, tmdbId = 100, title = "Movie")
-        whenever(getMovieHandler.handle(any())).thenReturn(movie.right())
+        setupMovie(100)
+        movieRepository.save(org.raterr.movie.Movie(id = 1, tmdbId = 100, title = "Movie"))
         ratingRepository.save(
             Rating(
                 id = 1,
@@ -253,12 +263,17 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddRatingHandlerError.RatingAlreadyExists)
+        result.fold(
+            { assertTrue(it is AddRatingHandlerError.RatingAlreadyExists) },
+            { }
+        )
     }
 
     @Test
     fun `movie not found returns MovieNotFound`() {
-        whenever(getMovieHandler.handle(any())).thenReturn(TmdbError.MovieNotFound.left())
+        val tmdbClient = FakeTmdbClient()
+        getMovieHandler = GetMovieHandler(tmdbClient, movieRepository)
+        handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository)
 
         val result = handler.handle(
             AddRating(
@@ -273,13 +288,15 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertTrue((result as Either.Left).value is AddRatingHandlerError.MovieNotFound)
+        result.fold(
+            { assertTrue(it is AddRatingHandlerError.MovieNotFound) },
+            { }
+        )
     }
 
     @Test
     fun `auto-unfollows movie after rating`() {
-        val movie = Movie(id = 1, tmdbId = 100, title = "Movie")
-        whenever(getMovieHandler.handle(any())).thenReturn(movie.right())
+        setupMovie(100)
         val existingFollow = followRepository.save(
             Follow(
                 userId = 1,

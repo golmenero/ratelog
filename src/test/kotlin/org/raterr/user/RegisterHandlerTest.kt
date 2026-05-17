@@ -1,17 +1,11 @@
 package org.raterr.user
 
-import arrow.core.Either
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
-import org.raterr.rating.Rating
 import org.raterr.rating.InMemoryRatingRepository
-import org.raterr.user.InMemoryUserRepository
+import org.raterr.rating.Rating
 import org.raterr.user.register.RegisterHandler
 import org.raterr.user.register.RegisterHandlerError
 import org.raterr.user.register.RegisterUser
@@ -20,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 class RegisterHandlerTest {
 
     private val userRepository = InMemoryUserRepository()
-    private val passwordEncoder: PasswordEncoder = mock()
+    private val passwordEncoder = FakePasswordEncoder()
     private val ratingRepository = InMemoryRatingRepository()
     private val handler = RegisterHandler(userRepository, passwordEncoder, ratingRepository)
 
@@ -28,63 +22,80 @@ class RegisterHandlerTest {
     fun setUp() {
         userRepository.clear()
         ratingRepository.clear()
+        passwordEncoder.clear()
     }
 
     @Test
     fun `happy path returns Right`() {
-        whenever(passwordEncoder.encode("password123")).thenReturn("hashed")
-
         val result = handler.handle(RegisterUser("testuser", "test@example.com", "password123"))
 
-        Assertions.assertTrue(result.isRight())
+        assertTrue(result.isRight())
     }
 
     @Test
     fun `blank username returns EmptyFields`() {
         val result = handler.handle(RegisterUser("", "test@example.com", "password123"))
 
-        Assertions.assertTrue(result.isLeft())
-        Assertions.assertTrue((result as Either.Left).value is RegisterHandlerError.EmptyFields)
+        assertTrue(result.isLeft())
+        result.fold(
+            { assertTrue(it is RegisterHandlerError.EmptyFields) },
+            { }
+        )
     }
 
     @Test
     fun `blank email returns EmptyFields`() {
         val result = handler.handle(RegisterUser("testuser", "", "password123"))
 
-        Assertions.assertTrue(result.isLeft())
-        Assertions.assertTrue((result as Either.Left).value is RegisterHandlerError.EmptyFields)
+        assertTrue(result.isLeft())
+        result.fold(
+            { assertTrue(it is RegisterHandlerError.EmptyFields) },
+            { }
+        )
     }
 
     @Test
     fun `blank password returns EmptyFields`() {
         val result = handler.handle(RegisterUser("testuser", "test@example.com", ""))
 
-        Assertions.assertTrue(result.isLeft())
-        Assertions.assertTrue((result as Either.Left).value is RegisterHandlerError.EmptyFields)
+        assertTrue(result.isLeft())
+        result.fold(
+            { assertTrue(it is RegisterHandlerError.EmptyFields) },
+            { }
+        )
     }
 
     @Test
     fun `username too short returns InvalidUsernameLength`() {
         val result = handler.handle(RegisterUser("ab", "test@example.com", "password123"))
 
-        Assertions.assertTrue(result.isLeft())
-        Assertions.assertTrue((result as Either.Left).value is RegisterHandlerError.InvalidUsernameLength)
+        assertTrue(result.isLeft())
+        result.fold(
+            { assertTrue(it is RegisterHandlerError.InvalidUsernameLength) },
+            { }
+        )
     }
 
     @Test
     fun `username too long returns InvalidUsernameLength`() {
         val result = handler.handle(RegisterUser("a".repeat(51), "test@example.com", "password123"))
 
-        Assertions.assertTrue(result.isLeft())
-        Assertions.assertTrue((result as Either.Left).value is RegisterHandlerError.InvalidUsernameLength)
+        assertTrue(result.isLeft())
+        result.fold(
+            { assertTrue(it is RegisterHandlerError.InvalidUsernameLength) },
+            { }
+        )
     }
 
     @Test
     fun `password too short returns InvalidPasswordLength`() {
         val result = handler.handle(RegisterUser("testuser", "test@example.com", "1234567"))
 
-        Assertions.assertTrue(result.isLeft())
-        Assertions.assertTrue((result as Either.Left).value is RegisterHandlerError.InvalidPasswordLength)
+        assertTrue(result.isLeft())
+        result.fold(
+            { assertTrue(it is RegisterHandlerError.InvalidPasswordLength) },
+            { }
+        )
     }
 
     @Test
@@ -93,8 +104,11 @@ class RegisterHandlerTest {
 
         val result = handler.handle(RegisterUser("testuser", "other@example.com", "password123"))
 
-        Assertions.assertTrue(result.isLeft())
-        Assertions.assertTrue((result as Either.Left).value is RegisterHandlerError.UsernameAlreadyExists)
+        assertTrue(result.isLeft())
+        result.fold(
+            { assertTrue(it is RegisterHandlerError.UsernameAlreadyExists) },
+            { }
+        )
     }
 
     @Test
@@ -103,14 +117,16 @@ class RegisterHandlerTest {
 
         val result = handler.handle(RegisterUser("testuser", "test@example.com", "password123"))
 
-        Assertions.assertTrue(result.isLeft())
-        Assertions.assertTrue((result as Either.Left).value is RegisterHandlerError.EmailAlreadyExists)
+        assertTrue(result.isLeft())
+        result.fold(
+            { assertTrue(it is RegisterHandlerError.EmailAlreadyExists) },
+            { }
+        )
     }
 
     @Test
     fun `migrates orphan ratings to new user`() {
-        whenever(passwordEncoder.encode("password123")).thenReturn("hashed")
-        val orphanRating = ratingRepository.save(
+        ratingRepository.save(
             Rating(
                 id = 1,
                 movieId = 10,
@@ -131,4 +147,18 @@ class RegisterHandlerTest {
         assertEquals(1, migratedRatings.size)
         assertEquals(savedUser.id, migratedRatings[0].userId)
     }
+}
+
+class FakePasswordEncoder : PasswordEncoder {
+    private val store = mutableMapOf<String, String>()
+
+    fun clear() {
+        store.clear()
+    }
+
+    override fun encode(rawPassword: CharSequence): String =
+        store.getOrPut(rawPassword.toString()) { "hashed_${rawPassword}" }
+
+    override fun matches(rawPassword: CharSequence, encodedPassword: String): Boolean =
+        encode(rawPassword) == encodedPassword
 }

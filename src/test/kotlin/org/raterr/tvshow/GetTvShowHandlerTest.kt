@@ -1,18 +1,11 @@
 package org.raterr.tvshow
 
-import arrow.core.left
-import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.raterr.TmdbId
-import org.raterr.tvshow.InMemoryTvShowRepository
-import org.raterr.tmdb.TmdbClient
-import org.raterr.tmdb.TmdbError
+import org.raterr.tmdb.FakeTmdbClient
 import org.raterr.tmdb.TmdbGenre
 import org.raterr.tmdb.TmdbTvShow
 import org.raterr.tvshow.get.GetTvShow
@@ -20,9 +13,9 @@ import org.raterr.tvshow.get.GetTvShowHandler
 
 class GetTvShowHandlerTest {
 
-    private val tmdbClient: TmdbClient = mock()
     private val tvShowRepository = InMemoryTvShowRepository()
-    private val handler = GetTvShowHandler(tmdbClient, tvShowRepository)
+    private lateinit var tmdbClient: FakeTmdbClient
+    private lateinit var handler: GetTvShowHandler
 
     @BeforeEach
     fun setUp() {
@@ -31,18 +24,20 @@ class GetTvShowHandlerTest {
 
     @Test
     fun `creates new tvshow when not in repo`() {
-        val tmdbShow = TmdbTvShow(
-            id = 456,
-            name = "Test Show",
-            originalName = "Original Show",
-            overview = "Show Overview",
-            firstAirDate = "2024-03-15",
-            posterPath = "/show-poster.jpg",
-            voteAverage = 8.2,
-            genres = listOf(TmdbGenre(1, "Drama")),
-            status = "Running"
-        )
-        whenever(tmdbClient.tvShowDetails(456)).thenReturn(tmdbShow.right())
+        tmdbClient = FakeTmdbClient(tvShows = mapOf(
+            456 to TmdbTvShow(
+                id = 456,
+                name = "Test Show",
+                originalName = "Original Show",
+                overview = "Show Overview",
+                firstAirDate = "2024-03-15",
+                posterPath = "/show-poster.jpg",
+                voteAverage = 8.2,
+                genres = listOf(TmdbGenre(1, "Drama")),
+                status = "Running"
+            )
+        ))
+        handler = GetTvShowHandler(tmdbClient, tvShowRepository)
 
         val result = handler.handle(GetTvShow(TmdbId(456)))
 
@@ -75,18 +70,20 @@ class GetTvShowHandlerTest {
                 genres = "Action"
             )
         )
-        val tmdbShow = TmdbTvShow(
-            id = 456,
-            name = "New Name",
-            originalName = "New Original",
-            overview = "New Overview",
-            firstAirDate = "2024-09-01",
-            posterPath = "/new.jpg",
-            voteAverage = 9.0,
-            genres = listOf(TmdbGenre(3, "Sci-Fi")),
-            status = "Ended"
-        )
-        whenever(tmdbClient.tvShowDetails(456)).thenReturn(tmdbShow.right())
+        tmdbClient = FakeTmdbClient(tvShows = mapOf(
+            456 to TmdbTvShow(
+                id = 456,
+                name = "New Name",
+                originalName = "New Original",
+                overview = "New Overview",
+                firstAirDate = "2024-09-01",
+                posterPath = "/new.jpg",
+                voteAverage = 9.0,
+                genres = listOf(TmdbGenre(3, "Sci-Fi")),
+                status = "Ended"
+            )
+        ))
+        handler = GetTvShowHandler(tmdbClient, tvShowRepository)
 
         val result = handler.handle(GetTvShow(TmdbId(456)))
 
@@ -99,9 +96,10 @@ class GetTvShowHandlerTest {
 
     @Test
     fun `returns TvShowNotFound when TMDB fails`() {
-        whenever(tmdbClient.tvShowDetails(456)).thenReturn(TmdbError.TvShowNotFound.left())
+        tmdbClient = FakeTmdbClient()
+        handler = GetTvShowHandler(tmdbClient, tvShowRepository)
 
-        val result = handler.handle(GetTvShow(TmdbId(456)))
+        val result = handler.handle(GetTvShow(TmdbId(999)))
 
         assertTrue(result.isLeft())
     }

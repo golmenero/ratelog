@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
 @Component
-class TmdbClient(
+open class TmdbClient(
     @Value("\${raterr.tmdb.api-key}")
     private val apiKey: String,
 
@@ -23,7 +23,7 @@ class TmdbClient(
         .build()
 
     @Cacheable(value = ["tmdb-search-movies"], key = "#query")
-    fun searchMovies(query: String): Either<TmdbError, List<TmdbMovie>> {
+    open fun searchMovies(query: String): Either<TmdbError, List<TmdbMovie>> {
         if (query.isBlank()) return emptyList<TmdbMovie>().right()
         requireApiKey()
 
@@ -46,7 +46,7 @@ class TmdbClient(
     }
 
     @Cacheable(value = ["tmdb-movie-details"], key = "#tmdbId")
-    fun movieDetails(tmdbId: Int): Either<TmdbError, TmdbMovie> {
+    open fun movieDetails(tmdbId: Int): Either<TmdbError, TmdbMovie> {
         requireApiKey()
 
         return restClient.get()
@@ -63,7 +63,7 @@ class TmdbClient(
     }
 
     @Cacheable(value = ["tmdb-search-tvshows"], key = "#query")
-    fun searchTvShows(query: String): Either<TmdbError, List<TmdbTvShow>> {
+    open fun searchTvShows(query: String): Either<TmdbError, List<TmdbTvShow>> {
         if (query.isBlank()) return emptyList<TmdbTvShow>().right()
         requireApiKey()
 
@@ -86,7 +86,7 @@ class TmdbClient(
     }
 
     @Cacheable(value = ["tmdb-tvshow-details"], key = "#tmdbId")
-    fun tvShowDetails(tmdbId: Int): Either<TmdbError, TmdbTvShow> {
+    open fun tvShowDetails(tmdbId: Int): Either<TmdbError, TmdbTvShow> {
         requireApiKey()
 
         return restClient.get()
