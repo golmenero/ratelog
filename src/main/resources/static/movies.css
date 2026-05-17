@@ -423,7 +423,17 @@
   flex-shrink: 0;
 }
 
+.star-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
 .star-filled {
+  position: absolute;
+  top: 0;
+  left: 0;
   color: var(--accent);
   font-size: 1rem;
 }

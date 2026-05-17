@@ -5,8 +5,10 @@
 <th:block th:fragment="scoreBlock(averageScore, directing, cinematography, acting, soundtrack, screenplay)">
     <div class="rating-display">
         <span th:each="i : ${#numbers.sequence(1, 5)}">
-            <span th:if="${averageScore >= i * 2}" class="star-filled">&#9733;</span>
-            <span th:unless="${averageScore >= i * 2}" class="star-empty">&#9734;</span>
+            <span class="star-wrapper">
+                <span class="star-empty">&#9734;</span>
+                <span class="star-filled" th:style="${averageScore >= i * 2} ? 'clip-path: inset(0 0 0 0);' : (${averageScore > (i - 1) * 2} ? 'clip-path: inset(0 ' + ${((i * 2 - averageScore) * 50)} + '% 0 0);' : 'clip-path: inset(0 100% 0 0);')">&#9733;</span>
+            </span>
         </span>
         <span class="rating-score-value" th:text="${#strings.replace(#numbers.formatDecimal(averageScore, 1, 2), ',', '.')}">0.0</span>
     </div>
@@ -37,8 +39,10 @@
 <th:block th:fragment="feedScoreBlock(score)">
     <div class="rating-display">
         <span th:each="i : ${#numbers.sequence(1, 5)}">
-            <span th:if="${score >= i * 2}" class="star-filled">&#9733;</span>
-            <span th:unless="${score >= i * 2}" class="star-empty">&#9734;</span>
+            <span class="star-wrapper">
+                <span class="star-empty">&#9734;</span>
+                <span class="star-filled" th:style="${score >= i * 2} ? 'clip-path: inset(0 0 0 0);' : (${score > (i - 1) * 2} ? 'clip-path: inset(0 ' + ${((i * 2 - score) * 50)} + '% 0 0);' : 'clip-path: inset(0 100% 0 0);')">&#9733;</span>
+            </span>
         </span>
         <span class="rating-score-value" th:text="${#strings.replace(#numbers.formatDecimal(score, 1, 2), ',', '.')}">0.0</span>
     </div>
