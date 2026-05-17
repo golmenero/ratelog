@@ -43,7 +43,7 @@ class AddRatingController(
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
-                    "redirect:/movie/top"
+                    "redirect:/movies"
                 }
             )
 

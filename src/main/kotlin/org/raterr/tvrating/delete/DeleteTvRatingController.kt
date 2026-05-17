@@ -15,7 +15,7 @@ class DeleteTvRatingController(
     private val handler: DeleteTvRatingHandler,
 ) {
 
-    @PostMapping("/tv/top/delete/{id}")
+    @PostMapping("/tvshows/delete/{id}")
     @Transactional
     fun deleteRating(
         @CurrentUser user: User,
@@ -30,11 +30,11 @@ class DeleteTvRatingController(
             .fold(
                 {
                     redirectAttributes.addFlashAttribute("error", it)
-                    "redirect:/tv/top"
+                    "redirect:/tvshows"
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "Rating deleted successfully.")
-                    "redirect:/tv/top"
+                    "redirect:/tvshows"
                 }
             )
 

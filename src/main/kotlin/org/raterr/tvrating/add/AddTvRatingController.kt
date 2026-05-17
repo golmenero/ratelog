@@ -43,7 +43,7 @@ class AddTvRatingController(
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
-                    "redirect:/tv/top"
+                    "redirect:/tvshows"
                 }
             )
 

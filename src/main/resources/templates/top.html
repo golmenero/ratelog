@@ -23,7 +23,7 @@
         <section class="panel">
             <div class="section-heading">
                 <div class="heading-filter">
-                    <form th:action="@{/movie/top}" method="get" style="display: contents;">
+                    <form th:action="@{/movies}" method="get" style="display: contents;">
                         <select id="category" name="category" aria-label="Filter by category">
                             <option value="">All categories</option>
                             <option value="Action" th:selected="${selectedCategory == 'Action'}">Action</option>
@@ -80,7 +80,7 @@
                         <div th:replace="~{fragments/score :: scoreBlock(${m.averageScore}, ${m.directing}, ${m.cinematography}, ${m.acting}, ${m.soundtrack}, ${m.screenplay})}"></div>
                     </div>
                     <div class="top-actions">
-                        <form th:action="@{'/movie/top/delete/' + ${m.tmdbId}}" method="post">
+                        <form th:action="@{'/movies/delete/' + ${m.tmdbId}}" method="post">
                             <button class="top-delete-button" type="submit" aria-label="Delete rating">
                                 <i data-lucide="trash-2" aria-hidden="true"></i>
                             </button>

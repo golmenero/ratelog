@@ -97,12 +97,12 @@ Compose services:
 | `POST` | `/logout` | Logout |
 | `GET` | `/movie/rate?id=X` | Movie rating page |
 | `POST` | `/movie/rate` | Submit movie rating |
-| `POST` | `/movie/top/delete/{id}` | Delete movie rating |
-| `GET` | `/movie/top` | Top movies (query: `limit`, `year`, `category`) |
+| `POST` | `/movies/delete/{id}` | Delete movie rating |
+| `GET` | `/movies` | Top movies (query: `limit`, `year`, `category`) |
 | `GET` | `/tv/rate?id=X` | TV show rating page |
 | `POST` | `/tv/rate` | Submit TV show rating |
-| `POST` | `/tv/top/delete/{id}` | Delete TV show rating |
-| `GET` | `/tv/top` | Top TV shows (query: `limit`, `year`, `category`) |
+| `POST` | `/tvshows/delete/{id}` | Delete TV show rating |
+| `GET` | `/tvshows` | Top TV shows (query: `limit`, `year`, `category`) |
 | `POST` | `/follow` | Toggle follow/unfollow (params: `tmdbId`, `type`, `q`) |
 | `GET` | `/premieres` | Followed content timeline |
 

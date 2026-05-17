@@ -29,7 +29,7 @@ class TopTvShowController(
     private val handler: TopTvShowHandler,
 ) {
 
-    @GetMapping("/tv/top")
+    @GetMapping("/tvshows")
     fun topsPage(
         @CurrentUser user: User,
         @RequestParam("year", required = false) year: Int?,

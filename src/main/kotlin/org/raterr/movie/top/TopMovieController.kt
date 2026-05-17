@@ -32,7 +32,7 @@ class TopMovieController(
     private val handler: TopMovieHandler,
 ) {
 
-    @GetMapping("/movie/top")
+    @GetMapping("/movies")
     fun topsPage(
         @CurrentUser user: User,
         @RequestParam("year", required = false) year: Int?,
