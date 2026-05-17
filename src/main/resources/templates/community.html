@@ -37,13 +37,7 @@
                                     <div class="feed-user-avatar" th:text="${#strings.toUpperCase(#strings.substring(item.username, 0, 1))}">U</div>
                                     <span class="feed-user-name" th:text="${item.username}">Username</span>
                                 </div>
-                                <div class="feed-rating">
-                                    <span th:each="i : ${#numbers.sequence(1, 5)}">
-                                        <span th:if="${item.score >= i * 2}" class="feed-star-filled">★</span>
-                                        <span th:unless="${item.score >= i * 2}" class="feed-star-empty">☆</span>
-                                    </span>
-                                    <span class="feed-score-value" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.0</span>
-                                </div>
+                                <div th:replace="~{fragments/score :: feedScoreBlock(${item.score})}"></div>
                             </div>
                             <div class="feed-content-row">
                                 <span class="feed-title" th:text="${item.title}">Title</span>

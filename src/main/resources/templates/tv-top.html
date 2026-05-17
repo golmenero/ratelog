@@ -79,35 +79,7 @@
                             <span class="tag" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : 'Unknown year'">Year</span>
                         </div>
                         <h3 class="top-title" th:text="${s.name}">Title</h3>
-                        <p class="rating-inline compact-stars">
-                            <span th:each="i : ${#numbers.sequence(1, 5)}">
-                                <span th:if="${s.averageScore >= i * 2}">&#9733;</span>
-                                <span th:unless="${s.averageScore >= i * 2}">&#9734;</span>
-                            </span>
-                            <span class="score-value" th:text="${#strings.replace(#numbers.formatDecimal(s.averageScore, 1, 2), ',', '.')}">0.0</span>
-                        </p>
-                        <div class="category-ratings">
-                            <div class="category-rating">
-                                <span class="category-label"><i data-lucide="clapperboard" class="category-icon"></i></span>
-                                <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(s.directing, 1, 2), ',', '.')}">0.0</span>
-                            </div>
-                            <div class="category-rating">
-                                <span class="category-label"><i data-lucide="camera" class="category-icon"></i></span>
-                                <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(s.cinematography, 1, 2), ',', '.')}">0.0</span>
-                            </div>
-                            <div class="category-rating">
-                                <span class="category-label"><i data-lucide="hat-glasses" class="category-icon"></i></span>
-                                <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(s.acting, 1, 2), ',', '.')}">0.0</span>
-                            </div>
-                            <div class="category-rating">
-                                <span class="category-label"><i data-lucide="music" class="category-icon"></i></span>
-                                <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(s.soundtrack, 1, 2), ',', '.')}">0.0</span>
-                            </div>
-                            <div class="category-rating">
-                                <span class="category-label"><i data-lucide="file-text" class="category-icon"></i></span>
-                                <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(s.screenplay, 1, 2), ',', '.')}">0.0</span>
-                            </div>
-                        </div>
+                        <div th:replace="~{fragments/score :: scoreBlock(${s.averageScore}, ${s.directing}, ${s.cinematography}, ${s.acting}, ${s.soundtrack}, ${s.screenplay})}"></div>
                     </div>
                     <div class="top-actions">
                         <form th:action="@{'/tv/top/delete/' + ${s.tmdbId}}" method="post">

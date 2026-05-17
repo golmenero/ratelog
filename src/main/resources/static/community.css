@@ -99,28 +99,7 @@
   font-family: var(--font-ui);
 }
 
-.feed-rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
 
-.feed-star-filled {
-  color: var(--accent);
-  font-size: 1rem;
-}
-
-.feed-star-empty {
-  color: var(--text-soft);
-  font-size: 1rem;
-}
-
-.feed-score-value {
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--text-soft);
-}
 
 .feed-content-row {
   display: flex;

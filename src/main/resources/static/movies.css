@@ -412,23 +412,27 @@
   margin-top: 4px;
 }
 
-.rating-inline {
-  display: inline-flex;
+.rating-display {
+  display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.star-filled {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.star-empty {
   color: var(--text-soft);
-  font-family: var(--font-ui);
+  font-size: 1rem;
+}
+
+.rating-score-value {
   font-weight: 600;
-}
-
-.stars {
-  color: hsl(var(--_brand-clay));
-  letter-spacing: 0.08em;
-  font-size: 0.95rem;
-}
-
-.compact-stars {
-  margin-top: 8px;
+  font-size: 0.92rem;
+  color: var(--text-soft);
 }
 
 .category-ratings {

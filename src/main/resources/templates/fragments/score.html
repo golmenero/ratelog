@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="scoreBlock(averageScore, directing, cinematography, acting, soundtrack, screenplay)">
+    <div class="rating-display">
+        <span th:each="i : ${#numbers.sequence(1, 5)}">
+            <span th:if="${averageScore >= i * 2}" class="star-filled">&#9733;</span>
+            <span th:unless="${averageScore >= i * 2}" class="star-empty">&#9734;</span>
+        </span>
+        <span class="rating-score-value" th:text="${#strings.replace(#numbers.formatDecimal(averageScore, 1, 2), ',', '.')}">0.0</span>
+    </div>
+    <div class="category-ratings">
+        <div class="category-rating">
+            <span class="category-label"><i data-lucide="clapperboard" class="category-icon"></i></span>
+            <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(directing, 1, 2), ',', '.')}">0.0</span>
+        </div>
+        <div class="category-rating">
+            <span class="category-label"><i data-lucide="camera" class="category-icon"></i></span>
+            <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(cinematography, 1, 2), ',', '.')}">0.0</span>
+        </div>
+        <div class="category-rating">
+            <span class="category-label"><i data-lucide="hat-glasses" class="category-icon"></i></span>
+            <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(acting, 1, 2), ',', '.')}">0.0</span>
+        </div>
+        <div class="category-rating">
+            <span class="category-label"><i data-lucide="music" class="category-icon"></i></span>
+            <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(soundtrack, 1, 2), ',', '.')}">0.0</span>
+        </div>
+        <div class="category-rating">
+            <span class="category-label"><i data-lucide="file-text" class="category-icon"></i></span>
+            <span class="category-score" th:text="${#strings.replace(#numbers.formatDecimal(screenplay, 1, 2), ',', '.')}">0.0</span>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="feedScoreBlock(score)">
+    <div class="rating-display">
+        <span th:each="i : ${#numbers.sequence(1, 5)}">
+            <span th:if="${score >= i * 2}" class="star-filled">&#9733;</span>
+            <span th:unless="${score >= i * 2}" class="star-empty">&#9734;</span>
+        </span>
+        <span class="rating-score-value" th:text="${#strings.replace(#numbers.formatDecimal(score, 1, 2), ',', '.')}">0.0</span>
+    </div>
+</th:block>
+
+</body>
+</html>
