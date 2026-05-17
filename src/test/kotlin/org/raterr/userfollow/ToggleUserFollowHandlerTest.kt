@@ -1,5 +1,6 @@
-package org.raterr.follow
+package org.raterr.userfollow
 
+import arrow.core.Either
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -11,7 +12,6 @@ import org.raterr.userfollow.toggleuser.ToggleUserFollowHandler
 import org.raterr.userfollow.toggleuser.ToggleUserFollowHandlerError
 import org.raterr.user.User
 import org.raterr.user.UserRepository
-import org.raterr.userfollow.UserFollow
 import java.util.Optional
 
 class ToggleUserFollowHandlerTest {
@@ -31,6 +31,8 @@ class ToggleUserFollowHandlerTest {
         val followed = User(id = 2, username = "followed", email = "followed@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000)
         whenever(userRepository.findByUsername("followed")).thenReturn(Optional.of(followed))
 
+        userFollowRepository.addUser(2, "followed")
+
         val result = handler.handle(ToggleUserFollow(UserId(1), "followed"))
 
         assertTrue(result.isRight())
@@ -47,7 +49,7 @@ class ToggleUserFollowHandlerTest {
         val result = handler.handle(ToggleUserFollow(UserId(1), "nonexistent"))
 
         assertTrue(result.isLeft())
-        val error = (result as arrow.core.Either.Left).value
+        val error = (result as Either.Left).value
         assertTrue(error is ToggleUserFollowHandlerError.UserNotFound)
     }
 
@@ -59,7 +61,7 @@ class ToggleUserFollowHandlerTest {
         val result = handler.handle(ToggleUserFollow(UserId(1), "self"))
 
         assertTrue(result.isLeft())
-        val error = (result as arrow.core.Either.Left).value
+        val error = (result as Either.Left).value
         assertTrue(error is ToggleUserFollowHandlerError.CannotFollowYourself)
     }
 
@@ -69,6 +71,7 @@ class ToggleUserFollowHandlerTest {
         val followed = User(id = 2, username = "followed", email = "followed@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000)
         whenever(userRepository.findByUsername("followed")).thenReturn(Optional.of(followed))
 
+        userFollowRepository.addUser(2, "followed")
         userFollowRepository.save(UserFollow(followerId = 1, followedId = 2))
 
         val result = handler.handle(ToggleUserFollow(UserId(1), "followed"))
@@ -83,6 +86,8 @@ class ToggleUserFollowHandlerTest {
         val follower = User(id = 1, username = "follower", email = "follower@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000)
         val followed = User(id = 2, username = "followed", email = "followed@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000)
         whenever(userRepository.findByUsername("followed")).thenReturn(Optional.of(followed))
+
+        userFollowRepository.addUser(2, "followed")
 
         handler.handle(ToggleUserFollow(UserId(1), "followed"))
         handler.handle(ToggleUserFollow(UserId(1), "followed"))

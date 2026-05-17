@@ -1,8 +1,5 @@
-package org.raterr.follow
+package org.raterr.userfollow
 
-import org.raterr.userfollow.UserFollow
-import org.raterr.userfollow.UserFollowRepository
-import org.raterr.userfollow.UserFollowWithUsername
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicLong
 

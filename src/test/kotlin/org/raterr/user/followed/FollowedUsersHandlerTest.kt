@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.raterr.UserId
-import org.raterr.follow.InMemoryUserFollowRepository
+import org.raterr.userfollow.InMemoryUserFollowRepository
 import org.raterr.userfollow.UserFollow
 
 class FollowedUsersHandlerTest {
