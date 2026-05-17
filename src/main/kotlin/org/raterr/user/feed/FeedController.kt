@@ -33,7 +33,7 @@ class FeedController(
                     { model.addAttribute("feed", it) }
                 )
 
-            FollowedUsersQuery(UserId(user.id!!)).let(followedUsersHandler::handle)
+            FollowedUsersQuery(UserId(user.id)).let(followedUsersHandler::handle)
                 .fold(
                     { },
                     { model.addAttribute("followedUsers", it) }

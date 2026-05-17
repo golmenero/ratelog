@@ -1,4 +1,4 @@
-package org.raterr.follow.toggle
+package org.raterr.userfollow.toggleuser
 
 import org.raterr.UserId
 import org.raterr.annotations.CurrentUser

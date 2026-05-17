@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
 import org.raterr.UserId
-import org.raterr.follow.UserFollowRepository
+import org.raterr.userfollow.UserFollowRepository
 import org.raterr.movie.MovieRepository
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository

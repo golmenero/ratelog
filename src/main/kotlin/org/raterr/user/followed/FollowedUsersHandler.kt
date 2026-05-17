@@ -3,7 +3,7 @@ package org.raterr.user.followed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.UserId
-import org.raterr.follow.UserFollowRepository
+import org.raterr.userfollow.UserFollowRepository
 import org.springframework.stereotype.Service
 
 data class FollowedUsersQuery(

@@ -1,5 +1,8 @@
 package org.raterr.follow
 
+import org.raterr.userfollow.UserFollow
+import org.raterr.userfollow.UserFollowRepository
+import org.raterr.userfollow.UserFollowWithUsername
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicLong
 
@@ -49,6 +52,9 @@ class InMemoryUserFollowRepository : UserFollowRepository {
 
     override fun findFollowersByUserId(userId: Long): List<UserFollow> =
         storage.filter { it.followedId == userId }
+
+    override fun findFollowedUserIds(userId: Long): List<Long>  =
+        storage.filter { it.followerId == userId }.map { it.followedId }
 
     override fun <S : UserFollow> save(entity: S): S {
         @Suppress("UNCHECKED_CAST")

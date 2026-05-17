@@ -1,4 +1,4 @@
-package org.raterr.follow
+package org.raterr.userfollow
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column

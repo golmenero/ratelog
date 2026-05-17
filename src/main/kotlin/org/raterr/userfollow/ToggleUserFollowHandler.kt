@@ -1,9 +1,10 @@
-package org.raterr.follow.toggle
+package org.raterr.userfollow.toggleuser
 
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.UserId
-import org.raterr.follow.UserFollowRepository
+import org.raterr.userfollow.UserFollow
+import org.raterr.userfollow.UserFollowRepository
 import org.raterr.user.UserRepository
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
@@ -39,7 +40,7 @@ class ToggleUserFollowHandler(
             userFollowRepository.findByFollowerIdAndFollowedId(followerId, followedId)
                 .ifPresent(userFollowRepository::delete)
         } else {
-            org.raterr.follow.UserFollow(
+            UserFollow(
                 followerId = followerId,
                 followedId = followedId,
             ).let(userFollowRepository::save)

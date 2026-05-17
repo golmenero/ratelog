@@ -1,17 +1,17 @@
 package org.raterr.follow
 
-import arrow.core.Either
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.raterr.UserId
-import org.raterr.follow.toggle.ToggleUserFollow
-import org.raterr.follow.toggle.ToggleUserFollowHandler
-import org.raterr.follow.toggle.ToggleUserFollowHandlerError
+import org.raterr.userfollow.toggleuser.ToggleUserFollow
+import org.raterr.userfollow.toggleuser.ToggleUserFollowHandler
+import org.raterr.userfollow.toggleuser.ToggleUserFollowHandlerError
 import org.raterr.user.User
 import org.raterr.user.UserRepository
+import org.raterr.userfollow.UserFollow
 import java.util.Optional
 
 class ToggleUserFollowHandlerTest {

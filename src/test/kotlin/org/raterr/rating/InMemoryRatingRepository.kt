@@ -6,10 +6,16 @@ import java.util.concurrent.atomic.AtomicLong
 class InMemoryRatingRepository : RatingRepository {
 
     private val storage = mutableListOf<Rating>()
+    private val users = mutableMapOf<Long, String>()
     private val idGenerator = AtomicLong(1)
+
+    fun addUser(id: Long, username: String) {
+        users[id] = username
+    }
 
     fun clear() {
         storage.clear()
+        users.clear()
         idGenerator.set(1)
     }
 
@@ -89,4 +95,23 @@ class InMemoryRatingRepository : RatingRepository {
             .take(limit)
         return filtered
     }
+
+    override fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<RatingWithUsername> =
+        storage
+            .filter { it.userId in userIds && it.createdAtEpochMs >= sinceEpochMs }
+            .sortedByDescending { it.createdAtEpochMs }
+            .map {
+                RatingWithUsername(
+                    id = it.id,
+                    movieId = it.movieId,
+                    userId = it.userId,
+                    directing = it.directing,
+                    cinematography = it.cinematography,
+                    acting = it.acting,
+                    soundtrack = it.soundtrack,
+                    screenplay = it.screenplay,
+                    createdAtEpochMs = it.createdAtEpochMs,
+                    username = users[it.userId] ?: ""
+                )
+            }
 }
