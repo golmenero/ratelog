@@ -74,11 +74,13 @@
                             <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${s.posterPath}}" th:alt="'Poster of ' + ${s.name}">
                         </div>
                         <div class="top-info">
-                            <div class="tag-row top-tag-row">
-                                <span class="tag" th:text="'#' + ${s.rank}">#1</span>
-                                <span class="tag" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : 'Unknown year'">Year</span>
+                            <div class="top-header-row">
+                                <span class="top-rank-num" th:text="${s.rank}">#1</span>
+                                <span class="top-title-wrap">
+                                    <h3 class="top-title" th:text="${s.name}">Title</h3>
+                                    <span class="top-year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : 'Unknown year'">Year</span>
+                                </span>
                             </div>
-                            <h3 class="top-title" th:text="${s.name}">Title</h3>
                             <div th:replace="~{fragments/score :: scoreBlock(${s.averageScore}, ${s.directing}, ${s.cinematography}, ${s.acting}, ${s.soundtrack}, ${s.screenplay})}"></div>
                         </div>
                         <div class="top-actions">

@@ -365,7 +365,7 @@
 .top-card {
   padding: 20px;
   display: grid;
-  grid-template-columns: 96px minmax(0, 1fr) auto;
+  grid-template-columns: 80px minmax(0, 1fr) auto;
   gap: 18px;
   align-items: start;
 
@@ -379,8 +379,8 @@
 }
 
 .top-poster {
-  width: 96px;
-  min-height: 136px;
+  width: 80px;
+  min-height: 114px;
   border-radius: 18px;
 
   .poster-fallback {
@@ -394,8 +394,49 @@
   align-items: flex-start;
 }
 
-.top-tag-row {
-  margin-bottom: 10px;
+.top-header-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  width: 100%;
+}
+
+.top-rank-num {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-right: 10px;
+}
+
+.top-title-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-title {
+  min-width: 0;
+  font-size: 1.3rem;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-year {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  opacity: 0.5;
 }
 
 .top-rank {
