@@ -82,7 +82,6 @@ class InMemoryTvRatingRepository : TvRatingRepository {
 
     override fun findByUserIdWithFilters(
         userId: Long,
-        year: Int?,
         category: String?,
         limit: Int,
         name: String?

@@ -51,32 +51,11 @@ class TopTvShowHandlerTest {
             )
         )
 
-        val result = handler.handle(TopTvShow(UserId(1), null, null, 10, null))
+        val result = handler.handle(TopTvShow(UserId(1), null, 10, null))
 
         assertEquals(2, result.size)
         assertEquals("Show1", result[0].second.name)
         assertEquals("Show2", result[1].second.name)
-    }
-
-    @Test
-    fun `filters by year`() {
-        val show = tvShowRepository.save(TvShow(tmdbId = 100, name = "Show"))
-        tvRatingRepository.save(
-            TvRating(
-                tvShowId = show.id!!,
-                userId = 1,
-                directing = 5.0,
-                cinematography = 5.0,
-                acting = 5.0,
-                soundtrack = 5.0,
-                screenplay = 5.0,
-                createdAtEpochMs = System.currentTimeMillis()
-            )
-        )
-
-        val result = handler.handle(TopTvShow(UserId(1), 2024, null, 10, null))
-
-        assertEquals(1, result.size)
     }
 
     @Test
@@ -95,7 +74,7 @@ class TopTvShowHandlerTest {
             )
         )
 
-        val result = handler.handle(TopTvShow(UserId(1), null, "Drama", 10, null))
+        val result = handler.handle(TopTvShow(UserId(1), "Drama", 10, null))
 
         assertEquals(1, result.size)
     }
@@ -116,21 +95,21 @@ class TopTvShowHandlerTest {
             )
         )
 
-        val result = handler.handle(TopTvShow(UserId(1), null, null, 10, "Test"))
+        val result = handler.handle(TopTvShow(UserId(1), null, 10, "Test"))
 
         assertEquals(1, result.size)
     }
 
     @Test
     fun `limits results`() {
-        val result = handler.handle(TopTvShow(UserId(1), null, null, 3, null))
+        val result = handler.handle(TopTvShow(UserId(1), null, 3, null))
 
         assertEquals(0, result.size)
     }
 
     @Test
     fun `empty returns empty list`() {
-        val result = handler.handle(TopTvShow(UserId(1), null, null, 10, null))
+        val result = handler.handle(TopTvShow(UserId(1), null, 10, null))
 
         assertEquals(0, result.size)
     }

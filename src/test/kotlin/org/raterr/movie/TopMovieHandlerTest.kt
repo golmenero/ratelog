@@ -51,30 +51,9 @@ class TopMovieHandlerTest {
             )
         )
 
-        val result = handler.handle(TopMovie(UserId(1), null, null, 10, null))
+        val result = handler.handle(TopMovie(UserId(1), null, 10, null))
 
         assertEquals(2, result.size)
-    }
-
-    @Test
-    fun `filters by year`() {
-        val movie = movieRepository.save(Movie(tmdbId = 100, title = "Movie"))
-        ratingRepository.save(
-            Rating(
-                movieId = movie.id!!,
-                userId = 1,
-                directing = 5.0,
-                cinematography = 5.0,
-                acting = 5.0,
-                soundtrack = 5.0,
-                screenplay = 5.0,
-                createdAtEpochMs = System.currentTimeMillis()
-            )
-        )
-
-        val result = handler.handle(TopMovie(UserId(1), 2024, null, 10, null))
-
-        assertEquals(1, result.size)
     }
 
     @Test
@@ -93,7 +72,7 @@ class TopMovieHandlerTest {
             )
         )
 
-        val result = handler.handle(TopMovie(UserId(1), null, "Action", 10, null))
+        val result = handler.handle(TopMovie(UserId(1), "Action", 10, null))
 
         assertEquals(1, result.size)
     }
@@ -114,21 +93,21 @@ class TopMovieHandlerTest {
             )
         )
 
-        val result = handler.handle(TopMovie(UserId(1), null, null, 10, "Test"))
+        val result = handler.handle(TopMovie(UserId(1), null, 10, "Test"))
 
         assertEquals(1, result.size)
     }
 
     @Test
     fun `limits results`() {
-        val result = handler.handle(TopMovie(UserId(1), null, null, 3, null))
+        val result = handler.handle(TopMovie(UserId(1), null, 3, null))
 
         assertEquals(0, result.size)
     }
 
     @Test
     fun `empty returns empty list`() {
-        val result = handler.handle(TopMovie(UserId(1), null, null, 10, null))
+        val result = handler.handle(TopMovie(UserId(1), null, 10, null))
 
         assertEquals(0, result.size)
     }

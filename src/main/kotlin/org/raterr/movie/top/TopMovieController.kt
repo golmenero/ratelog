@@ -35,7 +35,6 @@ class TopMovieController(
     @GetMapping("/movies")
     fun topsPage(
         @CurrentUser user: User,
-        @RequestParam("year", required = false) year: Int?,
         @RequestParam("category", required = false) category: String?,
         @RequestParam("limit", required = false, defaultValue = "10") limit: Int,
         @RequestParam("name", required = false) name: String?,
@@ -43,14 +42,12 @@ class TopMovieController(
     ): String {
         val tops = TopMovie(
             userId = user.id!!.let(::UserId),
-            year = year,
             category = category,
             limit = limit,
             name = name
         ).let(handler::handle)
 
         model.addAttribute("tops", tops.let(::map))
-        model.addAttribute("selectedYear", year)
         model.addAttribute("selectedCategory", category)
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)

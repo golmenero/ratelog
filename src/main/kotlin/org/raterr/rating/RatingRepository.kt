@@ -23,7 +23,6 @@ interface RatingRepository : CrudRepository<Rating, Long> {
         SELECT r.* FROM ratings r
         JOIN movies m ON r.movie_id = m.id
         WHERE r.user_id = :userId
-          AND (:year IS NULL OR m.release_year = :year)
           AND (:category IS NULL OR LOWER(m.genres) LIKE '%' || LOWER(:category) || '%')
           AND (:name IS NULL OR LOWER(m.title) LIKE '%' || LOWER(:name) || '%')
         ORDER BY (r.directing + r.cinematography + r.acting + r.soundtrack + r.screenplay) DESC
@@ -32,7 +31,6 @@ interface RatingRepository : CrudRepository<Rating, Long> {
     )
     fun findByUserIdWithFilters(
         userId: Long,
-        year: Int?,
         category: String?,
         limit: Int,
         name: String?

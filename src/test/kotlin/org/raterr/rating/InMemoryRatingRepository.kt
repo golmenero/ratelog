@@ -85,7 +85,6 @@ class InMemoryRatingRepository : RatingRepository {
 
     override fun findByUserIdWithFilters(
         userId: Long,
-        year: Int?,
         category: String?,
         limit: Int,
         name: String?
