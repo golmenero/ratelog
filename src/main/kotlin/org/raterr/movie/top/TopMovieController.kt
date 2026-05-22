@@ -53,7 +53,7 @@ class TopMovieController(
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        MoviePremieresQuery(UserId(user.id!!)).let(moviePremieresHandler::handle)
+        MoviePremieresQuery(UserId(user.id)).let(moviePremieresHandler::handle)
             .fold(
                 { },
                 {

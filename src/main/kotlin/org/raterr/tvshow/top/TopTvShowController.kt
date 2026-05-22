@@ -53,7 +53,7 @@ class TopTvShowController(
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        TvShowPremieresQuery(UserId(user.id!!)).let(tvShowPremieresHandler::handle)
+        TvShowPremieresQuery(UserId(user.id)).let(tvShowPremieresHandler::handle)
             .fold(
                 { },
                 {

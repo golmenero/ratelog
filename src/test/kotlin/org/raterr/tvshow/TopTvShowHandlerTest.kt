@@ -54,8 +54,8 @@ class TopTvShowHandlerTest {
         val result = handler.handle(TopTvShow(UserId(1), null, 10, null))
 
         assertEquals(2, result.size)
-        assertEquals(1, result[0].rank)
-        assertEquals(2, result[1].rank)
+        assertEquals(1, result[0].rating.rank)
+        assertEquals(2, result[1].rating.rank)
         assertEquals("Show1", result[0].show.name)
     }
 
@@ -104,8 +104,8 @@ class TopTvShowHandlerTest {
         val result = handler.handle(TopTvShow(UserId(1), "Drama", 10, null))
 
         assertEquals(2, result.size)
-        assertEquals(1, result[0].rank)
-        assertEquals(3, result[1].rank)
+        assertEquals(1, result[0].rating.rank)
+        assertEquals(3, result[1].rating.rank)
     }
 
     @Test
@@ -127,7 +127,7 @@ class TopTvShowHandlerTest {
         val result = handler.handle(TopTvShow(UserId(1), null, 10, "Breaking"))
 
         assertEquals(1, result.size)
-        assertEquals(1, result[0].rank)
+        assertEquals(1, result[0].rating.rank)
     }
 
     @Test

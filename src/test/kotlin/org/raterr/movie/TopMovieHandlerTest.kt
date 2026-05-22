@@ -54,8 +54,8 @@ class TopMovieHandlerTest {
         val result = handler.handle(TopMovie(UserId(1), null, 10, null))
 
         assertEquals(2, result.size)
-        assertEquals(1, result[0].rank)
-        assertEquals(2, result[1].rank)
+        assertEquals(1, result[0].rating.rank)
+        assertEquals(2, result[1].rating.rank)
         assertEquals("Movie2", result[0].movie.title)
     }
 
@@ -104,8 +104,8 @@ class TopMovieHandlerTest {
         val result = handler.handle(TopMovie(UserId(1), "Action", 10, null))
 
         assertEquals(2, result.size)
-        assertEquals(1, result[0].rank)
-        assertEquals(3, result[1].rank)
+        assertEquals(1, result[0].rating.rank)
+        assertEquals(3, result[1].rating.rank)
     }
 
     @Test
@@ -127,7 +127,7 @@ class TopMovieHandlerTest {
         val result = handler.handle(TopMovie(UserId(1), null, 10, "Matrix"))
 
         assertEquals(1, result.size)
-        assertEquals(1, result[0].rank)
+        assertEquals(1, result[0].rating.rank)
     }
 
     @Test
