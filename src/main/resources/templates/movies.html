@@ -107,7 +107,6 @@
                                     <div class="premiere-info">
                                         <div class="premiere-title-row">
                                             <span class="premiere-name" th:text="${item.title}">Title</span>
-                                            <span class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
                                         </div>
                                         <span class="premiere-date premiere-date-released" th:text="'Released ' + ${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                                     </div>
@@ -138,7 +137,6 @@
                                     <div class="premiere-info">
                                         <div class="premiere-title-row">
                                             <span class="premiere-name" th:text="${item.title}">Title</span>
-                                            <span class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
                                         </div>
                                         <span class="premiere-date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Date</span>
                                     </div>
@@ -166,7 +164,6 @@
                                     <div class="premiere-info">
                                         <div class="premiere-title-row">
                                             <span class="premiere-name" th:text="${item.title}">Title</span>
-                                            <span class="tag tag-movie" style="font-size: 0.72rem; padding: 4px 8px;">Movie</span>
                                         </div>
                                         <span class="premiere-date">TBA</span>
                                     </div>
