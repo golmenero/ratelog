@@ -17,21 +17,27 @@ interface TvRatingRepository : CrudRepository<TvRating, Long> {
 
     @Query(
         """
-        SELECT r.* FROM tv_ratings r
+        WITH ranked AS (
+            SELECT r.*,
+                   ROW_NUMBER() OVER (ORDER BY (r.directing + r.cinematography + r.acting + r.soundtrack + r.screenplay) DESC) as abs_rank
+            FROM tv_ratings r
+            WHERE r.user_id = :userId
+        )
+        SELECT r.id, r.tv_show_id, r.user_id, r.directing, r.cinematography, r.acting, r.soundtrack, r.screenplay, r.created_at_epoch_ms, r.abs_rank
+        FROM ranked r
         JOIN tv_shows t ON r.tv_show_id = t.id
-        WHERE r.user_id = :userId
-          AND (:category IS NULL OR LOWER(t.genres) LIKE '%' || LOWER(:category) || '%')
+        WHERE (:category IS NULL OR LOWER(t.genres) LIKE '%' || LOWER(:category) || '%')
           AND (:name IS NULL OR LOWER(t.name) LIKE '%' || LOWER(:name) || '%')
-        ORDER BY (r.directing + r.cinematography + r.acting + r.soundtrack + r.screenplay) DESC
+        ORDER BY r.abs_rank
         LIMIT :limit
         """
     )
-    fun findByUserIdWithFilters(
+    fun findRankedByUserIdWithFilters(
         userId: Long,
         category: String?,
         limit: Int,
         name: String?
-    ): List<TvRating>
+    ): List<TvRatingWithRank>
 
     @Query(
         """
@@ -44,6 +50,19 @@ interface TvRatingRepository : CrudRepository<TvRating, Long> {
     )
     fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<TvRatingWithUsername>
 }
+
+data class TvRatingWithRank(
+    val id: Long? = null,
+    val tvShowId: Long,
+    val userId: Long,
+    val directing: Double,
+    val cinematography: Double,
+    val acting: Double,
+    val soundtrack: Double,
+    val screenplay: Double,
+    val createdAtEpochMs: Long,
+    val absRank: Int
+)
 
 data class TvRatingWithUsername(
     val id: Long? = null,

@@ -1,9 +1,12 @@
 package org.raterr.rating
 
+import org.raterr.movie.InMemoryMovieRepository
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicLong
 
-class InMemoryRatingRepository : RatingRepository {
+class InMemoryRatingRepository(
+    private val movieRepository: InMemoryMovieRepository = InMemoryMovieRepository()
+) : RatingRepository {
 
     private val storage = mutableListOf<Rating>()
     private val users = mutableMapOf<Long, String>()
@@ -83,16 +86,32 @@ class InMemoryRatingRepository : RatingRepository {
         return before - storage.size
     }
 
-    override fun findByUserIdWithFilters(
+    override fun findRankedByUserIdWithFilters(
         userId: Long,
         category: String?,
         limit: Int,
         name: String?
-    ): List<Rating> {
-        val filtered = storage.filter { it.userId == userId }
+    ): List<RatingWithRank> {
+        val all = storage.filter { it.userId == userId }
             .sortedByDescending { it.directing + it.cinematography + it.acting + it.soundtrack + it.screenplay }
-            .take(limit)
-        return filtered
+        return all.mapIndexed { index, rating ->
+            RatingWithRank(
+                id = rating.id,
+                movieId = rating.movieId,
+                userId = rating.userId,
+                directing = rating.directing,
+                cinematography = rating.cinematography,
+                acting = rating.acting,
+                soundtrack = rating.soundtrack,
+                screenplay = rating.screenplay,
+                createdAtEpochMs = rating.createdAtEpochMs,
+                absRank = index + 1
+            )
+        }.filter { ranked ->
+            val movie = movieRepository.findById(ranked.movieId).orElse(null)
+            (category == null || movie?.genres?.lowercase()?.contains(category.lowercase()) == true) &&
+            (name == null || movie?.title?.lowercase()?.contains(name.lowercase()) == true)
+        }.take(limit)
     }
 
     override fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<RatingWithUsername> =

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 data class GetTopTvShowsResponse(
+    val rank: Int,
     val tmdbId: Int,
     val name: String,
     val firstAirYear: Int?,
@@ -65,19 +66,20 @@ class TopTvShowController(
         return "tvshows"
     }
 
-    private fun map(list: List<Pair<TvRating, TvShow>>): List<GetTopTvShowsResponse> =
+    private fun map(list: List<RankedTvShow>): List<GetTopTvShowsResponse> =
         list.map {
             GetTopTvShowsResponse(
-                tmdbId = it.second.tmdbId,
-                name = it.second.name,
-                firstAirYear = it.second.firstAirYear,
-                posterPath = it.second.posterPath,
-                averageScore = TvRatingScoreService.score(it.first),
-                directing = it.first.directing,
-                cinematography = it.first.cinematography,
-                acting = it.first.acting,
-                soundtrack = it.first.soundtrack,
-                screenplay = it.first.screenplay
+                rank = it.rank,
+                tmdbId = it.show.tmdbId,
+                name = it.show.name,
+                firstAirYear = it.show.firstAirYear,
+                posterPath = it.show.posterPath,
+                averageScore = TvRatingScoreService.score(it.directing, it.cinematography, it.acting, it.soundtrack, it.screenplay),
+                directing = it.directing,
+                cinematography = it.cinematography,
+                acting = it.acting,
+                soundtrack = it.soundtrack,
+                screenplay = it.screenplay
             )
         }
 }

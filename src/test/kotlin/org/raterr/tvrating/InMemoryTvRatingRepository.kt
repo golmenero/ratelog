@@ -1,9 +1,12 @@
 package org.raterr.tvrating
 
+import org.raterr.tvshow.InMemoryTvShowRepository
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicLong
 
-class InMemoryTvRatingRepository : TvRatingRepository {
+class InMemoryTvRatingRepository(
+    private val tvShowRepository: InMemoryTvShowRepository = InMemoryTvShowRepository()
+) : TvRatingRepository {
 
     private val storage = mutableListOf<TvRating>()
     private val users = mutableMapOf<Long, String>()
@@ -80,16 +83,32 @@ class InMemoryTvRatingRepository : TvRatingRepository {
         return before - storage.size
     }
 
-    override fun findByUserIdWithFilters(
+    override fun findRankedByUserIdWithFilters(
         userId: Long,
         category: String?,
         limit: Int,
         name: String?
-    ): List<TvRating> {
-        val filtered = storage.filter { it.userId == userId }
+    ): List<TvRatingWithRank> {
+        val all = storage.filter { it.userId == userId }
             .sortedByDescending { it.directing + it.cinematography + it.acting + it.soundtrack + it.screenplay }
-            .take(limit)
-        return filtered
+        return all.mapIndexed { index, rating ->
+            TvRatingWithRank(
+                id = rating.id,
+                tvShowId = rating.tvShowId,
+                userId = rating.userId,
+                directing = rating.directing,
+                cinematography = rating.cinematography,
+                acting = rating.acting,
+                soundtrack = rating.soundtrack,
+                screenplay = rating.screenplay,
+                createdAtEpochMs = rating.createdAtEpochMs,
+                absRank = index + 1
+            )
+        }.filter { ranked ->
+            val show = tvShowRepository.findById(ranked.tvShowId).orElse(null)
+            (category == null || show?.genres?.lowercase()?.contains(category.lowercase()) == true) &&
+            (name == null || show?.name?.lowercase()?.contains(name.lowercase()) == true)
+        }.take(limit)
     }
 
     override fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<TvRatingWithUsername> =

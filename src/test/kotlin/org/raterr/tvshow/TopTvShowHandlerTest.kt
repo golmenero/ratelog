@@ -13,7 +13,7 @@ import org.raterr.tvshow.top.TopTvShowHandler
 class TopTvShowHandlerTest {
 
     private val tvShowRepository = InMemoryTvShowRepository()
-    private val tvRatingRepository = InMemoryTvRatingRepository()
+    private val tvRatingRepository = InMemoryTvRatingRepository(tvShowRepository)
     private val handler = TopTvShowHandler(tvShowRepository, tvRatingRepository)
 
     @BeforeEach
@@ -23,7 +23,7 @@ class TopTvShowHandlerTest {
     }
 
     @Test
-    fun `no filters returns ratings with shows`() {
+    fun `no filters returns ratings with shows ordered by score`() {
         val show1 = tvShowRepository.save(TvShow(tmdbId = 100, name = "Show1"))
         val show2 = tvShowRepository.save(TvShow(tmdbId = 200, name = "Show2"))
         tvRatingRepository.save(
@@ -54,16 +54,43 @@ class TopTvShowHandlerTest {
         val result = handler.handle(TopTvShow(UserId(1), null, 10, null))
 
         assertEquals(2, result.size)
-        assertEquals("Show1", result[0].second.name)
-        assertEquals("Show2", result[1].second.name)
+        assertEquals(1, result[0].rank)
+        assertEquals(2, result[1].rank)
+        assertEquals("Show1", result[0].show.name)
     }
 
     @Test
-    fun `filters by category`() {
-        val show = tvShowRepository.save(TvShow(tmdbId = 100, name = "Show"))
+    fun `filters by category keeps absolute rank`() {
+        val show1 = tvShowRepository.save(TvShow(tmdbId = 100, name = "DramaShow", genres = "Drama"))
+        val show2 = tvShowRepository.save(TvShow(tmdbId = 200, name = "ComedyShow", genres = "Comedy"))
+        val show3 = tvShowRepository.save(TvShow(tmdbId = 300, name = "AnotherDrama", genres = "Drama"))
         tvRatingRepository.save(
             TvRating(
-                tvShowId = show.id!!,
+                tvShowId = show1.id!!,
+                userId = 1,
+                directing = 10.0,
+                cinematography = 10.0,
+                acting = 10.0,
+                soundtrack = 10.0,
+                screenplay = 10.0,
+                createdAtEpochMs = System.currentTimeMillis()
+            )
+        )
+        tvRatingRepository.save(
+            TvRating(
+                tvShowId = show2.id!!,
+                userId = 1,
+                directing = 8.0,
+                cinematography = 8.0,
+                acting = 8.0,
+                soundtrack = 8.0,
+                screenplay = 8.0,
+                createdAtEpochMs = System.currentTimeMillis()
+            )
+        )
+        tvRatingRepository.save(
+            TvRating(
+                tvShowId = show3.id!!,
                 userId = 1,
                 directing = 5.0,
                 cinematography = 5.0,
@@ -76,12 +103,14 @@ class TopTvShowHandlerTest {
 
         val result = handler.handle(TopTvShow(UserId(1), "Drama", 10, null))
 
-        assertEquals(1, result.size)
+        assertEquals(2, result.size)
+        assertEquals(1, result[0].rank)
+        assertEquals(3, result[1].rank)
     }
 
     @Test
-    fun `filters by name`() {
-        val show = tvShowRepository.save(TvShow(tmdbId = 100, name = "Show"))
+    fun `filters by name keeps absolute rank`() {
+        val show = tvShowRepository.save(TvShow(tmdbId = 100, name = "Breaking Bad"))
         tvRatingRepository.save(
             TvRating(
                 tvShowId = show.id!!,
@@ -95,9 +124,10 @@ class TopTvShowHandlerTest {
             )
         )
 
-        val result = handler.handle(TopTvShow(UserId(1), null, 10, "Test"))
+        val result = handler.handle(TopTvShow(UserId(1), null, 10, "Breaking"))
 
         assertEquals(1, result.size)
+        assertEquals(1, result[0].rank)
     }
 
     @Test
