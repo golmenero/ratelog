@@ -110,7 +110,7 @@
                                         <div class="premiere-title-row">
                                             <span class="premiere-name" th:text="${item.title}">Title</span>
                                         </div>
-                                        <span class="premiere-date premiere-date-released" th:text="'Released ' + ${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
+                                        <span class="premiere-date premiere-date-released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                                     </div>
                                     <div class="premiere-actions">
                                         <a th:href="@{/movie/rate(id=${item.tmdbId})}" class="raterr-btn" title="Rate">
