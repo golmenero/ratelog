@@ -18,5 +18,6 @@ data class Rating(
     val soundtrack: Double,
     val screenplay: Double,
     @Column("created_at_epoch_ms")
-    val createdAtEpochMs: Long
+    val createdAtEpochMs: Long,
+    val rank: Int,
 )

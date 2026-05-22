@@ -91,23 +91,11 @@ class InMemoryRatingRepository(
         category: String?,
         limit: Int,
         name: String?
-    ): List<RatingWithRank> {
+    ): List<Rating> {
         val all = storage.filter { it.userId == userId }
             .sortedByDescending { it.directing + it.cinematography + it.acting + it.soundtrack + it.screenplay }
-        return all.mapIndexed { index, rating ->
-            RatingWithRank(
-                id = rating.id,
-                movieId = rating.movieId,
-                userId = rating.userId,
-                directing = rating.directing,
-                cinematography = rating.cinematography,
-                acting = rating.acting,
-                soundtrack = rating.soundtrack,
-                screenplay = rating.screenplay,
-                createdAtEpochMs = rating.createdAtEpochMs,
-                absRank = index + 1
-            )
-        }.filter { ranked ->
+            .mapIndexed { index, rating -> rating.copy(rank = index + 1) }
+        return all.filter { ranked ->
             val movie = movieRepository.findById(ranked.movieId).orElse(null)
             (category == null || movie?.genres?.lowercase()?.contains(category.lowercase()) == true) &&
             (name == null || movie?.title?.lowercase()?.contains(name.lowercase()) == true)

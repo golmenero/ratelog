@@ -20,18 +20,12 @@ interface RatingRepository : CrudRepository<Rating, Long> {
 
     @Query(
         """
-        WITH ranked AS (
-            SELECT r.*,
-                   ROW_NUMBER() OVER (ORDER BY (r.directing + r.cinematography + r.acting + r.soundtrack + r.screenplay) DESC) as abs_rank
-            FROM ratings r
-            WHERE r.user_id = :userId
-        )
-        SELECT r.id, r.movie_id, r.user_id, r.directing, r.cinematography, r.acting, r.soundtrack, r.screenplay, r.created_at_epoch_ms, r.abs_rank
-        FROM ranked r
+        SELECT r.* FROM ratings r
         JOIN movies m ON r.movie_id = m.id
-        WHERE (:category IS NULL OR LOWER(m.genres) LIKE '%' || LOWER(:category) || '%')
+        WHERE r.user_id = :userId
+          AND (:category IS NULL OR LOWER(m.genres) LIKE '%' || LOWER(:category) || '%')
           AND (:name IS NULL OR LOWER(m.title) LIKE '%' || LOWER(:name) || '%')
-        ORDER BY r.abs_rank
+        ORDER BY r.rank
         LIMIT :limit
         """
     )
@@ -40,7 +34,7 @@ interface RatingRepository : CrudRepository<Rating, Long> {
         category: String?,
         limit: Int,
         name: String?
-    ): List<RatingWithRank>
+    ): List<Rating>
 
     @Query(
         """
@@ -53,19 +47,6 @@ interface RatingRepository : CrudRepository<Rating, Long> {
     )
     fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<RatingWithUsername>
 }
-
-data class RatingWithRank(
-    val id: Long? = null,
-    val movieId: Long,
-    val userId: Long,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val createdAtEpochMs: Long,
-    val absRank: Int
-)
 
 data class RatingWithUsername(
     val id: Long? = null,

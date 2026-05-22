@@ -1,7 +1,7 @@
 package org.raterr.tvshow.top
 
 import org.raterr.UserId
-import org.raterr.tvrating.TvRatingScoreService
+import org.raterr.tvrating.TvRating
 import org.raterr.tvrating.TvRatingRepository
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
@@ -16,15 +16,7 @@ data class TopTvShow(
 )
 
 data class RankedTvShow(
-    val rank: Int,
-    val ratingId: Long?,
-    val tvShowId: Long,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val createdAtEpochMs: Long,
+    val rating: TvRating,
     val show: TvShow
 )
 
@@ -35,18 +27,6 @@ class TopTvShowHandler(
 ) {
     fun handle(query: TopTvShow): List<RankedTvShow> =
         tvRatingRepository.findRankedByUserIdWithFilters(query.userId.value, query.category, query.limit, query.name)
-            .map { ranked ->
-                RankedTvShow(
-                    rank = ranked.absRank,
-                    ratingId = ranked.id,
-                    tvShowId = ranked.tvShowId,
-                    directing = ranked.directing,
-                    cinematography = ranked.cinematography,
-                    acting = ranked.acting,
-                    soundtrack = ranked.soundtrack,
-                    screenplay = ranked.screenplay,
-                    createdAtEpochMs = ranked.createdAtEpochMs,
-                    show = ranked.tvShowId.let(tvShowRepository::findById).getOrNull()!!
-                )
-            }
+            .map { it to it.tvShowId.let(tvShowRepository::findById).getOrNull()!! }
+            .map { RankedTvShow(it.first, it.second) }
 }

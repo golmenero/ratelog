@@ -69,17 +69,17 @@ class TopTvShowController(
     private fun map(list: List<RankedTvShow>): List<GetTopTvShowsResponse> =
         list.map {
             GetTopTvShowsResponse(
-                rank = it.rank,
+                rank = it.rating.rank,
                 tmdbId = it.show.tmdbId,
                 name = it.show.name,
                 firstAirYear = it.show.firstAirYear,
                 posterPath = it.show.posterPath,
-                averageScore = TvRatingScoreService.score(it.directing, it.cinematography, it.acting, it.soundtrack, it.screenplay),
-                directing = it.directing,
-                cinematography = it.cinematography,
-                acting = it.acting,
-                soundtrack = it.soundtrack,
-                screenplay = it.screenplay
+                averageScore = TvRatingScoreService.score(it.rating),
+                directing = it.rating.directing,
+                cinematography = it.rating.cinematography,
+                acting = it.rating.acting,
+                soundtrack = it.rating.soundtrack,
+                screenplay = it.rating.screenplay
             )
         }
 }

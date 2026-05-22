@@ -88,23 +88,11 @@ class InMemoryTvRatingRepository(
         category: String?,
         limit: Int,
         name: String?
-    ): List<TvRatingWithRank> {
+    ): List<TvRating> {
         val all = storage.filter { it.userId == userId }
             .sortedByDescending { it.directing + it.cinematography + it.acting + it.soundtrack + it.screenplay }
-        return all.mapIndexed { index, rating ->
-            TvRatingWithRank(
-                id = rating.id,
-                tvShowId = rating.tvShowId,
-                userId = rating.userId,
-                directing = rating.directing,
-                cinematography = rating.cinematography,
-                acting = rating.acting,
-                soundtrack = rating.soundtrack,
-                screenplay = rating.screenplay,
-                createdAtEpochMs = rating.createdAtEpochMs,
-                absRank = index + 1
-            )
-        }.filter { ranked ->
+            .mapIndexed { index, rating -> rating.copy(rank = index + 1) }
+        return all.filter { ranked ->
             val show = tvShowRepository.findById(ranked.tvShowId).orElse(null)
             (category == null || show?.genres?.lowercase()?.contains(category.lowercase()) == true) &&
             (name == null || show?.name?.lowercase()?.contains(name.lowercase()) == true)
