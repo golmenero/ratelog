@@ -67,8 +67,8 @@
                 
                 <div th:if="${tops != null}" id="list" class="top-list spacer-top">
                     <div th:if="${#lists.isEmpty(tops)}" class="empty-state">No rated movies yet for this filter.</div>
-                    <article th:each="m, iterStat : ${tops}" th:class="'top-card list-poster-card' + (${m.rank <= 3 and m.posterPath != null} ? '' : ' no-poster')">
-                        <div th:if="${m.rank <= 3 and m.posterPath != null}" class="top-poster poster-frame">
+                    <article th:each="m, iterStat : ${tops}" th:class="'top-card list-poster-card' + (${m.posterPath != null} ? '' : ' no-poster')">
+                        <div th:if="${m.posterPath != null}" class="top-poster poster-frame">
                             <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${m.posterPath}}" th:alt="'Poster of ' + ${m.title}">
                         </div>
                         <div class="top-info">
