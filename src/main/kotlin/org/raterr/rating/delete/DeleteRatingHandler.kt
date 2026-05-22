@@ -6,6 +6,7 @@ import arrow.core.raise.ensure
 import org.raterr.TmdbId
 import org.raterr.UserId
 import org.raterr.movie.MovieRepository
+import org.raterr.rating.RatingRankService
 import org.raterr.rating.RatingRepository
 import org.springframework.stereotype.Component
 
@@ -18,6 +19,7 @@ data class DeleteRating(
 class DeleteRatingHandler(
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
+    private val ratingRankService: RatingRankService,
 ) {
     fun handle(command: DeleteRating): Either<DeleteRatingHandlerError, Unit> = either {
         val movie = movieRepository.findByTmdbId(command.tmdbId.value)
@@ -27,5 +29,7 @@ class DeleteRatingHandler(
 
         val deletedCount = ratingRepository.deleteByMovieIdAndUserId(movie.id!!, command.userId.value)
         ensure(deletedCount > 0) { DeleteRatingHandlerError.RatingNotFound }
+
+        ratingRankService.recalculateRanks(command.userId.value)
     }
 }

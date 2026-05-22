@@ -24,6 +24,7 @@ class AddRatingHandlerTest {
 
     private val tmdbClient: TmdbClient = mock()
     private val ratingRepository = InMemoryRatingRepository()
+    private val ratingRankService = RatingRankService(ratingRepository)
     private val followRepository = InMemoryFollowRepository()
     private val movieRepository = InMemoryMovieRepository()
     private lateinit var getMovieHandler: GetMovieHandler
@@ -39,7 +40,7 @@ class AddRatingHandlerTest {
     private fun setupMovie(tmdbId: Int) {
         whenever(tmdbClient.movieDetails(tmdbId)).thenReturn(TmdbMovie(id = tmdbId, title = "Movie", releaseDate = "2024-01-01").right())
         getMovieHandler = GetMovieHandler(tmdbClient, movieRepository)
-        handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository)
+        handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository, ratingRankService)
     }
 
     @Test
@@ -279,7 +280,7 @@ class AddRatingHandlerTest {
     fun `movie not found returns MovieNotFound`() {
         whenever(tmdbClient.movieDetails(100)).thenReturn(TmdbError.MovieNotFound.left())
         getMovieHandler = GetMovieHandler(tmdbClient, movieRepository)
-        handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository)
+        handler = AddRatingHandler(getMovieHandler, ratingRepository, followRepository, ratingRankService)
 
         val result = handler.handle(
             AddRating(

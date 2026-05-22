@@ -33,6 +33,13 @@ interface TvRatingRepository : CrudRepository<TvRating, Long> {
         name: String?
     ): List<TvRating>
 
+    @Query("SELECT r.* FROM tv_ratings r WHERE r.user_id = :userId ORDER BY r.rank")
+    fun findByUserIdOrderedByRank(userId: Long): List<TvRating>
+
+    @Modifying
+    @Query("UPDATE tv_ratings SET rank = :rank WHERE id = :id")
+    fun updateRank(id: Long, rank: Int): Int
+
     @Query(
         """
         SELECT r.*, u.username AS username FROM tv_ratings r

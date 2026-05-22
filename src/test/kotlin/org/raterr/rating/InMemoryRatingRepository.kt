@@ -102,6 +102,19 @@ class InMemoryRatingRepository(
         }.take(limit)
     }
 
+    override fun findByUserIdOrderedByRank(userId: Long): List<Rating> =
+        storage.filter { it.userId == userId }
+            .sortedBy { it.rank }
+
+    override fun updateRank(id: Long, rank: Int): Int {
+        val idx = storage.indexOfFirst { it.id == id }
+        if (idx >= 0) {
+            storage[idx] = storage[idx].copy(rank = rank)
+            return 1
+        }
+        return 0
+    }
+
     override fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<RatingWithUsername> =
         storage
             .filter { it.userId in userIds && it.createdAtEpochMs >= sinceEpochMs }

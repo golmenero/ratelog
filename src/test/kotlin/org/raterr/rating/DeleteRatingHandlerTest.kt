@@ -17,7 +17,8 @@ class DeleteRatingHandlerTest {
 
     private val movieRepository = InMemoryMovieRepository()
     private val ratingRepository = InMemoryRatingRepository()
-    private val handler = DeleteRatingHandler(movieRepository, ratingRepository)
+    private val ratingRankService = RatingRankService(ratingRepository)
+    private val handler = DeleteRatingHandler(movieRepository, ratingRepository, ratingRankService)
 
     @BeforeEach
     fun setUp() {

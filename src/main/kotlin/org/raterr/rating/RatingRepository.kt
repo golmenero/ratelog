@@ -36,6 +36,13 @@ interface RatingRepository : CrudRepository<Rating, Long> {
         name: String?
     ): List<Rating>
 
+    @Query("SELECT r.* FROM ratings r WHERE r.user_id = :userId ORDER BY r.rank")
+    fun findByUserIdOrderedByRank(userId: Long): List<Rating>
+
+    @Modifying
+    @Query("UPDATE ratings SET rank = :rank WHERE id = :id")
+    fun updateRank(id: Long, rank: Int): Int
+
     @Query(
         """
         SELECT r.*, u.username AS username FROM ratings r

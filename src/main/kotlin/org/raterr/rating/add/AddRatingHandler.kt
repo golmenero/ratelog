@@ -7,6 +7,7 @@ import org.raterr.follow.FollowRepository
 import org.raterr.movie.get.GetMovie
 import org.raterr.movie.get.GetMovieHandler
 import org.raterr.rating.Rating
+import org.raterr.rating.RatingRankService
 import org.raterr.rating.RatingRepository
 import org.raterr.TmdbId
 import org.raterr.UserId
@@ -27,6 +28,7 @@ class AddRatingHandler(
     private val getMovieHandler: GetMovieHandler,
     private val ratingRepository: RatingRepository,
     private val followRepository: FollowRepository,
+    private val ratingRankService: RatingRankService,
 ) {
     fun handle(command: AddRating): Either<AddRatingHandlerError, Unit> = either {
         listOf(
@@ -57,6 +59,8 @@ class AddRatingHandler(
             screenplay = command.screenplay,
             createdAtEpochMs = System.currentTimeMillis()
         ).let(ratingRepository::save)
+
+        ratingRankService.recalculateRanks(command.userId.value)
 
         followRepository.findByUserIdAndContentTypeAndContentTmdbId(
             command.userId.value,

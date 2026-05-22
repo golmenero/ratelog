@@ -17,7 +17,8 @@ class DeleteTvRatingHandlerTest {
 
     private val tvShowRepository = InMemoryTvShowRepository()
     private val tvRatingRepository = InMemoryTvRatingRepository()
-    private val handler = DeleteTvRatingHandler(tvShowRepository, tvRatingRepository)
+    private val tvRatingRankService = TvRatingRankService(tvRatingRepository)
+    private val handler = DeleteTvRatingHandler(tvShowRepository, tvRatingRepository, tvRatingRankService)
 
     @BeforeEach
     fun setUp() {

@@ -7,6 +7,7 @@ import org.raterr.follow.FollowRepository
 import org.raterr.tvshow.get.GetTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
 import org.raterr.tvrating.TvRating
+import org.raterr.tvrating.TvRatingRankService
 import org.raterr.tvrating.TvRatingRepository
 import org.raterr.TmdbId
 import org.raterr.UserId
@@ -27,6 +28,7 @@ class AddTvRatingHandler(
     private val getTvShowHandler: GetTvShowHandler,
     private val tvRatingRepository: TvRatingRepository,
     private val followRepository: FollowRepository,
+    private val tvRatingRankService: TvRatingRankService,
 ) {
     fun handle(command: AddTvRating): Either<AddTvRatingHandlerError, Unit> = either {
         listOf(
@@ -57,6 +59,8 @@ class AddTvRatingHandler(
             screenplay = command.screenplay,
             createdAtEpochMs = System.currentTimeMillis()
         ).let(tvRatingRepository::save)
+
+        tvRatingRankService.recalculateRanks(command.userId.value)
 
         followRepository.findByUserIdAndContentTypeAndContentTmdbId(
             command.userId.value,

@@ -24,6 +24,7 @@ class AddTvRatingHandlerTest {
 
     private val tmdbClient: TmdbClient = mock()
     private val tvRatingRepository = InMemoryTvRatingRepository()
+    private val tvRatingRankService = TvRatingRankService(tvRatingRepository)
     private val followRepository = InMemoryFollowRepository()
     private val tvShowRepository = InMemoryTvShowRepository()
     private lateinit var getTvShowHandler: GetTvShowHandler
@@ -39,7 +40,7 @@ class AddTvRatingHandlerTest {
     private fun setupShow(tmdbId: Int) {
         whenever(tmdbClient.tvShowDetails(tmdbId)).thenReturn(TmdbTvShow(id = tmdbId, name = "Show", firstAirDate = "2024-01-01").right())
         getTvShowHandler = GetTvShowHandler(tmdbClient, tvShowRepository)
-        handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository)
+        handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository, tvRatingRankService)
     }
 
     @Test
@@ -210,7 +211,7 @@ class AddTvRatingHandlerTest {
     fun `tvshow not found returns TvShowNotFound`() {
         whenever(tmdbClient.tvShowDetails(200)).thenReturn(TmdbError.TvShowNotFound.left())
         getTvShowHandler = GetTvShowHandler(tmdbClient, tvShowRepository)
-        handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository)
+        handler = AddTvRatingHandler(getTvShowHandler, tvRatingRepository, followRepository, tvRatingRankService)
 
         val result = handler.handle(
             AddTvRating(
