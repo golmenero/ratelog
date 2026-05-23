@@ -159,28 +159,3 @@ button {
     background: transparent !important;
   }
 }
-
-.top-delete-button {
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: none;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--text);
-  box-shadow: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  i {
-    width: 18px;
-    height: 18px;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: #fff9f3;
-    transform: none;
-  }
-}

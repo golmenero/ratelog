@@ -75,16 +75,24 @@
                             <div class="top-header-row">
                                 <span class="top-rank-num" th:text="${m.rank}">#1</span>
                                 <span class="top-title-wrap">
-                                    <h3 class="top-title" th:text="${m.title}">Title</h3>
+                                    <h3 class="top-title top-title-clickable" th:text="${m.title}" th:data-tmdb-id="${m.tmdbId}" th:data-title="${m.title}" th:data-year="${m.releaseYear}" th:data-directing="${#strings.replace(#numbers.formatDecimal(m.directing, 1, 2), ',', '.')}" th:data-cinematography="${#strings.replace(#numbers.formatDecimal(m.cinematography, 1, 2), ',', '.')}" th:data-acting="${#strings.replace(#numbers.formatDecimal(m.acting, 1, 2), ',', '.')}" th:data-soundtrack="${#strings.replace(#numbers.formatDecimal(m.soundtrack, 1, 2), ',', '.')}" th:data-screenplay="${#strings.replace(#numbers.formatDecimal(m.screenplay, 1, 2), ',', '.')}" style="cursor: pointer;">Title</h3>
                                     <span class="top-year" th:text="${m.releaseYear != null} ? ${m.releaseYear} : 'Unknown year'">Year</span>
                                 </span>
                             </div>
-                            <div th:replace="~{fragments/score :: scoreBlock(${m.averageScore}, ${m.directing}, ${m.cinematography}, ${m.acting}, ${m.soundtrack}, ${m.screenplay})}"></div>
+                            <div class="rating-display">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <span class="star-wrapper">
+                                        <span class="star-empty">&#9734;</span>
+                                        <span class="star-filled" th:style="${m.averageScore >= i * 2} ? 'clip-path: inset(0 0 0 0);' : (${m.averageScore > (i - 1) * 2} ? 'clip-path: inset(0 ' + ${((i * 2 - m.averageScore) * 50)} + '% 0 0);' : 'clip-path: inset(0 100% 0 0);')">&#9733;</span>
+                                    </span>
+                                </span>
+                                <span class="rating-score-value" th:text="${#strings.replace(#numbers.formatDecimal(m.averageScore, 1, 2), ',', '.')}">0.0</span>
+                            </div>
                         </div>
                         <div class="top-actions">
                             <form th:action="@{'/movies/delete/' + ${m.tmdbId}}" method="post">
-                                <button class="top-delete-button" type="submit" aria-label="Delete rating">
-                                    <i data-lucide="trash-2" aria-hidden="true"></i>
+                                <button class="raterr-btn" type="submit" aria-label="Delete rating">
+                                    <i data-lucide="trash" aria-hidden="true"></i>
                                 </button>
                             </form>
                         </div>
@@ -191,6 +199,9 @@
         </div>
     </main>
 </div>
+
+<div th:replace="~{fragments/rating-modal :: ratingModal}"></div>
+
 </body>
 <script>
     lucide.createIcons();

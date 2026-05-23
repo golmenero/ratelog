@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="ratingModal">
+    <div id="rating-modal" class="rating-modal">
+        <div class="rating-modal-content">
+            <button class="modal-close" aria-label="Close">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="modal-header">
+                <h2 id="modal-title" class="modal-title">Title</h2>
+                <span id="modal-year" class="modal-year">Year</span>
+            </div>
+            <div class="modal-categories">
+                <div class="modal-category-row">
+                    <span class="modal-category-label"><i data-lucide="clapperboard" class="category-icon"></i> Directing</span>
+                    <span id="modal-directing" class="modal-category-value">0.0</span>
+                </div>
+                <div class="modal-category-row">
+                    <span class="modal-category-label"><i data-lucide="camera" class="category-icon"></i> Cinematography</span>
+                    <span id="modal-cinematography" class="modal-category-value">0.0</span>
+                </div>
+                <div class="modal-category-row">
+                    <span class="modal-category-label"><i data-lucide="hat-glasses" class="category-icon"></i> Acting</span>
+                    <span id="modal-acting" class="modal-category-value">0.0</span>
+                </div>
+                <div class="modal-category-row">
+                    <span class="modal-category-label"><i data-lucide="music" class="category-icon"></i> Soundtrack</span>
+                    <span id="modal-soundtrack" class="modal-category-value">0.0</span>
+                </div>
+                <div class="modal-category-row">
+                    <span class="modal-category-label"><i data-lucide="file-text" class="category-icon"></i> Screenplay</span>
+                    <span id="modal-screenplay" class="modal-category-value">0.0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.top-title-clickable').forEach(title => {
+            title.addEventListener('click', () => {
+                const modal = document.getElementById('rating-modal');
+                document.getElementById('modal-title').textContent = title.dataset.title;
+                document.getElementById('modal-year').textContent = title.dataset.year || 'Unknown year';
+                document.getElementById('modal-directing').textContent = title.dataset.directing;
+                document.getElementById('modal-cinematography').textContent = title.dataset.cinematography;
+                document.getElementById('modal-acting').textContent = title.dataset.acting;
+                document.getElementById('modal-soundtrack').textContent = title.dataset.soundtrack;
+                document.getElementById('modal-screenplay').textContent = title.dataset.screenplay;
+                modal.classList.add('visible');
+                lucide.createIcons();
+            });
+        });
+
+        document.getElementById('rating-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget || e.target.closest('.modal-close')) {
+                e.currentTarget.classList.remove('visible');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('rating-modal').classList.remove('visible');
+            }
+        });
+    </script>
+</th:block>
+
+</body>
+</html>
