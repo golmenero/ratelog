@@ -6,7 +6,6 @@ import org.raterr.tvrating.TvRatingRepository
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
 import org.springframework.stereotype.Service
-import kotlin.jvm.optionals.getOrNull
 
 data class TopTvShow(
     val userId: UserId,
@@ -27,6 +26,6 @@ class TopTvShowHandler(
 ) {
     fun handle(query: TopTvShow): List<RankedTvShow> =
         tvRatingRepository.findRankedByUserIdWithFilters(query.userId.value, query.category, query.limit, query.name)
-            .map { it to it.tvShowId.let(tvShowRepository::findById).getOrNull()!! }
-            .map { RankedTvShow(it.first, it.second) }
+            .map { it to it.tvShowId.let(TvShow::Id).let(tvShowRepository::findById) }
+            .map { RankedTvShow(it.first, it.second!!) }
 }

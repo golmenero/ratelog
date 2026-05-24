@@ -1,7 +1,14 @@
 package org.raterr.tvshow
 
+import org.raterr.Genre
+import org.raterr.Overview
+import org.raterr.TmdbId
+import org.raterr.Title
+import org.raterr.Url
+import java.time.LocalDate
+
 fun aTvShow(
-    id: Long? = null,
+    id: TvShow.Id? = TvShow.Id(1),
     tmdbId: Int = 1,
     name: String = "Test TvShow",
     originalName: String? = "Test TvShow",
@@ -10,17 +17,17 @@ fun aTvShow(
     firstAirYear: Int? = 2024,
     posterPath: String? = "/test-poster.jpg",
     tmdbVoteAverage: Double? = 7.5,
-    genres: String? = "Action,Adventure"
+    genres: List<Genre> = listOf(Genre.Action, Genre.Adventure)
 ): TvShow =
     TvShow(
         id = id,
-        tmdbId = tmdbId,
-        name = name,
-        originalName = originalName,
-        overview = overview,
-        firstAirDate = firstAirDate,
+        tmdbId = TmdbId(tmdbId),
+        name = Title(name),
+        originalName = originalName?.let { Title(it) },
+        overview = overview?.let { Overview(it) },
+        firstAirDate = firstAirDate?.let { LocalDate.parse(it) },
         firstAirYear = firstAirYear,
-        posterPath = posterPath,
+        posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = tmdbVoteAverage,
         genres = genres
     )

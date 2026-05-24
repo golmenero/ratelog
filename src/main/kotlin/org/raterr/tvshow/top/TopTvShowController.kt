@@ -2,11 +2,9 @@ package org.raterr.tvshow.top
 
 import org.raterr.UserId
 import org.raterr.tvrating.TvRatingScoreService
-import org.raterr.tvrating.TvRating
 import org.raterr.annotations.CurrentUser
 import org.raterr.tvshow.premieres.TvShowPremieresHandler
 import org.raterr.tvshow.premieres.TvShowPremieresQuery
-import org.raterr.tvshow.TvShow
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -70,10 +68,10 @@ class TopTvShowController(
         list.map {
             GetTopTvShowsResponse(
                 rank = it.rating.rank,
-                tmdbId = it.show.tmdbId,
-                name = it.show.name,
+                tmdbId = it.show.tmdbId.value,
+                name = it.show.name.value,
                 firstAirYear = it.show.firstAirYear,
-                posterPath = it.show.posterPath,
+                posterPath = it.show.posterPath?.value,
                 averageScore = TvRatingScoreService.score(it.rating),
                 directing = it.rating.directing,
                 cinematography = it.rating.cinematography,

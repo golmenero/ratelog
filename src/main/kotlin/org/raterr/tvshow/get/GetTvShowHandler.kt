@@ -2,11 +2,16 @@ package org.raterr.tvshow.get
 
 import arrow.core.Either
 import arrow.core.raise.either
+import org.raterr.Genre
+import org.raterr.Overview
+import org.raterr.Title
 import org.raterr.tmdb.TmdbClient
 import org.raterr.TmdbId
+import org.raterr.Url
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 data class GetTvShow(val tmdbId: TmdbId)
 
@@ -17,31 +22,29 @@ class GetTvShowHandler(
 ) {
     fun handle(query: GetTvShow): Either<GetTvShowHandlerError, TvShow> = either {
         val tmdbShow = query.tmdbId.value.let(tmdbClient::tvShowDetails).bind()
-        val genres = tmdbShow.genres.joinToString(",") { it.name }
+        val genres = tmdbShow.genres.map { Genre.valueOf(it.name) }
 
         val show = query.tmdbId
-            .value
             .let(tvShowRepository::findByTmdbId)
-            .orElse(null)
             ?.copy(
-                name = tmdbShow.name,
-                originalName = tmdbShow.originalName,
-                overview = tmdbShow.overview,
-                firstAirDate = tmdbShow.firstAirDate,
+                name = tmdbShow.name.let(::Title),
+                originalName = tmdbShow.originalName?.let(::Title),
+                overview = tmdbShow.overview?.let(::Overview),
+                firstAirDate = tmdbShow.firstAirDate?.let(LocalDate::parse),
                 firstAirYear = tmdbShow.firstAirDate?.take(4)?.toIntOrNull(),
-                posterPath = tmdbShow.posterPath,
+                posterPath = tmdbShow.posterPath?.let(::Url),
                 tmdbVoteAverage = tmdbShow.voteAverage,
                 genres = genres
             )
             ?: TvShow(
                 id = null,
-                tmdbId = tmdbShow.id,
-                name = tmdbShow.name,
-                originalName = tmdbShow.originalName,
-                overview = tmdbShow.overview,
-                firstAirDate = tmdbShow.firstAirDate,
+                tmdbId = tmdbShow.id.let(::TmdbId),
+                name = tmdbShow.name.let(::Title),
+                originalName = tmdbShow.originalName?.let(::Title),
+                overview = tmdbShow.overview?.let(::Overview),
+                firstAirDate = tmdbShow.firstAirDate?.let(LocalDate::parse),
                 firstAirYear = tmdbShow.firstAirDate?.take(4)?.toIntOrNull(),
-                posterPath = tmdbShow.posterPath,
+                posterPath = tmdbShow.posterPath?.let(::Url),
                 tmdbVoteAverage = tmdbShow.voteAverage,
                 genres = genres
             )

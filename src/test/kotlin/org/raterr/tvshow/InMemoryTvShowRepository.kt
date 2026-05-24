@@ -1,6 +1,6 @@
 package org.raterr.tvshow
 
-import java.util.Optional
+import org.raterr.TmdbId
 import java.util.concurrent.atomic.AtomicLong
 
 class InMemoryTvShowRepository : TvShowRepository {
@@ -13,52 +13,20 @@ class InMemoryTvShowRepository : TvShowRepository {
         idGenerator.set(1)
     }
 
-    override fun <S : TvShow> save(entity: S): S {
-        @Suppress("UNCHECKED_CAST")
-        return if (entity.id == null) {
-            val newEntity = entity.copy(id = idGenerator.getAndIncrement()) as S
-            storage.add(newEntity)
-            newEntity
+    override fun findById(id: TvShow.Id): TvShow? =
+        storage.firstOrNull { it.id == id }
+
+    override fun findByTmdbId(tmdbId: TmdbId): TvShow? =
+        storage.firstOrNull { it.tmdbId == tmdbId }
+
+    override fun save(show: TvShow): TvShow =
+        if (show.id == null) {
+            val newShow = show.copy(id = idGenerator.getAndIncrement().let(TvShow::Id))
+            storage.add(newShow)
+            newShow
         } else {
-            storage.removeIf { it.id == entity.id }
-            storage.add(entity)
-            entity
+            storage.removeIf { it.id == show.id }
+            storage.add(show)
+            show
         }
-    }
-
-    override fun <S : TvShow> saveAll(entities: Iterable<S>): Iterable<S> = entities.map { save(it) }
-
-    override fun findById(id: Long): Optional<TvShow> =
-        storage.find { it.id == id }?.let { Optional.of(it) } ?: Optional.empty()
-
-    override fun existsById(id: Long): Boolean = storage.any { it.id == id }
-
-    override fun findAll(): Iterable<TvShow> = storage.toList()
-
-    override fun findAllById(ids: Iterable<Long>): Iterable<TvShow> = storage.filter { it.id in ids }
-
-    override fun count(): Long = storage.size.toLong()
-
-    override fun deleteById(id: Long) {
-        storage.removeIf { it.id == id }
-    }
-
-    override fun delete(entity: TvShow) {
-        storage.removeIf { it.id == entity.id }
-    }
-
-    override fun deleteAllById(ids: Iterable<Long>) {
-        ids.forEach { deleteById(it) }
-    }
-
-    override fun deleteAll(entities: Iterable<TvShow>) {
-        entities.forEach { delete(it) }
-    }
-
-    override fun deleteAll() {
-        storage.clear()
-    }
-
-    override fun findByTmdbId(tmdbId: Int): Optional<TvShow> =
-        storage.find { it.tmdbId == tmdbId }?.let { Optional.of(it) } ?: Optional.empty()
 }

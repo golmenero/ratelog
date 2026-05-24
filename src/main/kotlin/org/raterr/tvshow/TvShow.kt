@@ -1,19 +1,23 @@
 ﻿package org.raterr.tvshow
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Column
-import org.springframework.data.relational.core.mapping.Table
+import org.raterr.Genre
+import org.raterr.Overview
+import org.raterr.TmdbId
+import org.raterr.Title
+import org.raterr.Url
+import java.time.LocalDate
 
-@Table("tv_shows")
 data class TvShow(
-    @Id val id: Long? = null,
-    @Column("tmdb_id") val tmdbId: Int,
-    val name: String,
-    @Column("original_name") val originalName: String?,
-    val overview: String?,
-    @Column("first_air_date") val firstAirDate: String?,
-    @Column("first_air_year") val firstAirYear: Int?,
-    @Column("poster_path") val posterPath: String?,
-    @Column("tmdb_vote_average") val tmdbVoteAverage: Double?,
-    val genres: String?
-)
+    val id: Id?,
+    val tmdbId: TmdbId,
+    val name: Title,
+    val originalName: Title?,
+    val overview: Overview?,
+    val firstAirDate: LocalDate?,
+    val firstAirYear: Int?,
+    val posterPath: Url?,
+    val tmdbVoteAverage: Double?,
+    val genres: List<Genre>
+) {
+    data class Id(val value: Long)
+}

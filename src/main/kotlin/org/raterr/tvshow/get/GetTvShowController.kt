@@ -1,9 +1,6 @@
 ﻿package org.raterr.tvshow.get
 
 import org.raterr.TmdbId
-import org.raterr.tvrating.TvRating
-import org.raterr.tvrating.TvRatingRepository
-import org.raterr.tvrating.TvRatingScoreService
 import org.raterr.tvshow.TvShow
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -21,7 +18,7 @@ data class GetTvShowDetailsResponse(
 )
 
 @Controller
-class GetTvShowDetailsController(
+class GetTvShowController(
     private val handler: GetTvShowHandler,
 ) {
 
@@ -42,12 +39,12 @@ class GetTvShowDetailsController(
 
     private fun buildResponse(show: TvShow): GetTvShowDetailsResponse =
         GetTvShowDetailsResponse(
-            tmdbId = show.tmdbId,
-            name = show.name,
-            overview = show.overview,
-            firstAirDate = show.firstAirDate,
+            tmdbId = show.tmdbId.value,
+            name = show.name.value,
+            overview = show.overview?.value,
+            firstAirDate = show.firstAirDate.toString(),
             firstAirYear = show.firstAirYear,
-            posterPath = show.posterPath,
+            posterPath = show.posterPath?.value,
             tmdbVoteAverage = show.tmdbVoteAverage,
         )
 

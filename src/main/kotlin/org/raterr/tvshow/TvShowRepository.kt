@@ -1,10 +1,9 @@
 ﻿package org.raterr.tvshow
 
-import org.springframework.data.repository.CrudRepository
-import org.springframework.stereotype.Repository
-import java.util.Optional
+import org.raterr.TmdbId
 
-@Repository
-interface TvShowRepository : CrudRepository<TvShow, Long> {
-    fun findByTmdbId(tmdbId: Int): Optional<TvShow>
+interface TvShowRepository {
+    fun findById(id: TvShow.Id): TvShow?
+    fun findByTmdbId(tmdbId: TmdbId): TvShow?
+    fun save(show: TvShow): TvShow
 }

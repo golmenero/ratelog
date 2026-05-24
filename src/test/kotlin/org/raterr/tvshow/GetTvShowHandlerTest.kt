@@ -8,7 +8,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.raterr.Overview
+import org.raterr.Title
 import org.raterr.TmdbId
+import org.raterr.Url
 import org.raterr.tmdb.TmdbClient
 import org.raterr.tmdb.TmdbError
 import org.raterr.tmdb.TmdbGenre
@@ -44,32 +47,32 @@ class GetTvShowHandlerTest {
         val result = handler.handle(GetTvShow(TmdbId(456)))
 
         assertTrue(result.isRight())
-        val saved = tvShowRepository.findByTmdbId(456).get()
-        assertEquals(456, saved.tmdbId)
-        assertEquals("Test Show", saved.name)
-        assertEquals("Original Show", saved.originalName)
-        assertEquals("Show Overview", saved.overview)
-        assertEquals("2024-03-15", saved.firstAirDate)
+        val saved = tvShowRepository.findByTmdbId(TmdbId(456))!!
+        assertEquals(456, saved.tmdbId.value)
+        assertEquals("Test Show", saved.name.value)
+        assertEquals("Original Show", saved.originalName?.value)
+        assertEquals("Show Overview", saved.overview?.value)
+        assertEquals("2024-03-15", saved.firstAirDate.toString())
         assertEquals(2024, saved.firstAirYear)
-        assertEquals("/show-poster.jpg", saved.posterPath)
+        assertEquals("/show-poster.jpg", saved.posterPath?.value)
         assertEquals(8.2, saved.tmdbVoteAverage)
-        assertEquals("Drama", saved.genres)
+        assertEquals(listOf(org.raterr.Genre.Drama), saved.genres)
     }
 
     @Test
     fun `updates existing tvshow when in repo`() {
         tvShowRepository.save(
             TvShow(
-                id = 10,
-                tmdbId = 456,
-                name = "Old Name",
-                originalName = "Old Original",
-                overview = "Old Overview",
-                firstAirDate = "2020-01-01",
+                id = TvShow.Id(10),
+                tmdbId = TmdbId(456),
+                name = Title("Old Name"),
+                originalName = Title("Old Original"),
+                overview = Overview("Old Overview"),
+                firstAirDate = java.time.LocalDate.parse("2020-01-01"),
                 firstAirYear = 2020,
-                posterPath = "/old.jpg",
+                posterPath = Url("/old.jpg"),
                 tmdbVoteAverage = 6.0,
-                genres = "Action"
+                genres = listOf(org.raterr.Genre.Action)
             )
         )
         whenever(tmdbClient.tvShowDetails(456)).thenReturn(TmdbTvShow(
@@ -87,10 +90,10 @@ class GetTvShowHandlerTest {
         val result = handler.handle(GetTvShow(TmdbId(456)))
 
         assertTrue(result.isRight())
-        val saved = tvShowRepository.findByTmdbId(456).get()
-        assertEquals(10, saved.id)
-        assertEquals("New Name", saved.name)
-        assertEquals("Sci-Fi", saved.genres)
+        val saved = tvShowRepository.findByTmdbId(TmdbId(456))!!
+        assertEquals(10, saved.id?.value)
+        assertEquals("New Name", saved.name.value)
+        assertEquals(listOf(org.raterr.Genre.ScienceFiction), saved.genres)
     }
 
     @Test
