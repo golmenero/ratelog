@@ -34,6 +34,7 @@ class GetMovieHandler(
                 genres = genres
             )
             ?: Movie(
+                id = null,
                 tmdbId = tmdbMovie.id,
                 title = tmdbMovie.title,
                 originalTitle = tmdbMovie.originalTitle,

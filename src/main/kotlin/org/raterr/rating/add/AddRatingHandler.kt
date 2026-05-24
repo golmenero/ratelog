@@ -50,6 +50,7 @@ class AddRatingHandler(
         ensure(existingRating == null) { AddRatingHandlerError.RatingAlreadyExists }
 
         Rating(
+            id = null,
             movieId = movie.id,
             userId = command.userId.value,
             directing = command.directing,

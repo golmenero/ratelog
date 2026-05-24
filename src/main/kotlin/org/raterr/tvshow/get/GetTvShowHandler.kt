@@ -34,6 +34,7 @@ class GetTvShowHandler(
                 genres = genres
             )
             ?: TvShow(
+                id = null,
                 tmdbId = tmdbShow.id,
                 name = tmdbShow.name,
                 originalName = tmdbShow.originalName,

@@ -35,6 +35,7 @@ class RegisterHandler(
         val hashedPassword = passwordEncoder.encode(command.password)
 
         val user = User(
+            id = null,
             username = command.username,
             email = command.email,
             passwordHash = hashedPassword

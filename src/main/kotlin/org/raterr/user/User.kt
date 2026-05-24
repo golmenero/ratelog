@@ -6,12 +6,9 @@ import org.springframework.data.relational.core.mapping.Table
 
 @Table("users")
 data class User(
-    @Id
-    val id: Long? = null,
+    @Id val id: Long?,
     val username: String,
     val email: String,
-    @Column("password_hash")
-    val passwordHash: String,
-    @Column("created_at_epoch_ms")
-    val createdAtEpochMs: Long = System.currentTimeMillis()
+    @Column("password_hash") val passwordHash: String,
+    @Column("created_at_epoch_ms") val createdAtEpochMs: Long = System.currentTimeMillis()
 )

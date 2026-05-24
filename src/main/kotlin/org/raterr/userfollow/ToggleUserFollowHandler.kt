@@ -41,6 +41,7 @@ class ToggleUserFollowHandler(
                 .ifPresent(userFollowRepository::delete)
         } else {
             UserFollow(
+                id = null,
                 followerId = followerId,
                 followedId = followedId,
             ).let(userFollowRepository::save)

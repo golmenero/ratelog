@@ -32,6 +32,7 @@ class ToggleFollowHandler(
         if (existingFollow.isPresent) followRepository.delete(existingFollow.get())
         else {
             Follow(
+                id = null,
                 userId = command.userId.value,
                 contentType = command.type.name,
                 contentTmdbId = command.tmdbId.value

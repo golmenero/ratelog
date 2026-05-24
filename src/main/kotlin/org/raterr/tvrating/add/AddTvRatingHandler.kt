@@ -50,6 +50,7 @@ class AddTvRatingHandler(
         ensure(existingRating == null) { AddTvRatingHandlerError.RatingAlreadyExists }
 
         TvRating(
+            id = null,
             tvShowId = show.id,
             userId = command.userId.value,
             directing = command.directing,
