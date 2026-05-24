@@ -3,9 +3,12 @@ package org.raterr.movie
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
+import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
+import java.util.Optional
 
 @Table("movies")
-data class Movie(
+data class MovieEntity(
     @Id val id: Long? = null,
     @Column("tmdb_id") val tmdbId: Int,
     val title: String,
@@ -17,3 +20,8 @@ data class Movie(
     @Column("tmdb_vote_average") val tmdbVoteAverage: Double?,
     val genres: String?
 )
+
+@Repository
+interface MovieDAO : CrudRepository<MovieEntity, Long> {
+    fun findByTmdbId(tmdbId: Int): Optional<MovieEntity>
+}

@@ -3,6 +3,7 @@ package org.raterr.search
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
+import org.raterr.TmdbId
 import org.raterr.UserId
 import org.raterr.follow.FollowRepository
 import org.raterr.movie.MovieRepository
@@ -64,8 +65,8 @@ class SearchHandler(
             val movies = tmdbClient.searchMovies(query).bind()
 
             movies.map { tmdbMovie ->
-                val movie = movieRepository.findByTmdbId(tmdbMovie.id).orElse(null)
-                val rating = movie?.id?.let(ratingRepository::findFirstByMovieId)
+                val movie = tmdbMovie.id.let(::TmdbId).let(movieRepository::findByTmdbId)
+                val rating = movie?.id?.value?.let(ratingRepository::findFirstByMovieId)
                 val isFollowed = userId?.let {
                     followRepository.existsByUserIdAndContentTypeAndContentTmdbId(it.value, MediaType.movie.name, tmdbMovie.id)
                 } ?: false

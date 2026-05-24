@@ -1,6 +1,5 @@
 package org.raterr.search
 
-import arrow.core.left
 import arrow.core.right
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -13,12 +12,10 @@ import org.raterr.UserId
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
 import org.raterr.movie.InMemoryMovieRepository
-import org.raterr.movie.Movie
 import org.raterr.movie.aMovie
 import org.raterr.rating.InMemoryRatingRepository
 import org.raterr.rating.Rating
 import org.raterr.tmdb.TmdbClient
-import org.raterr.tmdb.TmdbError
 import org.raterr.tmdb.TmdbMovie
 import org.raterr.tmdb.TmdbTvShow
 import org.raterr.tvrating.InMemoryTvRatingRepository

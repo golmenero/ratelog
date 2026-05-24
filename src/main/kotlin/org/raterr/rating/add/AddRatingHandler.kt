@@ -46,12 +46,12 @@ class AddRatingHandler(
             .mapLeft { AddRatingHandlerError.MovieNotFound }
             .bind()
 
-        val existingRating = ratingRepository.findByMovieIdAndUserId(movie.id!!, command.userId.value).firstOrNull()
+        val existingRating = ratingRepository.findByMovieIdAndUserId(movie.id!!.value, command.userId.value).firstOrNull()
         ensure(existingRating == null) { AddRatingHandlerError.RatingAlreadyExists }
 
         Rating(
             id = null,
-            movieId = movie.id,
+            movieId = movie.id.value,
             userId = command.userId.value,
             directing = command.directing,
             cinematography = command.cinematography,

@@ -42,12 +42,12 @@ class GetMovieController(
 
     private fun buildResponse(movie: Movie): GetMovieDetailsResponse =
         GetMovieDetailsResponse(
-            tmdbId = movie.tmdbId,
-            title = movie.title,
-            overview = movie.overview,
-            releaseDate = movie.releaseDate,
+            tmdbId = movie.tmdbId.value,
+            title = movie.title.value,
+            overview = movie.overview?.value,
+            releaseDate = movie.releaseDate.toString(),
             releaseYear = movie.releaseYear,
-            posterPath = movie.posterPath,
+            posterPath = movie.posterPath?.value,
             tmdbVoteAverage = movie.tmdbVoteAverage,
         )
 }

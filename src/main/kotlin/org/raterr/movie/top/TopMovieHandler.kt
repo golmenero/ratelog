@@ -1,9 +1,9 @@
 package org.raterr.movie.top
 
 import org.raterr.UserId
+import org.raterr.movie.Movie
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository
-import org.raterr.movie.Movie
 import org.raterr.movie.MovieRepository
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
@@ -27,6 +27,6 @@ class TopMovieHandler(
 ) {
     fun handle(query: TopMovie): List<RankedMovie> =
         ratingRepository.findRankedByUserIdWithFilters(query.userId.value, query.category, query.limit, query.name)
-            .map { it to it.movieId.let(movieRepository::findById).getOrNull()!! }
-            .map { RankedMovie(it.first, it.second) }
+            .map { it to it.movieId.let(Movie::Id).let(movieRepository::findById) }
+            .map { RankedMovie(it.first, it.second!!) }
 }

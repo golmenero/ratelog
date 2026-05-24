@@ -22,12 +22,11 @@ class DeleteRatingHandler(
     private val ratingRankService: RatingRankService,
 ) {
     fun handle(command: DeleteRating): Either<DeleteRatingHandlerError, Unit> = either {
-        val movie = movieRepository.findByTmdbId(command.tmdbId.value)
-            .orElse(null)
+        val movie = movieRepository.findByTmdbId(command.tmdbId)
 
         ensure(movie != null) { DeleteRatingHandlerError.MovieNotFound }
 
-        val deletedCount = ratingRepository.deleteByMovieIdAndUserId(movie.id!!, command.userId.value)
+        val deletedCount = ratingRepository.deleteByMovieIdAndUserId(movie.id!!.value, command.userId.value)
         ensure(deletedCount > 0) { DeleteRatingHandlerError.RatingNotFound }
 
         ratingRankService.recalculateRanks(command.userId.value)

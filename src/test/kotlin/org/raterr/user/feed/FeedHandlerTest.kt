@@ -6,12 +6,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.raterr.UserId
 import org.raterr.movie.InMemoryMovieRepository
-import org.raterr.movie.Movie
 import org.raterr.movie.aMovie
 import org.raterr.rating.InMemoryRatingRepository
 import org.raterr.rating.Rating
 import org.raterr.tvshow.InMemoryTvShowRepository
-import org.raterr.tvshow.TvShow
 import org.raterr.tvrating.InMemoryTvRatingRepository
 import org.raterr.tvrating.TvRating
 import org.raterr.tvshow.aTvShow

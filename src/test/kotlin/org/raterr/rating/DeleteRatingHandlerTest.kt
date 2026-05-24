@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.raterr.TmdbId
 import org.raterr.UserId
-import org.raterr.movie.Movie
 import org.raterr.rating.delete.DeleteRating
 import org.raterr.rating.delete.DeleteRatingHandler
 import org.raterr.rating.delete.DeleteRatingHandlerError
 import org.raterr.movie.InMemoryMovieRepository
 import org.raterr.movie.aMovie
-import org.raterr.rating.InMemoryRatingRepository
 import kotlin.test.Test
 
 class DeleteRatingHandlerTest {

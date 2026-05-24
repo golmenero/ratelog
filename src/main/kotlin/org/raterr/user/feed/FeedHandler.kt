@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
 import org.raterr.UserId
+import org.raterr.movie.Movie
 import org.raterr.userfollow.UserFollowRepository
 import org.raterr.movie.MovieRepository
 import org.raterr.rating.Rating
@@ -55,7 +56,8 @@ class FeedHandler(
         val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
 
         val movieItems = movieRatings.mapNotNull { rating ->
-            val movie = movieRepository.findById(rating.movieId).getOrNull() ?: return@mapNotNull null
+            val movie = rating.movieId.let(Movie::Id).let(movieRepository::findById)
+                ?: return@mapNotNull null
             val score = RatingScoreService.score(
                 Rating(
                     id = rating.id,
@@ -71,9 +73,9 @@ class FeedHandler(
             )
             FeedItem(
                 username = rating.username,
-                title = movie.title,
-                posterPath = movie.posterPath,
-                tmdbId = movie.tmdbId,
+                title = movie.title.value,
+                posterPath = movie.posterPath?.value,
+                tmdbId = movie.tmdbId.value,
                 type = MediaType.movie.name,
                 score = score,
                 ratedAt = dateFormatter.format(Instant.ofEpochMilli(rating.createdAtEpochMs)),

@@ -2,9 +2,7 @@ package org.raterr.movie.top
 
 import org.raterr.UserId
 import org.raterr.rating.RatingScoreService
-import org.raterr.rating.Rating
 import org.raterr.annotations.CurrentUser
-import org.raterr.movie.Movie
 import org.raterr.movie.premieres.MoviePremieresHandler
 import org.raterr.movie.premieres.MoviePremieresQuery
 import org.raterr.user.User
@@ -70,10 +68,10 @@ class TopMovieController(
         list.map {
             GetTopMoviesResponse(
                 rank = it.rating.rank,
-                tmdbId = it.movie.tmdbId,
-                title = it.movie.title,
+                tmdbId = it.movie.tmdbId.value,
+                title = it.movie.title.value,
                 releaseYear = it.movie.releaseYear,
-                posterPath = it.movie.posterPath,
+                posterPath = it.movie.posterPath?.value,
                 averageScore = RatingScoreService.score(it.rating),
                 directing = it.rating.directing,
                 cinematography = it.rating.cinematography,
