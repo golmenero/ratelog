@@ -24,8 +24,8 @@ class TopTvShowHandlerTest {
 
     @Test
     fun `no filters returns ratings with shows ordered by score`() {
-        val show1 = tvShowRepository.save(aTvShow(tmdbId = 100, name = "Show1"))
-        val show2 = tvShowRepository.save(aTvShow(tmdbId = 200, name = "Show2"))
+        val show1 = tvShowRepository.save(aTvShow(id = TvShow.Id(1), tmdbId = 100, name = "Show1"))
+        val show2 = tvShowRepository.save(aTvShow(id = TvShow.Id(2), tmdbId = 200, name = "Show2"))
         tvRatingRepository.save(
             TvRating(
                 tvShowId = show1.id!!.value,
@@ -61,9 +61,9 @@ class TopTvShowHandlerTest {
 
     @Test
     fun `filters by category keeps absolute rank`() {
-        val show1 = tvShowRepository.save(aTvShow(tmdbId = 100, name = "DramaShow", genres = listOf(Genre.Drama)))
-        val show2 = tvShowRepository.save(aTvShow(tmdbId = 200, name = "ComedyShow", genres = listOf(Genre.Comedy)))
-        val show3 = tvShowRepository.save(aTvShow(tmdbId = 300, name = "AnotherDrama", genres = listOf(Genre.Drama)))
+        val show1 = tvShowRepository.save(aTvShow(id = TvShow.Id(1), tmdbId = 100, name = "DramaShow", genres = listOf(Genre.Drama)))
+        val show2 = tvShowRepository.save(aTvShow(id = TvShow.Id(2), tmdbId = 200, name = "ComedyShow", genres = listOf(Genre.Comedy)))
+        val show3 = tvShowRepository.save(aTvShow(id = TvShow.Id(3), tmdbId = 300, name = "AnotherDrama", genres = listOf(Genre.Drama)))
         tvRatingRepository.save(
             TvRating(
                 tvShowId = show1.id!!.value,

@@ -46,12 +46,12 @@ class AddTvRatingHandler(
             .mapLeft { AddTvRatingHandlerError.TvShowNotFound }
             .bind()
 
-        val existingRating = tvRatingRepository.findByTvShowIdAndUserId(show.id!!, command.userId.value).firstOrNull()
+        val existingRating = tvRatingRepository.findByTvShowIdAndUserId(show.id!!.value, command.userId.value).firstOrNull()
         ensure(existingRating == null) { AddTvRatingHandlerError.RatingAlreadyExists }
 
         TvRating(
             id = null,
-            tvShowId = show.id,
+            tvShowId = show.id.value,
             userId = command.userId.value,
             directing = command.directing,
             cinematography = command.cinematography,

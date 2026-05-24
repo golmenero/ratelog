@@ -174,7 +174,7 @@ class AddTvRatingHandlerTest {
     @Test
     fun `existing rating returns RatingAlreadyExists`() {
         setupShow(200)
-        tvShowRepository.save(aTvShow(id = 1, tmdbId = 200, name = "Show"))
+        tvShowRepository.save(aTvShow(id = org.raterr.tvshow.TvShow.Id(1), tmdbId = 200, name = "Show"))
         tvRatingRepository.save(
             TvRating(
                 id = 1,

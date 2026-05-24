@@ -93,9 +93,9 @@ class InMemoryTvRatingRepository(
             .sortedByDescending { it.directing + it.cinematography + it.acting + it.soundtrack + it.screenplay }
             .mapIndexed { index, rating -> rating.copy(rank = index + 1) }
         return all.filter { ranked ->
-            val show = tvShowRepository.findById(ranked.tvShowId).orElse(null)
-            (category == null || show?.genres?.lowercase()?.contains(category.lowercase()) == true) &&
-            (name == null || show?.name?.lowercase()?.contains(name.lowercase()) == true)
+            val show = tvShowRepository.findById(org.raterr.tvshow.TvShow.Id(ranked.tvShowId))
+            (category == null || show?.genres?.map { it.name }?.joinToString(",")?.lowercase()?.contains(category.lowercase()) == true) &&
+            (name == null || show?.name?.value?.lowercase()?.contains(name.lowercase()) == true)
         }.take(limit)
     }
 

@@ -88,7 +88,7 @@ class FeedHandlerTest {
 
         val show = tvShowRepository.save(aTvShow(tmdbId = 200, name = "Test Show", posterPath = "/poster.jpg"))
         tvRatingRepository.save(
-            TvRating(tvShowId = show.id!!, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = now)
+            TvRating(tvShowId = show.id!!.value, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = now)
         )
 
         val result = handler.handle(FeedQuery(UserId(1)))

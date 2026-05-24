@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import kotlin.jvm.optionals.getOrNull
 
 data class FeedQuery(
     val userId: UserId
@@ -84,7 +83,7 @@ class FeedHandler(
         }
 
         val tvItems = tvRatings.mapNotNull { rating ->
-            val show = tvShowRepository.findById(rating.tvShowId).getOrNull() ?: return@mapNotNull null
+            val show = rating.tvShowId.let(org.raterr.tvshow.TvShow::Id).let(tvShowRepository::findById) ?: return@mapNotNull null
             val score = TvRatingScoreService.score(
                 TvRating(
                     id = rating.id,
@@ -100,9 +99,9 @@ class FeedHandler(
             )
             FeedItem(
                 username = rating.username,
-                title = show.name,
-                posterPath = show.posterPath,
-                tmdbId = show.tmdbId,
+                title = show.name.value,
+                posterPath = show.posterPath?.value,
+                tmdbId = show.tmdbId.value,
                 type = MediaType.tvshow.name,
                 score = score,
                 ratedAt = dateFormatter.format(Instant.ofEpochMilli(rating.createdAtEpochMs)),

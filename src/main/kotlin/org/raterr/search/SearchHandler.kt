@@ -92,8 +92,8 @@ class SearchHandler(
             val tvshows = tmdbClient.searchTvShows(query).bind()
 
             tvshows.map { tmdbShow ->
-                val show = tvShowRepository.findByTmdbId(tmdbShow.id).orElse(null)
-                val rating = show?.id?.let(tvRatingRepository::findFirstByTvShowId)
+                val show = tmdbShow.id.let(::TmdbId).let(tvShowRepository::findByTmdbId)
+                val rating = show?.id?.value?.let(tvRatingRepository::findFirstByTvShowId)
                 val isFollowed = userId?.let {
                     followRepository.existsByUserIdAndContentTypeAndContentTmdbId(it.value, MediaType.tvshow.name, tmdbShow.id)
                 } ?: false

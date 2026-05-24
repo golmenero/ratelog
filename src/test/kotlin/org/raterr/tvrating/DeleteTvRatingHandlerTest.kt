@@ -32,7 +32,7 @@ class DeleteTvRatingHandlerTest {
         val show = tvShowRepository.save(aTvShow(tmdbId = 200, name = "Show"))
         tvRatingRepository.save(
             TvRating(
-                tvShowId = show.id!!,
+                tvShowId = show.id!!.value,
                 userId = 1,
                 directing = 5.0,
                 cinematography = 5.0,

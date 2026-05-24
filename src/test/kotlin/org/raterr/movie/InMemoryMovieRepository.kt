@@ -8,6 +8,11 @@ class InMemoryMovieRepository : MovieRepository {
     val storage: MutableMap<TmdbId, Movie> = mutableMapOf()
     private val idGenerator = AtomicLong(1)
 
+    fun clear() {
+        storage.clear()
+        idGenerator.set(1)
+    }
+
     override fun findById(id: Movie.Id): Movie? =
         storage.values.firstOrNull { it.id == id }
 
@@ -26,8 +31,4 @@ class InMemoryMovieRepository : MovieRepository {
 
             movie
         }
-
-    fun clear() {
-        storage.clear()
-    }
 }

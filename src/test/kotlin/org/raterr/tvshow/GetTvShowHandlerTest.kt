@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.raterr.Genre
 import org.raterr.Overview
 import org.raterr.Title
 import org.raterr.TmdbId
@@ -72,7 +73,7 @@ class GetTvShowHandlerTest {
                 firstAirYear = 2020,
                 posterPath = Url("/old.jpg"),
                 tmdbVoteAverage = 6.0,
-                genres = listOf(org.raterr.Genre.Action)
+                genres = listOf(Genre.Action)
             )
         )
         whenever(tmdbClient.tvShowDetails(456)).thenReturn(TmdbTvShow(
@@ -83,7 +84,7 @@ class GetTvShowHandlerTest {
             firstAirDate = "2024-09-01",
             posterPath = "/new.jpg",
             voteAverage = 9.0,
-            genres = listOf(TmdbGenre(3, "Sci-Fi")),
+            genres = listOf(TmdbGenre(3, "Action")),
             status = "Ended"
         ).right())
 
@@ -93,7 +94,7 @@ class GetTvShowHandlerTest {
         val saved = tvShowRepository.findByTmdbId(TmdbId(456))!!
         assertEquals(10, saved.id?.value)
         assertEquals("New Name", saved.name.value)
-        assertEquals(listOf(org.raterr.Genre.ScienceFiction), saved.genres)
+        assertEquals(listOf(Genre.Action), saved.genres)
     }
 
     @Test
