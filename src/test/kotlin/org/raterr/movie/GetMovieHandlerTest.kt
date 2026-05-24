@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.raterr.Genre
 import org.raterr.TmdbId
 import org.raterr.movie.get.GetMovie
 import org.raterr.movie.get.GetMovieHandler
@@ -43,32 +44,32 @@ class GetMovieHandlerTest {
         val result = handler.handle(GetMovie(TmdbId(123)))
 
         assertTrue(result.isRight())
-        val saved = movieRepository.findByTmdbId(123).get()
-        assertEquals(123, saved.tmdbId)
-        assertEquals("Test Movie", saved.title)
-        assertEquals("Original", saved.originalTitle)
-        assertEquals("Overview", saved.overview)
-        assertEquals("2024-01-01", saved.releaseDate)
+        val saved = movieRepository.findByTmdbId(TmdbId(123))!!
+        assertEquals(TmdbId(123), saved.tmdbId)
+        assertEquals("Test Movie", saved.title.value)
+        assertEquals("Original", saved.originalTitle?.value)
+        assertEquals("Overview", saved.overview?.value)
+        assertEquals("2024-01-01", saved.releaseDate.toString())
         assertEquals(2024, saved.releaseYear)
-        assertEquals("/poster.jpg", saved.posterPath)
+        assertEquals("/poster.jpg", saved.posterPath?.value)
         assertEquals(7.5, saved.tmdbVoteAverage)
-        assertEquals("Action", saved.genres)
+        assertEquals(listOf(Genre.Action), saved.genres)
     }
 
     @Test
     fun `updates existing movie when in repo`() {
         movieRepository.save(
             Movie(
-                id = 5,
-                tmdbId = 123,
-                title = "Old Title",
-                originalTitle = "Old Original",
-                overview = "Old Overview",
-                releaseDate = "2020-01-01",
+                id = Movie.Id(5),
+                tmdbId = TmdbId(123),
+                title = org.raterr.Title("Old Title"),
+                originalTitle = org.raterr.Title("Old Original"),
+                overview = org.raterr.Overview("Old Overview"),
+                releaseDate = java.time.LocalDate.parse("2020-01-01"),
                 releaseYear = 2020,
-                posterPath = "/old.jpg",
+                posterPath = org.raterr.Url("/old.jpg"),
                 tmdbVoteAverage = 5.0,
-                genres = "Drama"
+                genres = listOf(Genre.Drama)
             )
         )
         whenever(tmdbClient.movieDetails(123)).thenReturn(TmdbMovie(
@@ -85,10 +86,10 @@ class GetMovieHandlerTest {
         val result = handler.handle(GetMovie(TmdbId(123)))
 
         assertTrue(result.isRight())
-        val saved = movieRepository.findByTmdbId(123).get()
-        assertEquals(5, saved.id)
-        assertEquals("New Title", saved.title)
-        assertEquals("Comedy", saved.genres)
+        val saved = movieRepository.findByTmdbId(TmdbId(123))!!
+        assertEquals(Movie.Id(5), saved.id)
+        assertEquals("New Title", saved.title.value)
+        assertEquals(listOf(Genre.Comedy), saved.genres)
     }
 
     @Test

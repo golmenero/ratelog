@@ -12,6 +12,7 @@ import org.raterr.UserId
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
 import org.raterr.movie.InMemoryMovieRepository
+import org.raterr.movie.Movie
 import org.raterr.movie.aMovie
 import org.raterr.movie.get.GetMovieHandler
 import org.raterr.rating.add.AddRating
@@ -243,7 +244,7 @@ class AddRatingHandlerTest {
     @Test
     fun `existing rating returns RatingAlreadyExists`() {
         setupMovie(100)
-        movieRepository.save(aMovie(id = 1, tmdbId = 100, title = "Movie"))
+        movieRepository.save(aMovie(id = Movie.Id(1), tmdbId = 100, title = "Movie"))
         ratingRepository.save(
             Rating(
                 id = 1,

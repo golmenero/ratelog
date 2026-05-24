@@ -1,6 +1,7 @@
 package org.raterr.rating
 
 import org.raterr.movie.InMemoryMovieRepository
+import org.raterr.movie.Movie
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicLong
 
@@ -96,9 +97,9 @@ class InMemoryRatingRepository(
             .sortedByDescending { it.directing + it.cinematography + it.acting + it.soundtrack + it.screenplay }
             .mapIndexed { index, rating -> rating.copy(rank = index + 1) }
         return all.filter { ranked ->
-            val movie = movieRepository.findById(ranked.movieId).orElse(null)
-            (category == null || movie?.genres?.lowercase()?.contains(category.lowercase()) == true) &&
-            (name == null || movie?.title?.lowercase()?.contains(name.lowercase()) == true)
+            val movie = movieRepository.findById(ranked.movieId.let(Movie::Id))
+            (category == null || movie?.genres?.any { it.name.lowercase() == category.lowercase() } == true) &&
+            (name == null || movie?.title?.value?.lowercase()?.contains(name.lowercase()) == true)
         }.take(limit)
     }
 

@@ -3,6 +3,7 @@ package org.raterr.movie
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.raterr.Genre
 import org.raterr.UserId
 import org.raterr.movie.top.TopMovie
 import org.raterr.movie.top.TopMovieHandler
@@ -24,11 +25,11 @@ class TopMovieHandlerTest {
 
     @Test
     fun `no filters returns ratings with movies ordered by score`() {
-        val movie1 = movieRepository.save(aMovie(tmdbId = 100, title = "Movie1"))
-        val movie2 = movieRepository.save(aMovie(tmdbId = 200, title = "Movie2"))
+        val movie1 = movieRepository.save(aMovie(id = Movie.Id(1), tmdbId = 100, title = "Movie1"))
+        val movie2 = movieRepository.save(aMovie(id = Movie.Id(2), tmdbId = 200, title = "Movie2"))
         ratingRepository.save(
             Rating(
-                movieId = movie1.id!!,
+                movieId = movie1.id!!.value,
                 userId = 1,
                 directing = 5.0,
                 cinematography = 5.0,
@@ -40,7 +41,7 @@ class TopMovieHandlerTest {
         )
         ratingRepository.save(
             Rating(
-                movieId = movie2.id!!,
+                movieId = movie2.id!!.value,
                 userId = 1,
                 directing = 8.0,
                 cinematography = 8.0,
@@ -56,17 +57,17 @@ class TopMovieHandlerTest {
         assertEquals(2, result.size)
         assertEquals(1, result[0].rating.rank)
         assertEquals(2, result[1].rating.rank)
-        assertEquals("Movie2", result[0].movie.title)
+        assertEquals("Movie2", result[0].movie.title.value)
     }
 
     @Test
     fun `filters by category keeps absolute rank`() {
-        val movie1 = movieRepository.save(aMovie(tmdbId = 100, title = "ActionMovie", genres = "Action"))
-        val movie2 = movieRepository.save(aMovie(tmdbId = 200, title = "DramaMovie", genres = "Drama"))
-        val movie3 = movieRepository.save(aMovie(tmdbId = 300, title = "AnotherAction", genres = "Action"))
+        val movie1 = movieRepository.save(aMovie(id = Movie.Id(1),tmdbId = 100, title = "ActionMovie", genres = listOf(Genre.Action)))
+        val movie2 = movieRepository.save(aMovie(id = Movie.Id(2),tmdbId = 200, title = "DramaMovie", genres = listOf(Genre.Drama)))
+        val movie3 = movieRepository.save(aMovie(id = Movie.Id(3),tmdbId = 300, title = "AnotherAction", genres = listOf(Genre.Action)))
         ratingRepository.save(
             Rating(
-                movieId = movie1.id!!,
+                movieId = movie1.id!!.value,
                 userId = 1,
                 directing = 10.0,
                 cinematography = 10.0,
@@ -78,7 +79,7 @@ class TopMovieHandlerTest {
         )
         ratingRepository.save(
             Rating(
-                movieId = movie2.id!!,
+                movieId = movie2.id!!.value,
                 userId = 1,
                 directing = 8.0,
                 cinematography = 8.0,
@@ -90,7 +91,7 @@ class TopMovieHandlerTest {
         )
         ratingRepository.save(
             Rating(
-                movieId = movie3.id!!,
+                movieId = movie3.id!!.value,
                 userId = 1,
                 directing = 5.0,
                 cinematography = 5.0,
@@ -113,7 +114,7 @@ class TopMovieHandlerTest {
         val movie = movieRepository.save(aMovie(tmdbId = 100, title = "The Matrix"))
         ratingRepository.save(
             Rating(
-                movieId = movie.id!!,
+                movieId = movie.id!!.value,
                 userId = 1,
                 directing = 5.0,
                 cinematography = 5.0,

@@ -12,6 +12,7 @@ import org.raterr.UserId
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
 import org.raterr.movie.InMemoryMovieRepository
+import org.raterr.movie.Movie
 import org.raterr.movie.aMovie
 import org.raterr.rating.InMemoryRatingRepository
 import org.raterr.rating.Rating
@@ -180,11 +181,11 @@ class SearchHandlerTest {
 
     @Test
     fun `canFollow false when rating exists`() {
-        val movie = movieRepository.save(aMovie(id = 5, tmdbId = 1, title = "Movie"))
+        val movie = movieRepository.save(aMovie(id = Movie.Id(5), tmdbId = 1, title = "Movie"))
         ratingRepository.save(
             Rating(
                 id = 1,
-                movieId = movie.id!!,
+                movieId = movie.id!!.value,
                 userId = 1,
                 directing = 5.0,
                 cinematography = 5.0,
@@ -208,7 +209,7 @@ class SearchHandlerTest {
 
     @Test
     fun `canFollow true when no rating exists`() {
-        movieRepository.save(aMovie(id = 5, tmdbId = 1, title = "Movie"))
+        movieRepository.save(aMovie(id = Movie.Id(5), tmdbId = 1, title = "Movie"))
         whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 

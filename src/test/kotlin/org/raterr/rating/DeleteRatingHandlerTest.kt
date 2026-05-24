@@ -30,7 +30,7 @@ class DeleteRatingHandlerTest {
         val movie = movieRepository.save(aMovie(tmdbId = 100, title = "Movie"))
         ratingRepository.save(
             Rating(
-                movieId = movie.id!!,
+                movieId = movie.id!!.value,
                 userId = 1,
                 directing = 5.0,
                 cinematography = 5.0,

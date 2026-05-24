@@ -1,64 +1,33 @@
 package org.raterr.movie
 
-import java.util.Optional
+import arrow.atomic.value
+import org.raterr.TmdbId
 import java.util.concurrent.atomic.AtomicLong
 
 class InMemoryMovieRepository : MovieRepository {
-
-    private val storage = mutableListOf<Movie>()
+    val storage: MutableMap<TmdbId, Movie> = mutableMapOf()
     private val idGenerator = AtomicLong(1)
+
+    override fun findById(id: Movie.Id): Movie? =
+        storage.values.firstOrNull { it.id == id }
+
+    override fun findByTmdbId(tmdbId: TmdbId): Movie? =
+        storage.values.firstOrNull { it.tmdbId == tmdbId }
+
+    override fun save(movie: Movie): Movie =
+        if (movie.id == null) {
+            val newEntity = movie.copy(id = idGenerator.getAndIncrement().let(Movie::Id))
+            storage[movie.tmdbId] = newEntity
+
+            newEntity
+        } else {
+            storage.remove(movie.tmdbId)
+            storage[movie.tmdbId] = movie
+
+            movie
+        }
 
     fun clear() {
         storage.clear()
-        idGenerator.set(1)
     }
-
-    override fun <S : Movie> save(entity: S): S {
-        @Suppress("UNCHECKED_CAST")
-        return if (entity.id == null) {
-            val newEntity = entity.copy(id = idGenerator.getAndIncrement()) as S
-            storage.add(newEntity)
-            newEntity
-        } else {
-            storage.removeIf { it.id == entity.id }
-            storage.add(entity)
-            entity
-        }
-    }
-
-    override fun <S : Movie> saveAll(entities: Iterable<S>): Iterable<S> = entities.map { save(it) }
-
-    override fun findById(id: Long): Optional<Movie> =
-        storage.find { it.id == id }?.let { Optional.of(it) } ?: Optional.empty()
-
-    override fun existsById(id: Long): Boolean = storage.any { it.id == id }
-
-    override fun findAll(): Iterable<Movie> = storage.toList()
-
-    override fun findAllById(ids: Iterable<Long>): Iterable<Movie> = storage.filter { it.id in ids }
-
-    override fun count(): Long = storage.size.toLong()
-
-    override fun deleteById(id: Long) {
-        storage.removeIf { it.id == id }
-    }
-
-    override fun delete(entity: Movie) {
-        storage.removeIf { it.id == entity.id }
-    }
-
-    override fun deleteAllById(ids: Iterable<Long>) {
-        ids.forEach { deleteById(it) }
-    }
-
-    override fun deleteAll(entities: Iterable<Movie>) {
-        entities.forEach { delete(it) }
-    }
-
-    override fun deleteAll() {
-        storage.clear()
-    }
-
-    override fun findByTmdbId(tmdbId: Int): Optional<Movie> =
-        storage.find { it.tmdbId == tmdbId }?.let { Optional.of(it) } ?: Optional.empty()
 }
