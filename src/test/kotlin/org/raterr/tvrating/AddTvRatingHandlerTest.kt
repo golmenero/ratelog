@@ -18,6 +18,7 @@ import org.raterr.tvrating.add.AddTvRating
 import org.raterr.tvrating.add.AddTvRatingHandler
 import org.raterr.tvrating.add.AddTvRatingHandlerError
 import org.raterr.tvshow.InMemoryTvShowRepository
+import org.raterr.tvshow.aTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
 
 class AddTvRatingHandlerTest {
@@ -173,7 +174,7 @@ class AddTvRatingHandlerTest {
     @Test
     fun `existing rating returns RatingAlreadyExists`() {
         setupShow(200)
-        tvShowRepository.save(org.raterr.tvshow.TvShow(id = 1, tmdbId = 200, name = "Show"))
+        tvShowRepository.save(aTvShow(id = 1, tmdbId = 200, name = "Show"))
         tvRatingRepository.save(
             TvRating(
                 id = 1,

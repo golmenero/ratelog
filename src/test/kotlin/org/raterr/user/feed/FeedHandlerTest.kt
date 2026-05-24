@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test
 import org.raterr.UserId
 import org.raterr.movie.InMemoryMovieRepository
 import org.raterr.movie.Movie
+import org.raterr.movie.aMovie
 import org.raterr.rating.InMemoryRatingRepository
 import org.raterr.rating.Rating
 import org.raterr.tvshow.InMemoryTvShowRepository
 import org.raterr.tvshow.TvShow
 import org.raterr.tvrating.InMemoryTvRatingRepository
 import org.raterr.tvrating.TvRating
+import org.raterr.tvshow.aTvShow
 import org.raterr.userfollow.InMemoryUserFollowRepository
 import org.raterr.userfollow.UserFollow
 import java.time.Instant
@@ -60,7 +62,7 @@ class FeedHandlerTest {
         userFollowRepository.save(UserFollow(followerId = 1, followedId = 2))
         ratingRepository.addUser(2, "bob")
 
-        val movie = movieRepository.save(Movie(tmdbId = 100, title = "Test Movie", posterPath = "/poster.jpg"))
+        val movie = movieRepository.save(aMovie(tmdbId = 100, title = "Test Movie", posterPath = "/poster.jpg"))
         ratingRepository.save(
             Rating(movieId = movie.id!!, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = now)
         )
@@ -85,7 +87,7 @@ class FeedHandlerTest {
         userFollowRepository.save(UserFollow(followerId = 1, followedId = 2))
         tvRatingRepository.addUser(2, "bob")
 
-        val show = tvShowRepository.save(TvShow(tmdbId = 200, name = "Test Show", posterPath = "/poster.jpg"))
+        val show = tvShowRepository.save(aTvShow(tmdbId = 200, name = "Test Show", posterPath = "/poster.jpg"))
         tvRatingRepository.save(
             TvRating(tvShowId = show.id!!, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = now)
         )
@@ -111,7 +113,7 @@ class FeedHandlerTest {
         ratingRepository.addUser(2, "bob")
 
         val oldDate = Instant.now().minusSeconds(31L * 24 * 60 * 60).toEpochMilli()
-        val movie = movieRepository.save(Movie(tmdbId = 100, title = "Old Movie"))
+        val movie = movieRepository.save(aMovie(tmdbId = 100, title = "Old Movie"))
         ratingRepository.save(
             Rating(movieId = movie.id!!, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = oldDate)
         )
@@ -135,12 +137,12 @@ class FeedHandlerTest {
         ratingRepository.addUser(3, "alice")
 
         val older = now - 100000
-        val movie1 = movieRepository.save(Movie(tmdbId = 100, title = "Older Movie"))
+        val movie1 = movieRepository.save(aMovie(tmdbId = 100, title = "Older Movie"))
         ratingRepository.save(
             Rating(movieId = movie1.id!!, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = older)
         )
 
-        val movie2 = movieRepository.save(Movie(tmdbId = 101, title = "Newer Movie"))
+        val movie2 = movieRepository.save(aMovie(tmdbId = 101, title = "Newer Movie"))
         ratingRepository.save(
             Rating(movieId = movie2.id!!, userId = 3, directing = 7.0, cinematography = 8.0, acting = 7.0, soundtrack = 7.0, screenplay = 7.0, createdAtEpochMs = now)
         )

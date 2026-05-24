@@ -11,6 +11,7 @@ import org.raterr.tvrating.delete.DeleteTvRating
 import org.raterr.tvrating.delete.DeleteTvRatingHandler
 import org.raterr.tvrating.delete.DeleteTvRatingHandlerError
 import org.raterr.tvshow.TvShow
+import org.raterr.tvshow.aTvShow
 import kotlin.test.Test
 
 class DeleteTvRatingHandlerTest {
@@ -28,7 +29,7 @@ class DeleteTvRatingHandlerTest {
 
     @Test
     fun `happy path returns Right`() {
-        val show = tvShowRepository.save(TvShow(tmdbId = 200, name = "Show"))
+        val show = tvShowRepository.save(aTvShow(tmdbId = 200, name = "Show"))
         tvRatingRepository.save(
             TvRating(
                 tvShowId = show.id!!,
@@ -57,7 +58,7 @@ class DeleteTvRatingHandlerTest {
 
     @Test
     fun `rating not found returns RatingNotFound`() {
-        tvShowRepository.save(TvShow(tmdbId = 200, name = "Show"))
+        tvShowRepository.save(aTvShow(tmdbId = 200, name = "Show"))
 
         val result = handler.handle(DeleteTvRating(TmdbId(200), UserId(1)))
 

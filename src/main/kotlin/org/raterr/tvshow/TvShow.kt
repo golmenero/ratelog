@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Table
 
 @Table("tv_shows")
 data class TvShow(
-    @Id val id: Long?,
+    @Id val id: Long? = null,
     @Column("tmdb_id") val tmdbId: Int,
     val name: String,
     @Column("original_name") val originalName: String?,

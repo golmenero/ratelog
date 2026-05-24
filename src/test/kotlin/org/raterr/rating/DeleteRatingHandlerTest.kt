@@ -10,6 +10,7 @@ import org.raterr.rating.delete.DeleteRating
 import org.raterr.rating.delete.DeleteRatingHandler
 import org.raterr.rating.delete.DeleteRatingHandlerError
 import org.raterr.movie.InMemoryMovieRepository
+import org.raterr.movie.aMovie
 import org.raterr.rating.InMemoryRatingRepository
 import kotlin.test.Test
 
@@ -28,7 +29,7 @@ class DeleteRatingHandlerTest {
 
     @Test
     fun `happy path returns Right`() {
-        val movie = movieRepository.save(Movie(tmdbId = 100, title = "Movie"))
+        val movie = movieRepository.save(aMovie(tmdbId = 100, title = "Movie"))
         ratingRepository.save(
             Rating(
                 movieId = movie.id!!,
@@ -57,7 +58,7 @@ class DeleteRatingHandlerTest {
 
     @Test
     fun `rating not found returns RatingNotFound`() {
-        movieRepository.save(Movie(tmdbId = 100, title = "Movie"))
+        movieRepository.save(aMovie(tmdbId = 100, title = "Movie"))
 
         val result = handler.handle(DeleteRating(TmdbId(100), UserId(1)))
 

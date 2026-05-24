@@ -24,8 +24,8 @@ class TopMovieHandlerTest {
 
     @Test
     fun `no filters returns ratings with movies ordered by score`() {
-        val movie1 = movieRepository.save(Movie(tmdbId = 100, title = "Movie1"))
-        val movie2 = movieRepository.save(Movie(tmdbId = 200, title = "Movie2"))
+        val movie1 = movieRepository.save(aMovie(tmdbId = 100, title = "Movie1"))
+        val movie2 = movieRepository.save(aMovie(tmdbId = 200, title = "Movie2"))
         ratingRepository.save(
             Rating(
                 movieId = movie1.id!!,
@@ -61,9 +61,9 @@ class TopMovieHandlerTest {
 
     @Test
     fun `filters by category keeps absolute rank`() {
-        val movie1 = movieRepository.save(Movie(tmdbId = 100, title = "ActionMovie", genres = "Action"))
-        val movie2 = movieRepository.save(Movie(tmdbId = 200, title = "DramaMovie", genres = "Drama"))
-        val movie3 = movieRepository.save(Movie(tmdbId = 300, title = "AnotherAction", genres = "Action"))
+        val movie1 = movieRepository.save(aMovie(tmdbId = 100, title = "ActionMovie", genres = "Action"))
+        val movie2 = movieRepository.save(aMovie(tmdbId = 200, title = "DramaMovie", genres = "Drama"))
+        val movie3 = movieRepository.save(aMovie(tmdbId = 300, title = "AnotherAction", genres = "Action"))
         ratingRepository.save(
             Rating(
                 movieId = movie1.id!!,
@@ -110,7 +110,7 @@ class TopMovieHandlerTest {
 
     @Test
     fun `filters by name keeps absolute rank`() {
-        val movie = movieRepository.save(Movie(tmdbId = 100, title = "The Matrix"))
+        val movie = movieRepository.save(aMovie(tmdbId = 100, title = "The Matrix"))
         ratingRepository.save(
             Rating(
                 movieId = movie.id!!,
