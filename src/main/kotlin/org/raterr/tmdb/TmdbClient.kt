@@ -160,7 +160,19 @@ data class TmdbTvShow(
     @JsonProperty("genres")
     val genres: List<TmdbGenre> = emptyList(),
     @JsonProperty("status")
-    val status: String? = null
+    val status: String? = null,
+    @JsonProperty("seasons")
+    val seasons: List<TmdbTvSeason> = emptyList()
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TmdbTvSeason(
+    @JsonProperty("season_number")
+    val seasonNumber: Int,
+    @JsonProperty("episode_count")
+    val episodeCount: Int? = null,
+    @JsonProperty("air_date")
+    val airDate: String? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

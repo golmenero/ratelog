@@ -15,6 +15,13 @@ data class GetTvShowDetailsResponse(
     val firstAirYear: Int?,
     val posterPath: String?,
     val tmdbVoteAverage: Double?,
+    val seasons: List<SeasonResponse>
+)
+
+data class SeasonResponse(
+    val seasonNumber: Int,
+    val episodeCount: Int?,
+    val airDate: String?
 )
 
 @Controller
@@ -37,15 +44,22 @@ class GetTvShowController(
                 }
             )
 
-    private fun buildResponse(show: TvShow): GetTvShowDetailsResponse =
+    private fun buildResponse(result: GetTvShowResult): GetTvShowDetailsResponse =
         GetTvShowDetailsResponse(
-            tmdbId = show.tmdbId.value,
-            name = show.name.value,
-            overview = show.overview?.value,
-            firstAirDate = show.firstAirDate.toString(),
-            firstAirYear = show.firstAirYear,
-            posterPath = show.posterPath?.value,
-            tmdbVoteAverage = show.tmdbVoteAverage,
+            tmdbId = result.show.tmdbId.value,
+            name = result.show.name.value,
+            overview = result.show.overview?.value,
+            firstAirDate = result.show.firstAirDate.toString(),
+            firstAirYear = result.show.firstAirYear,
+            posterPath = result.show.posterPath?.value,
+            tmdbVoteAverage = result.show.tmdbVoteAverage,
+            seasons = result.seasons.map { s ->
+                SeasonResponse(
+                    seasonNumber = s.seasonNumber,
+                    episodeCount = s.episodeCount,
+                    airDate = s.airDate
+                )
+            }
         )
 
 }

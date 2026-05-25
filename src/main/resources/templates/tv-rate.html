@@ -35,9 +35,21 @@
         </article>
 
         <section th:if="${show != null}" class="panel score-panel">
-            <form th:action="@{/tv/rate}" method="post" class="scores-grid">
+            <form id="rateForm" th:action="@{/tv/rate}" method="post" class="scores-grid">
                 <input type="hidden" name="tmdbId" th:value="${show.tmdbId}">
-                
+
+                <div class="score-field season-field">
+                    <label class="score-label" for="seasonNumber">
+                        <span><i data-lucide="layers" class="score-icon"></i>Season</span>
+                    </label>
+                    <select id="seasonNumber" name="seasonNumber" class="season-select">
+                        <option th:each="season : ${show.seasons}" 
+                                th:value="${season.seasonNumber}" 
+                                th:text="'Season ' + ${season.seasonNumber}">
+                        </option>
+                    </select>
+                </div>
+
                 <div class="score-field">
                     <label class="score-label" for="directing">
                         <span><i data-lucide="clapperboard" class="score-icon"></i>Direction</span>

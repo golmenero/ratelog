@@ -41,12 +41,12 @@ class AddSeasonRatingHandler(
             ensure(score.value in 1.0..10.0) { AddSeasonRatingHandlerError.InvalidRatingValue }
         }
 
-        val show = GetTvShow(TmdbId(command.tmdbId.value))
+        val result = GetTvShow(TmdbId(command.tmdbId.value))
             .let(getTvShowHandler::handle)
             .mapLeft { AddSeasonRatingHandlerError.TvShowNotFound }
             .bind()
 
-        val tvRating = tvRatingRepository.findFirstByTvShowId(show.id!!) ?: TvRating.create(show.id, command.userId, Instant.now())
+        val tvRating = tvRatingRepository.findFirstByTvShowId(result.show.id!!) ?: TvRating.create(result.show.id, command.userId, Instant.now())
         tvRating.addSeasonRating(
             seasonNumber = command.seasonNumber,
             directing = command.directing,
