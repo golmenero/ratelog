@@ -1,6 +1,5 @@
 package org.raterr.tvshow
 
-import org.raterr.movie.MovieEntity
 import org.springframework.data.annotation.Id
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.relational.core.mapping.Column
@@ -39,7 +38,7 @@ interface TvShowDAO : CrudRepository<TvShowEntity, Long> {
         """
         SELECT tv.* FROM tv_shows tv
         INNER JOIN tv_follows tf ON tv.id = tf.tv_show_id
-        WHERE mf.user_id = :userId
+        WHERE tf.user_id = :userId
         """
     )
     fun findFollowedTvShows(userId: Long): List<TvShowEntity>
