@@ -22,7 +22,7 @@ class GetTvShowHandler(
 ) {
     fun handle(query: GetTvShow): Either<GetTvShowHandlerError, TvShow> = either {
         val tmdbShow = query.tmdbId.value.let(tmdbClient::tvShowDetails).bind()
-        val genres = tmdbShow.genres.map { Genre.valueOf(it.name) }
+        val genres = tmdbShow.genres.mapNotNull { Genre.fromValue(it.name) }
 
         val show = query.tmdbId
             .let(tvShowRepository::findByTmdbId)

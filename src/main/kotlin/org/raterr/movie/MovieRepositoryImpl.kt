@@ -50,7 +50,7 @@ class MovieRepositoryImpl(
 
 
     private fun MovieEntity.toDomain(): Movie {
-        val genres = genres?.split(',')?.map(Genre::valueOf) ?: emptyList()
+        val genres = genres?.split(',')?.mapNotNull(Genre::fromValue) ?: emptyList()
         val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
         val follow = currentUserId?.let { movieFollowDAO.findByUserIdAndMovieId(it, id!!) }?.getOrNull()
 
@@ -81,7 +81,7 @@ class MovieRepositoryImpl(
             releaseYear = releaseYear,
             posterPath = posterPath?.value,
             tmdbVoteAverage = tmdbVoteAverage,
-            genres = genres.joinToString(",")
+            genres = genres.joinToString(",") { it.value }
         )
     }
 }

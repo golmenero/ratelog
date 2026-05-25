@@ -22,7 +22,7 @@ class GetMovieHandler(
 ) {
     fun handle(query: GetMovie): Either<GetMovieHandlerError, Movie> = either {
         val tmdbMovie = query.tmdbId.value.let(tmdbClient::movieDetails).bind()
-        val genres = tmdbMovie.genres.map { Genre.valueOf(it.name) }
+        val genres = tmdbMovie.genres.mapNotNull { Genre.fromValue(it.name) }
 
         val movie = query.tmdbId
             .let(movieRepository::findByTmdbId)

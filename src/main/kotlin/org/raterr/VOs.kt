@@ -12,34 +12,38 @@ enum class MediaType {
     movie, tvshow
 }
 
-enum class Genre {
-    Action,
-    Adventure,
-    Animation,
-    Comedy,
-    Crime,
-    Documentary,
-    Drama,
-    Family,
-    Fantasy,
-    History,
-    Horror,
-    Music,
-    Mystery,
-    Romance,
-    ScienceFiction,
-    TvMovie,
-    Thriller,
-    War,
-    Western,
-    ActionAdventure,
-    Kids,
-    News,
-    Reality,
-    SciFiFantasy,
-    Soap,
-    Talk,
-    WarPolitics
+enum class Genre(val value: String) {
+    ACTION("Action"),
+    ADVENTURE("Adventure"),
+    ANIMATION("Animation"),
+    COMEDY("Comedy"),
+    CRIME("Crime"),
+    DOCUMENTARY("Documentary"),
+    DRAMA("Drama"),
+    FAMILY("Family"),
+    FANTASY("Fantasy"),
+    HISTORY("History"),
+    HORROR("Horror"),
+    MUSIC("Music"),
+    MYSTERY("Mystery"),
+    ROMANCE("Romance"),
+    SCIENCE_FICTION("Science Fiction"),
+    TV_MOVIE("TV Movie"),
+    THRILLER("Thriller"),
+    WAR("War"),
+    WESTERN("Western"),
+    ACTION_ADVENTURE("Action & Adventure"),
+    KIDS("Kids"),
+    NEWS("News"),
+    REALITY("Reality"),
+    SCI_FI_FANTASY("Sci-Fi & Fantasy"),
+    SOAP("Soap"),
+    TALK("Talk"),
+    WAR_POLITICS("War & Politics");
+
+    companion object {
+        fun fromValue(value: String): Genre? = entries.find { it.value == value }
+    }
 }
 
 data class Username(val value: String)

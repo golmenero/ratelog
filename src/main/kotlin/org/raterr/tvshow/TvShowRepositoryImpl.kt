@@ -48,7 +48,7 @@ class TvShowRepositoryImpl(
         tvShowDAO.findFollowedTvShows(userId.value).map { it.toDomain() }
 
     private fun TvShowEntity.toDomain(): TvShow {
-        val genres = genres?.split(',')?.map(Genre::valueOf) ?: emptyList()
+        val genres = genres?.split(',')?.mapNotNull(Genre::fromValue) ?: emptyList()
         val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
         val follow = currentUserId?.let { tvFollowDAO.findByUserIdAndTvShowId(it, id!!) }?.getOrNull()
 
@@ -79,7 +79,7 @@ class TvShowRepositoryImpl(
             firstAirYear = firstAirYear,
             posterPath = posterPath?.value,
             tmdbVoteAverage = tmdbVoteAverage,
-            genres = genres.joinToString(",")
+            genres = genres.joinToString(",") { it.value }
         )
     }
 }
