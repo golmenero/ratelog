@@ -1,5 +1,5 @@
 package org.raterr.movie.premieres
 
-sealed interface MoviePremieresHandlerError {
+interface MoviePremieresHandlerError {
     data object MovieNotFound : MoviePremieresHandlerError
 }

@@ -2,8 +2,6 @@ package org.raterr.movie.premieres
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.raterr.TmdbId
-import org.raterr.movie.follow.MovieFollowRepository
 import org.raterr.movie.MovieRepository
 import org.raterr.tmdb.TmdbClient
 import org.raterr.user.User
@@ -13,7 +11,6 @@ import java.time.LocalDate
 data class MoviePremieresQuery(val userId: User.Id)
 
 data class MoviePremiereItem(
-    val movieId: Long,
     val tmdbId: Int,
     val title: String,
     val releaseDate: LocalDate,
@@ -31,27 +28,22 @@ data class MoviePremieres(
 @Service
 class MoviePremieresHandler(
     private val tmdbClient: TmdbClient,
-    private val movieFollowRepository: MovieFollowRepository,
     private val movieRepository: MovieRepository,
 ) {
     fun handle(query: MoviePremieresQuery): Either<MoviePremieresHandlerError, MoviePremieres> = either {
-        val follows = movieFollowRepository.findByUserId(query.userId.value)
+        val followedMovies = query.userId.let(movieRepository::findFollowedMovies)
 
         val released = mutableListOf<MoviePremiereItem>()
         val upcoming = mutableListOf<MoviePremiereItem>()
         val noDate = mutableListOf<MoviePremiereItem>()
         val today = LocalDate.now()
 
-        for (follow in follows) {
-            val movie = follow.movieId.let(org.raterr.movie.Movie::Id).let(movieRepository::findById)
-                ?: raise(MoviePremieresHandlerError.MovieNotFound)
-
+        for (movie in followedMovies) {
             val tmdbMovie = tmdbClient.movieDetails(movie.tmdbId.value).bind()
 
             if (!tmdbMovie.releaseDate.isNullOrBlank()) {
                 val date = LocalDate.parse(tmdbMovie.releaseDate)
                 val item = MoviePremiereItem(
-                    movieId = movie.id!!.value,
                     tmdbId = movie.tmdbId.value,
                     title = tmdbMovie.title,
                     releaseDate = date,
@@ -62,7 +54,6 @@ class MoviePremieresHandler(
             } else {
                 noDate.add(
                     MoviePremiereItem(
-                        movieId = movie.id!!.value,
                         tmdbId = movie.tmdbId.value,
                         title = tmdbMovie.title,
                         releaseDate = today,

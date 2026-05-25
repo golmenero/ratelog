@@ -5,13 +5,8 @@ import org.raterr.Overview
 import org.raterr.Title
 import org.raterr.TmdbId
 import org.raterr.Url
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Column
-import org.springframework.data.relational.core.mapping.Table
-import org.springframework.data.repository.CrudRepository
-import org.springframework.stereotype.Repository
+import org.raterr.user.User
 import java.time.LocalDate
-import java.util.Optional
 
 data class Movie(
     val id: Id?,
@@ -23,14 +18,20 @@ data class Movie(
     val releaseYear: Int?,
     val posterPath: Url?,
     val tmdbVoteAverage: Double?,
-    val genres: List<Genre>
+    val genres: List<Genre>,
+    val followed: Boolean = false,
+    val followedAtEpochMs: Long? = null
 ) {
     data class Id(val value: Long)
+
+    fun toggleFollow(now: Long) =
+        if (followed) copy(followed = false, followedAtEpochMs = null)
+        else copy(followed = true, followedAtEpochMs = now)
 }
 
-@Repository
 interface MovieRepository {
     fun findById(id: Movie.Id): Movie?
     fun findByTmdbId(tmdbId: TmdbId): Movie?
     fun save(movie: Movie): Movie
+    fun findFollowedMovies(userId: User.Id): List<Movie>
 }

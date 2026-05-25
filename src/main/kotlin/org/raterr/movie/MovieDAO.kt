@@ -33,12 +33,18 @@ data class MovieFollowEntity(
 @Repository
 interface MovieDAO : CrudRepository<MovieEntity, Long> {
     fun findByTmdbId(tmdbId: Int): Optional<MovieEntity>
+
+    @Query(
+        """
+        SELECT m.* FROM movies m
+        INNER JOIN movie_follows mf ON m.id = mf.movie_id
+        WHERE mf.user_id = :userId
+        """
+    )
+    fun findFollowedMovies(userId: Long): List<MovieEntity>
 }
 
 @Repository
 interface MovieFollowDAO : CrudRepository<MovieFollowEntity, Long> {
     fun findByUserIdAndMovieId(userId: Long, movieId: Long): Optional<MovieFollowEntity>
-
-    @Query("SELECT mf.movie_id FROM movie_follows mf WHERE mf.user_id = :userId")
-    fun findFollowedMovieIds(userId: Long): List<Long>
 }

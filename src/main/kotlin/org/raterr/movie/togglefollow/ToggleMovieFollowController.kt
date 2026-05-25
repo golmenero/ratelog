@@ -1,25 +1,25 @@
-package org.raterr.tvshow.follow.toggle
+package org.raterr.movie.togglefollow
 
+import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
-import org.raterr.tvshow.TvShow
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class ToggleTvFollowController(
-    private val handler: ToggleTvFollowHandler,
+class ToggleMovieFollowController(
+    private val handler: ToggleMovieFollowHandler,
 ) {
 
-    @PostMapping("/tvshow/follow")
-    fun toggleTvFollow(
+    @PostMapping("/movie/follow")
+    fun toggleMovieFollow(
         @CurrentUser user: User,
-        @RequestParam("tvShowId") tvShowId: Long,
+        @RequestParam("tmdbId") tmdbId: Int,
         @RequestParam("q", required = false) query: String?
     ): String {
-        ToggleTvFollow(
-            tvShowId = TvShow.Id(tvShowId),
+        ToggleMovieFollow(
+            tmdbId = TmdbId(tmdbId),
             userId = user.id!!,
         ).let(handler::handle)
 

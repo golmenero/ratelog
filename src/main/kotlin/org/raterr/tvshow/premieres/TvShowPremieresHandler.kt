@@ -5,7 +5,6 @@ import arrow.core.raise.either
 import org.raterr.TmdbId
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tmdb.TmdbClient
-import org.raterr.tvshow.follow.TvFollowRepository
 import org.raterr.user.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -13,7 +12,6 @@ import java.time.LocalDate
 data class TvShowPremieresQuery(val userId: User.Id)
 
 data class TvShowPremiereItem(
-    val tvShowId: Long,
     val tmdbId: Int,
     val name: String,
     val releaseDate: LocalDate,
@@ -31,27 +29,22 @@ data class TvShowPremieres(
 @Service
 class TvShowPremieresHandler(
     private val tmdbClient: TmdbClient,
-    private val tvFollowRepository: TvFollowRepository,
     private val tvShowRepository: TvShowRepository,
 ) {
     fun handle(query: TvShowPremieresQuery): Either<TvShowPremieresHandlerError, TvShowPremieres> = either {
-        val follows = tvFollowRepository.findByUserId(query.userId.value)
+        val followedTvShows = query.userId.let(tvShowRepository::findFollowedTvShows)
 
         val released = mutableListOf<TvShowPremiereItem>()
         val upcoming = mutableListOf<TvShowPremiereItem>()
         val noDate = mutableListOf<TvShowPremiereItem>()
         val today = LocalDate.now()
 
-        for (follow in follows) {
-            val show = follow.tvShowId.let(org.raterr.tvshow.TvShow::Id).let(tvShowRepository::findById)
-                ?: raise(TvShowPremieresHandlerError.TvShowNotFound)
-
+        for (show in followedTvShows) {
             val tmdbShow = tmdbClient.tvShowDetails(show.tmdbId.value).bind()
 
             if (!tmdbShow.firstAirDate.isNullOrBlank()) {
                 val date = LocalDate.parse(tmdbShow.firstAirDate)
                 val item = TvShowPremiereItem(
-                    tvShowId = show.id!!.value,
                     tmdbId = show.tmdbId.value,
                     name = tmdbShow.name,
                     releaseDate = date,
@@ -62,7 +55,6 @@ class TvShowPremieresHandler(
             } else {
                 noDate.add(
                     TvShowPremiereItem(
-                        tvShowId = show.id!!.value,
                         tmdbId = show.tmdbId.value,
                         name = tmdbShow.name,
                         releaseDate = today,
