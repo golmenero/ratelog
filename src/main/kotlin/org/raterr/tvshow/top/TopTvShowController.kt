@@ -18,6 +18,12 @@ data class GetTopTvShowsResponse(
     val firstAirYear: Int?,
     val posterPath: String?,
     val averageScore: Double,
+    val seasons: List<GetSeasonResponse>
+)
+
+data class GetSeasonResponse(
+    val seasonNumber: Int,
+    val score: Double,
     val directing: Double,
     val cinematography: Double,
     val acting: Double,
@@ -64,20 +70,26 @@ class TopTvShowController(
         return "tvshows"
     }
 
-    private fun map(list: List<TvRating>): List<GetTopTvShowsResponse> =
+    private fun map(list: List<TopTvShowItem>): List<GetTopTvShowsResponse> =
         list.map {
             GetTopTvShowsResponse(
-                rank = it.rank.value,
+                rank = it.rating.rank.value,
                 tmdbId = it.tvShow.tmdbId.value,
                 name = it.tvShow.name.value,
                 firstAirYear = it.tvShow.firstAirYear,
                 posterPath = it.tvShow.posterPath?.value,
-                averageScore = it.score,
-                directing = it.directing.value,
-                cinematography = it.cinematography.value,
-                acting = it.acting.value,
-                soundtrack = it.soundtrack.value,
-                screenplay = it.screenplay.value,
+                averageScore = it.rating.score,
+                seasons = it.rating.seasonRatings.map { sr ->
+                    GetSeasonResponse(
+                        seasonNumber = sr.seasonNumber.value,
+                        score = sr.score,
+                        directing = sr.directing.value,
+                        cinematography = sr.cinematography.value,
+                        acting = sr.acting.value,
+                        soundtrack = sr.soundtrack.value,
+                        screenplay = sr.screenplay.value
+                    )
+                }
             )
         }
 }

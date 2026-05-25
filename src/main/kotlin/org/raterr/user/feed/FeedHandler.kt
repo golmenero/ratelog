@@ -3,7 +3,9 @@ package org.raterr.user.feed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
+import org.raterr.movie.MovieRepository
 import org.raterr.movie.rating.RatingRepository
+import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvshow.rating.TvRatingRepository
 import org.raterr.user.User
 import org.raterr.user.UserRepository
@@ -32,6 +34,8 @@ private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy HH:mm").wit
 @Service
 class FeedHandler(
     private val userRepository: UserRepository,
+    private val movieRepository: MovieRepository,
+    private val tvShowRepository: TvShowRepository,
     private val ratingRepository: RatingRepository,
     private val tvRatingRepository: TvRatingRepository,
 ) {
@@ -46,11 +50,13 @@ class FeedHandler(
         val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
 
         val movieItems = movieRatings.map { rating ->
+            val user = userRepository.findById(rating.userId)!!
+            val movie = movieRepository.findById(rating.movieId)!!
             FeedItem(
-                username = rating.user.username.value,
-                title = rating.movie.title.value,
-                posterPath = rating.movie.posterPath?.value,
-                tmdbId = rating.movie.tmdbId.value,
+                username = user.username.value,
+                title = movie.title.value,
+                posterPath = movie.posterPath?.value,
+                tmdbId = movie.tmdbId.value,
                 type = MediaType.movie.name,
                 score = rating.score,
                 ratedAt = dateFormatter.format(rating.createdAt),
@@ -59,11 +65,13 @@ class FeedHandler(
         }
 
         val tvItems = tvRatings.map { rating ->
+            val user = userRepository.findById(rating.userId)!!
+            val tvShow = tvShowRepository.findById(rating.tvShowId)!!
             FeedItem(
-                username = rating.user.username.value,
-                title = rating.tvShow.name.value,
-                posterPath = rating.tvShow.posterPath?.value,
-                tmdbId = rating.tvShow.tmdbId.value,
+                username = user.username.value,
+                title = tvShow.name.value,
+                posterPath = tvShow.posterPath?.value,
+                tmdbId = tvShow.tmdbId.value,
                 type = MediaType.tvshow.name,
                 score = rating.score,
                 ratedAt = dateFormatter.format(rating.createdAt),

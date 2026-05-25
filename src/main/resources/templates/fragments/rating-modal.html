@@ -12,26 +12,17 @@
                 <h2 id="modal-title" class="modal-title">Title</h2>
                 <span id="modal-year" class="modal-year">Year</span>
             </div>
-            <div class="modal-categories">
-                <div class="modal-category-row">
-                    <span class="modal-category-label"><i data-lucide="clapperboard" class="category-icon"></i> Directing</span>
-                    <span id="modal-directing" class="modal-category-value">0.0</span>
-                </div>
-                <div class="modal-category-row">
-                    <span class="modal-category-label"><i data-lucide="camera" class="category-icon"></i> Cinematography</span>
-                    <span id="modal-cinematography" class="modal-category-value">0.0</span>
-                </div>
-                <div class="modal-category-row">
-                    <span class="modal-category-label"><i data-lucide="hat-glasses" class="category-icon"></i> Acting</span>
-                    <span id="modal-acting" class="modal-category-value">0.0</span>
-                </div>
-                <div class="modal-category-row">
-                    <span class="modal-category-label"><i data-lucide="music" class="category-icon"></i> Soundtrack</span>
-                    <span id="modal-soundtrack" class="modal-category-value">0.0</span>
-                </div>
-                <div class="modal-category-row">
-                    <span class="modal-category-label"><i data-lucide="file-text" class="category-icon"></i> Screenplay</span>
-                    <span id="modal-screenplay" class="modal-category-value">0.0</span>
+            <div class="modal-seasons" id="modal-seasons">
+                <div class="season-row" th:each="season : ${seasons}">
+                    <span class="season-label">Season <span th:text="${season.seasonNumber}">1</span></span>
+                    <div class="season-ratings">
+                        <span class="season-cat"><i data-lucide="clapperboard" class="category-icon"></i> <span th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.0</span></span>
+                        <span class="season-cat"><i data-lucide="camera" class="category-icon"></i> <span th:text="${#strings.replace(#numbers.formatDecimal(season.cinematography, 1, 2), ',', '.')}">0.0</span></span>
+                        <span class="season-cat"><i data-lucide="hat-glasses" class="category-icon"></i> <span th:text="${#strings.replace(#numbers.formatDecimal(season.acting, 1, 2), ',', '.')}">0.0</span></span>
+                        <span class="season-cat"><i data-lucide="music" class="category-icon"></i> <span th:text="${#strings.replace(#numbers.formatDecimal(season.soundtrack, 1, 2), ',', '.')}">0.0</span></span>
+                        <span class="season-cat"><i data-lucide="file-text" class="category-icon"></i> <span th:text="${#strings.replace(#numbers.formatDecimal(season.screenplay, 1, 2), ',', '.')}">0.0</span></span>
+                        <span class="season-score" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">0.0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,11 +34,31 @@
                 const modal = document.getElementById('rating-modal');
                 document.getElementById('modal-title').textContent = title.dataset.title;
                 document.getElementById('modal-year').textContent = title.dataset.year || 'Unknown year';
-                document.getElementById('modal-directing').textContent = title.dataset.directing;
-                document.getElementById('modal-cinematography').textContent = title.dataset.cinematography;
-                document.getElementById('modal-acting').textContent = title.dataset.acting;
-                document.getElementById('modal-soundtrack').textContent = title.dataset.soundtrack;
-                document.getElementById('modal-screenplay').textContent = title.dataset.screenplay;
+                
+                const seasonsContainer = document.getElementById('modal-seasons');
+                seasonsContainer.innerHTML = '';
+                
+                if (title.dataset.seasons) {
+                    title.dataset.seasons.split(';').forEach(s => {
+                        const parts = s.split(',');
+                        const [seasonNum, directing, cinematography, acting, soundtrack, screenplay, score] = parts.map(Number);
+                        const row = document.createElement('div');
+                        row.className = 'season-row';
+                        row.innerHTML = `
+                            <span class="season-label">Season ${seasonNum}</span>
+                            <div class="season-ratings">
+                                <span class="season-cat">D: ${directing.toFixed(2)}</span>
+                                <span class="season-cat">C: ${cinematography.toFixed(2)}</span>
+                                <span class="season-cat">A: ${acting.toFixed(2)}</span>
+                                <span class="season-cat">S: ${soundtrack.toFixed(2)}</span>
+                                <span class="season-cat">Sc: ${screenplay.toFixed(2)}</span>
+                                <span class="season-score">${score.toFixed(2)}</span>
+                            </div>
+                        `;
+                        seasonsContainer.appendChild(row);
+                    });
+                }
+                
                 modal.classList.add('visible');
                 lucide.createIcons();
             });

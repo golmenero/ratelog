@@ -13,23 +13,21 @@ import kotlin.jvm.optionals.getOrNull
 @Repository
 class RatingRepositoryImpl(
         private val ratingDAO: RatingDAO,
-        private val movieRepository: MovieRepository,
-        private val userRepository: UserRepository,
     ) : RatingRepository {
 
-    override fun findById(id: Rating.Id): RatingView? =
+    override fun findById(id: Rating.Id): Rating? =
         id.value.let(ratingDAO::findById).getOrNull()?.toDomain()
 
-    override fun findFirstByMovieId(movieId: Movie.Id): RatingView? =
+    override fun findFirstByMovieId(movieId: Movie.Id): Rating? =
         movieId.value.let(ratingDAO::findFirstByMovieId).getOrNull()?.toDomain()
 
-    override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): List<RatingView> =
+    override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): List<Rating> =
         ratingDAO.findByMovieIdAndUserId(movieId.value, userId.value).map { it.toDomain() }
 
-    override fun findByUserId(userId: User.Id): List<RatingView> =
+    override fun findByUserId(userId: User.Id): List<Rating> =
         ratingDAO.findByUserId(userId.value).map { it.toDomain() }
 
-    override fun findAllWithoutUser(): List<RatingView> =
+    override fun findAllWithoutUser(): List<Rating> =
         ratingDAO.findAll().filter { it.userId == 0L }.map { it.toDomain() }
 
     override fun save(rating: Rating) {
@@ -43,10 +41,10 @@ class RatingRepositoryImpl(
 
     override fun findRankedByUserIdWithFilters(
         userId: User.Id, category: String?, limit: Int, name: String?
-    ): List<RatingView> =
+    ): List<Rating> =
         ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score }.take(limit)
 
-    override fun findByUserIdOrderedByRank(userId: User.Id): List<RatingView> =
+    override fun findByUserIdOrderedByRank(userId: User.Id): List<Rating> =
         ratingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
 
     override fun updateRank(id: Rating.Id, rank: Rank): Int {
@@ -55,7 +53,7 @@ class RatingRepositoryImpl(
         return 1
     }
 
-    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<RatingView> {
+    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating> {
         val sinceEpochMs = since.toEpochMilli()
         val userIdValues = userIds.map(User.Id::value)
         return ratingDAO.findAll()
@@ -64,14 +62,11 @@ class RatingRepositoryImpl(
             .map { it.toDomain() }
     }
 
-    private fun RatingEntity.toDomain(): RatingView {
-        val movie = movieId.let(Movie::Id).let(movieRepository::findById)
-        val user = userId.let(User::Id).let(userRepository::findById)
-
-        return RatingView(
+    private fun RatingEntity.toDomain(): Rating {
+        return Rating(
             id = id?.let { Rating.Id(it) },
-            movie = movie!!,
-            user = user!!,
+            movieId = movieId.let(Movie::Id),
+            userId = userId.let(User::Id),
             directing = Score(directing),
             cinematography = Score(cinematography),
             acting = Score(acting),

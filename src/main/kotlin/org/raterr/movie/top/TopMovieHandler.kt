@@ -1,7 +1,9 @@
 package org.raterr.movie.top
 
+import org.raterr.movie.Movie
+import org.raterr.movie.MovieRepository
+import org.raterr.movie.rating.Rating
 import org.raterr.movie.rating.RatingRepository
-import org.raterr.movie.rating.RatingView
 import org.raterr.user.User
 import org.springframework.stereotype.Service
 
@@ -12,10 +14,22 @@ data class TopMovie(
     val name: String?
 )
 
+data class TopMovieItem(
+    val rating: Rating,
+    val movie: Movie,
+)
+
 @Service
 class TopMovieHandler(
     private val ratingRepository: RatingRepository,
+    private val movieRepository: MovieRepository,
 ) {
-    fun handle(query: TopMovie): List<RatingView> =
+    fun handle(query: TopMovie): List<TopMovieItem> =
         ratingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
+            .map(::toItem)
+
+    private fun toItem(rating: Rating) = TopMovieItem(
+        rating = rating,
+        movie = movieRepository.findById(rating.movieId)!!
+    )
 }
