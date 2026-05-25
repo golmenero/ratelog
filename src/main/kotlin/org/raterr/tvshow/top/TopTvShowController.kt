@@ -1,14 +1,15 @@
 package org.raterr.tvshow.top
 
 import org.raterr.annotations.CurrentUser
-import org.raterr.tvshow.rating.TvRatingView
 import org.raterr.tvshow.premieres.TvShowPremieresHandler
 import org.raterr.tvshow.premieres.TvShowPremieresQuery
+import org.raterr.tvshow.rating.TvRating
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
+import kotlin.collections.map
 
 data class GetTopTvShowsResponse(
     val rank: Int,
@@ -63,7 +64,7 @@ class TopTvShowController(
         return "tvshows"
     }
 
-    private fun map(list: List<TvRatingView>): List<GetTopTvShowsResponse> =
+    private fun map(list: List<TvRating>): List<GetTopTvShowsResponse> =
         list.map {
             GetTopTvShowsResponse(
                 rank = it.rank.value,

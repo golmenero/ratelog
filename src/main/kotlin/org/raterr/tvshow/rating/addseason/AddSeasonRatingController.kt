@@ -1,5 +1,7 @@
 package org.raterr.tvshow.rating.addseason
 
+import org.raterr.Score
+import org.raterr.SeasonNumber
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
@@ -27,13 +29,13 @@ class AddSeasonRatingController(
     ): String =
         AddSeasonRating(
             tmdbId = TmdbId(tmdbId),
-            seasonNumber = seasonNumber,
+            seasonNumber = seasonNumber.let(::SeasonNumber),
             userId = user.id!!,
-            directing = directing,
-            cinematography = cinematography,
-            acting = acting,
-            soundtrack = soundtrack,
-            screenplay = screenplay,
+            directing = directing.let(::Score),
+            cinematography = cinematography.let(::Score),
+            acting = acting.let(::Score),
+            soundtrack = soundtrack.let(::Score),
+            screenplay = screenplay.let(::Score),
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(

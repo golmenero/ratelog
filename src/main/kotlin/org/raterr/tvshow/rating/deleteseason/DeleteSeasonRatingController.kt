@@ -1,5 +1,6 @@
 package org.raterr.tvshow.rating.deleteseason
 
+import org.raterr.SeasonNumber
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
@@ -25,7 +26,7 @@ class DeleteSeasonRatingController(
     ): String =
         DeleteSeasonRating(
             tmdbId = TmdbId(tmdbId),
-            seasonNumber = seasonNumber,
+            seasonNumber = seasonNumber.let(::SeasonNumber),
             userId = user.id!!,
         ).let(handler::handle)
             .mapLeft(::mapError)

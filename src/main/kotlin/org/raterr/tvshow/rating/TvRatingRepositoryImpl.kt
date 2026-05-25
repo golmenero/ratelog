@@ -2,6 +2,7 @@ package org.raterr.tvshow.rating
 
 import org.raterr.Rank
 import org.raterr.Score
+import org.raterr.SeasonNumber
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.user.User
@@ -14,32 +15,24 @@ import kotlin.jvm.optionals.getOrNull
 class TvRatingRepositoryImpl(
         private val tvRatingDAO: TvRatingDAO,
         private val seasonRatingDAO: SeasonRatingDAO,
-        private val tvShowRepository: TvShowRepository,
-        private val userRepository: UserRepository,
     ) : TvRatingRepository {
 
-    override fun findById(id: TvRating.Id): TvRatingView? =
-        id.value.let(tvRatingDAO::findById).getOrNull()?.toDomain()
-
-    override fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRatingView? =
+    override fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating? =
         tvShowId.value.let(tvRatingDAO::findFirstByTvShowId).getOrNull()?.toDomain()
 
-    override fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): List<TvRatingView> =
-        tvRatingDAO.findByTvShowIdAndUserId(tvShowId.value, userId.value).map { it.toDomain() }
-
-    override fun findByUserId(userId: User.Id): List<TvRatingView> =
-        tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }
-
-    override fun findAllWithoutUser(): List<TvRatingView> =
-        tvRatingDAO.findAll().filter { it.userId == 0L }.map { it.toDomain() }
-
     override fun save(rating: TvRating) {
-        rating.toEntity().let(tvRatingDAO::save)
+        val savedEntity = tvRatingDAO.save(rating.toEntity())
+
+        seasonRatingDAO.findByTvShowIdAndUserId(savedEntity.tvShowId, savedEntity.userId)
+            .forEach { seasonRatingDAO.deleteById(it.id!!) }
+
+        rating.seasonRatings
+            .map { it.toEntity() }
+            .forEach(seasonRatingDAO::save)
     }
 
-    override fun deleteByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): Int {
-        val ratings = tvRatingDAO.findByTvShowIdAndUserId(tvShowId.value, userId.value)
-        return ratings.filter { tvRatingDAO.delete(it); true }.size
+    override fun deleteById(tvRatingId: TvRating.Id) {
+        tvRatingId.value.let(tvRatingDAO::deleteById)
     }
 
     override fun findRankedByUserIdWithFilters(
@@ -47,10 +40,10 @@ class TvRatingRepositoryImpl(
         category: String?,
         limit: Int,
         name: String?
-    ): List<TvRatingView> =
+    ): List<TvRating> =
         tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score }.take(limit)
 
-    override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRatingView> =
+    override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating> =
         tvRatingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
 
     override fun updateRank(id: TvRating.Id, rank: Rank): Int {
@@ -59,7 +52,7 @@ class TvRatingRepositoryImpl(
         return 1
     }
 
-    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRatingView> {
+    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRating> {
         val sinceEpochMs = since.toEpochMilli()
         val userIdValues = userIds.map(User.Id::value)
         return tvRatingDAO.findAll()
@@ -68,16 +61,15 @@ class TvRatingRepositoryImpl(
             .map { it.toDomain() }
     }
 
-    private fun TvRatingEntity.toDomain(): TvRatingView {
-        val tvShow = tvShowId.let(TvShow::Id).let(tvShowRepository::findById)
-        val user = userId.let(User::Id).let(userRepository::findById)
-
-        return TvRatingView(
+    private fun TvRatingEntity.toDomain(): TvRating {
+        val seasonRatings = seasonRatingDAO.findByTvShowIdAndUserId(tvShowId, userId).map { it.toDomain() }
+        return TvRating(
             id = id?.let { TvRating.Id(it) },
-            tvShow = tvShow!!,
-            user = user!!,
+            tvShowId = tvShowId.let(TvShow::Id),
+            userId = userId.let(User::Id),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            rank = Rank(rank)
+            rank = Rank(rank),
+            seasonRatings = seasonRatings
         )
     }
 
@@ -95,7 +87,7 @@ class TvRatingRepositoryImpl(
         return SeasonRating(
             id = id?.let { SeasonRating.Id(it) },
             tvShowId = tvShowId.let(TvShow::Id),
-            seasonNumber = SeasonRating.SeasonNumber(seasonNumber),
+            seasonNumber = SeasonNumber(seasonNumber),
             userId = userId.let(User::Id),
             directing = Score(directing),
             cinematography = Score(cinematography),

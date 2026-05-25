@@ -48,6 +48,8 @@ enum class Genre(val value: String) {
 
 data class Rank(val value: Int)
 
+data class SeasonNumber(val value: Int)
+
 data class Username(val value: String)
 
 data class Email(val value: String)

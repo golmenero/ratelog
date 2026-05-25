@@ -40,8 +40,5 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
 
 @Repository
 interface SeasonRatingDAO : CrudRepository<SeasonRatingEntity, Long> {
-    fun findFirstByTvShowIdAndSeasonNumber(tvShowId: Long, seasonNumber: Int): Optional<SeasonRatingEntity>
-    fun findByTvShowIdAndSeasonNumberAndUserId(tvShowId: Long, seasonNumber: Int, userId: Long): List<SeasonRatingEntity>
-    fun findByUserId(userId: Long): List<SeasonRatingEntity>
-    fun findByUserIdOrderByRank(userId: Long): List<SeasonRatingEntity>
+    fun findByTvShowIdAndUserId(tvShowId: Long, userId: Long): List<SeasonRatingEntity>
 }

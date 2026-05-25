@@ -4,10 +4,11 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.raterr.Score
+import org.raterr.SeasonNumber
 import org.raterr.TmdbId
-import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvshow.get.GetTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
+import org.raterr.tvshow.rating.TvRating
 import org.raterr.tvshow.rating.TvRatingRepository
 import org.raterr.tvshow.rating.rank.RankTvRating
 import org.raterr.tvshow.rating.rank.RankTvRatingHandler
@@ -17,19 +18,19 @@ import java.time.Instant
 
 data class AddSeasonRating(
     val tmdbId: TmdbId,
-    val seasonNumber: Int,
+    val seasonNumber: SeasonNumber,
     val userId: User.Id,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
+    val directing: Score,
+    val cinematography: Score,
+    val acting: Score,
+    val soundtrack: Score,
+    val screenplay: Score,
 )
 
 @Component
 class AddSeasonRatingHandler(
     private val getTvShowHandler: GetTvShowHandler,
-    private val tvShowRepository: TvShowRepository,
+    private val tvRatingRepository: TvRatingRepository,
     private val rankTvRatingHandler: RankTvRatingHandler,
 ) {
     fun handle(command: AddSeasonRating): Either<AddSeasonRatingHandlerError, Unit> = either {
@@ -39,8 +40,8 @@ class AddSeasonRatingHandler(
             command.acting,
             command.soundtrack,
             command.screenplay
-        ).forEach { value ->
-            ensure(value in 1.0..10.0) { AddSeasonRatingHandlerError.InvalidRatingValue }
+        ).forEach { score ->
+            ensure(score.value in 1.0..10.0) { AddSeasonRatingHandlerError.InvalidRatingValue }
         }
 
         val show = GetTvShow(TmdbId(command.tmdbId.value))
@@ -48,27 +49,17 @@ class AddSeasonRatingHandler(
             .mapLeft { AddSeasonRatingHandlerError.TvShowNotFound }
             .bind()
 
-        val seasonNumber = SeasonRating.SeasonNumber(command.seasonNumber)
-        val existingRating = seasonRatingRepository.findByTvShowIdAndSeasonNumberAndUserId(show.id!!, seasonNumber, command.userId).firstOrNull()
-        ensure(existingRating == null) { AddSeasonRatingHandlerError.RatingAlreadyExists }
-
-        SeasonRating(
-            id = null,
-            tvShowId = show.id,
-            seasonNumber = seasonNumber,
-            userId = command.userId,
-            directing = Score(command.directing),
-            cinematography = Score(command.cinematography),
-            acting = Score(command.acting),
-            soundtrack = Score(command.soundtrack),
-            screenplay = Score(command.screenplay),
+        val tvRating = tvRatingRepository.findFirstByTvShowId(show.id!!) ?: TvRating.create(show.id, command.userId, Instant.now())
+        tvRating.addSeasonRating(
+            seasonNumber = command.seasonNumber,
+            directing = command.directing,
+            cinematography = command.cinematography,
+            acting = command.acting,
+            soundtrack = command.soundtrack,
+            screenplay = command.screenplay,
             createdAt = Instant.now(),
-        ).let(seasonRatingRepository::save)
+        ).let(tvRatingRepository::save)
 
         command.userId.let(::RankTvRating).let(rankTvRatingHandler::handle)
-
-        if (show.followed) {
-            show.toggleFollow(System.currentTimeMillis()).let(tvShowRepository::save)
-        }
     }
 }

@@ -31,7 +31,6 @@ data class AddRating(
 class AddRatingHandler(
     private val getMovieHandler: GetMovieHandler,
     private val ratingRepository: RatingRepository,
-    private val movieRepository: MovieRepository,
     private val rankRatingHandler: RankRatingHandler,
 ) {
     fun handle(command: AddRating): Either<AddRatingHandlerError, Unit> = either {
@@ -67,9 +66,5 @@ class AddRatingHandler(
         ).let(ratingRepository::save)
 
         command.userId.let(::RankRating).let(rankRatingHandler::handle)
-
-        if (movie.followed) {
-            movie.toggleFollow(System.currentTimeMillis()).let(movieRepository::save)
-        }
     }
 }
