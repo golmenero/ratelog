@@ -1,4 +1,4 @@
-package org.raterr.user.follow.toggle
+package org.raterr.user.togglefollow
 
 import arrow.core.Either
 import arrow.core.raise.either
