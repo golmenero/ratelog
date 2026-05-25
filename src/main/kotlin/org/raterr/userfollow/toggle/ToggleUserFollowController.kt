@@ -1,8 +1,11 @@
-package org.raterr.userfollow.toggleuser
+package org.raterr.userfollow.toggle
 
 import org.raterr.Username
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
+import org.raterr.userfollow.toggleuser.ToggleUserFollow
+import org.raterr.userfollow.toggleuser.ToggleUserFollowHandler
+import org.raterr.userfollow.toggleuser.ToggleUserFollowHandlerError
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -25,7 +28,7 @@ class ToggleUserFollowController(
             ToggleUserFollow(
                 followerId = userId,
                 followedUsername = username.let(::Username),
-                )
+            )
                 .let(handler::handle)
                 .fold(
                     { error ->
