@@ -2,19 +2,14 @@ package org.raterr.follow.toggle
 
 import org.raterr.MediaType
 import org.raterr.TmdbId
-import org.raterr.UserId
-import org.raterr.annotations.CurrentUser
 import org.raterr.follow.Follow
 import org.raterr.follow.FollowRepository
 import org.raterr.user.User
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
 
 data class ToggleFollow(
     val tmdbId: TmdbId,
-    val userId: UserId,
+    val userId: User.Id,
     val type: MediaType,
 )
 

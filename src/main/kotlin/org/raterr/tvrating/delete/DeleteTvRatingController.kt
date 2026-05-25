@@ -1,7 +1,6 @@
 package org.raterr.tvrating.delete
 
 import org.raterr.TmdbId
-import org.raterr.UserId
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
@@ -24,7 +23,7 @@ class DeleteTvRatingController(
     ): String =
         DeleteTvRating(
             tmdbId = TmdbId(tmdbId),
-            userId = UserId(user.id!!),
+            userId = user.id!!,
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(

@@ -1,6 +1,5 @@
 package org.raterr.search
 
-import org.raterr.UserId
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
@@ -16,7 +15,7 @@ class SearchController(
 
     @GetMapping("/")
     fun searchPage(
-        @CurrentUser user: User?,
+        @CurrentUser user: User,
         @RequestParam("q", required = false) query: String?,
         model: Model,
         redirectAttributes: RedirectAttributes
@@ -24,7 +23,7 @@ class SearchController(
         if (!query.isNullOrBlank()) {
             SearchQuery(
                 query = query,
-                userId = user?.id?.let(::UserId),
+                userId = user.id!!,
             ).let(handler::handle)
             .fold(
                 {

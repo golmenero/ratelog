@@ -2,13 +2,13 @@ package org.raterr.movie.premieres
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.raterr.UserId
 import org.raterr.follow.FollowRepository
 import org.raterr.tmdb.TmdbClient
+import org.raterr.user.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
-data class MoviePremieresQuery(val userId: UserId)
+data class MoviePremieresQuery(val userId: User.Id)
 
 data class MoviePremiereItem(
     val tmdbId: Int,

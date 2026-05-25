@@ -24,8 +24,8 @@ class UserSearchHandlerTest {
 
     @Test
     fun `returns users when query matches and user is logged in`() {
-        userRepository.save(User(id = 1, username = "alice", email = "alice@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
-        userRepository.save(User(id = 2, username = "bob", email = "bob@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
+        userRepository.save(User(id = null, username = "alice", email = "alice@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
+        userRepository.save(User(id = null, username = "bob", email = "bob@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
         userFollowRepository.addUser(1, "alice")
         userFollowRepository.addUser(2, "bob")
 
@@ -44,8 +44,8 @@ class UserSearchHandlerTest {
 
     @Test
     fun `returns users with isFollowed true when follower follows them`() {
-        userRepository.save(User(id = 1, username = "alice", email = "alice@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
-        userRepository.save(User(id = 2, username = "bob", email = "bob@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
+        userRepository.save(User(id = null, username = "alice", email = "alice@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
+        userRepository.save(User(id = null, username = "bob", email = "bob@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
         userFollowRepository.addUser(1, "alice")
         userFollowRepository.addUser(2, "bob")
         userFollowRepository.save(UserFollow(followerId = 2, followedId = 1))
@@ -64,7 +64,7 @@ class UserSearchHandlerTest {
 
     @Test
     fun `returns users without isFollowed when no followerId`() {
-        userRepository.save(User(id = 1, username = "alice", email = "alice@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
+        userRepository.save(User(id = null, username = "alice", email = "alice@test.com", passwordHash = "hash", createdAtEpochMs = 1700000000000))
 
         val result = handler.handle(UserSearchQuery("ali", null))
 

@@ -1,6 +1,5 @@
 package org.raterr.user.profile
 
-import org.raterr.UserId
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
@@ -18,7 +17,6 @@ class ProfileController(
         model: Model
     ): String {
         return user.id!!
-            .let(::UserId)
             .let(::GetProfile)
             .let(handler::handle)
             .fold(

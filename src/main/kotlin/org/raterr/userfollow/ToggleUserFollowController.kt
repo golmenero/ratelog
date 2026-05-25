@@ -1,6 +1,6 @@
 package org.raterr.userfollow.toggleuser
 
-import org.raterr.UserId
+import org.raterr.Username
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
@@ -22,7 +22,10 @@ class ToggleUserFollowController(
     ): String {
         val redirectUrl = if (from == "community") "redirect:/community?username=$username" else "redirect:/community"
         return user.id?.let { userId ->
-            ToggleUserFollow(UserId(userId), username)
+            ToggleUserFollow(
+                followerId = userId,
+                followedUsername = username.let(::Username),
+                )
                 .let(handler::handle)
                 .fold(
                     { error ->

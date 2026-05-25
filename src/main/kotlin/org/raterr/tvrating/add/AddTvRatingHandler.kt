@@ -10,12 +10,12 @@ import org.raterr.tvrating.TvRating
 import org.raterr.tvrating.TvRatingRankService
 import org.raterr.tvrating.TvRatingRepository
 import org.raterr.TmdbId
-import org.raterr.UserId
+import org.raterr.user.User
 import org.springframework.stereotype.Component
 
 data class AddTvRating(
     val tmdbId: TmdbId,
-    val userId: UserId,
+    val userId: User.Id,
     val directing: Double,
     val cinematography: Double,
     val acting: Double,

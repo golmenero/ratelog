@@ -3,7 +3,6 @@ package org.raterr.user.feed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
-import org.raterr.UserId
 import org.raterr.movie.Movie
 import org.raterr.userfollow.UserFollowRepository
 import org.raterr.movie.MovieRepository
@@ -14,13 +13,14 @@ import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvrating.TvRating
 import org.raterr.tvrating.TvRatingRepository
 import org.raterr.tvrating.TvRatingScoreService
+import org.raterr.user.User
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 data class FeedQuery(
-    val userId: UserId
+    val userId: User.Id
 )
 
 data class FeedItem(

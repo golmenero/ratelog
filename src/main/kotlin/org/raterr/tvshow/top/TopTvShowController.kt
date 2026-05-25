@@ -1,6 +1,5 @@
 package org.raterr.tvshow.top
 
-import org.raterr.UserId
 import org.raterr.tvrating.TvRatingScoreService
 import org.raterr.annotations.CurrentUser
 import org.raterr.tvshow.premieres.TvShowPremieresHandler
@@ -40,7 +39,7 @@ class TopTvShowController(
         model: Model
     ): String {
         val tops = TopTvShow(
-            userId = user.id!!.let(::UserId),
+            userId = user.id!!,
             category = category,
             limit = limit,
             name = name
@@ -51,7 +50,7 @@ class TopTvShowController(
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        TvShowPremieresQuery(UserId(user.id)).let(tvShowPremieresHandler::handle)
+        TvShowPremieresQuery(user.id).let(tvShowPremieresHandler::handle)
             .fold(
                 { },
                 {

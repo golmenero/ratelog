@@ -1,5 +1,8 @@
 package org.raterr.user.register
 
+import org.raterr.Email
+import org.raterr.Password
+import org.raterr.Username
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,9 +25,9 @@ class RegisterController(
         redirectAttributes: RedirectAttributes
     ): String =
         RegisterUser(
-            username = username,
-            email = email,
-            password = password,
+            username = username.let(::Username),
+            email = email.let(::Email),
+            password = password.let(::Password),
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(

@@ -42,4 +42,8 @@ enum class Genre {
     WarPolitics
 }
 
-data class UserId(val value: Long)
+data class Username(val value: String)
+
+data class Email(val value: String)
+
+data class Password(val value: String)

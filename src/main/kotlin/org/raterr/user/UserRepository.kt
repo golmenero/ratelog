@@ -1,17 +1,14 @@
 package org.raterr.user
 
-import org.springframework.data.jdbc.repository.query.Query
-import org.springframework.data.repository.CrudRepository
-import org.springframework.stereotype.Repository
-import java.util.Optional
+import org.raterr.Email
+import org.raterr.Username
 
-@Repository
-interface UserRepository : CrudRepository<User, Long> {
-    fun findByUsername(username: String): Optional<User>
-    fun findByEmail(email: String): Optional<User>
-    fun existsByUsername(username: String): Boolean
-    fun existsByEmail(email: String): Boolean
-
-    @Query("SELECT * FROM users WHERE username LIKE CONCAT('%', :username, '%')")
-    fun findByUsernameContaining(username: String): List<User>
+interface UserRepository {
+    fun findById(id: User.Id): User?
+    fun findByUsername(username: Username): User?
+    fun findByEmail(email: Email): User?
+    fun existsByUsername(username: Username): Boolean
+    fun existsByEmail(email: Email): Boolean
+    fun save(user: User): User
+    fun findByUsernameContaining(username: Username): List<User>
 }

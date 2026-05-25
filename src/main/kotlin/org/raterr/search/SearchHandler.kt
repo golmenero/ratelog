@@ -4,11 +4,9 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
 import org.raterr.TmdbId
-import org.raterr.UserId
 import org.raterr.follow.FollowRepository
 import org.raterr.movie.MovieRepository
 import org.raterr.rating.RatingRepository
-import org.raterr.rating.RatingScoreService
 import org.raterr.tmdb.TmdbClient
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvrating.TvRatingRepository
@@ -17,7 +15,7 @@ import java.time.LocalDate
 
 data class SearchQuery(
     val query: String,
-    val userId: UserId?,
+    val userId: User.Id,
 )
 
 data class SearchResultItem(
@@ -60,16 +58,16 @@ class SearchHandler(
         return result
     }
 
-    private fun searchMovies(query: String, userId: UserId?): Either<SearchHandlerError, List<SearchResultItem>> =
+    private fun searchMovies(query: String, userId: User.Id): Either<SearchHandlerError, List<SearchResultItem>> =
         either {
             val movies = tmdbClient.searchMovies(query).bind()
 
             movies.map { tmdbMovie ->
                 val movie = tmdbMovie.id.let(::TmdbId).let(movieRepository::findByTmdbId)
                 val rating = movie?.id?.value?.let(ratingRepository::findFirstByMovieId)
-                val isFollowed = userId?.let {
+                val isFollowed = userId.let {
                     followRepository.existsByUserIdAndContentTypeAndContentTmdbId(it.value, MediaType.movie.name, tmdbMovie.id)
-                } ?: false
+                }
                 val isReleased = tmdbMovie.releaseDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
 
                 SearchResultItem(
@@ -87,16 +85,16 @@ class SearchHandler(
             }
         }
 
-    private fun searchTvShows(query: String, userId: UserId?): Either<SearchHandlerError,List<SearchResultItem>> =
+    private fun searchTvShows(query: String, userId: User.Id): Either<SearchHandlerError,List<SearchResultItem>> =
         either {
             val tvshows = tmdbClient.searchTvShows(query).bind()
 
             tvshows.map { tmdbShow ->
                 val show = tmdbShow.id.let(::TmdbId).let(tvShowRepository::findByTmdbId)
                 val rating = show?.id?.value?.let(tvRatingRepository::findFirstByTvShowId)
-                val isFollowed = userId?.let {
+                val isFollowed = userId.let {
                     followRepository.existsByUserIdAndContentTypeAndContentTmdbId(it.value, MediaType.tvshow.name, tmdbShow.id)
-                } ?: false
+                }
                 val isReleased = tmdbShow.firstAirDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
 
 

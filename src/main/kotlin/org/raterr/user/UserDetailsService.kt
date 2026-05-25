@@ -1,5 +1,6 @@
 package org.raterr.user
 
+import org.raterr.Username
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
@@ -13,11 +14,11 @@ class UserDetailsService(
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = userRepository.findByUsername(username)
-            .orElseThrow { UsernameNotFoundException("User not found: $username") }
+        val user = userRepository.findByUsername(username.let(::Username))
+            ?: throw UsernameNotFoundException("User not found: $username")
 
         return org.springframework.security.core.userdetails.User(
-            user.username,
+            user.username.value,
             user.passwordHash,
             listOf(SimpleGrantedAuthority("ROLE_USER"))
         )
@@ -25,7 +26,7 @@ class UserDetailsService(
 
     fun getCurrentUser(): User? {
         val authentication = SecurityContextHolder.getContext().authentication
-        val username = authentication?.name ?: return null
-        return userRepository.findByUsername(username).orElse(null)
+        val username = authentication?.name?.let(::Username) ?: return null
+        return userRepository.findByUsername(username)
     }
 }

@@ -1,14 +1,14 @@
 package org.raterr.user
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Column
-import org.springframework.data.relational.core.mapping.Table
+import org.raterr.Email
+import org.raterr.Username
 
-@Table("users")
 data class User(
-    @Id val id: Long? = null,
-    val username: String,
-    val email: String,
-    @Column("password_hash") val passwordHash: String,
-    @Column("created_at_epoch_ms") val createdAtEpochMs: Long = System.currentTimeMillis()
-)
+    val id: Id?,
+    val username: Username,
+    val email: Email,
+    val passwordHash: String,
+    val createdAtEpochMs: Long = System.currentTimeMillis()
+) {
+    data class Id(val value: Long)
+}

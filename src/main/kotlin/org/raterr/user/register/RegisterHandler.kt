@@ -3,6 +3,9 @@ package org.raterr.user.register
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import org.raterr.Email
+import org.raterr.Password
+import org.raterr.Username
 import org.raterr.rating.RatingRepository
 import org.raterr.user.User
 import org.raterr.user.UserRepository
@@ -10,9 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
 data class RegisterUser(
-    val username: String,
-    val email: String,
-    val password: String,
+    val username: Username,
+    val email: Email,
+    val password: Password,
 )
 
 @Component
@@ -22,17 +25,17 @@ class RegisterHandler(
     private val ratingRepository: RatingRepository,
 ) {
     fun handle(command: RegisterUser): Either<RegisterHandlerError, Unit> = either {
-        ensure(command.username.isNotBlank() && command.email.isNotBlank() && command.password.isNotBlank()) {
+        ensure(command.username.value.isNotBlank() && command.email.value.isNotBlank() && command.password.value.isNotBlank()) {
             RegisterHandlerError.EmptyFields
         }
 
-        ensure(command.username.length in 3..50) { RegisterHandlerError.InvalidUsernameLength }
-        ensure(command.password.length >= 8) { RegisterHandlerError.InvalidPasswordLength }
+        ensure(command.username.value.length in 3..50) { RegisterHandlerError.InvalidUsernameLength }
+        ensure(command.password.value.length >= 8) { RegisterHandlerError.InvalidPasswordLength }
 
         ensure(!userRepository.existsByUsername(command.username)) { RegisterHandlerError.UsernameAlreadyExists }
         ensure(!userRepository.existsByEmail(command.email)) { RegisterHandlerError.EmailAlreadyExists }
 
-        val hashedPassword = passwordEncoder.encode(command.password)
+        val hashedPassword = command.password.value.let(passwordEncoder::encode)
 
         val user = User(
             id = null,
@@ -44,7 +47,7 @@ class RegisterHandler(
         val savedUser = userRepository.save(user)
 
         ratingRepository.findAllWithoutUser().forEach { rating ->
-            ratingRepository.save(rating.copy(userId = savedUser.id!!))
+            ratingRepository.save(rating.copy(userId = savedUser.id!!.value))
         }
     }
 }

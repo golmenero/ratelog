@@ -1,6 +1,5 @@
 package org.raterr.movie.top
 
-import org.raterr.UserId
 import org.raterr.rating.RatingScoreService
 import org.raterr.annotations.CurrentUser
 import org.raterr.movie.premieres.MoviePremieresHandler
@@ -40,7 +39,7 @@ class TopMovieController(
         model: Model
     ): String {
         val tops = TopMovie(
-            userId = user.id!!.let(::UserId),
+            userId = user.id!!,
             category = category,
             limit = limit,
             name = name
@@ -51,7 +50,7 @@ class TopMovieController(
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        MoviePremieresQuery(UserId(user.id)).let(moviePremieresHandler::handle)
+        MoviePremieresQuery(user.id).let(moviePremieresHandler::handle)
             .fold(
                 { },
                 {

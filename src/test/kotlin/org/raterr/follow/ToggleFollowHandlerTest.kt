@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.raterr.MediaType
 import org.raterr.TmdbId
-import org.raterr.UserId
 import org.raterr.follow.toggle.ToggleFollow
 import org.raterr.follow.toggle.ToggleFollowHandler
+import org.raterr.user.User
 
 class ToggleFollowHandlerTest {
 
@@ -21,7 +21,7 @@ class ToggleFollowHandlerTest {
 
     @Test
     fun `follows when no existing follow`() {
-        handler.handle(ToggleFollow(TmdbId(100), UserId(1), MediaType.movie))
+        handler.handle(ToggleFollow(TmdbId(100), User.Id(1), MediaType.movie))
 
         val follows = followRepository.findByUserId(1)
         Assertions.assertEquals(1, follows.size)

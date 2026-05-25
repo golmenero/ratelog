@@ -2,10 +2,7 @@ package org.raterr.follow.toggle
 
 import org.raterr.MediaType
 import org.raterr.TmdbId
-import org.raterr.UserId
 import org.raterr.annotations.CurrentUser
-import org.raterr.follow.Follow
-import org.raterr.follow.FollowRepository
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,7 +22,7 @@ class ToggleFollowController(
     ): String {
         ToggleFollow(
             tmdbId = tmdbId.let(::TmdbId),
-            userId = user.id!!.let(::UserId),
+            userId = user.id!!,
             type = type.let(MediaType::valueOf),
         ).let(handler::handle)
 

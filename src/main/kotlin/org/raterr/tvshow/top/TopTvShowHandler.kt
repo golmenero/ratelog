@@ -1,14 +1,14 @@
 package org.raterr.tvshow.top
 
-import org.raterr.UserId
 import org.raterr.tvrating.TvRating
 import org.raterr.tvrating.TvRatingRepository
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
+import org.raterr.user.User
 import org.springframework.stereotype.Service
 
 data class TopTvShow(
-    val userId: UserId,
+    val userId: User.Id,
     val category: String?,
     val limit: Int = 10,
     val name: String?

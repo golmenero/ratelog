@@ -1,7 +1,6 @@
 package org.raterr.tvrating.add
 
 import org.raterr.TmdbId
-import org.raterr.UserId
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
@@ -27,7 +26,7 @@ class AddTvRatingController(
     ): String =
         AddTvRating(
             tmdbId = TmdbId(tmdbId),
-            userId = UserId(user.id!!),
+            userId = user.id!!,
             directing = directing,
             cinematography = cinematography,
             acting = acting,

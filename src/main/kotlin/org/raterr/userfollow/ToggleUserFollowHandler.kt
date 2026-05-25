@@ -2,12 +2,12 @@ package org.raterr.userfollow.toggleuser
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.raterr.UserId
+import org.raterr.Username
+import org.raterr.user.User
 import org.raterr.userfollow.UserFollow
 import org.raterr.userfollow.UserFollowRepository
 import org.raterr.user.UserRepository
 import org.springframework.stereotype.Service
-import kotlin.jvm.optionals.getOrNull
 
 sealed interface ToggleUserFollowHandlerError {
     data object CannotFollowYourself : ToggleUserFollowHandlerError
@@ -15,8 +15,8 @@ sealed interface ToggleUserFollowHandlerError {
 }
 
 data class ToggleUserFollow(
-    val followerId: UserId,
-    val followedUsername: String,
+    val followerId: User.Id,
+    val followedUsername: Username,
 )
 
 @Service
@@ -26,24 +26,24 @@ class ToggleUserFollowHandler(
 ) {
 
     fun handle(command: ToggleUserFollow): Either<ToggleUserFollowHandlerError, Unit> = either {
-        val followerId = command.followerId.value
+        val followerId = command.followerId
         val followedUser = userRepository.findByUsername(command.followedUsername)
-            .getOrNull() ?: raise(ToggleUserFollowHandlerError.UserNotFound)
+            ?: raise(ToggleUserFollowHandlerError.UserNotFound)
         val followedId = followedUser.id!!
 
         if (followerId == followedId) {
             raise(ToggleUserFollowHandlerError.CannotFollowYourself)
         }
 
-        val existingFollow = userFollowRepository.existsByFollowerIdAndFollowedId(followerId, followedId)
+        val existingFollow = userFollowRepository.existsByFollowerIdAndFollowedId(followerId.value, followedId.value)
         if (existingFollow) {
-            userFollowRepository.findByFollowerIdAndFollowedId(followerId, followedId)
+            userFollowRepository.findByFollowerIdAndFollowedId(followerId.value, followedId.value)
                 .ifPresent(userFollowRepository::delete)
         } else {
             UserFollow(
                 id = null,
-                followerId = followerId,
-                followedId = followedId,
+                followerId = followerId.value,
+                followedId = followedId.value,
             ).let(userFollowRepository::save)
         }
     }

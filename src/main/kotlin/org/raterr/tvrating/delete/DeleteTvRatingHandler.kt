@@ -4,15 +4,15 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.raterr.TmdbId
-import org.raterr.UserId
 import org.raterr.tvrating.TvRatingRankService
 import org.raterr.tvrating.TvRatingRepository
 import org.raterr.tvshow.TvShowRepository
+import org.raterr.user.User
 import org.springframework.stereotype.Component
 
 data class DeleteTvRating(
     val tmdbId: TmdbId,
-    val userId: UserId,
+    val userId: User.Id,
 )
 
 @Component

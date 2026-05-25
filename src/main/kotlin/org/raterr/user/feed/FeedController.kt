@@ -1,6 +1,6 @@
 package org.raterr.user.feed
 
-import org.raterr.UserId
+import org.raterr.Username
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
 import org.raterr.user.followed.FollowedUsersHandler
@@ -22,29 +22,28 @@ class FeedController(
 
     @GetMapping("/community")
     fun communityPage(
-        @CurrentUser user: User?,
+        @CurrentUser user: User,
         @RequestParam("username", required = false) username: String?,
         model: Model
     ): String {
-        if (user != null) {
-            FeedQuery(UserId(user.id!!)).let(feedHandler::handle)
-                .fold(
-                    { },
-                    { model.addAttribute("feed", it) }
-                )
+        FeedQuery(user.id!!).let(feedHandler::handle)
+            .fold(
+                { },
+                { model.addAttribute("feed", it) }
+            )
 
-            FollowedUsersQuery(UserId(user.id)).let(followedUsersHandler::handle)
-                .fold(
-                    { },
-                    { model.addAttribute("followedUsers", it) }
-                )
-        }
+        FollowedUsersQuery(user.id).let(followedUsersHandler::handle)
+            .fold(
+                { },
+                { model.addAttribute("followedUsers", it) }
+            )
 
-        if (!username.isNullOrBlank() && user != null) {
+        if (!username.isNullOrBlank()) {
             UserSearchQuery(
-                username = username,
-                followerId = UserId(user.id!!)
-            ).let(userSearchHandler::handle)
+                username = username.let(::Username),
+                followerId = user.id,
+                )
+                .let(userSearchHandler::handle)
                 .fold(
                     {
                         when (it) {

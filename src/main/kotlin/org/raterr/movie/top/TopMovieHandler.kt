@@ -1,15 +1,14 @@
 package org.raterr.movie.top
 
-import org.raterr.UserId
 import org.raterr.movie.Movie
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository
 import org.raterr.movie.MovieRepository
+import org.raterr.user.User
 import org.springframework.stereotype.Service
-import kotlin.jvm.optionals.getOrNull
 
 data class TopMovie(
-    val userId: UserId,
+    val userId: User.Id,
     val category: String?,
     val limit: Int = 10,
     val name: String?
