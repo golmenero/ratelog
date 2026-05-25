@@ -2,32 +2,42 @@ package org.raterr.tvrating
 
 import org.raterr.Score
 import org.raterr.Username
+import org.raterr.movie.Movie
+import org.raterr.movie.Movie.Id
+import org.raterr.movie.MovieRepository
 import org.raterr.tvshow.TvShow
+import org.raterr.tvshow.TvShowRepository
 import org.raterr.user.User
+import org.raterr.user.UserRepository
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import kotlin.jvm.optionals.getOrNull
 
 @Repository
-class TvRatingRepositoryImpl(private val tvRatingDAO: TvRatingDAO) : TvRatingRepository {
+class TvRatingRepositoryImpl(
+        private val tvRatingDAO: TvRatingDAO,
+        private val tvShowRepository: TvShowRepository,
+        private val userRepository: UserRepository,
+    ) : TvRatingRepository {
 
-    override fun findById(id: TvRating.Id): TvRating? =
+    override fun findById(id: TvRating.Id): TvRatingView? =
         id.value.let(tvRatingDAO::findById).getOrNull()?.toDomain()
 
-    override fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating? =
+    override fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRatingView? =
         tvShowId.value.let(tvRatingDAO::findFirstByTvShowId).getOrNull()?.toDomain()
 
-    override fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): List<TvRating> =
+    override fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): List<TvRatingView> =
         tvRatingDAO.findByTvShowIdAndUserId(tvShowId.value, userId.value).map { it.toDomain() }
 
-    override fun findByUserId(userId: User.Id): List<TvRating> =
+    override fun findByUserId(userId: User.Id): List<TvRatingView> =
         tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }
 
-    override fun findAllWithoutUser(): List<TvRating> =
+    override fun findAllWithoutUser(): List<TvRatingView> =
         tvRatingDAO.findAll().filter { it.userId == 0L }.map { it.toDomain() }
 
-    override fun save(rating: TvRating): TvRating =
-        rating.toEntity().let(tvRatingDAO::save).toDomain()
+    override fun save(rating: TvRating) {
+        rating.toEntity().let(tvRatingDAO::save)
+    }
 
     override fun deleteByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): Int {
         val ratings = tvRatingDAO.findByTvShowIdAndUserId(tvShowId.value, userId.value)
@@ -39,15 +49,10 @@ class TvRatingRepositoryImpl(private val tvRatingDAO: TvRatingDAO) : TvRatingRep
         category: String?,
         limit: Int,
         name: String?
-    ): List<TvRating> {
-        val all = tvRatingDAO.findByUserId(userId.value)
-            .map { it.toDomain() }
-            .sortedByDescending { TvRatingScoreService.score(it) }
+    ): List<TvRatingView> =
+        tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score }.take(limit)
 
-        return all.take(limit)
-    }
-
-    override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating> =
+    override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRatingView> =
         tvRatingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
 
     override fun updateRank(id: TvRating.Id, rank: TvRating.Rank): Int {
@@ -56,20 +61,23 @@ class TvRatingRepositoryImpl(private val tvRatingDAO: TvRatingDAO) : TvRatingRep
         return 1
     }
 
-    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRatingWithUsername> {
+    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRatingView> {
         val sinceEpochMs = since.toEpochMilli()
         val userIdValues = userIds.map(User.Id::value)
         return tvRatingDAO.findAll()
             .filter { it.userId in userIdValues && it.createdAtEpochMs >= sinceEpochMs }
             .sortedByDescending { it.createdAtEpochMs }
-            .map { it.toTvRatingWithUsernameEntity().toDomainWithUsername() }
+            .map { it.toDomain() }
     }
 
-    private fun TvRatingEntity.toDomain(): TvRating {
-        return TvRating(
+    private fun TvRatingEntity.toDomain(): TvRatingView {
+        val tvShow = tvShowId.let(TvShow::Id).let(tvShowRepository::findById)
+        val user = userId.let(User::Id).let(userRepository::findById)
+
+        return TvRatingView(
             id = id?.let { TvRating.Id(it) },
-            tvShowId = TvShow.Id(tvShowId),
-            userId = User.Id(userId),
+            tvShow = tvShow!!,
+            user = user!!,
             directing = Score(directing),
             cinematography = Score(cinematography),
             acting = Score(acting),
@@ -77,51 +85,6 @@ class TvRatingRepositoryImpl(private val tvRatingDAO: TvRatingDAO) : TvRatingRep
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
             rank = TvRating.Rank(rank)
-        )
-    }
-
-    private fun TvRatingEntity.toDomainWithUsername(): TvRatingWithUsername {
-        return TvRatingWithUsername(
-            id = TvRating.Id(id!!),
-            tvShowId = TvShow.Id(tvShowId),
-            userId = User.Id(userId),
-            directing = Score(directing),
-            cinematography = Score(cinematography),
-            acting = Score(acting),
-            soundtrack = Score(soundtrack),
-            screenplay = Score(screenplay),
-            createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            username = Username("")
-        )
-    }
-
-    private fun TvRatingEntity.toTvRatingWithUsernameEntity(): TvRatingWithUsernameEntity {
-        return TvRatingWithUsernameEntity(
-            id = id,
-            tvShowId = tvShowId,
-            userId = userId,
-            directing = directing,
-            cinematography = cinematography,
-            acting = acting,
-            soundtrack = soundtrack,
-            screenplay = screenplay,
-            createdAtEpochMs = createdAtEpochMs,
-            username = ""
-        )
-    }
-
-    private fun TvRatingWithUsernameEntity.toDomainWithUsername(): TvRatingWithUsername {
-        return TvRatingWithUsername(
-            id = TvRating.Id(id!!),
-            tvShowId = TvShow.Id(tvShowId),
-            userId = User.Id(userId),
-            directing = Score(directing),
-            cinematography = Score(cinematography),
-            acting = Score(acting),
-            soundtrack = Score(soundtrack),
-            screenplay = Score(screenplay),
-            createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            username = Username(username)
         )
     }
 

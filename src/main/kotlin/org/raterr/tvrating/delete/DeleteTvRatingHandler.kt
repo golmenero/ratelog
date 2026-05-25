@@ -4,8 +4,9 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.raterr.TmdbId
-import org.raterr.tvrating.TvRatingRankService
+import org.raterr.tvrating.rank.RankTvRatingHandler
 import org.raterr.tvrating.TvRatingRepository
+import org.raterr.tvrating.rank.RankTvRating
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.user.User
 import org.springframework.stereotype.Component
@@ -19,7 +20,7 @@ data class DeleteTvRating(
 class DeleteTvRatingHandler(
     private val tvShowRepository: TvShowRepository,
     private val tvRatingRepository: TvRatingRepository,
-    private val tvRatingRankService: TvRatingRankService,
+    private val rankTvRatingHandler: RankTvRatingHandler,
 ) {
     fun handle(command: DeleteTvRating): Either<DeleteTvRatingHandlerError, Unit> = either {
         val show = command.tmdbId.let(tvShowRepository::findByTmdbId)
@@ -29,6 +30,6 @@ class DeleteTvRatingHandler(
         val deletedCount = tvRatingRepository.deleteByTvShowIdAndUserId(show.id, command.userId)
         ensure(deletedCount > 0) { DeleteTvRatingHandlerError.RatingNotFound }
 
-        tvRatingRankService.recalculateRanks(command.userId)
+        command.userId.let(::RankTvRating).let(rankTvRatingHandler::handle)
     }
 }

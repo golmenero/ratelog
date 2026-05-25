@@ -1,7 +1,7 @@
 package org.raterr.tvshow.top
 
-import org.raterr.tvrating.TvRatingScoreService
 import org.raterr.annotations.CurrentUser
+import org.raterr.tvrating.TvRatingView
 import org.raterr.tvshow.premieres.TvShowPremieresHandler
 import org.raterr.tvshow.premieres.TvShowPremieresQuery
 import org.raterr.user.User
@@ -63,20 +63,20 @@ class TopTvShowController(
         return "tvshows"
     }
 
-    private fun map(list: List<RankedTvShow>): List<GetTopTvShowsResponse> =
+    private fun map(list: List<TvRatingView>): List<GetTopTvShowsResponse> =
         list.map {
             GetTopTvShowsResponse(
-                rank = it.rating.rank.value,
-                tmdbId = it.show.tmdbId.value,
-                name = it.show.name.value,
-                firstAirYear = it.show.firstAirYear,
-                posterPath = it.show.posterPath?.value,
-                averageScore = TvRatingScoreService.score(it.rating),
-                directing = it.rating.directing.value,
-                cinematography = it.rating.cinematography.value,
-                acting = it.rating.acting.value,
-                soundtrack = it.rating.soundtrack.value,
-                screenplay = it.rating.screenplay.value,
+                rank = it.rank.value,
+                tmdbId = it.tvShow.tmdbId.value,
+                name = it.tvShow.name.value,
+                firstAirYear = it.tvShow.firstAirYear,
+                posterPath = it.tvShow.posterPath?.value,
+                averageScore = it.score,
+                directing = it.directing.value,
+                cinematography = it.cinematography.value,
+                acting = it.acting.value,
+                soundtrack = it.soundtrack.value,
+                screenplay = it.screenplay.value,
             )
         }
 }

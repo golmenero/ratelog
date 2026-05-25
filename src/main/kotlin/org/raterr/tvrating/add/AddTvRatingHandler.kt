@@ -9,8 +9,9 @@ import org.raterr.follow.FollowRepository
 import org.raterr.tvrating.TvRating
 import org.raterr.tvshow.get.GetTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
-import org.raterr.tvrating.TvRatingRankService
+import org.raterr.tvrating.rank.RankTvRatingHandler
 import org.raterr.tvrating.TvRatingRepository
+import org.raterr.tvrating.rank.RankTvRating
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -30,7 +31,7 @@ class AddTvRatingHandler(
     private val getTvShowHandler: GetTvShowHandler,
     private val tvRatingRepository: TvRatingRepository,
     private val followRepository: FollowRepository,
-    private val tvRatingRankService: TvRatingRankService,
+    private val rankTvRatingHandler: RankTvRatingHandler,
 ) {
     fun handle(command: AddTvRating): Either<AddTvRatingHandlerError, Unit> = either {
         listOf(
@@ -64,7 +65,7 @@ class AddTvRatingHandler(
             rank = TvRating.Rank(0)
         ).let(tvRatingRepository::save)
 
-        tvRatingRankService.recalculateRanks(command.userId)
+        command.userId.let(::RankTvRating).let(rankTvRatingHandler::handle)
 
         followRepository.findByUserIdAndContentTypeAndContentTmdbId(
             command.userId.value,

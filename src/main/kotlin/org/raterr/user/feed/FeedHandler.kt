@@ -4,13 +4,9 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
 import org.raterr.userfollow.UserFollowRepository
-import org.raterr.movie.MovieRepository
-import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository
-import org.raterr.tvrating.TvRating
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvrating.TvRatingRepository
-import org.raterr.tvrating.TvRatingScoreService
 import org.raterr.user.User
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -39,7 +35,6 @@ class FeedHandler(
     private val userFollowRepository: UserFollowRepository,
     private val ratingRepository: RatingRepository,
     private val tvRatingRepository: TvRatingRepository,
-    private val tvShowRepository: TvShowRepository,
 ) {
 
     fun handle(query: FeedQuery): Either<FeedHandlerError, List<FeedItem>> = either {
@@ -64,29 +59,14 @@ class FeedHandler(
             )
         }
 
-        val tvItems = tvRatings.mapNotNull { rating ->
-            val show = rating.tvShowId.let(tvShowRepository::findById) ?: return@mapNotNull null
-            val score = TvRatingScoreService.score(
-                TvRating(
-                    id = rating.id,
-                    tvShowId = rating.tvShowId,
-                    userId = rating.userId,
-                    directing = rating.directing,
-                    cinematography = rating.cinematography,
-                    acting = rating.acting,
-                    soundtrack = rating.soundtrack,
-                    screenplay = rating.screenplay,
-                    createdAt = rating.createdAt,
-                    rank = TvRating.Rank(0)
-                )
-            )
+        val tvItems = tvRatings.map { rating ->
             FeedItem(
-                username = rating.username.value,
-                title = show.name.value,
-                posterPath = show.posterPath?.value,
-                tmdbId = show.tmdbId.value,
+                username = rating.user.username.value,
+                title = rating.tvShow.name.value,
+                posterPath = rating.tvShow.posterPath?.value,
+                tmdbId = rating.tvShow.tmdbId.value,
                 type = MediaType.tvshow.name,
-                score = score,
+                score = rating.score,
                 ratedAt = dateFormatter.format(rating.createdAt),
                 createdAtEpochMs = rating.createdAt.toEpochMilli()
             )

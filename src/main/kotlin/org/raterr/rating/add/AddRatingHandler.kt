@@ -9,8 +9,9 @@ import org.raterr.follow.FollowRepository
 import org.raterr.movie.get.GetMovie
 import org.raterr.movie.get.GetMovieHandler
 import org.raterr.rating.Rating
-import org.raterr.rating.RatingRankService
+import org.raterr.rating.rank.RankRatingHandler
 import org.raterr.rating.RatingRepository
+import org.raterr.rating.rank.RankRating
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -30,7 +31,7 @@ class AddRatingHandler(
     private val getMovieHandler: GetMovieHandler,
     private val ratingRepository: RatingRepository,
     private val followRepository: FollowRepository,
-    private val ratingRankService: RatingRankService,
+    private val rankRatingHandler: RankRatingHandler,
 ) {
     fun handle(command: AddRating): Either<AddRatingHandlerError, Unit> = either {
         listOf(
@@ -64,7 +65,7 @@ class AddRatingHandler(
             rank = Rating.Rank(0)
         ).let(ratingRepository::save)
 
-        ratingRankService.recalculateRanks(command.userId)
+        command.userId.let(::RankRating).let(rankRatingHandler::handle)
 
         followRepository.findByUserIdAndContentTypeAndContentTmdbId(
             command.userId.value,

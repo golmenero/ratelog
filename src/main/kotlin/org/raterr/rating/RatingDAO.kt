@@ -21,19 +21,6 @@ data class RatingEntity(
     val rank: Int = 0,
 )
 
-data class RatingWithUsernameEntity(
-    val id: Long? = null,
-    val movieId: Long,
-    val userId: Long,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val createdAtEpochMs: Long,
-    val username: String
-)
-
 @Repository
 interface RatingDAO : CrudRepository<RatingEntity, Long> {
     fun findFirstByMovieId(movieId: Long): Optional<RatingEntity>

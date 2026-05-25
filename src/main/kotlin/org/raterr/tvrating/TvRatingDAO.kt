@@ -21,19 +21,6 @@ data class TvRatingEntity(
     val rank: Int = 0,
 )
 
-data class TvRatingWithUsernameEntity(
-    val id: Long? = null,
-    val tvShowId: Long,
-    val userId: Long,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val createdAtEpochMs: Long,
-    val username: String
-)
-
 @Repository
 interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
     fun findFirstByTvShowId(tvShowId: Long): Optional<TvRatingEntity>
