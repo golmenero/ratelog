@@ -31,8 +31,8 @@ class RegisterHandler(
         ensure(command.username.value.length in 3..50) { RegisterHandlerError.InvalidUsernameLength }
         ensure(command.password.value.length >= 8) { RegisterHandlerError.InvalidPasswordLength }
 
-        ensure(!userRepository.existsByUsername(command.username)) { RegisterHandlerError.UsernameAlreadyExists }
-        ensure(!userRepository.existsByEmail(command.email)) { RegisterHandlerError.EmailAlreadyExists }
+        ensure(userRepository.findByUsername(command.username) != null) { RegisterHandlerError.UsernameAlreadyExists }
+        ensure(userRepository.findByEmail(command.email) != null) { RegisterHandlerError.EmailAlreadyExists }
 
         val hashedPassword = command.password.value.let(passwordEncoder::encode)
 

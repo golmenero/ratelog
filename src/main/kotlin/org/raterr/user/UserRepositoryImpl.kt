@@ -6,7 +6,11 @@ import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
 
 @Repository
-class UserRepositoryImpl(private val userDAO: UserDAO) : UserRepository {
+class UserRepositoryImpl(
+    private val userDAO: UserDAO,
+    private val userFollowDAO: UserFollowDAO,
+    private val userDetailsService: UserDetailsService,
+) : UserRepository {
     override fun findById(id: User.Id): User? =
         id.value.let(userDAO::findById).getOrNull()?.toDomain()
 
@@ -16,26 +20,55 @@ class UserRepositoryImpl(private val userDAO: UserDAO) : UserRepository {
     override fun findByEmail(email: Email): User? =
         userDAO.findByEmail(email.value).getOrNull()?.toDomain()
 
-    override fun existsByUsername(username: Username): Boolean =
-        userDAO.existsByUsername(username.value)
+    override fun save(user: User) {
+        val currentUserId = userDetailsService.getCurrentUser()?.id?.value
+        val follow = userFollowDAO.findByFollowerIdAndFollowedId(currentUserId!!, user.id!!.value).getOrNull()
 
-    override fun existsByEmail(email: Email): Boolean =
-        userDAO.existsByEmail(email.value)
+        when {
+            user.followed && follow == null -> {
+                UserFollowEntity(
+                    followerId = currentUserId,
+                    followedId = user.id.value,
+                ).let(userFollowDAO::save)
+            }
+            !user.followed && follow != null -> {
+                follow.let(userFollowDAO::delete)
+            }
+        }
 
-    override fun save(user: User): User =
-        user.toEntity().let(userDAO::save).toDomain()
+        user.toEntity().let(userDAO::save)
+    }
 
     override fun findByUsernameContaining(username: Username): List<User> =
         userDAO.findByUsernameContaining(username.value).map { it.toDomain() }
 
-    private fun UserEntity.toDomain(): User =
-        User(
-            id = id?.let { User.Id(it) },
+    override fun findByUsernameContaining(username: Username, followerId: User.Id): List<User> =
+        userDAO.findByUsernameContaining(username.value).map { it.toDomain() }
+
+    override fun findFollowingByUserId(userId: User.Id): List<User> {
+        val followedIds = userFollowDAO.findFollowingUserIds(userId.value)
+        return followedIds.mapNotNull { id ->
+            userDAO.findById(id).getOrNull()?.toDomain()
+        }
+    }
+
+    override fun findFollowedUserIds(userId: User.Id): List<User.Id> =
+        userFollowDAO.findFollowedUserIds(userId.value).map { User.Id(it) }
+
+    private fun UserEntity.toDomain(): User {
+        val currentUserId = userDetailsService.getCurrentUser()?.id?.value
+        val follow = currentUserId?.let { userFollowDAO.findByFollowerIdAndFollowedId( it, id!!) }?.getOrNull()
+
+        return User(
+            id = id!!.let { User.Id(it) },
             username = username.let(::Username),
             email = email.let(::Email),
             passwordHash = passwordHash,
-            createdAtEpochMs = createdAtEpochMs
+            createdAtEpochMs = createdAtEpochMs,
+            followed = follow != null,
+            followedAtEpochMs = follow?.createdAtEpochMs
         )
+    }
 
     private fun User.toEntity(): UserEntity =
         UserEntity(

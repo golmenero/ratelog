@@ -5,7 +5,6 @@ import arrow.core.raise.either
 import org.raterr.Username
 import org.raterr.user.User
 import org.raterr.user.UserRepository
-import org.raterr.userfollow.UserFollowRepository
 
 data class UserSearchQuery(
     val username: Username,
@@ -15,33 +14,30 @@ data class UserSearchQuery(
 data class UserSearchResult(
     val id: Long,
     val username: Username,
-    val isFollowed: Boolean
+    val isFollowed: Boolean,
+    val followedAtEpochMs: Long?
 )
 
 class UserSearchHandler(
-    private val userRepository: UserRepository,
-    private val userFollowRepository: UserFollowRepository
+    private val userRepository: UserRepository
 ) {
     fun handle(query: UserSearchQuery): Either<UserSearchHandlerError, List<UserSearchResult>> = either {
         if (query.username.value.isBlank()) {
             raise(UserSearchHandlerError.EmptyQuery)
         }
 
-        val users = userRepository.findByUsernameContaining(query.username)
-            .map { user ->
-                val isFollowed = query.followerId?.value?.let { followerId ->
-                    user.id?.value?.let { userId ->
-                        userFollowRepository.existsByFollowerIdAndFollowedId(followerId, userId)
-                    } ?: false
-                } ?: false
+        val users = query.followerId?.let { followerId ->
+            userRepository.findByUsernameContaining(query.username, followerId)
+        } ?: userRepository.findByUsernameContaining(query.username)
 
-                UserSearchResult(user.id!!.value, user.username, isFollowed)
-            }
+        val results = users.map { user ->
+            UserSearchResult(user.id!!.value, user.username, user.followed, user.followedAtEpochMs)
+        }
 
-        if (users.isEmpty()) {
+        if (results.isEmpty()) {
             raise(UserSearchHandlerError.NoUsersFound(query.username.value))
         }
 
-        users
+        results
     }
 }

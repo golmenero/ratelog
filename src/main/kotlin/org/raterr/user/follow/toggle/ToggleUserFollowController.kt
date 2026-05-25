@@ -1,11 +1,8 @@
-package org.raterr.userfollow.toggle
+package org.raterr.user.follow.toggle
 
 import org.raterr.Username
 import org.raterr.annotations.CurrentUser
 import org.raterr.user.User
-import org.raterr.userfollow.toggleuser.ToggleUserFollow
-import org.raterr.userfollow.toggleuser.ToggleUserFollowHandler
-import org.raterr.userfollow.toggleuser.ToggleUserFollowHandlerError
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam

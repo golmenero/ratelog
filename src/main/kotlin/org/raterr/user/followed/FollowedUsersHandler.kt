@@ -3,7 +3,7 @@ package org.raterr.user.followed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.user.User
-import org.raterr.userfollow.UserFollowRepository
+import org.raterr.user.UserRepository
 import org.springframework.stereotype.Service
 
 data class FollowedUsersQuery(
@@ -17,12 +17,12 @@ data class FollowedUserResult(
 
 @Service
 class FollowedUsersHandler(
-    private val userFollowRepository: UserFollowRepository
+    private val userRepository: UserRepository
 ) {
     fun handle(query: FollowedUsersQuery): Either<FollowedUsersHandlerError, List<FollowedUserResult>> = either {
-        val following = userFollowRepository.findFollowingByUserId(query.userId.value)
+        val following = userRepository.findFollowingByUserId(query.userId)
         following.map {
-            FollowedUserResult(it.followedId, it.followedUsername)
+            FollowedUserResult(it.id!!.value, it.username.value)
         }
     }
 }

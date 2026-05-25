@@ -3,11 +3,11 @@ package org.raterr.user.feed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
-import org.raterr.userfollow.UserFollowRepository
 import org.raterr.rating.RatingRepository
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvrating.TvRatingRepository
 import org.raterr.user.User
+import org.raterr.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.ZoneId
@@ -32,19 +32,19 @@ private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy HH:mm").wit
 
 @Service
 class FeedHandler(
-    private val userFollowRepository: UserFollowRepository,
+    private val userRepository: UserRepository,
     private val ratingRepository: RatingRepository,
     private val tvRatingRepository: TvRatingRepository,
 ) {
 
     fun handle(query: FeedQuery): Either<FeedHandlerError, List<FeedItem>> = either {
-        val followedIds = userFollowRepository.findFollowedUserIds(query.userId.value)
+        val followedIds = userRepository.findFollowedUserIds(query.userId)
         if (followedIds.isEmpty()) return@either emptyList()
 
         val thirtyDaysAgo = Instant.now().minusSeconds(30L * 24 * 60 * 60)
 
-        val movieRatings = ratingRepository.findByUserIdsAndLastDays(followedIds.map { User.Id(it) }, thirtyDaysAgo)
-        val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(followedIds.map { User.Id(it) }, thirtyDaysAgo)
+        val movieRatings = ratingRepository.findByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
+        val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
 
         val movieItems = movieRatings.map { rating ->
             FeedItem(
