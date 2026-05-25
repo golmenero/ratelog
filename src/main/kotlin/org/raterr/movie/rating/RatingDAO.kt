@@ -26,5 +26,5 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
     fun findFirstByMovieId(movieId: Long): Optional<RatingEntity>
     fun findByMovieIdAndUserId(movieId: Long, userId: Long): List<RatingEntity>
     fun findByUserId(userId: Long): List<RatingEntity>
-    fun findByUserIdOrderByRank(userId: Long): List<RatingEntity>
+    fun findByUserIdOrderByScore(userId: Long): List<RatingEntity>
 }

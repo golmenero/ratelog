@@ -44,7 +44,7 @@ class TvRatingRepositoryImpl(
         tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score.value }.take(limit)
 
     override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating> =
-        tvRatingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
+        tvRatingDAO.findByUserIdOrderByScore(userId.value).map { it.toDomain() }
 
     override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRating> {
         val sinceEpochMs = since.toEpochMilli()

@@ -45,7 +45,7 @@ class RatingRepositoryImpl(
         ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score.value }.take(limit)
 
     override fun findByUserIdOrderedByRank(userId: User.Id): List<Rating> =
-        ratingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
+        ratingDAO.findByUserIdOrderByScore(userId.value).map { it.toDomain() }
 
     override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating> {
         val sinceEpochMs = since.toEpochMilli()
