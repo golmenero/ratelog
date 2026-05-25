@@ -125,7 +125,7 @@
                                             <i data-lucide="star"></i>
                                         </a>
                                         <form th:action="@{/movie/follow}" method="post" style="display: inline;">
-                                            <input type="hidden" name="movieId" th:value="${item.movieId}" />
+                                            <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
                                             <button type="submit" class="raterr-btn green" title="Unfollow">
                                                 <i data-lucide="heart"></i>
                                             </button>
@@ -151,7 +151,7 @@
                                     </div>
                                     <div class="premiere-actions">
                                         <form th:action="@{/movie/follow}" method="post" style="display: inline;">
-                                            <input type="hidden" name="movieId" th:value="${item.movieId}" />
+                                            <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
                                             <button type="submit" class="raterr-btn green" title="Unfollow">
                                                 <i data-lucide="heart"></i>
                                             </button>
@@ -177,7 +177,7 @@
                                     </div>
                                     <div class="premiere-actions">
                                         <form th:action="@{/movie/follow}" method="post" style="display: inline;">
-                                            <input type="hidden" name="movieId" th:value="${item.movieId}" />
+                                            <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
                                             <button type="submit" class="raterr-btn green" title="Unfollow">
                                                 <i data-lucide="heart"></i>
                                             </button>
