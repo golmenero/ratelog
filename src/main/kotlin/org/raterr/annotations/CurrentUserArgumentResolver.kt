@@ -8,9 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
-class CurrentUserArgumentResolver(
-    private val userService: UserDetailsService
-) : HandlerMethodArgumentResolver {
+class CurrentUserArgumentResolver : HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(CurrentUser::class.java) &&
@@ -23,6 +21,6 @@ class CurrentUserArgumentResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): Any? {
-        return userService.getCurrentUser()
+        return UserDetailsService.getCurrentUser()
     }
 }

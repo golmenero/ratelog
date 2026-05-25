@@ -20,9 +20,7 @@ fun main(args: Array<String>) {
 }
 
 @Configuration
-class WebConfig(
-    private val userService: UserDetailsService
-) : WebMvcConfigurer {
+class WebConfig : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
@@ -39,6 +37,6 @@ class WebConfig(
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
-        resolvers.add(CurrentUserArgumentResolver(userService))
+        resolvers.add(CurrentUserArgumentResolver())
     }
 }

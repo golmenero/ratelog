@@ -16,7 +16,6 @@ import kotlin.jvm.optionals.getOrNull
 class MovieRepositoryImpl(
     val movieDAO: MovieDAO,
     val movieFollowDAO: MovieFollowDAO,
-    private val userDetailsService: UserDetailsService,
 ): MovieRepository {
     override fun findById(id: Movie.Id): Movie? =
         id.value.let(movieDAO::findById).getOrNull()?.toDomain()
@@ -25,7 +24,7 @@ class MovieRepositoryImpl(
         tmdbId.value.let(movieDAO::findByTmdbId).getOrNull()?.toDomain()
 
     override fun save(movie: Movie): Movie {
-        val currentUserId = userDetailsService.getCurrentUser()?.id?.value
+        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
 
         if (currentUserId != null && movie.id != null) {
             val follow = movieFollowDAO.findByUserIdAndMovieId(currentUserId, movie.id.value).getOrNull()
@@ -52,7 +51,7 @@ class MovieRepositoryImpl(
 
     private fun MovieEntity.toDomain(): Movie {
         val genres = genres?.split(',')?.map(Genre::valueOf) ?: emptyList()
-        val currentUserId = userDetailsService.getCurrentUser()?.id?.value
+        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
         val follow = currentUserId?.let { movieFollowDAO.findByUserIdAndMovieId(it, id!!) }?.getOrNull()
 
         return Movie(

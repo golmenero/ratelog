@@ -9,7 +9,6 @@ import kotlin.jvm.optionals.getOrNull
 class UserRepositoryImpl(
     private val userDAO: UserDAO,
     private val userFollowDAO: UserFollowDAO,
-    private val userDetailsService: UserDetailsService,
 ) : UserRepository {
     override fun findById(id: User.Id): User? =
         id.value.let(userDAO::findById).getOrNull()?.toDomain()
@@ -21,14 +20,14 @@ class UserRepositoryImpl(
         userDAO.findByEmail(email.value).getOrNull()?.toDomain()
 
     override fun save(user: User) {
-        val currentUserId = userDetailsService.getCurrentUser()?.id?.value
-        val follow = userFollowDAO.findByFollowerIdAndFollowedId(currentUserId!!, user.id!!.value).getOrNull()
+        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
+        val follow = currentUserId?.let { userFollowDAO.findByFollowerIdAndFollowedId(it, user.id!!.value) }?.getOrNull()
 
         when {
             user.followed && follow == null -> {
                 UserFollowEntity(
-                    followerId = currentUserId,
-                    followedId = user.id.value,
+                    followerId = currentUserId!!,
+                    followedId = user.id!!.value,
                 ).let(userFollowDAO::save)
             }
             !user.followed && follow != null -> {
@@ -56,8 +55,8 @@ class UserRepositoryImpl(
         userFollowDAO.findFollowedUserIds(userId.value).map { User.Id(it) }
 
     private fun UserEntity.toDomain(): User {
-        val currentUserId = userDetailsService.getCurrentUser()?.id?.value
-        val follow = currentUserId?.let { userFollowDAO.findByFollowerIdAndFollowedId( it, id!!) }?.getOrNull()
+        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
+        val follow = currentUserId?.let { userFollowDAO.findByFollowerIdAndFollowedId(it, id!!) }?.getOrNull()
 
         return User(
             id = id!!.let { User.Id(it) },

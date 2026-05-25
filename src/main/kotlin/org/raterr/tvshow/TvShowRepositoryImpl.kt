@@ -15,7 +15,6 @@ import kotlin.jvm.optionals.getOrNull
 class TvShowRepositoryImpl(
     val tvShowDAO: TvShowDAO,
     val tvFollowDAO: TvFollowDAO,
-    private val userDetailsService: UserDetailsService,
 ) : TvShowRepository {
     override fun findById(id: TvShow.Id): TvShow? =
         id.value.let(tvShowDAO::findById).getOrNull()?.toDomain()
@@ -24,7 +23,7 @@ class TvShowRepositoryImpl(
         tmdbId.value.let(tvShowDAO::findByTmdbId).getOrNull()?.toDomain()
 
     override fun save(show: TvShow): TvShow {
-        val currentUserId = userDetailsService.getCurrentUser()?.id?.value
+        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
 
         if (currentUserId != null && show.id != null) {
             val follow = tvFollowDAO.findByUserIdAndTvShowId(currentUserId, show.id.value).getOrNull()
@@ -50,7 +49,7 @@ class TvShowRepositoryImpl(
 
     private fun TvShowEntity.toDomain(): TvShow {
         val genres = genres?.split(',')?.map(Genre::valueOf) ?: emptyList()
-        val currentUserId = userDetailsService.getCurrentUser()?.id?.value
+        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
         val follow = currentUserId?.let { tvFollowDAO.findByUserIdAndTvShowId(it, id!!) }?.getOrNull()
 
         return TvShow(

@@ -5,6 +5,7 @@ import arrow.core.raise.either
 import org.raterr.Username
 import org.raterr.user.User
 import org.raterr.user.UserRepository
+import org.springframework.stereotype.Service
 
 data class UserSearchQuery(
     val username: Username,
@@ -18,6 +19,7 @@ data class UserSearchResult(
     val followedAtEpochMs: Long?
 )
 
+@Service
 class UserSearchHandler(
     private val userRepository: UserRepository
 ) {
