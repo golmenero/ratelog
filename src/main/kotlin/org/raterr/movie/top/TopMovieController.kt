@@ -3,7 +3,7 @@ package org.raterr.movie.top
 import org.raterr.annotations.CurrentUser
 import org.raterr.movie.premieres.MoviePremieresHandler
 import org.raterr.movie.premieres.MoviePremieresQuery
-import org.raterr.rating.RatingView
+import org.raterr.movie.rating.RatingView
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

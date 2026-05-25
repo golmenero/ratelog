@@ -2,8 +2,10 @@ package org.raterr.tvshow.premieres
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.raterr.follow.FollowRepository
+import org.raterr.TmdbId
+import org.raterr.tvshow.TvShowRepository
 import org.raterr.tmdb.TmdbClient
+import org.raterr.tvshow.follow.TvFollowRepository
 import org.raterr.user.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -28,11 +30,11 @@ data class TvShowPremieres(
 @Service
 class TvShowPremieresHandler(
     private val tmdbClient: TmdbClient,
-    private val followRepository: FollowRepository
+    private val tvFollowRepository: TvFollowRepository,
+    private val tvShowRepository: TvShowRepository,
 ) {
     fun handle(query: TvShowPremieresQuery): Either<TvShowPremieresHandlerError, TvShowPremieres> = either {
-        val follows = followRepository.findByUserId(query.userId.value)
-            .filter { it.contentType == "tvshow" }
+        val follows = tvFollowRepository.findByUserId(query.userId.value)
 
         val released = mutableListOf<TvShowPremiereItem>()
         val upcoming = mutableListOf<TvShowPremiereItem>()
@@ -40,25 +42,28 @@ class TvShowPremieresHandler(
         val today = LocalDate.now()
 
         for (follow in follows) {
-            val show = tmdbClient.tvShowDetails(follow.contentTmdbId).bind()
+            val show = follow.tvShowId.let(org.raterr.tvshow.TvShow::Id).let(tvShowRepository::findById)
+                ?: raise(TvShowPremieresHandlerError.TvShowNotFound)
 
-            if (!show.firstAirDate.isNullOrBlank()) {
-                val date = LocalDate.parse(show.firstAirDate)
+            val tmdbShow = tmdbClient.tvShowDetails(show.tmdbId.value).bind()
+
+            if (!tmdbShow.firstAirDate.isNullOrBlank()) {
+                val date = LocalDate.parse(tmdbShow.firstAirDate)
                 val item = TvShowPremiereItem(
-                    tmdbId = follow.contentTmdbId,
-                    name = show.name,
+                    tmdbId = show.tmdbId.value,
+                    name = tmdbShow.name,
                     releaseDate = date,
-                    posterPath = show.posterPath,
+                    posterPath = tmdbShow.posterPath,
                     isReleased = date <= today
                 )
                 if (item.isReleased) released.add(item) else upcoming.add(item)
             } else {
                 noDate.add(
                     TvShowPremiereItem(
-                        tmdbId = follow.contentTmdbId,
-                        name = show.name,
+                        tmdbId = show.tmdbId.value,
+                        name = tmdbShow.name,
                         releaseDate = today,
-                        posterPath = show.posterPath,
+                        posterPath = tmdbShow.posterPath,
                         isReleased = false,
                         hasDate = false
                     )

@@ -1,7 +1,7 @@
 package org.raterr.tvshow.top
 
-import org.raterr.tvrating.TvRatingRepository
-import org.raterr.tvrating.TvRatingView
+import org.raterr.tvshow.rating.TvRatingRepository
+import org.raterr.tvshow.rating.TvRatingView
 import org.raterr.user.User
 import org.springframework.stereotype.Service
 

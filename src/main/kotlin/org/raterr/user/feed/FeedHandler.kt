@@ -3,9 +3,8 @@ package org.raterr.user.feed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
-import org.raterr.rating.RatingRepository
-import org.raterr.tvshow.TvShowRepository
-import org.raterr.tvrating.TvRatingRepository
+import org.raterr.movie.rating.RatingRepository
+import org.raterr.tvshow.rating.TvRatingRepository
 import org.raterr.user.User
 import org.raterr.user.UserRepository
 import org.springframework.stereotype.Service

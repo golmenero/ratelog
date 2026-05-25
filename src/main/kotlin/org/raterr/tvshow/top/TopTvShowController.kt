@@ -1,7 +1,7 @@
 package org.raterr.tvshow.top
 
 import org.raterr.annotations.CurrentUser
-import org.raterr.tvrating.TvRatingView
+import org.raterr.tvshow.rating.TvRatingView
 import org.raterr.tvshow.premieres.TvShowPremieresHandler
 import org.raterr.tvshow.premieres.TvShowPremieresQuery
 import org.raterr.user.User

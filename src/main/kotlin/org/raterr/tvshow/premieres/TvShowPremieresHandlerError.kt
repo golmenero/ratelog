@@ -1,3 +1,5 @@
 package org.raterr.tvshow.premieres
 
-interface TvShowPremieresHandlerError
+sealed interface TvShowPremieresHandlerError {
+    data object TvShowNotFound : TvShowPremieresHandlerError
+}

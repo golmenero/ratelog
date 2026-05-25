@@ -6,7 +6,6 @@ import arrow.core.raise.ensure
 import org.raterr.Email
 import org.raterr.Password
 import org.raterr.Username
-import org.raterr.rating.RatingRepository
 import org.raterr.user.User
 import org.raterr.user.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder

@@ -1,7 +1,7 @@
 package org.raterr.movie.top
 
-import org.raterr.rating.RatingRepository
-import org.raterr.rating.RatingView
+import org.raterr.movie.rating.RatingRepository
+import org.raterr.movie.rating.RatingView
 import org.raterr.user.User
 import org.springframework.stereotype.Service
 
