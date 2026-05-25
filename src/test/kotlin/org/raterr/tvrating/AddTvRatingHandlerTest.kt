@@ -11,6 +11,7 @@ import org.raterr.TmdbId
 import org.raterr.user.User.Id
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
+import org.raterr.rating.Rating
 import org.raterr.tmdb.TmdbClient
 import org.raterr.tmdb.TmdbError
 import org.raterr.tmdb.TmdbTvShow
@@ -62,7 +63,7 @@ class AddTvRatingHandlerTest {
         )
 
         assertTrue(result.isRight())
-        assertTrue(tvRatingRepository.findAll().any())
+        assertTrue(tvRatingRepository.findById(TvRating.Id(1)) != null)
     }
 
     @Test

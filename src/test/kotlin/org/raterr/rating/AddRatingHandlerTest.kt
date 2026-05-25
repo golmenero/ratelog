@@ -62,7 +62,7 @@ class AddRatingHandlerTest {
         )
 
         assertTrue(result.isRight())
-        assertTrue(ratingRepository.findAll().any())
+        assertTrue(ratingRepository.findById(Rating.Id(1)) != null)
     }
 
     @Test

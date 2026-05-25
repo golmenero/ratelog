@@ -1,7 +1,5 @@
 package org.raterr.tvrating
 
-import org.raterr.Score
-import org.raterr.Username
 import org.raterr.tvshow.InMemoryTvShowRepository
 import org.raterr.tvshow.TvShow
 import org.raterr.user.User
@@ -27,10 +25,10 @@ class InMemoryTvRatingRepository(
     }
 
     override fun findById(id: TvRating.Id): TvRating? =
-        storage.find { it.id == id }
+        storage.firstOrNull { it.id == id }
 
     override fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating? =
-        storage.find { it.tvShowId == tvShowId }
+        storage.firstOrNull { it.tvShowId == tvShowId }
 
     override fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): List<TvRating> =
         storage.filter { it.tvShowId == tvShowId && it.userId == userId }
@@ -41,8 +39,8 @@ class InMemoryTvRatingRepository(
     override fun findAllWithoutUser(): List<TvRating> =
         storage.filter { it.userId.value == 0L }
 
-    override fun save(rating: TvRating): TvRating {
-        return if (rating.id == null) {
+    override fun save(rating: TvRating): TvRating =
+        if (rating.id == null) {
             val newRating = rating.copy(id = TvRating.Id(idGenerator.getAndIncrement()))
             storage.add(newRating)
             newRating
@@ -51,7 +49,6 @@ class InMemoryTvRatingRepository(
             storage.add(rating)
             rating
         }
-    }
 
     override fun deleteByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): Int {
         val before = storage.size
@@ -105,7 +102,7 @@ class InMemoryTvRatingRepository(
                     soundtrack = it.soundtrack,
                     screenplay = it.screenplay,
                     createdAt = it.createdAt,
-                    username = Username(users[it.userId.value] ?: "")
+                    username = org.raterr.Username(users[it.userId.value] ?: "")
                 )
             }
     }

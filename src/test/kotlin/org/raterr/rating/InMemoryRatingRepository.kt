@@ -1,7 +1,5 @@
 package org.raterr.rating
 
-import org.raterr.Score
-import org.raterr.Username
 import org.raterr.movie.InMemoryMovieRepository
 import org.raterr.movie.Movie
 import org.raterr.user.User
@@ -27,10 +25,10 @@ class InMemoryRatingRepository(
     }
 
     override fun findById(id: Rating.Id): Rating? =
-        storage.find { it.id == id }
+        storage.firstOrNull { it.id == id }
 
     override fun findFirstByMovieId(movieId: Movie.Id): Rating? =
-        storage.find { it.movieId == movieId }
+        storage.firstOrNull { it.movieId == movieId }
 
     override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): List<Rating> =
         storage.filter { it.movieId == movieId && it.userId == userId }
@@ -41,8 +39,8 @@ class InMemoryRatingRepository(
     override fun findAllWithoutUser(): List<Rating> =
         storage.filter { it.userId.value == 0L }
 
-    override fun save(rating: Rating): Rating {
-        return if (rating.id == null) {
+    override fun save(rating: Rating): Rating =
+        if (rating.id == null) {
             val newRating = rating.copy(id = Rating.Id(idGenerator.getAndIncrement()))
             storage.add(newRating)
             newRating
@@ -51,7 +49,6 @@ class InMemoryRatingRepository(
             storage.add(rating)
             rating
         }
-    }
 
     override fun deleteByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Int {
         val before = storage.size
@@ -105,7 +102,7 @@ class InMemoryRatingRepository(
                     soundtrack = it.soundtrack,
                     screenplay = it.screenplay,
                     createdAt = it.createdAt,
-                    username = Username(users[it.userId.value] ?: "")
+                    username = org.raterr.Username(users[it.userId.value] ?: "")
                 )
             }
     }

@@ -2,21 +2,26 @@ package org.raterr.tvrating
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.raterr.Score
+import org.raterr.tvshow.TvShow
+import org.raterr.user.User
+import java.time.Instant
 
 class TvRatingScoreServiceTest {
 
     @Test
     fun `score with all 5`() {
         val rating = TvRating(
-            id = 1,
-            tvShowId = 1,
-            userId = 1,
-            directing = 5.0,
-            cinematography = 5.0,
-            acting = 5.0,
-            soundtrack = 5.0,
-            screenplay = 5.0,
-            createdAtEpochMs = System.currentTimeMillis()
+            id = TvRating.Id(1),
+            tvShowId = TvShow.Id(1),
+            userId = User.Id(1),
+            directing = Score(5.0),
+            cinematography = Score(5.0),
+            acting = Score(5.0),
+            soundtrack = Score(5.0),
+            screenplay = Score(5.0),
+            createdAt = Instant.now(),
+            rank = TvRating.Rank(0)
         )
         assertEquals(5.0, TvRatingScoreService.score(rating))
     }
@@ -24,15 +29,16 @@ class TvRatingScoreServiceTest {
     @Test
     fun `score with all 10`() {
         val rating = TvRating(
-            id = 1,
-            tvShowId = 1,
-            userId = 1,
-            directing = 10.0,
-            cinematography = 10.0,
-            acting = 10.0,
-            soundtrack = 10.0,
-            screenplay = 10.0,
-            createdAtEpochMs = System.currentTimeMillis()
+            id = TvRating.Id(1),
+            tvShowId = TvShow.Id(1),
+            userId = User.Id(1),
+            directing = Score(10.0),
+            cinematography = Score(10.0),
+            acting = Score(10.0),
+            soundtrack = Score(10.0),
+            screenplay = Score(10.0),
+            createdAt = Instant.now(),
+            rank = TvRating.Rank(0)
         )
         assertEquals(10.0, TvRatingScoreService.score(rating))
     }
@@ -40,15 +46,16 @@ class TvRatingScoreServiceTest {
     @Test
     fun `score with all 1`() {
         val rating = TvRating(
-            id = 1,
-            tvShowId = 1,
-            userId = 1,
-            directing = 1.0,
-            cinematography = 1.0,
-            acting = 1.0,
-            soundtrack = 1.0,
-            screenplay = 1.0,
-            createdAtEpochMs = System.currentTimeMillis()
+            id = TvRating.Id(1),
+            tvShowId = TvShow.Id(1),
+            userId = User.Id(1),
+            directing = Score(1.0),
+            cinematography = Score(1.0),
+            acting = Score(1.0),
+            soundtrack = Score(1.0),
+            screenplay = Score(1.0),
+            createdAt = Instant.now(),
+            rank = TvRating.Rank(0)
         )
         assertEquals(1.0, TvRatingScoreService.score(rating))
     }
@@ -56,15 +63,16 @@ class TvRatingScoreServiceTest {
     @Test
     fun `score with mixed values`() {
         val rating = TvRating(
-            id = 1,
-            tvShowId = 1,
-            userId = 1,
-            directing = 1.0,
-            cinematography = 2.0,
-            acting = 3.0,
-            soundtrack = 4.0,
-            screenplay = 5.0,
-            createdAtEpochMs = System.currentTimeMillis()
+            id = TvRating.Id(1),
+            tvShowId = TvShow.Id(1),
+            userId = User.Id(1),
+            directing = Score(1.0),
+            cinematography = Score(2.0),
+            acting = Score(3.0),
+            soundtrack = Score(4.0),
+            screenplay = Score(5.0),
+            createdAt = Instant.now(),
+            rank = TvRating.Rank(0)
         )
         assertEquals(3.0, TvRatingScoreService.score(rating))
     }
