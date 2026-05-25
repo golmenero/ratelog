@@ -25,7 +25,7 @@ class TopTvShowHandler(
     private val tvRatingRepository: TvRatingRepository,
 ) {
     fun handle(query: TopTvShow): List<RankedTvShow> =
-        tvRatingRepository.findRankedByUserIdWithFilters(query.userId.value, query.category, query.limit, query.name)
-            .map { it to it.tvShowId.let(TvShow::Id).let(tvShowRepository::findById) }
-            .map { RankedTvShow(it.first, it.second!!) }
+        tvRatingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
+            .map { it to it.tvShowId.let(tvShowRepository::findById) }
+            .mapNotNull { (rating, show) -> show?.let { RankedTvShow(rating, it) } }
 }

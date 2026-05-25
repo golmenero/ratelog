@@ -24,11 +24,11 @@ class DeleteTvRatingHandler(
     fun handle(command: DeleteTvRating): Either<DeleteTvRatingHandlerError, Unit> = either {
         val show = command.tmdbId.let(tvShowRepository::findByTmdbId)
 
-        ensure(show != null) { DeleteTvRatingHandlerError.TvShowNotFound }
+        ensure(show != null && show.id != null) { DeleteTvRatingHandlerError.TvShowNotFound }
 
-        val deletedCount = tvRatingRepository.deleteByTvShowIdAndUserId(show.id!!.value, command.userId.value)
+        val deletedCount = tvRatingRepository.deleteByTvShowIdAndUserId(show.id, command.userId)
         ensure(deletedCount > 0) { DeleteTvRatingHandlerError.RatingNotFound }
 
-        tvRatingRankService.recalculateRanks(command.userId.value)
+        tvRatingRankService.recalculateRanks(command.userId)
     }
 }

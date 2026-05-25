@@ -1,69 +1,57 @@
 package org.raterr.rating
 
-import org.springframework.data.jdbc.repository.query.Modifying
-import org.springframework.data.jdbc.repository.query.Query
-import org.springframework.data.repository.CrudRepository
+import org.raterr.Score
+import org.raterr.Username
+import org.raterr.movie.Movie
+import org.raterr.user.User
 import org.springframework.stereotype.Repository
+import java.time.Instant
+
+data class Rating(
+    val id: Id?,
+    val movieId: Movie.Id,
+    val userId: User.Id,
+    val directing: Score,
+    val cinematography: Score,
+    val acting: Score,
+    val soundtrack: Score,
+    val screenplay: Score,
+    val createdAt: Instant,
+    val rank: Rank,
+) {
+    data class Id(val value: Long)
+    data class Rank(val value: Int)
+}
+
+data class RatingWithUsername(
+    val id: Rating.Id,
+    val movieId: Movie.Id,
+    val userId: User.Id,
+    val directing: Score,
+    val cinematography: Score,
+    val acting: Score,
+    val soundtrack: Score,
+    val screenplay: Score,
+    val createdAt: Instant,
+    val username: Username
+)
 
 @Repository
-interface RatingRepository : CrudRepository<Rating, Long> {
-    fun findFirstByMovieId(movieId: Long): Rating?
-    fun findByMovieIdAndUserId(movieId: Long, userId: Long): List<Rating>
-    fun findByUserId(userId: Long): List<Rating>
-
-    @Query("SELECT * FROM ratings WHERE user_id IS NULL")
+interface RatingRepository {
+    fun findById(id: Rating.Id): Rating?
+    fun findFirstByMovieId(movieId: Movie.Id): Rating?
+    fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): List<Rating>
+    fun findByUserId(userId: User.Id): List<Rating>
     fun findAllWithoutUser(): List<Rating>
-
-    @Modifying
-    @Query("DELETE FROM ratings WHERE movie_id = :movieId AND user_id = :userId")
-    fun deleteByMovieIdAndUserId(movieId: Long, userId: Long): Int
-
-    @Query(
-        """
-        SELECT r.* FROM ratings r
-        JOIN movies m ON r.movie_id = m.id
-        WHERE r.user_id = :userId
-          AND (:category IS NULL OR LOWER(m.genres) LIKE '%' || LOWER(:category) || '%')
-          AND (:name IS NULL OR LOWER(m.title) LIKE '%' || LOWER(:name) || '%')
-        ORDER BY r.rank
-        LIMIT :limit
-        """
-    )
+    fun save(rating: Rating): Rating
+    fun deleteByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Int
     fun findRankedByUserIdWithFilters(
-        userId: Long,
+        userId: User.Id,
         category: String?,
         limit: Int,
         name: String?
     ): List<Rating>
-
-    @Query("SELECT r.* FROM ratings r WHERE r.user_id = :userId ORDER BY r.rank")
-    fun findByUserIdOrderedByRank(userId: Long): List<Rating>
-
-    @Modifying
-    @Query("UPDATE ratings SET rank = :rank WHERE id = :id")
-    fun updateRank(id: Long, rank: Int): Int
-
-    @Query(
-        """
-        SELECT r.*, u.username AS username FROM ratings r
-        JOIN users u ON u.id = r.user_id
-        WHERE r.user_id IN (:userIds)
-          AND r.created_at_epoch_ms >= :sinceEpochMs
-        ORDER BY r.created_at_epoch_ms DESC
-        """
-    )
-    fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<RatingWithUsername>
+    fun findByUserIdOrderedByRank(userId: User.Id): List<Rating>
+    fun updateRank(id: Rating.Id, rank: Rating.Rank): Int
+    fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<RatingWithUsername>
 }
-
-data class RatingWithUsername(
-    val id: Long? = null,
-    val movieId: Long,
-    val userId: Long,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val createdAtEpochMs: Long,
-    val username: String
-)

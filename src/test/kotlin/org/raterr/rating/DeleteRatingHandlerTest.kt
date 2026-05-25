@@ -29,15 +29,9 @@ class DeleteRatingHandlerTest {
     fun `happy path returns Right`() {
         val movie = movieRepository.save(aMovie(tmdbId = 100, title = "Movie"))
         ratingRepository.save(
-            Rating(
-                movieId = movie.id!!.value,
-                userId = 1,
-                directing = 5.0,
-                cinematography = 5.0,
-                acting = 5.0,
-                soundtrack = 5.0,
-                screenplay = 5.0,
-                createdAtEpochMs = System.currentTimeMillis()
+            aRating(
+                movieId = movie.id!!,
+                userId = Id(1)
             )
         )
 

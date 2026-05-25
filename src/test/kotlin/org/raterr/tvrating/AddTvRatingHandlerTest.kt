@@ -18,6 +18,7 @@ import org.raterr.tvrating.add.AddTvRating
 import org.raterr.tvrating.add.AddTvRatingHandler
 import org.raterr.tvrating.add.AddTvRatingHandlerError
 import org.raterr.tvshow.InMemoryTvShowRepository
+import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.aTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
 
@@ -174,18 +175,12 @@ class AddTvRatingHandlerTest {
     @Test
     fun `existing rating returns RatingAlreadyExists`() {
         setupShow(200)
-        tvShowRepository.save(aTvShow(id = org.raterr.tvshow.TvShow.Id(1), tmdbId = 200, name = "Show"))
+        val show = tvShowRepository.save(aTvShow(id = TvShow.Id(1), tmdbId = 200, name = "Show"))
         tvRatingRepository.save(
-            TvRating(
-                id = 1,
-                tvShowId = 1,
-                userId = 1,
-                directing = 5.0,
-                cinematography = 5.0,
-                acting = 5.0,
-                soundtrack = 5.0,
-                screenplay = 5.0,
-                createdAtEpochMs = System.currentTimeMillis()
+            aTvRating(
+                id = TvRating.Id(1),
+                tvShowId = show.id!!,
+                userId = Id(1)
             )
         )
 

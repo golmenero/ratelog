@@ -8,7 +8,7 @@ import org.raterr.Email
 import org.raterr.Password
 import org.raterr.Username
 import org.raterr.rating.InMemoryRatingRepository
-import org.raterr.rating.Rating
+import org.raterr.rating.aRating
 import org.raterr.user.register.RegisterHandler
 import org.raterr.user.register.RegisterHandlerError
 import org.raterr.user.register.RegisterUser
@@ -131,25 +131,19 @@ class RegisterHandlerTest {
     @Test
     fun `migrates orphan ratings to new user`() {
         ratingRepository.save(
-            Rating(
-                id = 1,
-                movieId = 10,
-                userId = 0,
-                directing = 5.0,
-                cinematography = 5.0,
-                acting = 5.0,
-                soundtrack = 5.0,
-                screenplay = 5.0,
-                createdAtEpochMs = System.currentTimeMillis()
+            aRating(
+                id = org.raterr.rating.Rating.Id(1),
+                movieId = org.raterr.movie.Movie.Id(10),
+                userId = User.Id(0)
             )
         )
 
         handler.handle(RegisterUser(Username("testuser"), Email("test@example.com"), Password("password123")))
 
         val savedUser = userRepository.findByUsername(Username("testuser"))
-        val migratedRatings = ratingRepository.findByUserId(savedUser!!.id!!.value)
+        val migratedRatings = ratingRepository.findByUserId(savedUser!!.id!!)
         assertEquals(1, migratedRatings.size)
-        assertEquals(savedUser.id.value, migratedRatings[0].userId)
+        assertEquals(savedUser.id.value, migratedRatings[0].userId.value)
     }
 }
 

@@ -64,7 +64,7 @@ class SearchHandler(
 
             movies.map { tmdbMovie ->
                 val movie = tmdbMovie.id.let(::TmdbId).let(movieRepository::findByTmdbId)
-                val rating = movie?.id?.value?.let(ratingRepository::findFirstByMovieId)
+                val rating = movie?.id?.let(ratingRepository::findFirstByMovieId)
                 val isFollowed = userId.let {
                     followRepository.existsByUserIdAndContentTypeAndContentTmdbId(it.value, MediaType.movie.name, tmdbMovie.id)
                 }
@@ -91,7 +91,7 @@ class SearchHandler(
 
             tvshows.map { tmdbShow ->
                 val show = tmdbShow.id.let(::TmdbId).let(tvShowRepository::findByTmdbId)
-                val rating = show?.id?.value?.let(tvRatingRepository::findFirstByTvShowId)
+                val rating = show?.id?.let(tvRatingRepository::findFirstByTvShowId)
                 val isFollowed = userId.let {
                     followRepository.existsByUserIdAndContentTypeAndContentTmdbId(it.value, MediaType.tvshow.name, tmdbShow.id)
                 }

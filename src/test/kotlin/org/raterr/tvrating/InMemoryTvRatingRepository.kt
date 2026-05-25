@@ -1,7 +1,11 @@
 package org.raterr.tvrating
 
+import org.raterr.Score
+import org.raterr.Username
 import org.raterr.tvshow.InMemoryTvShowRepository
-import java.util.Optional
+import org.raterr.tvshow.TvShow
+import org.raterr.user.User
+import java.time.Instant
 import java.util.concurrent.atomic.AtomicLong
 
 class InMemoryTvRatingRepository(
@@ -22,88 +26,60 @@ class InMemoryTvRatingRepository(
         idGenerator.set(1)
     }
 
-    override fun <S : TvRating> save(entity: S): S {
-        @Suppress("UNCHECKED_CAST")
-        return if (entity.id == null) {
-            val newEntity = entity.copy(id = idGenerator.getAndIncrement()) as S
-            storage.add(newEntity)
-            newEntity
+    override fun findById(id: TvRating.Id): TvRating? =
+        storage.find { it.id == id }
+
+    override fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating? =
+        storage.find { it.tvShowId == tvShowId }
+
+    override fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): List<TvRating> =
+        storage.filter { it.tvShowId == tvShowId && it.userId == userId }
+
+    override fun findByUserId(userId: User.Id): List<TvRating> =
+        storage.filter { it.userId == userId }
+
+    override fun findAllWithoutUser(): List<TvRating> =
+        storage.filter { it.userId.value == 0L }
+
+    override fun save(rating: TvRating): TvRating {
+        return if (rating.id == null) {
+            val newRating = rating.copy(id = TvRating.Id(idGenerator.getAndIncrement()))
+            storage.add(newRating)
+            newRating
         } else {
-            storage.removeIf { it.id == entity.id }
-            storage.add(entity)
-            entity
+            storage.removeIf { it.id == rating.id }
+            storage.add(rating)
+            rating
         }
     }
 
-    override fun <S : TvRating> saveAll(entities: Iterable<S>): Iterable<S> = entities.map { save(it) }
-
-    override fun findById(id: Long): Optional<TvRating> =
-        storage.find { it.id == id }?.let { Optional.of(it) } ?: Optional.empty()
-
-    override fun existsById(id: Long): Boolean = storage.any { it.id == id }
-
-    override fun findAll(): Iterable<TvRating> = storage.toList()
-
-    override fun findAllById(ids: Iterable<Long>): Iterable<TvRating> = storage.filter { it.id in ids }
-
-    override fun count(): Long = storage.size.toLong()
-
-    override fun deleteById(id: Long) {
-        storage.removeIf { it.id == id }
-    }
-
-    override fun delete(entity: TvRating) {
-        storage.removeIf { it.id == entity.id }
-    }
-
-    override fun deleteAllById(ids: Iterable<Long>) {
-        ids.forEach { deleteById(it) }
-    }
-
-    override fun deleteAll(entities: Iterable<TvRating>) {
-        entities.forEach { delete(it) }
-    }
-
-    override fun deleteAll() {
-        storage.clear()
-    }
-
-    override fun findFirstByTvShowId(tvShowId: Long): TvRating? =
-        storage.find { it.tvShowId == tvShowId }
-
-    override fun findByTvShowIdAndUserId(tvShowId: Long, userId: Long): List<TvRating> =
-        storage.filter { it.tvShowId == tvShowId && it.userId == userId }
-
-    override fun findByUserId(userId: Long): List<TvRating> =
-        storage.filter { it.userId == userId }
-
-    override fun deleteByTvShowIdAndUserId(tvShowId: Long, userId: Long): Int {
+    override fun deleteByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): Int {
         val before = storage.size
         storage.removeIf { it.tvShowId == tvShowId && it.userId == userId }
         return before - storage.size
     }
 
     override fun findRankedByUserIdWithFilters(
-        userId: Long,
+        userId: User.Id,
         category: String?,
         limit: Int,
         name: String?
     ): List<TvRating> {
         val all = storage.filter { it.userId == userId }
-            .sortedByDescending { it.directing + it.cinematography + it.acting + it.soundtrack + it.screenplay }
-            .mapIndexed { index, rating -> rating.copy(rank = index + 1) }
+            .sortedByDescending { TvRatingScoreService.score(it) }
+            .mapIndexed { index, rating -> rating.copy(rank = TvRating.Rank(index + 1)) }
         return all.filter { ranked ->
-            val show = tvShowRepository.findById(org.raterr.tvshow.TvShow.Id(ranked.tvShowId))
-            (category == null || show?.genres?.map { it.name }?.joinToString(",")?.lowercase()?.contains(category.lowercase()) == true) &&
-            (name == null || show?.name?.value?.lowercase()?.contains(name.lowercase()) == true)
+            val show = tvShowRepository.findById(ranked.tvShowId)
+            (category == null || show?.genres?.any { it.name.lowercase() == category.lowercase() } == true) &&
+                    (name == null || show?.name?.value?.lowercase()?.contains(name.lowercase()) == true)
         }.take(limit)
     }
 
-    override fun findByUserIdOrderedByRank(userId: Long): List<TvRating> =
+    override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating> =
         storage.filter { it.userId == userId }
-            .sortedBy { it.rank }
+            .sortedBy { it.rank.value }
 
-    override fun updateRank(id: Long, rank: Int): Int {
+    override fun updateRank(id: TvRating.Id, rank: TvRating.Rank): Int {
         val idx = storage.indexOfFirst { it.id == id }
         if (idx >= 0) {
             storage[idx] = storage[idx].copy(rank = rank)
@@ -112,13 +88,15 @@ class InMemoryTvRatingRepository(
         return 0
     }
 
-    override fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<TvRatingWithUsername> =
-        storage
-            .filter { it.userId in userIds && it.createdAtEpochMs >= sinceEpochMs }
-            .sortedByDescending { it.createdAtEpochMs }
+    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRatingWithUsername> {
+        val userIdValues = userIds.map(User.Id::value)
+        val sinceEpochMs = since.toEpochMilli()
+        return storage
+            .filter { it.userId.value in userIdValues && it.createdAt.toEpochMilli() >= sinceEpochMs }
+            .sortedByDescending { it.createdAt.toEpochMilli() }
             .map {
                 TvRatingWithUsername(
-                    id = it.id,
+                    id = it.id!!,
                     tvShowId = it.tvShowId,
                     userId = it.userId,
                     directing = it.directing,
@@ -126,8 +104,9 @@ class InMemoryTvRatingRepository(
                     acting = it.acting,
                     soundtrack = it.soundtrack,
                     screenplay = it.screenplay,
-                    createdAtEpochMs = it.createdAtEpochMs,
-                    username = users[it.userId] ?: ""
+                    createdAt = it.createdAt,
+                    username = Username(users[it.userId.value] ?: "")
                 )
             }
+    }
 }

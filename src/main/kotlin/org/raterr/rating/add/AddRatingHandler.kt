@@ -3,15 +3,17 @@ package org.raterr.rating.add
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import org.raterr.Score
+import org.raterr.TmdbId
 import org.raterr.follow.FollowRepository
 import org.raterr.movie.get.GetMovie
 import org.raterr.movie.get.GetMovieHandler
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRankService
 import org.raterr.rating.RatingRepository
-import org.raterr.TmdbId
 import org.raterr.user.User
 import org.springframework.stereotype.Component
+import java.time.Instant
 
 data class AddRating(
     val tmdbId: TmdbId,
@@ -32,12 +34,12 @@ class AddRatingHandler(
 ) {
     fun handle(command: AddRating): Either<AddRatingHandlerError, Unit> = either {
         listOf(
-            "directing" to command.directing,
-            "cinematography" to command.cinematography,
-            "acting" to command.acting,
-            "soundtrack" to command.soundtrack,
-            "screenplay" to command.screenplay
-        ).forEach { (field, value) ->
+            command.directing,
+            command.cinematography,
+            command.acting,
+            command.soundtrack,
+            command.screenplay
+        ).forEach { value ->
             ensure(value in 1.0..10.0) { AddRatingHandlerError.InvalidRatingValue }
         }
 
@@ -46,22 +48,23 @@ class AddRatingHandler(
             .mapLeft { AddRatingHandlerError.MovieNotFound }
             .bind()
 
-        val existingRating = ratingRepository.findByMovieIdAndUserId(movie.id!!.value, command.userId.value).firstOrNull()
+        val existingRating = ratingRepository.findByMovieIdAndUserId(movie.id!!, command.userId).firstOrNull()
         ensure(existingRating == null) { AddRatingHandlerError.RatingAlreadyExists }
 
         Rating(
             id = null,
-            movieId = movie.id.value,
-            userId = command.userId.value,
-            directing = command.directing,
-            cinematography = command.cinematography,
-            acting = command.acting,
-            soundtrack = command.soundtrack,
-            screenplay = command.screenplay,
-            createdAtEpochMs = System.currentTimeMillis()
+            movieId = movie.id,
+            userId = command.userId,
+            directing = Score(command.directing),
+            cinematography = Score(command.cinematography),
+            acting = Score(command.acting),
+            soundtrack = Score(command.soundtrack),
+            screenplay = Score(command.screenplay),
+            createdAt = Instant.now(),
+            rank = Rating.Rank(0)
         ).let(ratingRepository::save)
 
-        ratingRankService.recalculateRanks(command.userId.value)
+        ratingRankService.recalculateRanks(command.userId)
 
         followRepository.findByUserIdAndContentTypeAndContentTmdbId(
             command.userId.value,

@@ -1,66 +1,57 @@
 ﻿package org.raterr.tvrating
 
-import org.springframework.data.jdbc.repository.query.Modifying
-import org.springframework.data.jdbc.repository.query.Query
-import org.springframework.data.repository.CrudRepository
+import org.raterr.Score
+import org.raterr.Username
+import org.raterr.tvshow.TvShow
+import org.raterr.user.User
 import org.springframework.stereotype.Repository
+import java.time.Instant
+
+data class TvRating(
+    val id: Id?,
+    val tvShowId: TvShow.Id,
+    val userId: User.Id,
+    val directing: Score,
+    val cinematography: Score,
+    val acting: Score,
+    val soundtrack: Score,
+    val screenplay: Score,
+    val createdAt: Instant,
+    val rank: Rank,
+) {
+    data class Id(val value: Long)
+    data class Rank(val value: Int)
+}
+
+data class TvRatingWithUsername(
+    val id: TvRating.Id,
+    val tvShowId: TvShow.Id,
+    val userId: User.Id,
+    val directing: Score,
+    val cinematography: Score,
+    val acting: Score,
+    val soundtrack: Score,
+    val screenplay: Score,
+    val createdAt: Instant,
+    val username: Username
+)
 
 @Repository
-interface TvRatingRepository : CrudRepository<TvRating, Long> {
-    fun findFirstByTvShowId(tvShowId: Long): TvRating?
-    fun findByTvShowIdAndUserId(tvShowId: Long, userId: Long): List<TvRating>
-    fun findByUserId(userId: Long): List<TvRating>
-
-    @Modifying
-    @Query("DELETE FROM tv_ratings WHERE tv_show_id = :tvShowId AND user_id = :userId")
-    fun deleteByTvShowIdAndUserId(tvShowId: Long, userId: Long): Int
-
-    @Query(
-        """
-        SELECT r.* FROM tv_ratings r
-        JOIN tv_shows t ON r.tv_show_id = t.id
-        WHERE r.user_id = :userId
-          AND (:category IS NULL OR LOWER(t.genres) LIKE '%' || LOWER(:category) || '%')
-          AND (:name IS NULL OR LOWER(t.name) LIKE '%' || LOWER(:name) || '%')
-        ORDER BY r.rank
-        LIMIT :limit
-        """
-    )
+interface TvRatingRepository {
+    fun findById(id: TvRating.Id): TvRating?
+    fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating?
+    fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): List<TvRating>
+    fun findByUserId(userId: User.Id): List<TvRating>
+    fun findAllWithoutUser(): List<TvRating>
+    fun save(rating: TvRating): TvRating
+    fun deleteByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): Int
     fun findRankedByUserIdWithFilters(
-        userId: Long,
+        userId: User.Id,
         category: String?,
         limit: Int,
         name: String?
     ): List<TvRating>
-
-    @Query("SELECT r.* FROM tv_ratings r WHERE r.user_id = :userId ORDER BY r.rank")
-    fun findByUserIdOrderedByRank(userId: Long): List<TvRating>
-
-    @Modifying
-    @Query("UPDATE tv_ratings SET rank = :rank WHERE id = :id")
-    fun updateRank(id: Long, rank: Int): Int
-
-    @Query(
-        """
-        SELECT r.*, u.username AS username FROM tv_ratings r
-        JOIN users u ON u.id = r.user_id
-        WHERE r.user_id IN (:userIds)
-          AND r.created_at_epoch_ms >= :sinceEpochMs
-        ORDER BY r.created_at_epoch_ms DESC
-        """
-    )
-    fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<TvRatingWithUsername>
+    fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating>
+    fun updateRank(id: TvRating.Id, rank: TvRating.Rank): Int
+    fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRatingWithUsername>
 }
-
-data class TvRatingWithUsername(
-    val id: Long? = null,
-    val tvShowId: Long,
-    val userId: Long,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val createdAtEpochMs: Long,
-    val username: String
-)

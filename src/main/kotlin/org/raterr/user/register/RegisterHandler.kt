@@ -47,7 +47,7 @@ class RegisterHandler(
         val savedUser = userRepository.save(user)
 
         ratingRepository.findAllWithoutUser().forEach { rating ->
-            ratingRepository.save(rating.copy(userId = savedUser.id!!.value))
+            ratingRepository.save(rating.copy(userId = savedUser.id!!))
         }
     }
 }

@@ -15,7 +15,7 @@ import org.raterr.movie.InMemoryMovieRepository
 import org.raterr.movie.Movie
 import org.raterr.movie.aMovie
 import org.raterr.rating.InMemoryRatingRepository
-import org.raterr.rating.Rating
+import org.raterr.rating.aRating
 import org.raterr.tmdb.TmdbClient
 import org.raterr.tmdb.TmdbMovie
 import org.raterr.tmdb.TmdbTvShow
@@ -183,16 +183,10 @@ class SearchHandlerTest {
     fun `canFollow false when rating exists`() {
         val movie = movieRepository.save(aMovie(id = Movie.Id(5), tmdbId = 1, title = "Movie"))
         ratingRepository.save(
-            Rating(
-                id = 1,
-                movieId = movie.id!!.value,
-                userId = 1,
-                directing = 5.0,
-                cinematography = 5.0,
-                acting = 5.0,
-                soundtrack = 5.0,
-                screenplay = 5.0,
-                createdAtEpochMs = System.currentTimeMillis()
+            aRating(
+                id = org.raterr.rating.Rating.Id(1),
+                movieId = movie.id!!,
+                userId = Id(1)
             )
         )
         whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())

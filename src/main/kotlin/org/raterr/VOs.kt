@@ -47,3 +47,9 @@ data class Username(val value: String)
 data class Email(val value: String)
 
 data class Password(val value: String)
+
+data class Score(val value: Double) {
+    init {
+        require(value in 1.0..10.0) { "Score must be between 1.0 and 10.0" }
+    }
+}

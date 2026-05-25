@@ -1,11 +1,12 @@
 package org.raterr.rating
 
+import org.raterr.Score
 import org.springframework.stereotype.Service
 
 @Service
 class RatingScoreService {
     companion object {
         fun score(rating: Rating): Double =
-            (rating.directing + rating.cinematography + rating.acting + rating.soundtrack + rating.screenplay) / 5.0
+            (rating.directing.value + rating.cinematography.value + rating.acting.value + rating.soundtrack.value + rating.screenplay.value) / 5.0
     }
 }

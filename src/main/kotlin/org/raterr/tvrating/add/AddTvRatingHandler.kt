@@ -3,15 +3,17 @@ package org.raterr.tvrating.add
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import org.raterr.Score
+import org.raterr.TmdbId
 import org.raterr.follow.FollowRepository
+import org.raterr.tvrating.TvRating
 import org.raterr.tvshow.get.GetTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
-import org.raterr.tvrating.TvRating
 import org.raterr.tvrating.TvRatingRankService
 import org.raterr.tvrating.TvRatingRepository
-import org.raterr.TmdbId
 import org.raterr.user.User
 import org.springframework.stereotype.Component
+import java.time.Instant
 
 data class AddTvRating(
     val tmdbId: TmdbId,
@@ -32,12 +34,12 @@ class AddTvRatingHandler(
 ) {
     fun handle(command: AddTvRating): Either<AddTvRatingHandlerError, Unit> = either {
         listOf(
-            "directing" to command.directing,
-            "cinematography" to command.cinematography,
-            "acting" to command.acting,
-            "soundtrack" to command.soundtrack,
-            "screenplay" to command.screenplay
-        ).forEach { (field, value) ->
+            command.directing,
+            command.cinematography,
+            command.acting,
+            command.soundtrack,
+            command.screenplay
+        ).forEach { value ->
             ensure(value in 1.0..10.0) { AddTvRatingHandlerError.InvalidRatingValue }
         }
 
@@ -46,22 +48,23 @@ class AddTvRatingHandler(
             .mapLeft { AddTvRatingHandlerError.TvShowNotFound }
             .bind()
 
-        val existingRating = tvRatingRepository.findByTvShowIdAndUserId(show.id!!.value, command.userId.value).firstOrNull()
+        val existingRating = tvRatingRepository.findByTvShowIdAndUserId(show.id!!, command.userId).firstOrNull()
         ensure(existingRating == null) { AddTvRatingHandlerError.RatingAlreadyExists }
 
         TvRating(
             id = null,
-            tvShowId = show.id.value,
-            userId = command.userId.value,
-            directing = command.directing,
-            cinematography = command.cinematography,
-            acting = command.acting,
-            soundtrack = command.soundtrack,
-            screenplay = command.screenplay,
-            createdAtEpochMs = System.currentTimeMillis()
+            tvShowId = show.id,
+            userId = command.userId,
+            directing = Score(command.directing),
+            cinematography = Score(command.cinematography),
+            acting = Score(command.acting),
+            soundtrack = Score(command.soundtrack),
+            screenplay = Score(command.screenplay),
+            createdAt = Instant.now(),
+            rank = TvRating.Rank(0)
         ).let(tvRatingRepository::save)
 
-        tvRatingRankService.recalculateRanks(command.userId.value)
+        tvRatingRankService.recalculateRanks(command.userId)
 
         followRepository.findByUserIdAndContentTypeAndContentTmdbId(
             command.userId.value,

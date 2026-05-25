@@ -1,8 +1,11 @@
 package org.raterr.rating
 
+import org.raterr.Score
+import org.raterr.Username
 import org.raterr.movie.InMemoryMovieRepository
 import org.raterr.movie.Movie
-import java.util.Optional
+import org.raterr.user.User
+import java.time.Instant
 import java.util.concurrent.atomic.AtomicLong
 
 class InMemoryRatingRepository(
@@ -23,91 +26,60 @@ class InMemoryRatingRepository(
         idGenerator.set(1)
     }
 
-    override fun <S : Rating> save(entity: S): S {
-        @Suppress("UNCHECKED_CAST")
-        return if (entity.id == null) {
-            val newEntity = entity.copy(id = idGenerator.getAndIncrement()) as S
-            storage.add(newEntity)
-            newEntity
-        } else {
-            storage.removeIf { it.id == entity.id }
-            storage.add(entity)
-            entity
-        }
-    }
+    override fun findById(id: Rating.Id): Rating? =
+        storage.find { it.id == id }
 
-    override fun <S : Rating> saveAll(entities: Iterable<S>): Iterable<S> = entities.map { save(it) }
-
-    override fun findById(id: Long): Optional<Rating> =
-        storage.find { it.id == id }?.let { Optional.of(it) } ?: Optional.empty()
-
-    override fun existsById(id: Long): Boolean = storage.any { it.id == id }
-
-    override fun findAll(): Iterable<Rating> = storage.toList()
-
-    override fun findAllById(ids: Iterable<Long>): Iterable<Rating> = storage.filter { it.id in ids }
-
-    override fun count(): Long = storage.size.toLong()
-
-    override fun deleteById(id: Long) {
-        storage.removeIf { it.id == id }
-    }
-
-    override fun delete(entity: Rating) {
-        storage.removeIf { it.id == entity.id }
-    }
-
-    override fun deleteAllById(ids: Iterable<Long>) {
-        ids.forEach { deleteById(it) }
-    }
-
-    override fun deleteAll(entities: Iterable<Rating>) {
-        entities.forEach { delete(it) }
-    }
-
-    override fun deleteAll() {
-        storage.clear()
-    }
-
-    override fun findFirstByMovieId(movieId: Long): Rating? =
+    override fun findFirstByMovieId(movieId: Movie.Id): Rating? =
         storage.find { it.movieId == movieId }
 
-    override fun findByMovieIdAndUserId(movieId: Long, userId: Long): List<Rating> =
+    override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): List<Rating> =
         storage.filter { it.movieId == movieId && it.userId == userId }
 
-    override fun findByUserId(userId: Long): List<Rating> =
+    override fun findByUserId(userId: User.Id): List<Rating> =
         storage.filter { it.userId == userId }
 
     override fun findAllWithoutUser(): List<Rating> =
-        storage.filter { it.userId == 0L }
+        storage.filter { it.userId.value == 0L }
 
-    override fun deleteByMovieIdAndUserId(movieId: Long, userId: Long): Int {
+    override fun save(rating: Rating): Rating {
+        return if (rating.id == null) {
+            val newRating = rating.copy(id = Rating.Id(idGenerator.getAndIncrement()))
+            storage.add(newRating)
+            newRating
+        } else {
+            storage.removeIf { it.id == rating.id }
+            storage.add(rating)
+            rating
+        }
+    }
+
+    override fun deleteByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Int {
         val before = storage.size
         storage.removeIf { it.movieId == movieId && it.userId == userId }
         return before - storage.size
     }
 
     override fun findRankedByUserIdWithFilters(
-        userId: Long,
+        userId: User.Id,
         category: String?,
         limit: Int,
         name: String?
     ): List<Rating> {
         val all = storage.filter { it.userId == userId }
-            .sortedByDescending { it.directing + it.cinematography + it.acting + it.soundtrack + it.screenplay }
-            .mapIndexed { index, rating -> rating.copy(rank = index + 1) }
+            .sortedByDescending { RatingScoreService.score(it) }
+            .mapIndexed { index, rating -> rating.copy(rank = Rating.Rank(index + 1)) }
         return all.filter { ranked ->
-            val movie = movieRepository.findById(ranked.movieId.let(Movie::Id))
+            val movie = movieRepository.findById(ranked.movieId)
             (category == null || movie?.genres?.any { it.name.lowercase() == category.lowercase() } == true) &&
-            (name == null || movie?.title?.value?.lowercase()?.contains(name.lowercase()) == true)
+                    (name == null || movie?.title?.value?.lowercase()?.contains(name.lowercase()) == true)
         }.take(limit)
     }
 
-    override fun findByUserIdOrderedByRank(userId: Long): List<Rating> =
+    override fun findByUserIdOrderedByRank(userId: User.Id): List<Rating> =
         storage.filter { it.userId == userId }
-            .sortedBy { it.rank }
+            .sortedBy { it.rank.value }
 
-    override fun updateRank(id: Long, rank: Int): Int {
+    override fun updateRank(id: Rating.Id, rank: Rating.Rank): Int {
         val idx = storage.indexOfFirst { it.id == id }
         if (idx >= 0) {
             storage[idx] = storage[idx].copy(rank = rank)
@@ -116,13 +88,15 @@ class InMemoryRatingRepository(
         return 0
     }
 
-    override fun findByUserIdsAndLastDays(userIds: List<Long>, sinceEpochMs: Long): List<RatingWithUsername> =
-        storage
-            .filter { it.userId in userIds && it.createdAtEpochMs >= sinceEpochMs }
-            .sortedByDescending { it.createdAtEpochMs }
+    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<RatingWithUsername> {
+        val userIdValues = userIds.map(User.Id::value)
+        val sinceEpochMs = since.toEpochMilli()
+        return storage
+            .filter { it.userId.value in userIdValues && it.createdAt.toEpochMilli() >= sinceEpochMs }
+            .sortedByDescending { it.createdAt.toEpochMilli() }
             .map {
                 RatingWithUsername(
-                    id = it.id,
+                    id = it.id!!,
                     movieId = it.movieId,
                     userId = it.userId,
                     directing = it.directing,
@@ -130,8 +104,9 @@ class InMemoryRatingRepository(
                     acting = it.acting,
                     soundtrack = it.soundtrack,
                     screenplay = it.screenplay,
-                    createdAtEpochMs = it.createdAtEpochMs,
-                    username = users[it.userId] ?: ""
+                    createdAt = it.createdAt,
+                    username = Username(users[it.userId.value] ?: "")
                 )
             }
+    }
 }

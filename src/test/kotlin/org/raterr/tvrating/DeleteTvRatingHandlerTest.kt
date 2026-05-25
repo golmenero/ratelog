@@ -6,12 +6,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.raterr.TmdbId
 import org.raterr.user.User.Id
 import org.raterr.tvshow.InMemoryTvShowRepository
-import org.raterr.tvrating.InMemoryTvRatingRepository
+import org.raterr.tvshow.TvShow
+import org.raterr.tvshow.aTvShow
 import org.raterr.tvrating.delete.DeleteTvRating
 import org.raterr.tvrating.delete.DeleteTvRatingHandler
 import org.raterr.tvrating.delete.DeleteTvRatingHandlerError
-import org.raterr.tvshow.TvShow
-import org.raterr.tvshow.aTvShow
 import kotlin.test.Test
 
 class DeleteTvRatingHandlerTest {
@@ -31,15 +30,9 @@ class DeleteTvRatingHandlerTest {
     fun `happy path returns Right`() {
         val show = tvShowRepository.save(aTvShow(tmdbId = 200, name = "Show"))
         tvRatingRepository.save(
-            TvRating(
-                tvShowId = show.id!!.value,
-                userId = 1,
-                directing = 5.0,
-                cinematography = 5.0,
-                acting = 5.0,
-                soundtrack = 5.0,
-                screenplay = 5.0,
-                createdAtEpochMs = System.currentTimeMillis()
+            aTvRating(
+                tvShowId = show.id!!,
+                userId = Id(1)
             )
         )
 

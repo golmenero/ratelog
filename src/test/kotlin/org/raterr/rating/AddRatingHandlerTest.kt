@@ -244,18 +244,12 @@ class AddRatingHandlerTest {
     @Test
     fun `existing rating returns RatingAlreadyExists`() {
         setupMovie(100)
-        movieRepository.save(aMovie(id = Movie.Id(1), tmdbId = 100, title = "Movie"))
+        val movie = movieRepository.save(aMovie(id = Movie.Id(1), tmdbId = 100, title = "Movie"))
         ratingRepository.save(
-            Rating(
-                id = 1,
-                movieId = 1,
-                userId = 1,
-                directing = 5.0,
-                cinematography = 5.0,
-                acting = 5.0,
-                soundtrack = 5.0,
-                screenplay = 5.0,
-                createdAtEpochMs = System.currentTimeMillis()
+            aRating(
+                id = Rating.Id(1),
+                movieId = movie.id!!,
+                userId = Id(1)
             )
         )
 

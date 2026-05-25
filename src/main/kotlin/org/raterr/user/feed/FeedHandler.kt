@@ -3,14 +3,13 @@ package org.raterr.user.feed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
-import org.raterr.movie.Movie
 import org.raterr.userfollow.UserFollowRepository
 import org.raterr.movie.MovieRepository
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository
 import org.raterr.rating.RatingScoreService
-import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvrating.TvRating
+import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvrating.TvRatingRepository
 import org.raterr.tvrating.TvRatingScoreService
 import org.raterr.user.User
@@ -49,13 +48,13 @@ class FeedHandler(
         val followedIds = userFollowRepository.findFollowedUserIds(query.userId.value)
         if (followedIds.isEmpty()) return@either emptyList()
 
-        val thirtyDaysAgo = Instant.now().minusSeconds(30L * 24 * 60 * 60).toEpochMilli()
+        val thirtyDaysAgo = Instant.now().minusSeconds(30L * 24 * 60 * 60)
 
-        val movieRatings = ratingRepository.findByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
-        val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
+        val movieRatings = ratingRepository.findByUserIdsAndLastDays(followedIds.map { User.Id(it) }, thirtyDaysAgo)
+        val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(followedIds.map { User.Id(it) }, thirtyDaysAgo)
 
         val movieItems = movieRatings.mapNotNull { rating ->
-            val movie = rating.movieId.let(Movie::Id).let(movieRepository::findById)
+            val movie = rating.movieId.let(movieRepository::findById)
                 ?: return@mapNotNull null
             val score = RatingScoreService.score(
                 Rating(
@@ -67,23 +66,24 @@ class FeedHandler(
                     acting = rating.acting,
                     soundtrack = rating.soundtrack,
                     screenplay = rating.screenplay,
-                    createdAtEpochMs = rating.createdAtEpochMs
+                    createdAt = rating.createdAt,
+                    rank = Rating.Rank(0)
                 )
             )
             FeedItem(
-                username = rating.username,
+                username = rating.username.value,
                 title = movie.title.value,
                 posterPath = movie.posterPath?.value,
                 tmdbId = movie.tmdbId.value,
                 type = MediaType.movie.name,
                 score = score,
-                ratedAt = dateFormatter.format(Instant.ofEpochMilli(rating.createdAtEpochMs)),
-                createdAtEpochMs = rating.createdAtEpochMs
+                ratedAt = dateFormatter.format(rating.createdAt),
+                createdAtEpochMs = rating.createdAt.toEpochMilli()
             )
         }
 
         val tvItems = tvRatings.mapNotNull { rating ->
-            val show = rating.tvShowId.let(org.raterr.tvshow.TvShow::Id).let(tvShowRepository::findById) ?: return@mapNotNull null
+            val show = rating.tvShowId.let(tvShowRepository::findById) ?: return@mapNotNull null
             val score = TvRatingScoreService.score(
                 TvRating(
                     id = rating.id,
@@ -94,18 +94,19 @@ class FeedHandler(
                     acting = rating.acting,
                     soundtrack = rating.soundtrack,
                     screenplay = rating.screenplay,
-                    createdAtEpochMs = rating.createdAtEpochMs
+                    createdAt = rating.createdAt,
+                    rank = TvRating.Rank(0)
                 )
             )
             FeedItem(
-                username = rating.username,
+                username = rating.username.value,
                 title = show.name.value,
                 posterPath = show.posterPath?.value,
                 tmdbId = show.tmdbId.value,
                 type = MediaType.tvshow.name,
                 score = score,
-                ratedAt = dateFormatter.format(Instant.ofEpochMilli(rating.createdAtEpochMs)),
-                createdAtEpochMs = rating.createdAtEpochMs
+                ratedAt = dateFormatter.format(rating.createdAt),
+                createdAtEpochMs = rating.createdAt.toEpochMilli()
             )
         }
 
