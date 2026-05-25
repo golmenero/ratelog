@@ -1,4 +1,4 @@
-package org.raterr.tvshow.rating.delete
+package org.raterr.tvshow.rating.deleteseason
 
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
@@ -7,11 +7,12 @@ import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
-class DeleteTvRatingController(
-    private val handler: DeleteTvRatingHandler,
+class DeleteSeasonRatingController(
+    private val handler: DeleteSeasonRatingHandler,
 ) {
 
     @PostMapping("/tvshows/delete/{id}")
@@ -19,10 +20,12 @@ class DeleteTvRatingController(
     fun deleteRating(
         @CurrentUser user: User,
         @PathVariable("id") tmdbId: Int,
+        @RequestParam("seasonNumber") seasonNumber: Int,
         redirectAttributes: RedirectAttributes
     ): String =
-        DeleteTvRating(
+        DeleteSeasonRating(
             tmdbId = TmdbId(tmdbId),
+            seasonNumber = seasonNumber,
             userId = user.id!!,
         ).let(handler::handle)
             .mapLeft(::mapError)
@@ -37,8 +40,8 @@ class DeleteTvRatingController(
                 }
             )
 
-    private fun mapError(error: DeleteTvRatingHandlerError): String = when (error) {
-        DeleteTvRatingHandlerError.TvShowNotFound,
-        DeleteTvRatingHandlerError.RatingNotFound -> "Could not delete the rating."
+    private fun mapError(error: DeleteSeasonRatingHandlerError): String = when (error) {
+        DeleteSeasonRatingHandlerError.TvShowNotFound,
+        DeleteSeasonRatingHandlerError.RatingNotFound -> "Could not delete the rating."
     }
 }

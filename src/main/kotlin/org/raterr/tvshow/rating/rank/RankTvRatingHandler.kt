@@ -1,5 +1,6 @@
 package org.raterr.tvshow.rating.rank
 
+import org.raterr.Rank
 import org.raterr.tvshow.rating.TvRating
 import org.raterr.tvshow.rating.TvRatingRepository
 import org.raterr.user.User
@@ -17,7 +18,7 @@ class RankTvRatingHandler(
         val ratings = tvRatingRepository.findByUserIdOrderedByRank(command.userId).sortedByDescending { it.score }
         ratings.forEachIndexed { index, rating ->
             rating.id?.let { id ->
-                tvRatingRepository.updateRank(id, TvRating.Rank(index + 1))
+                tvRatingRepository.updateRank(id, Rank(index + 1))
             }
         }
     }

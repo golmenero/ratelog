@@ -1,4 +1,4 @@
-package org.raterr.tvshow.rating.add
+package org.raterr.tvshow.rating.addseason
 
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
-class AddTvRatingController(
-    private val handler: AddTvRatingHandler,
+class AddSeasonRatingController(
+    private val handler: AddSeasonRatingHandler,
 ) {
 
     @PostMapping("/tv/rate")
     fun saveRating(
         @CurrentUser user: User,
         @RequestParam("tmdbId") tmdbId: Int,
+        @RequestParam("seasonNumber") seasonNumber: Int,
         @RequestParam("directing") directing: Double,
         @RequestParam("cinematography") cinematography: Double,
         @RequestParam("acting") acting: Double,
@@ -24,8 +25,9 @@ class AddTvRatingController(
         @RequestParam("screenplay") screenplay: Double,
         redirectAttributes: RedirectAttributes
     ): String =
-        AddTvRating(
+        AddSeasonRating(
             tmdbId = TmdbId(tmdbId),
+            seasonNumber = seasonNumber,
             userId = user.id!!,
             directing = directing,
             cinematography = cinematography,
@@ -46,9 +48,9 @@ class AddTvRatingController(
                 }
             )
 
-    private fun mapError(error: AddTvRatingHandlerError): String = when (error) {
-        AddTvRatingHandlerError.InvalidRatingValue -> "Invalid rating value."
-        AddTvRatingHandlerError.RatingAlreadyExists -> "A rating already exists for this TV show."
-        AddTvRatingHandlerError.TvShowNotFound -> "Could not load the TV show."
+    private fun mapError(error: AddSeasonRatingHandlerError): String = when (error) {
+        AddSeasonRatingHandlerError.InvalidRatingValue -> "Invalid rating value."
+        AddSeasonRatingHandlerError.RatingAlreadyExists -> "A rating already exists for this season."
+        AddSeasonRatingHandlerError.TvShowNotFound -> "Could not load the TV show."
     }
 }

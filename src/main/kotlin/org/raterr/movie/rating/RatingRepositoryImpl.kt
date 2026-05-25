@@ -1,5 +1,6 @@
 package org.raterr.movie.rating
 
+import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.movie.Movie
 import org.raterr.movie.MovieRepository
@@ -48,7 +49,7 @@ class RatingRepositoryImpl(
     override fun findByUserIdOrderedByRank(userId: User.Id): List<RatingView> =
         ratingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
 
-    override fun updateRank(id: Rating.Id, rank: Rating.Rank): Int {
+    override fun updateRank(id: Rating.Id, rank: Rank): Int {
         val entity = ratingDAO.findById(id.value).getOrNull() ?: return 0
         ratingDAO.save(entity.copy(rank = rank.value))
         return 1
@@ -77,7 +78,7 @@ class RatingRepositoryImpl(
             soundtrack = Score(soundtrack),
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            rank = Rating.Rank(rank)
+            rank = Rank(rank)
         )
     }
 

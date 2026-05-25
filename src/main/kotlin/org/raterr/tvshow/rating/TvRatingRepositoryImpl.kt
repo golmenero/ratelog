@@ -1,5 +1,6 @@
 package org.raterr.tvshow.rating
 
+import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
@@ -12,6 +13,7 @@ import kotlin.jvm.optionals.getOrNull
 @Repository
 class TvRatingRepositoryImpl(
         private val tvRatingDAO: TvRatingDAO,
+        private val seasonRatingDAO: SeasonRatingDAO,
         private val tvShowRepository: TvShowRepository,
         private val userRepository: UserRepository,
     ) : TvRatingRepository {
@@ -51,7 +53,7 @@ class TvRatingRepositoryImpl(
     override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRatingView> =
         tvRatingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
 
-    override fun updateRank(id: TvRating.Id, rank: TvRating.Rank): Int {
+    override fun updateRank(id: TvRating.Id, rank: Rank): Int {
         val entity = tvRatingDAO.findById(id.value).getOrNull() ?: return 0
         tvRatingDAO.save(entity.copy(rank = rank.value))
         return 1
@@ -74,13 +76,8 @@ class TvRatingRepositoryImpl(
             id = id?.let { TvRating.Id(it) },
             tvShow = tvShow!!,
             user = user!!,
-            directing = Score(directing),
-            cinematography = Score(cinematography),
-            acting = Score(acting),
-            soundtrack = Score(soundtrack),
-            screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            rank = TvRating.Rank(rank)
+            rank = Rank(rank)
         )
     }
 
@@ -89,13 +86,38 @@ class TvRatingRepositoryImpl(
             id = id?.value,
             tvShowId = tvShowId.value,
             userId = userId.value,
+            createdAtEpochMs = createdAt.toEpochMilli(),
+            rank = rank.value
+        )
+    }
+
+    private fun SeasonRatingEntity.toDomain(): SeasonRating {
+        return SeasonRating(
+            id = id?.let { SeasonRating.Id(it) },
+            tvShowId = tvShowId.let(TvShow::Id),
+            seasonNumber = SeasonRating.SeasonNumber(seasonNumber),
+            userId = userId.let(User::Id),
+            directing = Score(directing),
+            cinematography = Score(cinematography),
+            acting = Score(acting),
+            soundtrack = Score(soundtrack),
+            screenplay = Score(screenplay),
+            createdAt = Instant.ofEpochMilli(createdAtEpochMs),
+        )
+    }
+
+    private fun SeasonRating.toEntity(): SeasonRatingEntity {
+        return SeasonRatingEntity(
+            id = id?.value,
+            tvShowId = tvShowId.value,
+            seasonNumber = seasonNumber.value,
+            userId = userId.value,
             directing = directing.value,
             cinematography = cinematography.value,
             acting = acting.value,
             soundtrack = soundtrack.value,
             screenplay = screenplay.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
-            rank = rank.value
         )
     }
 }

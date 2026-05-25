@@ -3,6 +3,7 @@ package org.raterr.movie.rating.add
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.TmdbId
 import org.raterr.movie.MovieRepository
@@ -62,7 +63,7 @@ class AddRatingHandler(
             soundtrack = Score(command.soundtrack),
             screenplay = Score(command.screenplay),
             createdAt = Instant.now(),
-            rank = Rating.Rank(0)
+            rank = Rank(0)
         ).let(ratingRepository::save)
 
         command.userId.let(::RankRating).let(rankRatingHandler::handle)

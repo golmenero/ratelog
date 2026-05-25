@@ -12,13 +12,22 @@ data class TvRatingEntity(
     @Id val id: Long? = null,
     @Column("tv_show_id") val tvShowId: Long,
     @Column("user_id") val userId: Long,
+    @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
+    val rank: Int = 0,
+)
+
+@Table("season_ratings")
+data class SeasonRatingEntity(
+    @Id val id: Long? = null,
+    @Column("tv_show_id") val tvShowId: Long,
+    @Column("season_number") val seasonNumber: Int,
+    @Column("user_id") val userId: Long,
     val directing: Double,
     val cinematography: Double,
     val acting: Double,
     val soundtrack: Double,
     val screenplay: Double,
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
-    val rank: Int = 0,
 )
 
 @Repository
@@ -27,4 +36,12 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
     fun findByTvShowIdAndUserId(tvShowId: Long, userId: Long): List<TvRatingEntity>
     fun findByUserId(userId: Long): List<TvRatingEntity>
     fun findByUserIdOrderByRank(userId: Long): List<TvRatingEntity>
+}
+
+@Repository
+interface SeasonRatingDAO : CrudRepository<SeasonRatingEntity, Long> {
+    fun findFirstByTvShowIdAndSeasonNumber(tvShowId: Long, seasonNumber: Int): Optional<SeasonRatingEntity>
+    fun findByTvShowIdAndSeasonNumberAndUserId(tvShowId: Long, seasonNumber: Int, userId: Long): List<SeasonRatingEntity>
+    fun findByUserId(userId: Long): List<SeasonRatingEntity>
+    fun findByUserIdOrderByRank(userId: Long): List<SeasonRatingEntity>
 }
