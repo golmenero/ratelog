@@ -104,13 +104,6 @@
   display: grid;
   grid-template-rows: 220px 1fr;
   position: relative;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    border-color: var(--border-strong);
-    box-shadow: 0 0 0 3px hsl(var(--_brand-clay) / 0.12), var(--shadow);
-  }
 }
 
 .result-content {
@@ -123,6 +116,10 @@
   display: flex;
   gap: 10px;
   margin-top: 8px;
+}
+
+.result-card-disabled {
+  cursor: default;
 }
 
 .tag-row {
@@ -237,43 +234,4 @@
   .hero-card {
     padding: 4px 0 0;
   }
-}
-
-.search-detail-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-
-  &.visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-.search-detail-modal-content {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  max-width: 480px;
-  width: 90%;
-  position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  display: grid;
-  gap: 18px;
-}
-
-.detail-modal-actions {
-  display: flex;
-  gap: 10px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
 }

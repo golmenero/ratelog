@@ -27,28 +27,7 @@ data class SearchResultItem(
     val type: String,
     val isFollowed: Boolean = false,
     val canRate: Boolean = true,
-    val canFollow: Boolean = true,
-    val movieRating: MovieRatingInfo? = null,
-    val tvSeasonRatings: List<TvSeasonRatingInfo> = emptyList()
-)
-
-data class MovieRatingInfo(
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val score: Double
-)
-
-data class TvSeasonRatingInfo(
-    val seasonNumber: Int,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val score: Double
+    val canFollow: Boolean = true
 )
 
 @org.springframework.stereotype.Service
@@ -86,17 +65,6 @@ class SearchHandler(
                 val rating = movie?.id?.let(ratingRepository::findFirstByMovieId)
                 val isReleased = tmdbMovie.releaseDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
 
-                val movieRating = rating?.let {
-                    MovieRatingInfo(
-                        directing = it.directing.value,
-                        cinematography = it.cinematography.value,
-                        acting = it.acting.value,
-                        soundtrack = it.soundtrack.value,
-                        screenplay = it.screenplay.value,
-                        score = it.score.value,
-                    )
-                }
-
                 SearchResultItem(
                     tmdbId = tmdbMovie.id,
                     title = tmdbMovie.title,
@@ -107,8 +75,7 @@ class SearchHandler(
                     type = MediaType.movie.name,
                     isFollowed = movie?.followed ?: false,
                     canRate = isReleased,
-                    canFollow = rating == null,
-                    movieRating = movieRating
+                    canFollow = rating == null
                 )
             }
         }
@@ -123,18 +90,6 @@ class SearchHandler(
                 val isReleased = tmdbShow.firstAirDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
 
 
-                val tvSeasonRatings = rating?.seasonRatings?.map { seasonRating ->
-                    TvSeasonRatingInfo(
-                        seasonNumber = seasonRating.seasonNumber.value,
-                        directing = seasonRating.directing.value,
-                        cinematography = seasonRating.cinematography.value,
-                        acting = seasonRating.acting.value,
-                        soundtrack = seasonRating.soundtrack.value,
-                        screenplay = seasonRating.screenplay.value,
-                        score = seasonRating.score.value
-                    )
-                } ?: emptyList()
-
                 SearchResultItem(
                     tmdbId = tmdbShow.id,
                     title = tmdbShow.name,
@@ -145,8 +100,7 @@ class SearchHandler(
                     type = MediaType.tvshow.name,
                     isFollowed = show?.followed ?: false,
                     canRate = isReleased,
-                    canFollow = rating == null,
-                    tvSeasonRatings = tvSeasonRatings
+                    canFollow = rating == null
                 )
         }
     }

@@ -675,48 +675,6 @@ a {
   opacity: 0.6;
 }
 
-.modal-seasons {
-  display: grid;
-  gap: 12px;
-}
-
-.season-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.season-label {
-  color: var(--text-soft);
-  font-family: var(--font-ui);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.season-ratings {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.season-cat {
-  color: var(--text-soft);
-  font-family: var(--font-ui);
-  font-size: 0.8rem;
-}
-
-.season-score {
-  font-weight: 700;
-  color: hsl(20 78% 86%);
-  font-family: var(--font-ui);
-  font-size: 0.95rem;
-  min-width: 36px;
-  text-align: right;
-}
-
 .modal-categories {
   display: grid;
   gap: 12px;
