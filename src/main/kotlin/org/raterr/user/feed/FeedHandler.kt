@@ -7,7 +7,6 @@ import org.raterr.userfollow.UserFollowRepository
 import org.raterr.movie.MovieRepository
 import org.raterr.rating.Rating
 import org.raterr.rating.RatingRepository
-import org.raterr.rating.RatingScoreService
 import org.raterr.tvrating.TvRating
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvrating.TvRatingRepository
@@ -40,7 +39,6 @@ class FeedHandler(
     private val userFollowRepository: UserFollowRepository,
     private val ratingRepository: RatingRepository,
     private val tvRatingRepository: TvRatingRepository,
-    private val movieRepository: MovieRepository,
     private val tvShowRepository: TvShowRepository,
 ) {
 
@@ -53,30 +51,14 @@ class FeedHandler(
         val movieRatings = ratingRepository.findByUserIdsAndLastDays(followedIds.map { User.Id(it) }, thirtyDaysAgo)
         val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(followedIds.map { User.Id(it) }, thirtyDaysAgo)
 
-        val movieItems = movieRatings.mapNotNull { rating ->
-            val movie = rating.movieId.let(movieRepository::findById)
-                ?: return@mapNotNull null
-            val score = RatingScoreService.score(
-                Rating(
-                    id = rating.id,
-                    movieId = rating.movieId,
-                    userId = rating.userId,
-                    directing = rating.directing,
-                    cinematography = rating.cinematography,
-                    acting = rating.acting,
-                    soundtrack = rating.soundtrack,
-                    screenplay = rating.screenplay,
-                    createdAt = rating.createdAt,
-                    rank = Rating.Rank(0)
-                )
-            )
+        val movieItems = movieRatings.map { rating ->
             FeedItem(
-                username = rating.username.value,
-                title = movie.title.value,
-                posterPath = movie.posterPath?.value,
-                tmdbId = movie.tmdbId.value,
+                username = rating.user.username.value,
+                title = rating.movie.title.value,
+                posterPath = rating.movie.posterPath?.value,
+                tmdbId = rating.movie.tmdbId.value,
                 type = MediaType.movie.name,
-                score = score,
+                score = rating.score,
                 ratedAt = dateFormatter.format(rating.createdAt),
                 createdAtEpochMs = rating.createdAt.toEpochMilli()
             )

@@ -1,9 +1,9 @@
 package org.raterr.movie.top
 
-import org.raterr.rating.RatingScoreService
 import org.raterr.annotations.CurrentUser
 import org.raterr.movie.premieres.MoviePremieresHandler
 import org.raterr.movie.premieres.MoviePremieresQuery
+import org.raterr.rating.RatingView
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -63,20 +63,20 @@ class TopMovieController(
         return "movies"
     }
 
-    private fun map(list: List<RankedMovie>): List<GetTopMoviesResponse> =
+    private fun map(list: List<RatingView>): List<GetTopMoviesResponse> =
         list.map {
             GetTopMoviesResponse(
-                rank = it.rating.rank.value,
+                rank = it.rank.value,
                 tmdbId = it.movie.tmdbId.value,
                 title = it.movie.title.value,
                 releaseYear = it.movie.releaseYear,
                 posterPath = it.movie.posterPath?.value,
-                averageScore = RatingScoreService.score(it.rating),
-                directing = it.rating.directing.value,
-                cinematography = it.rating.cinematography.value,
-                acting = it.rating.acting.value,
-                soundtrack = it.rating.soundtrack.value,
-                screenplay = it.rating.screenplay.value,
+                averageScore = it.score,
+                directing = it.directing.value,
+                cinematography = it.cinematography.value,
+                acting = it.acting.value,
+                soundtrack = it.soundtrack.value,
+                screenplay = it.screenplay.value,
             )
         }
 }

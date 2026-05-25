@@ -22,7 +22,6 @@ data class RegisterUser(
 class RegisterHandler(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val ratingRepository: RatingRepository,
 ) {
     fun handle(command: RegisterUser): Either<RegisterHandlerError, Unit> = either {
         ensure(command.username.value.isNotBlank() && command.email.value.isNotBlank() && command.password.value.isNotBlank()) {
@@ -37,17 +36,11 @@ class RegisterHandler(
 
         val hashedPassword = command.password.value.let(passwordEncoder::encode)
 
-        val user = User(
+        User(
             id = null,
             username = command.username,
             email = command.email,
             passwordHash = hashedPassword
-        )
-
-        val savedUser = userRepository.save(user)
-
-        ratingRepository.findAllWithoutUser().forEach { rating ->
-            ratingRepository.save(rating.copy(userId = savedUser.id!!))
-        }
+        ).let(userRepository::save)
     }
 }

@@ -3,31 +3,40 @@ package org.raterr.rating
 import org.raterr.Score
 import org.raterr.Username
 import org.raterr.movie.Movie
+import org.raterr.movie.MovieDAO
+import org.raterr.movie.MovieRepository
 import org.raterr.user.User
+import org.raterr.user.UserDAO
+import org.raterr.user.UserRepository
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import kotlin.jvm.optionals.getOrNull
 
 @Repository
-class RatingRepositoryImpl(private val ratingDAO: RatingDAO) : RatingRepository {
+class RatingRepositoryImpl(
+        private val ratingDAO: RatingDAO,
+        private val movieRepository: MovieRepository,
+        private val userRepository: UserRepository,
+    ) : RatingRepository {
 
-    override fun findById(id: Rating.Id): Rating? =
+    override fun findById(id: Rating.Id): RatingView? =
         id.value.let(ratingDAO::findById).getOrNull()?.toDomain()
 
-    override fun findFirstByMovieId(movieId: Movie.Id): Rating? =
+    override fun findFirstByMovieId(movieId: Movie.Id): RatingView? =
         movieId.value.let(ratingDAO::findFirstByMovieId).getOrNull()?.toDomain()
 
-    override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): List<Rating> =
+    override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): List<RatingView> =
         ratingDAO.findByMovieIdAndUserId(movieId.value, userId.value).map { it.toDomain() }
 
-    override fun findByUserId(userId: User.Id): List<Rating> =
+    override fun findByUserId(userId: User.Id): List<RatingView> =
         ratingDAO.findByUserId(userId.value).map { it.toDomain() }
 
-    override fun findAllWithoutUser(): List<Rating> =
+    override fun findAllWithoutUser(): List<RatingView> =
         ratingDAO.findAll().filter { it.userId == 0L }.map { it.toDomain() }
 
-    override fun save(rating: Rating): Rating =
-        rating.toEntity().let(ratingDAO::save).toDomain()
+    override fun save(rating: Rating) {
+        rating.toEntity().let(ratingDAO::save)
+    }
 
     override fun deleteByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Int {
         val ratings = ratingDAO.findByMovieIdAndUserId(movieId.value, userId.value)
@@ -35,19 +44,11 @@ class RatingRepositoryImpl(private val ratingDAO: RatingDAO) : RatingRepository 
     }
 
     override fun findRankedByUserIdWithFilters(
-        userId: User.Id,
-        category: String?,
-        limit: Int,
-        name: String?
-    ): List<Rating> {
-        val all = ratingDAO.findByUserId(userId.value)
-            .map { it.toDomain() }
-            .sortedByDescending { RatingScoreService.score(it) }
+        userId: User.Id, category: String?, limit: Int, name: String?
+    ): List<RatingView> =
+        ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score }.take(limit)
 
-        return all.take(limit)
-    }
-
-    override fun findByUserIdOrderedByRank(userId: User.Id): List<Rating> =
+    override fun findByUserIdOrderedByRank(userId: User.Id): List<RatingView> =
         ratingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
 
     override fun updateRank(id: Rating.Id, rank: Rating.Rank): Int {
@@ -56,20 +57,23 @@ class RatingRepositoryImpl(private val ratingDAO: RatingDAO) : RatingRepository 
         return 1
     }
 
-    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<RatingWithUsername> {
+    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<RatingView> {
         val sinceEpochMs = since.toEpochMilli()
         val userIdValues = userIds.map(User.Id::value)
         return ratingDAO.findAll()
             .filter { it.userId in userIdValues && it.createdAtEpochMs >= sinceEpochMs }
             .sortedByDescending { it.createdAtEpochMs }
-            .map { it.toRatingWithUsernameEntity().toDomainWithUsername() }
+            .map { it.toDomain() }
     }
 
-    private fun RatingEntity.toDomain(): Rating {
-        return Rating(
+    private fun RatingEntity.toDomain(): RatingView {
+        val movie = movieId.let(Movie::Id).let(movieRepository::findById)
+        val user = userId.let(User::Id).let(userRepository::findById)
+
+        return RatingView(
             id = id?.let { Rating.Id(it) },
-            movieId = Movie.Id(movieId),
-            userId = User.Id(userId),
+            movie = movie!!,
+            user = user!!,
             directing = Score(directing),
             cinematography = Score(cinematography),
             acting = Score(acting),
@@ -77,51 +81,6 @@ class RatingRepositoryImpl(private val ratingDAO: RatingDAO) : RatingRepository 
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
             rank = Rating.Rank(rank)
-        )
-    }
-
-    private fun RatingEntity.toDomainWithUsername(): RatingWithUsername {
-        return RatingWithUsername(
-            id = Rating.Id(id!!),
-            movieId = Movie.Id(movieId),
-            userId = User.Id(userId),
-            directing = Score(directing),
-            cinematography = Score(cinematography),
-            acting = Score(acting),
-            soundtrack = Score(soundtrack),
-            screenplay = Score(screenplay),
-            createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            username = Username("")
-        )
-    }
-
-    private fun RatingEntity.toRatingWithUsernameEntity(): RatingWithUsernameEntity {
-        return RatingWithUsernameEntity(
-            id = id,
-            movieId = movieId,
-            userId = userId,
-            directing = directing,
-            cinematography = cinematography,
-            acting = acting,
-            soundtrack = soundtrack,
-            screenplay = screenplay,
-            createdAtEpochMs = createdAtEpochMs,
-            username = ""
-        )
-    }
-
-    private fun RatingWithUsernameEntity.toDomainWithUsername(): RatingWithUsername {
-        return RatingWithUsername(
-            id = Rating.Id(id!!),
-            movieId = Movie.Id(movieId),
-            userId = User.Id(userId),
-            directing = Score(directing),
-            cinematography = Score(cinematography),
-            acting = Score(acting),
-            soundtrack = Score(soundtrack),
-            screenplay = Score(screenplay),
-            createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            username = Username(username)
         )
     }
 
