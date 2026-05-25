@@ -42,16 +42,10 @@ class RatingRepositoryImpl(
     override fun findRankedByUserIdWithFilters(
         userId: User.Id, category: String?, limit: Int, name: String?
     ): List<Rating> =
-        ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score }.take(limit)
+        ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score.value }.take(limit)
 
     override fun findByUserIdOrderedByRank(userId: User.Id): List<Rating> =
         ratingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
-
-    override fun updateRank(id: Rating.Id, rank: Rank): Int {
-        val entity = ratingDAO.findById(id.value).getOrNull() ?: return 0
-        ratingDAO.save(entity.copy(rank = rank.value))
-        return 1
-    }
 
     override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating> {
         val sinceEpochMs = since.toEpochMilli()
@@ -73,7 +67,7 @@ class RatingRepositoryImpl(
             soundtrack = Score(soundtrack),
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            rank = Rank(rank)
+            score = score.let(::Score),
         )
     }
 
@@ -88,7 +82,7 @@ class RatingRepositoryImpl(
             soundtrack = soundtrack.value,
             screenplay = screenplay.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
-            rank = rank.value
+            score = score.value,
         )
     }
 }

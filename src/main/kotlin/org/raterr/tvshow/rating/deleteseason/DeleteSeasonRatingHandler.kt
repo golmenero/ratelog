@@ -6,13 +6,9 @@ import arrow.core.raise.ensure
 import org.raterr.SeasonNumber
 import org.raterr.TmdbId
 import org.raterr.tvshow.TvShowRepository
-import org.raterr.tvshow.rating.TvRating
 import org.raterr.tvshow.rating.TvRatingRepository
-import org.raterr.tvshow.rating.rank.RankTvRating
-import org.raterr.tvshow.rating.rank.RankTvRatingHandler
 import org.raterr.user.User
 import org.springframework.stereotype.Component
-import java.time.Instant
 
 data class DeleteSeasonRating(
     val tmdbId: TmdbId,
@@ -24,7 +20,6 @@ data class DeleteSeasonRating(
 class DeleteSeasonRatingHandler(
     private val tvShowRepository: TvShowRepository,
     private val tvRatingRepository: TvRatingRepository,
-    private val rankTvRatingHandler: RankTvRatingHandler,
 ) {
     fun handle(command: DeleteSeasonRating): Either<DeleteSeasonRatingHandlerError, Unit> = either {
         val show = command.tmdbId.let(tvShowRepository::findByTmdbId)
@@ -38,7 +33,5 @@ class DeleteSeasonRatingHandler(
 
         updatedTvRating.let(tvRatingRepository::save)
         if (updatedTvRating.seasonRatings.isEmpty()) tvRatingRepository.deleteById(tvRating.id!!)
-
-        command.userId.let(::RankTvRating).let(rankTvRatingHandler::handle)
     }
 }

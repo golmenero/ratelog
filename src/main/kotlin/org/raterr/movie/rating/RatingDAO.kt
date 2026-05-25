@@ -18,7 +18,7 @@ data class RatingEntity(
     val soundtrack: Double,
     val screenplay: Double,
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
-    val rank: Int = 0,
+    val score: Double,
 )
 
 @Repository

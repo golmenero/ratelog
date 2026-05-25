@@ -41,16 +41,10 @@ class TvRatingRepositoryImpl(
         limit: Int,
         name: String?
     ): List<TvRating> =
-        tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score }.take(limit)
+        tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score.value }.take(limit)
 
     override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating> =
         tvRatingDAO.findByUserIdOrderByRank(userId.value).map { it.toDomain() }
-
-    override fun updateRank(id: TvRating.Id, rank: Rank): Int {
-        val entity = tvRatingDAO.findById(id.value).getOrNull() ?: return 0
-        tvRatingDAO.save(entity.copy(rank = rank.value))
-        return 1
-    }
 
     override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRating> {
         val sinceEpochMs = since.toEpochMilli()
@@ -68,8 +62,8 @@ class TvRatingRepositoryImpl(
             tvShowId = tvShowId.let(TvShow::Id),
             userId = userId.let(User::Id),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            rank = Rank(rank),
-            seasonRatings = seasonRatings
+            seasonRatings = seasonRatings,
+            score = score.let(::Score),
         )
     }
 
@@ -79,7 +73,7 @@ class TvRatingRepositoryImpl(
             tvShowId = tvShowId.value,
             userId = userId.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
-            rank = rank.value
+            score = score.value,
         )
     }
 

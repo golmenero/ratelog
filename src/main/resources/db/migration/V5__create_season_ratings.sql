@@ -15,10 +15,9 @@ CREATE TABLE IF NOT EXISTS season_ratings (
 
 CREATE INDEX idx_season_ratings_tv_show_season ON season_ratings(tv_show_id, season_number);
 CREATE INDEX idx_season_ratings_user_id ON season_ratings(user_id);
-CREATE INDEX idx_season_ratings_user_rank ON season_ratings(user_id, rank);
 
-INSERT INTO season_ratings (tv_show_id, season_number, user_id, directing, cinematography, acting, soundtrack, screenplay, created_at_epoch_ms, rank)
-SELECT tv_show_id, 1, user_id, directing, cinematography, acting, soundtrack, screenplay, created_at_epoch_ms, rank
+INSERT INTO season_ratings (tv_show_id, season_number, user_id, directing, cinematography, acting, soundtrack, screenplay, created_at_epoch_ms)
+SELECT tv_show_id, 1, user_id, directing, cinematography, acting, soundtrack, screenplay, created_at_epoch_ms
 FROM tv_ratings;
 
 ALTER TABLE tv_ratings DROP COLUMN IF EXISTS directing;

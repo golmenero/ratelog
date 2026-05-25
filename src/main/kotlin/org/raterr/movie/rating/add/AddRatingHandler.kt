@@ -6,13 +6,10 @@ import arrow.core.raise.ensure
 import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.TmdbId
-import org.raterr.movie.MovieRepository
 import org.raterr.movie.get.GetMovie
 import org.raterr.movie.get.GetMovieHandler
 import org.raterr.movie.rating.Rating
-import org.raterr.movie.rating.rank.RankRatingHandler
 import org.raterr.movie.rating.RatingRepository
-import org.raterr.movie.rating.rank.RankRating
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -31,7 +28,6 @@ data class AddRating(
 class AddRatingHandler(
     private val getMovieHandler: GetMovieHandler,
     private val ratingRepository: RatingRepository,
-    private val rankRatingHandler: RankRatingHandler,
 ) {
     fun handle(command: AddRating): Either<AddRatingHandlerError, Unit> = either {
         listOf(
@@ -62,9 +58,6 @@ class AddRatingHandler(
             soundtrack = Score(command.soundtrack),
             screenplay = Score(command.screenplay),
             createdAt = Instant.now(),
-            rank = Rank(0)
-        ).let(ratingRepository::save)
-
-        command.userId.let(::RankRating).let(rankRatingHandler::handle)
+        ).updateScore().let(ratingRepository::save)
     }
 }

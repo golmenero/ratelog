@@ -13,7 +13,7 @@ data class TvRatingEntity(
     @Column("tv_show_id") val tvShowId: Long,
     @Column("user_id") val userId: Long,
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
-    val rank: Int = 0,
+    val score: Double,
 )
 
 @Table("season_ratings")

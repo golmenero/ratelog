@@ -1,6 +1,5 @@
 package org.raterr.movie.rating
 
-import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.movie.Movie
 import org.raterr.user.User
@@ -17,11 +16,12 @@ data class Rating(
     val soundtrack: Score,
     val screenplay: Score,
     val createdAt: Instant,
-    val rank: Rank,
+    val score: Score = Score(0.0),
 ) {
     data class Id(val value: Long)
 
-    val score = (directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0
+    fun updateScore() = copy(score = ((directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0)
+        .let(::Score))
 }
 
 @Repository
@@ -37,5 +37,4 @@ interface RatingRepository {
 
     fun save(rating: Rating)
     fun deleteByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Int
-    fun updateRank(id: Rating.Id, rank: Rank): Int
 }

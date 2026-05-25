@@ -1,6 +1,5 @@
 ﻿package org.raterr.tvshow.rating
 
-import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.SeasonNumber
 import org.raterr.tvshow.TvShow
@@ -14,14 +13,13 @@ data class TvRating(
     val seasonRatings: List<SeasonRating>,
     val userId: User.Id,
     val createdAt: Instant,
-    val rank: Rank,
+    val score: Score = Score(0.0),
 ) {
     data class Id(val value: Long)
 
-    val score = seasonRatings.map { it.score }.average()
-
     fun deleteSeasonRating(seasonNumber: SeasonNumber) =
         copy(seasonRatings = seasonRatings - (seasonRatings.filter { it.seasonNumber == seasonNumber }).toSet())
+            .updateScore()
 
     fun addSeasonRating(
         seasonNumber: SeasonNumber,
@@ -43,7 +41,9 @@ data class TvRating(
             soundtrack = soundtrack,
             screenplay = screenplay,
             createdAt = createdAt
-        ))
+        )).updateScore()
+
+    private fun updateScore() = copy(score = seasonRatings.map { it.score.value }.average().let(::Score))
 
     companion object {
         fun create(tvShowId: TvShow.Id, userId: User.Id, now: Instant) = TvRating(
@@ -52,7 +52,6 @@ data class TvRating(
             seasonRatings = emptyList(),
             userId = userId,
             createdAt = now,
-            rank = Rank(0)
         )
     }
 }
@@ -71,7 +70,7 @@ data class SeasonRating(
 ) {
     data class Id(val value: Long)
 
-    val score = (directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0
+    val score = ((directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0).let(::Score)
 }
 
 @Repository
@@ -83,5 +82,4 @@ interface TvRatingRepository {
 
     fun save(rating: TvRating)
     fun deleteById(tvRatingId: TvRating.Id)
-    fun updateRank(id: TvRating.Id, rank: Rank): Int
 }

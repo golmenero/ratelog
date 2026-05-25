@@ -10,8 +10,6 @@ import org.raterr.tvshow.get.GetTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
 import org.raterr.tvshow.rating.TvRating
 import org.raterr.tvshow.rating.TvRatingRepository
-import org.raterr.tvshow.rating.rank.RankTvRating
-import org.raterr.tvshow.rating.rank.RankTvRatingHandler
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -31,7 +29,6 @@ data class AddSeasonRating(
 class AddSeasonRatingHandler(
     private val getTvShowHandler: GetTvShowHandler,
     private val tvRatingRepository: TvRatingRepository,
-    private val rankTvRatingHandler: RankTvRatingHandler,
 ) {
     fun handle(command: AddSeasonRating): Either<AddSeasonRatingHandlerError, Unit> = either {
         listOf(
@@ -59,7 +56,5 @@ class AddSeasonRatingHandler(
             screenplay = command.screenplay,
             createdAt = Instant.now(),
         ).let(tvRatingRepository::save)
-
-        command.userId.let(::RankTvRating).let(rankTvRatingHandler::handle)
     }
 }

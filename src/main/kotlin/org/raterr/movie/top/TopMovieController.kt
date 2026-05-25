@@ -63,19 +63,19 @@ class TopMovieController(
     }
 
     private fun map(list: List<TopMovieItem>): List<GetTopMoviesResponse> =
-        list.map {
+        list.mapIndexed { index, item ->
             GetTopMoviesResponse(
-                rank = it.rating.rank.value,
-                tmdbId = it.movie.tmdbId.value,
-                title = it.movie.title.value,
-                releaseYear = it.movie.releaseYear,
-                posterPath = it.movie.posterPath?.value,
-                averageScore = it.rating.score,
-                directing = it.rating.directing.value,
-                cinematography = it.rating.cinematography.value,
-                acting = it.rating.acting.value,
-                soundtrack = it.rating.soundtrack.value,
-                screenplay = it.rating.screenplay.value,
+                rank = index + 1,
+                tmdbId = item.movie.tmdbId.value,
+                title = item.movie.title.value,
+                releaseYear = item.movie.releaseYear,
+                posterPath = item.movie.posterPath?.value,
+                averageScore = item.rating.score.value,
+                directing = item.rating.directing.value,
+                cinematography = item.rating.cinematography.value,
+                acting = item.rating.acting.value,
+                soundtrack = item.rating.soundtrack.value,
+                screenplay = item.rating.screenplay.value,
             )
         }
 }

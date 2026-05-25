@@ -35,7 +35,18 @@
             <div th:if="${results != null}" id="results" class="results-grid">
                 <div th:if="${#lists.isEmpty(results)}" class="empty-state">Try with another title, year or original name.</div>
                 
-                <article th:each="item : ${results}" th:class="'result-card' + (${item.canRate} ? ' result-card-disabled' : '')">
+                <article th:each="item : ${results}"
+                         th:class="'result-card' + (${item.type == 'tvshow'} ? ' result-card-tv' : '')"
+                         th:data-tmdb-id="${item.tmdbId}"
+                         th:data-type="${item.type}"
+                         th:data-title="${item.title}"
+                         th:data-year="${item.year != null} ? ${item.year} : ''"
+                         th:data-is-followed="${item.isFollowed}"
+                         th:data-can-rate="${item.canRate}"
+                         th:data-can-follow="${item.canFollow}"
+                         th:data-movie-rating="${item.movieRating != null} ? ${item.movieRating.directing} + ',' + ${item.movieRating.cinematography} + ',' + ${item.movieRating.acting} + ',' + ${item.movieRating.soundtrack} + ',' + ${item.movieRating.screenplay} + ',' + ${item.movieRating.score} : ''"
+                         th:data-season-ratings="${#strings.arrayJoin(item.tvSeasonRatings.![seasonNumber + ',' + directing + ',' + cinematography + ',' + acting + ',' + soundtrack + ',' + screenplay + ',' + score], ';')}"
+                         th:data-query="${query}">
                     <div class="poster-frame">
                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                         <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
@@ -48,28 +59,6 @@
                         </div>
                         <h3 class="result-title" th:text="${item.title}">Title</h3>
                         <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : 'No synopsis available right now.'">Overview</p>
-                        <div class="result-actions">
-                            <a th:if="${item.type == 'movie' && item.canRate}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="raterr-btn">
-                                <i data-lucide="star"></i>
-                            </a>
-                            <a th:if="${item.type == 'tvshow' && item.canRate}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="raterr-btn">
-                                <i data-lucide="star"></i>
-                            </a>
-                            <form th:if="${item.type == 'movie' && item.canFollow}" th:action="@{/movie/follow}" method="post" style="display: inline;">
-                                <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
-                                <input type="hidden" name="q" th:value="${query}" />
-                                <button type="submit" th:class="${item.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
-                                    <i data-lucide="heart"></i>
-                                </button>
-                            </form>
-                            <form th:if="${item.type == 'tvshow' && item.canFollow}" th:action="@{/tvshow/follow}" method="post" style="display: inline;">
-                                <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
-                                <input type="hidden" name="q" th:value="${query}" />
-                                <button type="submit" th:class="${item.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
-                                    <i data-lucide="heart"></i>
-                                </button>
-                            </form>
-                        </div>
                     </div>
                 </article>
             </div>
@@ -77,8 +66,33 @@
         </section>
     </main>
 </div>
+
+<div th:replace="~{fragments/movie-detail-modal :: movieDetailModal}"></div>
+<div th:replace="~{fragments/tvshow-detail-modal :: tvshowDetailModal}"></div>
+
 </body>
 <script>
     lucide.createIcons();
+
+    document.querySelectorAll('.result-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('button') || e.target.closest('a') || e.target.closest('form')) return;
+            if (card.dataset.type === 'movie') {
+                populateMovieModal(card);
+                movieModal.classList.add('visible');
+            } else {
+                populateTvModal(card);
+                tvModal.classList.add('visible');
+            }
+            lucide.createIcons();
+        });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            movieModal.classList.remove('visible');
+            tvModal.classList.remove('visible');
+        }
+    });
 </script>
 </html>

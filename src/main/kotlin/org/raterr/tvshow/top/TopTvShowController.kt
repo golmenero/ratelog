@@ -71,18 +71,18 @@ class TopTvShowController(
     }
 
     private fun map(list: List<TopTvShowItem>): List<GetTopTvShowsResponse> =
-        list.map {
+        list.mapIndexed { index, item ->
             GetTopTvShowsResponse(
-                rank = it.rating.rank.value,
-                tmdbId = it.tvShow.tmdbId.value,
-                name = it.tvShow.name.value,
-                firstAirYear = it.tvShow.firstAirYear,
-                posterPath = it.tvShow.posterPath?.value,
-                averageScore = it.rating.score,
-                seasons = it.rating.seasonRatings.map { sr ->
+                rank = index + 1,
+                tmdbId = item.tvShow.tmdbId.value,
+                name = item.tvShow.name.value,
+                firstAirYear = item.tvShow.firstAirYear,
+                posterPath = item.tvShow.posterPath?.value,
+                averageScore = item.rating.score.value,
+                seasons = item.rating.seasonRatings.map { sr ->
                     GetSeasonResponse(
                         seasonNumber = sr.seasonNumber.value,
-                        score = sr.score,
+                        score = sr.score.value,
                         directing = sr.directing.value,
                         cinematography = sr.cinematography.value,
                         acting = sr.acting.value,

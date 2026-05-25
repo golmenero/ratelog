@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="movieDetailModal">
+    <div id="detail-modal-movie" class="search-detail-modal">
+        <div class="search-detail-modal-content">
+            <button class="modal-close" aria-label="Close"><i data-lucide="x"></i></button>
+            <div class="modal-header">
+                <h2 id="movie-modal-title" class="modal-title"></h2>
+                <span id="movie-modal-year" class="modal-year"></span>
+            </div>
+            <div id="movie-modal-ratings" class="modal-categories"></div>
+            <div id="movie-modal-actions" class="detail-modal-actions"></div>
+        </div>
+    </div>
+
+    <script>
+        const movieModal = document.getElementById('detail-modal-movie');
+
+        function populateMovieModal(card) {
+            document.getElementById('movie-modal-title').textContent = card.dataset.title;
+            document.getElementById('movie-modal-year').textContent = card.dataset.year || 'Unknown year';
+
+            const ratingsContainer = document.getElementById('movie-modal-ratings');
+            ratingsContainer.innerHTML = '';
+            const ratingData = card.dataset.movieRating;
+            if (ratingData) {
+                const [dir, cam, act, snd, scr, sc] = ratingData.split(',').map(Number);
+                const cats = [
+                    { icon: 'clapperboard', label: 'Directing', value: dir },
+                    { icon: 'camera', label: 'Cinematography', value: cam },
+                    { icon: 'hat-glasses', label: 'Acting', value: act },
+                    { icon: 'music', label: 'Soundtrack', value: snd },
+                    { icon: 'file-text', label: 'Screenplay', value: scr }
+                ];
+                cats.forEach(c => {
+                    const row = document.createElement('div');
+                    row.className = 'modal-category-row';
+                    row.innerHTML = `
+                        <span class="modal-category-label"><i data-lucide="${c.icon}"></i> ${c.label}</span>
+                        <span class="modal-category-value">${c.value.toFixed(2)}</span>`;
+                    ratingsContainer.appendChild(row);
+                });
+            }
+
+            const actions = document.getElementById('movie-modal-actions');
+            actions.innerHTML = '';
+            if (card.dataset.canRate === 'true') {
+                const a = document.createElement('a');
+                a.href = '/movie/rate?id=' + card.dataset.tmdbId;
+                a.className = 'raterr-btn';
+                a.innerHTML = '<i data-lucide="star"></i>';
+                actions.appendChild(a);
+            }
+            if (card.dataset.canFollow === 'true') {
+                const f = document.createElement('form');
+                f.action = '/movie/follow'; f.method = 'post'; f.style.display = 'inline';
+                f.innerHTML = `<input type="hidden" name="tmdbId" value="${card.dataset.tmdbId}" />
+                    <input type="hidden" name="q" value="${card.dataset.query}" />
+                    <button type="submit" class="raterr-btn ${card.dataset.isFollowed === 'true' ? 'green' : ''}"><i data-lucide="heart"></i></button>`;
+                actions.appendChild(f);
+            }
+        }
+
+        movieModal.addEventListener('click', (e) => {
+            if (e.target === movieModal || e.target.closest('.modal-close')) movieModal.classList.remove('visible');
+        });
+    </script>
+</th:block>
+
+</body>
+</html>
