@@ -1,6 +1,7 @@
 package org.raterr.movie
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.CrudRepository
@@ -21,7 +22,23 @@ data class MovieEntity(
     val genres: String?
 )
 
+@Table("movie_follows")
+data class MovieFollowEntity(
+    @Id val id: Long? = null,
+    @Column("user_id") val userId: Long,
+    @Column("movie_id") val movieId: Long,
+    @Column("created_at_epoch_ms") val createdAtEpochMs: Long = System.currentTimeMillis()
+)
+
 @Repository
 interface MovieDAO : CrudRepository<MovieEntity, Long> {
     fun findByTmdbId(tmdbId: Int): Optional<MovieEntity>
+}
+
+@Repository
+interface MovieFollowDAO : CrudRepository<MovieFollowEntity, Long> {
+    fun findByUserIdAndMovieId(userId: Long, movieId: Long): Optional<MovieFollowEntity>
+
+    @Query("SELECT mf.movie_id FROM movie_follows mf WHERE mf.user_id = :userId")
+    fun findFollowedMovieIds(userId: Long): List<Long>
 }

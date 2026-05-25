@@ -5,7 +5,7 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.raterr.Score
 import org.raterr.TmdbId
-import org.raterr.movie.follow.MovieFollowRepository
+import org.raterr.movie.MovieRepository
 import org.raterr.movie.get.GetMovie
 import org.raterr.movie.get.GetMovieHandler
 import org.raterr.movie.rating.Rating
@@ -30,7 +30,7 @@ data class AddRating(
 class AddRatingHandler(
     private val getMovieHandler: GetMovieHandler,
     private val ratingRepository: RatingRepository,
-    private val movieFollowRepository: MovieFollowRepository,
+    private val movieRepository: MovieRepository,
     private val rankRatingHandler: RankRatingHandler,
 ) {
     fun handle(command: AddRating): Either<AddRatingHandlerError, Unit> = either {
@@ -67,9 +67,8 @@ class AddRatingHandler(
 
         command.userId.let(::RankRating).let(rankRatingHandler::handle)
 
-        movieFollowRepository.findByUserIdAndMovieId(
-            command.userId.value,
-            movie.id.value
-        ).ifPresent(movieFollowRepository::delete)
+        if (movie.followed) {
+            movie.toggleFollow(System.currentTimeMillis()).let(movieRepository::save)
+        }
     }
 }

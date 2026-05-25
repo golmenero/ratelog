@@ -5,7 +5,7 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.raterr.Score
 import org.raterr.TmdbId
-import org.raterr.tvshow.follow.TvFollowRepository
+import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvshow.get.GetTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
 import org.raterr.tvshow.rating.TvRating
@@ -30,7 +30,7 @@ data class AddTvRating(
 class AddTvRatingHandler(
     private val getTvShowHandler: GetTvShowHandler,
     private val tvRatingRepository: TvRatingRepository,
-    private val tvFollowRepository: TvFollowRepository,
+    private val tvShowRepository: TvShowRepository,
     private val rankTvRatingHandler: RankTvRatingHandler,
 ) {
     fun handle(command: AddTvRating): Either<AddTvRatingHandlerError, Unit> = either {
@@ -67,9 +67,8 @@ class AddTvRatingHandler(
 
         command.userId.let(::RankTvRating).let(rankTvRatingHandler::handle)
 
-        tvFollowRepository.findByUserIdAndTvShowId(
-            command.userId.value,
-            show.id.value
-        ).ifPresent(tvFollowRepository::delete)
+        if (show.followed) {
+            show.toggleFollow(System.currentTimeMillis()).let(tvShowRepository::save)
+        }
     }
 }
