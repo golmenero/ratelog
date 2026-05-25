@@ -55,9 +55,15 @@
                             <a th:if="${item.type == 'tvshow' && item.canRate}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="raterr-btn">
                                 <i data-lucide="star"></i>
                             </a>
-                            <form th:if="${item.canFollow}" th:action="@{/follow}" method="post" style="display: inline;">
-                                <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
-                                <input type="hidden" name="type" th:value="${item.type}" />
+                            <form th:if="${item.type == 'movie' && item.canFollow}" th:action="@{/movie/follow}" method="post" style="display: inline;">
+                                <input type="hidden" name="movieId" th:value="${item.movieId}" />
+                                <input type="hidden" name="q" th:value="${query}" />
+                                <button type="submit" th:class="${item.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
+                                    <i data-lucide="heart"></i>
+                                </button>
+                            </form>
+                            <form th:if="${item.type == 'tvshow' && item.canFollow}" th:action="@{/tvshow/follow}" method="post" style="display: inline;">
+                                <input type="hidden" name="tvShowId" th:value="${item.tvShowId}" />
                                 <input type="hidden" name="q" th:value="${query}" />
                                 <button type="submit" th:class="${item.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
                                     <i data-lucide="heart"></i>

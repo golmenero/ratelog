@@ -21,6 +21,8 @@ data class SearchQuery(
 
 data class SearchResultItem(
     val tmdbId: Int,
+    val movieId: Long? = null,
+    val tvShowId: Long? = null,
     val title: String,
     val overview: String?,
     val year: Int?,
@@ -74,6 +76,7 @@ class SearchHandler(
 
                 SearchResultItem(
                     tmdbId = tmdbMovie.id,
+                    movieId = movie?.id?.value,
                     title = tmdbMovie.title,
                     overview = tmdbMovie.overview,
                     year = tmdbMovie.releaseDate?.take(4)?.toIntOrNull(),
@@ -102,6 +105,7 @@ class SearchHandler(
 
                 SearchResultItem(
                     tmdbId = tmdbShow.id,
+                    tvShowId = show?.id?.value,
                     title = tmdbShow.name,
                     overview = tmdbShow.overview,
                     year = tmdbShow.firstAirDate?.take(4)?.toIntOrNull(),

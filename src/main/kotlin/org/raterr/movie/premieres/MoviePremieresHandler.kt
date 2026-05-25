@@ -13,6 +13,7 @@ import java.time.LocalDate
 data class MoviePremieresQuery(val userId: User.Id)
 
 data class MoviePremiereItem(
+    val movieId: Long,
     val tmdbId: Int,
     val title: String,
     val releaseDate: LocalDate,
@@ -50,6 +51,7 @@ class MoviePremieresHandler(
             if (!tmdbMovie.releaseDate.isNullOrBlank()) {
                 val date = LocalDate.parse(tmdbMovie.releaseDate)
                 val item = MoviePremiereItem(
+                    movieId = movie.id!!.value,
                     tmdbId = movie.tmdbId.value,
                     title = tmdbMovie.title,
                     releaseDate = date,
@@ -60,6 +62,7 @@ class MoviePremieresHandler(
             } else {
                 noDate.add(
                     MoviePremiereItem(
+                        movieId = movie.id!!.value,
                         tmdbId = movie.tmdbId.value,
                         title = tmdbMovie.title,
                         releaseDate = today,
