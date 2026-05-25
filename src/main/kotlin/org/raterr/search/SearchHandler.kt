@@ -4,13 +4,11 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.MediaType
 import org.raterr.TmdbId
-import org.raterr.movie.follow.MovieFollowRepository
 import org.raterr.movie.MovieRepository
 import org.raterr.movie.rating.RatingRepository
 import org.raterr.tmdb.TmdbClient
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvshow.rating.TvRatingRepository
-import org.raterr.tvshow.follow.TvFollowRepository
 import org.raterr.user.User
 import java.time.LocalDate
 
@@ -21,8 +19,6 @@ data class SearchQuery(
 
 data class SearchResultItem(
     val tmdbId: Int,
-    val movieId: Long? = null,
-    val tvShowId: Long? = null,
     val title: String,
     val overview: String?,
     val year: Int?,
@@ -41,13 +37,11 @@ class SearchHandler(
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
     private val tvRatingRepository: TvRatingRepository,
-    private val movieFollowRepository: MovieFollowRepository,
-    private val tvFollowRepository: TvFollowRepository,
 ) {
     fun handle(query: SearchQuery): Either<SearchHandlerError, List<SearchResultItem>> = either {
         if (query.query.isBlank()) return@either emptyList()
-        val movies = searchMovies(query.query, query.userId).bind().take(6)
-        val shows = searchTvShows(query.query, query.userId).bind().take(6)
+        val movies = searchMovies(query.query).bind().take(6)
+        val shows = searchTvShows(query.query).bind().take(6)
 
         interleave(movies, shows)
     }
@@ -62,57 +56,49 @@ class SearchHandler(
         return result
     }
 
-    private fun searchMovies(query: String, userId: User.Id): Either<SearchHandlerError, List<SearchResultItem>> =
+    private fun searchMovies(query: String): Either<SearchHandlerError, List<SearchResultItem>> =
         either {
             val movies = tmdbClient.searchMovies(query).bind()
 
             movies.map { tmdbMovie ->
                 val movie = tmdbMovie.id.let(::TmdbId).let(movieRepository::findByTmdbId)
                 val rating = movie?.id?.let(ratingRepository::findFirstByMovieId)
-                val isFollowed = movie?.id?.let {
-                    movieFollowRepository.existsByUserIdAndMovieId(userId.value, it.value)
-                } ?: false
                 val isReleased = tmdbMovie.releaseDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
 
                 SearchResultItem(
                     tmdbId = tmdbMovie.id,
-                    movieId = movie?.id?.value,
                     title = tmdbMovie.title,
                     overview = tmdbMovie.overview,
                     year = tmdbMovie.releaseDate?.take(4)?.toIntOrNull(),
                     posterPath = tmdbMovie.posterPath,
                     tmdbVoteAverage = tmdbMovie.voteAverage,
                     type = MediaType.movie.name,
-                    isFollowed = isFollowed,
+                    isFollowed = movie?.followed ?: false,
                     canRate = isReleased,
                     canFollow = rating == null
                 )
             }
         }
 
-    private fun searchTvShows(query: String, userId: User.Id): Either<SearchHandlerError,List<SearchResultItem>> =
+    private fun searchTvShows(query: String): Either<SearchHandlerError,List<SearchResultItem>> =
         either {
             val tvshows = tmdbClient.searchTvShows(query).bind()
 
             tvshows.map { tmdbShow ->
                 val show = tmdbShow.id.let(::TmdbId).let(tvShowRepository::findByTmdbId)
                 val rating = show?.id?.let(tvRatingRepository::findFirstByTvShowId)
-                val isFollowed = show?.id?.let {
-                    tvFollowRepository.existsByUserIdAndTvShowId(userId.value, it.value)
-                } ?: false
                 val isReleased = tmdbShow.firstAirDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
 
 
                 SearchResultItem(
                     tmdbId = tmdbShow.id,
-                    tvShowId = show?.id?.value,
                     title = tmdbShow.name,
                     overview = tmdbShow.overview,
                     year = tmdbShow.firstAirDate?.take(4)?.toIntOrNull(),
                     posterPath = tmdbShow.posterPath,
                     tmdbVoteAverage = tmdbShow.voteAverage,
                     type = MediaType.tvshow.name,
-                    isFollowed = isFollowed,
+                    isFollowed = show?.followed ?: false,
                     canRate = isReleased,
                     canFollow = rating == null
                 )
