@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.raterr.MediaType
-import org.raterr.UserId
+import org.raterr.user.User.Id
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
 import org.raterr.movie.InMemoryMovieRepository
@@ -47,7 +47,7 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(listOf(TmdbTvShow(id = 2, name = "Show", firstAirDate = "2024-01-01")).right())
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -65,7 +65,7 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -82,7 +82,7 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchMovies("test")).thenReturn(emptyList<TmdbMovie>().right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(listOf(TmdbTvShow(id = 2, name = "Show", firstAirDate = "2024-01-01")).right())
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -108,7 +108,7 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchMovies("test")).thenReturn(movies.right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(shows.right())
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -126,7 +126,7 @@ class SearchHandlerTest {
 
     @Test
     fun `blank query returns empty list`() {
-        val result = handler.handle(SearchQuery("", UserId(1)))
+        val result = handler.handle(SearchQuery("", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -141,7 +141,7 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
         followRepository.save(Follow(userId = 1, contentType = MediaType.movie.name, contentTmdbId = 1, createdAtEpochMs = System.currentTimeMillis()))
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -156,7 +156,7 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = futureDate)).right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -170,7 +170,7 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2020-01-01")).right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -198,7 +198,7 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -213,26 +213,12 @@ class SearchHandlerTest {
         whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
         whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
 
-        val result = handler.handle(SearchQuery("test", UserId(1)))
+        val result = handler.handle(SearchQuery("test", Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
             { },
             { assertEquals(true, it[0].canFollow) }
-        )
-    }
-
-    @Test
-    fun `userId null means isFollowed false`() {
-        whenever(tmdbClient.searchMovies("test")).thenReturn(listOf(TmdbMovie(id = 1, title = "Movie", releaseDate = "2024-01-01")).right())
-        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TmdbTvShow>().right())
-
-        val result = handler.handle(SearchQuery("test", null))
-
-        assertTrue(result.isRight())
-        result.fold(
-            { },
-            { assertEquals(false, it[0].isFollowed) }
         )
     }
 }

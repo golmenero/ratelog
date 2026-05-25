@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.raterr.UserId
+import org.raterr.user.User
 import org.raterr.userfollow.InMemoryUserFollowRepository
 import org.raterr.userfollow.UserFollow
 
@@ -27,7 +27,7 @@ class FollowedUsersHandlerTest {
         userFollowRepository.save(UserFollow(followerId = 1, followedId = 2))
         userFollowRepository.save(UserFollow(followerId = 1, followedId = 3))
 
-        val result = handler.handle(FollowedUsersQuery(UserId(1)))
+        val result = handler.handle(FollowedUsersQuery(User.Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -44,7 +44,7 @@ class FollowedUsersHandlerTest {
     fun `returns empty list when user follows nobody`() {
         userFollowRepository.addUser(1, "alice")
 
-        val result = handler.handle(FollowedUsersQuery(UserId(1)))
+        val result = handler.handle(FollowedUsersQuery(User.Id(1)))
 
         assertTrue(result.isRight())
         result.fold(

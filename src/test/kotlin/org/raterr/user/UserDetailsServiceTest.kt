@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.raterr.Email
+import org.raterr.Username
 import org.raterr.user.InMemoryUserRepository
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -24,7 +26,7 @@ class UserDetailsServiceTest {
 
     @Test
     fun `loadUserByUsername success returns UserDetails with ROLE_USER`() {
-        userRepository.save(User(id = 1, username = "testuser", email = "test@example.com", passwordHash = "hashed"))
+        userRepository.save(User(id = User.Id(1), username = Username("testuser"), email = Email("test@example.com"), passwordHash = "hashed"))
 
         val userDetails = service.loadUserByUsername("testuser")
 
@@ -43,14 +45,14 @@ class UserDetailsServiceTest {
 
     @Test
     fun `getCurrentUser success returns current user`() {
-        userRepository.save(User(id = 1, username = "testuser", email = "test@example.com", passwordHash = "hashed"))
+        userRepository.save(User(id = User.Id(1), username = Username("testuser"), email = Email("test@example.com"), passwordHash = "hashed"))
         val auth = UsernamePasswordAuthenticationToken("testuser", null, listOf(SimpleGrantedAuthority("ROLE_USER")))
         SecurityContextHolder.getContext().authentication = auth
 
         val result = service.getCurrentUser()
 
         assertNotNull(result)
-        assertEquals("testuser", result?.username)
+        assertEquals("testuser", result?.username?.value)
         SecurityContextHolder.clearContext()
     }
 

@@ -41,7 +41,7 @@ class ToggleFollowHandlerTest {
             )
         )
 
-        handler.handle(ToggleFollow(TmdbId(100), UserId(1), MediaType.movie))
+        handler.handle(ToggleFollow(TmdbId(100), User.Id(1), MediaType.movie))
 
         val follows = followRepository.findByUserId(1)
         Assertions.assertTrue(follows.isEmpty())
@@ -49,8 +49,8 @@ class ToggleFollowHandlerTest {
 
     @Test
     fun `toggle twice results in no follow`() {
-        handler.handle(ToggleFollow(TmdbId(200), UserId(1), MediaType.tvshow))
-        handler.handle(ToggleFollow(TmdbId(200), UserId(1), MediaType.tvshow))
+        handler.handle(ToggleFollow(TmdbId(200), User.Id(1), MediaType.tvshow))
+        handler.handle(ToggleFollow(TmdbId(200), User.Id(1), MediaType.tvshow))
 
         val follows = followRepository.findByUserId(1)
         Assertions.assertTrue(follows.isEmpty())

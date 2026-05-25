@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.raterr.Genre
-import org.raterr.UserId
+import org.raterr.user.User.Id
 import org.raterr.tvrating.InMemoryTvRatingRepository
 import org.raterr.tvrating.TvRating
 import org.raterr.tvshow.top.TopTvShow
@@ -51,7 +51,7 @@ class TopTvShowHandlerTest {
             )
         )
 
-        val result = handler.handle(TopTvShow(UserId(1), null, 10, null))
+        val result = handler.handle(TopTvShow(Id(1), null, 10, null))
 
         assertEquals(2, result.size)
         assertEquals(1, result[0].rating.rank)
@@ -101,7 +101,7 @@ class TopTvShowHandlerTest {
             )
         )
 
-        val result = handler.handle(TopTvShow(UserId(1), "Drama", 10, null))
+        val result = handler.handle(TopTvShow(Id(1), "Drama", 10, null))
 
         assertEquals(2, result.size)
         assertEquals(1, result[0].rating.rank)
@@ -124,7 +124,7 @@ class TopTvShowHandlerTest {
             )
         )
 
-        val result = handler.handle(TopTvShow(UserId(1), null, 10, "Breaking"))
+        val result = handler.handle(TopTvShow(Id(1), null, 10, "Breaking"))
 
         assertEquals(1, result.size)
         assertEquals(1, result[0].rating.rank)
@@ -132,14 +132,14 @@ class TopTvShowHandlerTest {
 
     @Test
     fun `limits results`() {
-        val result = handler.handle(TopTvShow(UserId(1), null, 3, null))
+        val result = handler.handle(TopTvShow(Id(1), null, 3, null))
 
         assertEquals(0, result.size)
     }
 
     @Test
     fun `empty returns empty list`() {
-        val result = handler.handle(TopTvShow(UserId(1), null, 10, null))
+        val result = handler.handle(TopTvShow(Id(1), null, 10, null))
 
         assertEquals(0, result.size)
     }

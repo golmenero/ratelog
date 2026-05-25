@@ -4,7 +4,7 @@ import arrow.core.Either
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.raterr.TmdbId
-import org.raterr.UserId
+import org.raterr.user.User.Id
 import org.raterr.tvshow.InMemoryTvShowRepository
 import org.raterr.tvrating.InMemoryTvRatingRepository
 import org.raterr.tvrating.delete.DeleteTvRating
@@ -43,14 +43,14 @@ class DeleteTvRatingHandlerTest {
             )
         )
 
-        val result = handler.handle(DeleteTvRating(TmdbId(200), UserId(1)))
+        val result = handler.handle(DeleteTvRating(TmdbId(200), Id(1)))
 
         assertTrue(result.isRight())
     }
 
     @Test
     fun `tvshow not found returns TvShowNotFound`() {
-        val result = handler.handle(DeleteTvRating(TmdbId(200), UserId(1)))
+        val result = handler.handle(DeleteTvRating(TmdbId(200), Id(1)))
 
         assertTrue(result.isLeft())
         assertTrue((result as Either.Left).value is DeleteTvRatingHandlerError.TvShowNotFound)
@@ -60,7 +60,7 @@ class DeleteTvRatingHandlerTest {
     fun `rating not found returns RatingNotFound`() {
         tvShowRepository.save(aTvShow(tmdbId = 200, name = "Show"))
 
-        val result = handler.handle(DeleteTvRating(TmdbId(200), UserId(1)))
+        val result = handler.handle(DeleteTvRating(TmdbId(200), Id(1)))
 
         assertTrue(result.isLeft())
         assertTrue((result as Either.Left).value is DeleteTvRatingHandlerError.RatingNotFound)

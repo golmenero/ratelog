@@ -4,7 +4,7 @@ import arrow.core.Either
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.raterr.TmdbId
-import org.raterr.UserId
+import org.raterr.user.User.Id
 import org.raterr.rating.delete.DeleteRating
 import org.raterr.rating.delete.DeleteRatingHandler
 import org.raterr.rating.delete.DeleteRatingHandlerError
@@ -41,14 +41,14 @@ class DeleteRatingHandlerTest {
             )
         )
 
-        val result = handler.handle(DeleteRating(TmdbId(100), UserId(1)))
+        val result = handler.handle(DeleteRating(TmdbId(100), Id(1)))
 
         assertTrue(result.isRight())
     }
 
     @Test
     fun `movie not found returns MovieNotFound`() {
-        val result = handler.handle(DeleteRating(TmdbId(100), UserId(1)))
+        val result = handler.handle(DeleteRating(TmdbId(100), Id(1)))
 
         assertTrue(result.isLeft())
         assertTrue((result as Either.Left).value is DeleteRatingHandlerError.MovieNotFound)
@@ -58,7 +58,7 @@ class DeleteRatingHandlerTest {
     fun `rating not found returns RatingNotFound`() {
         movieRepository.save(aMovie(tmdbId = 100, title = "Movie"))
 
-        val result = handler.handle(DeleteRating(TmdbId(100), UserId(1)))
+        val result = handler.handle(DeleteRating(TmdbId(100), Id(1)))
 
         assertTrue(result.isLeft())
         assertTrue((result as Either.Left).value is DeleteRatingHandlerError.RatingNotFound)

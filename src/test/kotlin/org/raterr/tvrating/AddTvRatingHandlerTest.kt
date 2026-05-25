@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.raterr.TmdbId
-import org.raterr.UserId
+import org.raterr.user.User.Id
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
 import org.raterr.tmdb.TmdbClient
@@ -51,7 +51,7 @@ class AddTvRatingHandlerTest {
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 5.0,
                 cinematography = 6.0,
                 acting = 7.0,
@@ -71,7 +71,7 @@ class AddTvRatingHandlerTest {
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 0.9,
                 cinematography = 5.0,
                 acting = 5.0,
@@ -94,7 +94,7 @@ class AddTvRatingHandlerTest {
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 5.0,
                 cinematography = 10.1,
                 acting = 5.0,
@@ -117,7 +117,7 @@ class AddTvRatingHandlerTest {
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 5.0,
                 cinematography = 5.0,
                 acting = 0.0,
@@ -140,7 +140,7 @@ class AddTvRatingHandlerTest {
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 1.0,
                 cinematography = 1.0,
                 acting = 1.0,
@@ -159,7 +159,7 @@ class AddTvRatingHandlerTest {
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 10.0,
                 cinematography = 10.0,
                 acting = 10.0,
@@ -192,7 +192,7 @@ class AddTvRatingHandlerTest {
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 5.0,
                 cinematography = 5.0,
                 acting = 5.0,
@@ -217,7 +217,7 @@ class AddTvRatingHandlerTest {
         val result = handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 5.0,
                 cinematography = 5.0,
                 acting = 5.0,
@@ -248,7 +248,7 @@ class AddTvRatingHandlerTest {
         handler.handle(
             AddTvRating(
                 tmdbId = TmdbId(200),
-                userId = UserId(1),
+                userId = Id(1),
                 directing = 5.0,
                 cinematography = 5.0,
                 acting = 5.0,

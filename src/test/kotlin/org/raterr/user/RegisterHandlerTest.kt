@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.raterr.Email
+import org.raterr.Password
+import org.raterr.Username
 import org.raterr.rating.InMemoryRatingRepository
 import org.raterr.rating.Rating
 import org.raterr.user.register.RegisterHandler
@@ -27,14 +30,14 @@ class RegisterHandlerTest {
 
     @Test
     fun `happy path returns Right`() {
-        val result = handler.handle(RegisterUser("testuser", "test@example.com", "password123"))
+        val result = handler.handle(RegisterUser(Username("testuser"), Email("test@example.com"), Password("password123")))
 
         assertTrue(result.isRight())
     }
 
     @Test
     fun `blank username returns EmptyFields`() {
-        val result = handler.handle(RegisterUser("", "test@example.com", "password123"))
+        val result = handler.handle(RegisterUser(Username(""), Email("test@example.com"), Password("password123")))
 
         assertTrue(result.isLeft())
         result.fold(
@@ -45,7 +48,8 @@ class RegisterHandlerTest {
 
     @Test
     fun `blank email returns EmptyFields`() {
-        val result = handler.handle(RegisterUser("testuser", "", "password123"))
+        val result = handler.handle(RegisterUser(
+            Username("testuser"), Email(""), Password("password123")))
 
         assertTrue(result.isLeft())
         result.fold(
@@ -56,7 +60,7 @@ class RegisterHandlerTest {
 
     @Test
     fun `blank password returns EmptyFields`() {
-        val result = handler.handle(RegisterUser("testuser", "test@example.com", ""))
+        val result = handler.handle(RegisterUser(Username("testuser"), Email("test@example.com"), Password("")))
 
         assertTrue(result.isLeft())
         result.fold(
@@ -67,7 +71,7 @@ class RegisterHandlerTest {
 
     @Test
     fun `username too short returns InvalidUsernameLength`() {
-        val result = handler.handle(RegisterUser("ab", "test@example.com", "password123"))
+        val result = handler.handle(RegisterUser(Username("ab"), Email("test@example.com"), Password("password123")))
 
         assertTrue(result.isLeft())
         result.fold(
@@ -78,7 +82,7 @@ class RegisterHandlerTest {
 
     @Test
     fun `username too long returns InvalidUsernameLength`() {
-        val result = handler.handle(RegisterUser("a".repeat(51), "test@example.com", "password123"))
+        val result = handler.handle(RegisterUser(Username("a".repeat(51)), Email("test@example.com"), Password("password123")))
 
         assertTrue(result.isLeft())
         result.fold(
@@ -89,7 +93,7 @@ class RegisterHandlerTest {
 
     @Test
     fun `password too short returns InvalidPasswordLength`() {
-        val result = handler.handle(RegisterUser("testuser", "test@example.com", "1234567"))
+        val result = handler.handle(RegisterUser(Username("testuser"), Email("test@example.com"), Password("1234567")))
 
         assertTrue(result.isLeft())
         result.fold(
@@ -100,9 +104,9 @@ class RegisterHandlerTest {
 
     @Test
     fun `duplicate username returns UsernameAlreadyExists`() {
-        userRepository.save(User(username = "testuser", email = "test@example.com", passwordHash = "hashed"))
+        userRepository.save(User(id = null, username = Username("testuser"), email = Email("test@example.com"), passwordHash = "hashed"))
 
-        val result = handler.handle(RegisterUser("testuser", "other@example.com", "password123"))
+        val result = handler.handle(RegisterUser(Username("testuser"), Email("other@example.com"), Password("password123")))
 
         assertTrue(result.isLeft())
         result.fold(
@@ -113,9 +117,9 @@ class RegisterHandlerTest {
 
     @Test
     fun `duplicate email returns EmailAlreadyExists`() {
-        userRepository.save(User(username = "otheruser", email = "test@example.com", passwordHash = "hashed"))
+        userRepository.save(User(id = null, username =Username( "otheruser"), email = Email("test@example.com"), passwordHash = "hashed"))
 
-        val result = handler.handle(RegisterUser("testuser", "test@example.com", "password123"))
+        val result = handler.handle(RegisterUser(Username("testuser"), Email("test@example.com"), Password("password123")))
 
         assertTrue(result.isLeft())
         result.fold(
@@ -140,12 +144,12 @@ class RegisterHandlerTest {
             )
         )
 
-        handler.handle(RegisterUser("testuser", "test@example.com", "password123"))
+        handler.handle(RegisterUser(Username("testuser"), Email("test@example.com"), Password("password123")))
 
-        val savedUser = userRepository.findByUsername("testuser").get()
-        val migratedRatings = ratingRepository.findByUserId(savedUser.id!!)
+        val savedUser = userRepository.findByUsername(Username("testuser"))
+        val migratedRatings = ratingRepository.findByUserId(savedUser!!.id!!.value)
         assertEquals(1, migratedRatings.size)
-        assertEquals(savedUser.id, migratedRatings[0].userId)
+        assertEquals(savedUser.id.value, migratedRatings[0].userId)
     }
 }
 

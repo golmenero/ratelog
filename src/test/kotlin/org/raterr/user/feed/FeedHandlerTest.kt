@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.raterr.UserId
+import org.raterr.user.User.Id
 import org.raterr.movie.InMemoryMovieRepository
 import org.raterr.movie.Movie
 import org.raterr.movie.aMovie
@@ -46,7 +46,7 @@ class FeedHandlerTest {
 
     @Test
     fun `returns empty list when user follows nobody`() {
-        val result = handler.handle(FeedQuery(UserId(1)))
+        val result = handler.handle(FeedQuery(Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -66,7 +66,7 @@ class FeedHandlerTest {
             Rating(movieId = movie.id!!.value, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = now)
         )
 
-        val result = handler.handle(FeedQuery(UserId(1)))
+        val result = handler.handle(FeedQuery(Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -91,7 +91,7 @@ class FeedHandlerTest {
             TvRating(tvShowId = show.id!!.value, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = now)
         )
 
-        val result = handler.handle(FeedQuery(UserId(1)))
+        val result = handler.handle(FeedQuery(Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -117,7 +117,7 @@ class FeedHandlerTest {
             Rating(movieId = movie.id!!.value, userId = 2, directing = 8.0, cinematography = 7.0, acting = 9.0, soundtrack = 6.0, screenplay = 8.0, createdAtEpochMs = oldDate)
         )
 
-        val result = handler.handle(FeedQuery(UserId(1)))
+        val result = handler.handle(FeedQuery(Id(1)))
 
         assertTrue(result.isRight())
         result.fold(
@@ -146,7 +146,7 @@ class FeedHandlerTest {
             Rating(movieId = movie2.id!!.value, userId = 3, directing = 7.0, cinematography = 8.0, acting = 7.0, soundtrack = 7.0, screenplay = 7.0, createdAtEpochMs = now)
         )
 
-        val result = handler.handle(FeedQuery(UserId(1)))
+        val result = handler.handle(FeedQuery(Id(1)))
 
         assertTrue(result.isRight())
         result.fold(

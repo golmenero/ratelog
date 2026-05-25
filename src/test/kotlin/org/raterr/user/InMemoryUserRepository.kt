@@ -1,5 +1,7 @@
 package org.raterr.user
 
+import org.raterr.Email
+import org.raterr.Username
 import java.util.concurrent.atomic.AtomicLong
 
 class InMemoryUserRepository : UserRepository {
@@ -27,18 +29,18 @@ class InMemoryUserRepository : UserRepository {
     override fun findById(id: User.Id): User? =
         storage.find { it.id == id }
 
-    override fun findByUsername(username: String): User? =
+    override fun findByUsername(username: Username): User? =
         storage.find { it.username == username }
 
-    override fun findByEmail(email: String): User? =
+    override fun findByEmail(email: Email): User? =
         storage.find { it.email == email }
 
-    override fun existsByUsername(username: String): Boolean =
+    override fun existsByUsername(username: Username): Boolean =
         storage.any { it.username == username }
 
-    override fun existsByEmail(email: String): Boolean =
+    override fun existsByEmail(email: Email): Boolean =
         storage.any { it.email == email }
 
-    override fun findByUsernameContaining(username: String): List<User> =
-        storage.filter { it.username.contains(username, ignoreCase = true) }
+    override fun findByUsernameContaining(username: Username): List<User> =
+        storage.filter { it.username.value.contains(username.value, ignoreCase = true) }
 }

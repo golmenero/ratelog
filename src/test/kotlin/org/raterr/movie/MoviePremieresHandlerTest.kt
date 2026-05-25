@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.raterr.UserId
+import org.raterr.user.User.Id
 import org.raterr.follow.Follow
 import org.raterr.follow.InMemoryFollowRepository
 import org.raterr.movie.premieres.MoviePremieresHandler
@@ -32,7 +32,7 @@ class MoviePremieresHandlerTest {
     fun `returns empty premieres when no follows`() {
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
-        val result = handler.handle(MoviePremieresQuery(UserId(1)))
+        val result = handler.handle(MoviePremieresQuery(Id(1)))
 
         Assertions.assertTrue(result.isRight())
         result.fold(
@@ -65,7 +65,7 @@ class MoviePremieresHandlerTest {
         )
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
-        val result = handler.handle(MoviePremieresQuery(UserId(1)))
+        val result = handler.handle(MoviePremieresQuery(Id(1)))
 
         Assertions.assertTrue(result.isRight())
         result.fold(
@@ -97,7 +97,7 @@ class MoviePremieresHandlerTest {
         )
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
-        val result = handler.handle(MoviePremieresQuery(UserId(1)))
+        val result = handler.handle(MoviePremieresQuery(Id(1)))
 
         Assertions.assertTrue(result.isRight())
         result.fold(
@@ -123,7 +123,7 @@ class MoviePremieresHandlerTest {
         )
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
-        val result = handler.handle(MoviePremieresQuery(UserId(1)))
+        val result = handler.handle(MoviePremieresQuery(Id(1)))
 
         Assertions.assertTrue(result.isRight())
         result.fold(
@@ -148,7 +148,7 @@ class MoviePremieresHandlerTest {
         )
         handler = MoviePremieresHandler(tmdbClient, followRepository)
 
-        val result = handler.handle(MoviePremieresQuery(UserId(1)))
+        val result = handler.handle(MoviePremieresQuery(Id(1)))
 
         Assertions.assertTrue(result.isRight())
         result.fold(

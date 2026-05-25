@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.raterr.Genre
-import org.raterr.UserId
+import org.raterr.user.User.Id
 import org.raterr.movie.top.TopMovie
 import org.raterr.movie.top.TopMovieHandler
 import org.raterr.rating.Rating
@@ -52,7 +52,7 @@ class TopMovieHandlerTest {
             )
         )
 
-        val result = handler.handle(TopMovie(UserId(1), null, 10, null))
+        val result = handler.handle(TopMovie(Id(1), null, 10, null))
 
         assertEquals(2, result.size)
         assertEquals(1, result[0].rating.rank)
@@ -102,7 +102,7 @@ class TopMovieHandlerTest {
             )
         )
 
-        val result = handler.handle(TopMovie(UserId(1), "Action", 10, null))
+        val result = handler.handle(TopMovie(Id(1), "Action", 10, null))
 
         assertEquals(2, result.size)
         assertEquals(1, result[0].rating.rank)
@@ -125,7 +125,7 @@ class TopMovieHandlerTest {
             )
         )
 
-        val result = handler.handle(TopMovie(UserId(1), null, 10, "Matrix"))
+        val result = handler.handle(TopMovie(Id(1), null, 10, "Matrix"))
 
         assertEquals(1, result.size)
         assertEquals(1, result[0].rating.rank)
@@ -133,14 +133,14 @@ class TopMovieHandlerTest {
 
     @Test
     fun `limits results`() {
-        val result = handler.handle(TopMovie(UserId(1), null, 3, null))
+        val result = handler.handle(TopMovie(Id(1), null, 3, null))
 
         assertEquals(0, result.size)
     }
 
     @Test
     fun `empty returns empty list`() {
-        val result = handler.handle(TopMovie(UserId(1), null, 10, null))
+        val result = handler.handle(TopMovie(Id(1), null, 10, null))
 
         assertEquals(0, result.size)
     }
