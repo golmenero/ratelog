@@ -40,6 +40,18 @@
   max-width: 100%;
   margin-bottom: 14px;
   font-family: var(--font-serif);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.hero-year {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: var(--text-soft);
+  font-weight: 500;
+  opacity: 0.5;
+  font-family: var(--font-ui);
+  letter-spacing: -0.02em;
 }
 
 .hero-description {

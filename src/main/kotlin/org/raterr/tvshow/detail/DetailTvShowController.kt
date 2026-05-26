@@ -15,6 +15,7 @@ data class TvShowDetailResponse(
     val firstAirYear: Int?,
     val posterPath: String?,
     val tmdbVoteAverage: Double?,
+    val genres: List<String>,
     val seasons: List<SeasonResponse>,
     val overallScore: Double?,
     val isFollowed: Boolean,
@@ -67,6 +68,7 @@ class DetailTvShowController(
             firstAirYear = result.show.firstAirYear,
             posterPath = result.show.posterPath?.value,
             tmdbVoteAverage = result.show.tmdbVoteAverage,
+            genres = result.show.genres.map { it.value },
             seasons = result.seasons.map { s ->
                 SeasonResponse(
                     seasonNumber = s.seasonNumber,

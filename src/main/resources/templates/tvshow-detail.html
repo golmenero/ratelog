@@ -15,7 +15,10 @@
         <section class="hero-card">
             <div class="hero-content">
                 <div>
-                    <h1 class="hero-title" id="title" th:text="${show != null} ? ${show.name} : 'TV show not found'">Loading TV show...</h1>
+                    <h1 class="hero-title" id="title">
+                        <span th:text="${show != null} ? ${show.name} : 'TV show not found'">Loading TV show...</span>
+                        <span th:if="${show != null && show.firstAirYear != null}" class="hero-year" th:text="${show.firstAirYear}">Year</span>
+                    </h1>
                 </div>
             </div>
         </section>
@@ -26,11 +29,10 @@
                 <div th:unless="${show.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(show.name, 0, 1))}">?</div>
             </div>
             <div class="show-detail-body">
-                <div class="tag-row" id="showTags">
-                    <span class="tag" th:text="${show.firstAirYear != null} ? ${show.firstAirYear} : 'Unknown year'">Year</span>
-                    <span class="tag">TMDB: <span th:text="${show.tmdbVoteAverage != null} ? ${show.tmdbVoteAverage} : '&#8212;'">0</span></span>
-                </div>
                 <p class="show-detail-overview muted" id="showOverview" th:text="${show.overview != null and show.overview.trim().length() > 0} ? ${show.overview} : 'No synopsis available for this title.'">Loading TV show information.</p>
+                <div th:if="${!#lists.isEmpty(show.genres)}" class="genre-tags">
+                    <span th:each="genre : ${show.genres}" class="genre-tag" th:text="${genre}">Genre</span>
+                </div>
             </div>
             <div class="show-detail-actions">
                 <form th:action="@{/tvshow/follow}" method="post">
