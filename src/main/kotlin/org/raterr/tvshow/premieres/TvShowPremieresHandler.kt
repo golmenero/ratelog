@@ -11,7 +11,7 @@ import java.time.LocalDate
 data class TvShowPremieresQuery(val userId: User.Id)
 
 data class TvShowPremiereItem(
-    val tmdbId: Int,
+    val id: Long,
     val name: String,
     val releaseDate: LocalDate,
     val posterPath: String?,
@@ -44,7 +44,7 @@ class TvShowPremieresHandler(
             if (!tmdbShow.firstAirDate.isNullOrBlank()) {
                 val date = LocalDate.parse(tmdbShow.firstAirDate)
                 val item = TvShowPremiereItem(
-                    tmdbId = show.tmdbId.value,
+                    id = show.id!!.value,
                     name = tmdbShow.name,
                     releaseDate = date,
                     posterPath = tmdbShow.posterPath,
@@ -54,7 +54,7 @@ class TvShowPremieresHandler(
             } else {
                 noDate.add(
                     TvShowPremiereItem(
-                        tmdbId = show.tmdbId.value,
+                        id = show.id!!.value,
                         name = tmdbShow.name,
                         releaseDate = today,
                         posterPath = tmdbShow.posterPath,

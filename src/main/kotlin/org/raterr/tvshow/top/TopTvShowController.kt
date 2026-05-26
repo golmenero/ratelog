@@ -14,6 +14,7 @@ import kotlin.collections.map
 data class GetTopTvShowsResponse(
     val rank: Int,
     val id: Long,
+    val tmdbId: Int,
     val name: String,
     val firstAirYear: Int?,
     val posterPath: String?,
@@ -75,6 +76,7 @@ class TopTvShowController(
             GetTopTvShowsResponse(
                 rank = index + 1,
                 id = item.tvShow.id!!.value,
+                tmdbId = item.tvShow.tmdbId.value,
                 name = item.tvShow.name.value,
                 firstAirYear = item.tvShow.firstAirYear,
                 posterPath = item.tvShow.posterPath?.value,

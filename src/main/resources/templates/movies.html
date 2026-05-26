@@ -75,7 +75,7 @@
                             <div class="top-header-row">
                                 <span class="top-rank-num" th:text="${m.rank}">#1</span>
                                 <span class="top-title-wrap">
-                                    <a th:href="@{'/movie/' + ${m.id}}" class="top-title" th:text="${m.title}">Title</a>
+                                    <a th:href="@{'/movie/' + ${m.tmdbId}}" class="top-title" th:text="${m.title}">Title</a>
                                     <span class="top-year" th:text="${m.releaseYear != null} ? ${m.releaseYear} : 'Unknown year'">Year</span>
                                 </span>
                             </div>
@@ -121,7 +121,7 @@
                                         <span class="premiere-date premiere-date-released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                                     </div>
                                     <div class="premiere-actions">
-                                        <a th:href="@{'/movie/' + ${item.id}}" class="raterr-btn" title="Rate">
+                                        <a th:href="@{'/movie/' + ${item.tmdbId}}" class="raterr-btn" title="Rate">
                                             <i data-lucide="star"></i>
                                         </a>
                                         <form th:action="@{/movie/follow}" method="post" style="display: inline;">

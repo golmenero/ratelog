@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam
 data class GetTopMoviesResponse(
     val rank: Int,
     val id: Long,
+    val tmdbId: Int,
     val title: String,
     val releaseYear: Int?,
     val posterPath: String?,
@@ -67,6 +68,7 @@ class TopMovieController(
             GetTopMoviesResponse(
                 rank = index + 1,
                 id = item.movie.id!!.value,
+                tmdbId = item.movie.tmdbId.value,
                 title = item.movie.title.value,
                 releaseYear = item.movie.releaseYear,
                 posterPath = item.movie.posterPath?.value,
