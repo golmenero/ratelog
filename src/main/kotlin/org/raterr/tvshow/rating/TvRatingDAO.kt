@@ -1,6 +1,7 @@
 package org.raterr.tvshow.rating
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.CrudRepository
@@ -33,9 +34,22 @@ data class SeasonRatingEntity(
 @Repository
 interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
     fun findFirstByTvShowId(tvShowId: Long): Optional<TvRatingEntity>
-    fun findByTvShowIdAndUserId(tvShowId: Long, userId: Long): List<TvRatingEntity>
-    fun findByUserId(userId: Long): List<TvRatingEntity>
-    fun findByUserIdOrderByScore(userId: Long): List<TvRatingEntity>
+
+    @Query("SELECT r.id FROM tv_ratings r WHERE r.user_id = :userId ORDER BY r.score DESC")
+    fun findRanking(userId: Long): List<Long>
+
+    @Query(
+        """
+        SELECT r.* FROM tv_ratings r
+            INNER JOIN tv_shows t ON r.tv_show_id = t.id
+        WHERE r.user_id = :userId
+            AND (:category IS NULL OR t.genres LIKE CONCAT('%', :category, '%'))
+            AND (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))
+        ORDER BY r.score DESC
+        LIMIT :limit
+        """
+    )
+    fun findRankedByUserIdWithFilters(userId: Long, category: String?, name: String?, limit: Int): List<TvRatingEntity>
 }
 
 @Repository

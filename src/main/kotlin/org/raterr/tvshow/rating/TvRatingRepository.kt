@@ -1,5 +1,6 @@
 ﻿package org.raterr.tvshow.rating
 
+import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.SeasonNumber
 import org.raterr.tvshow.TvShow
@@ -76,8 +77,7 @@ data class SeasonRating(
 @Repository
 interface TvRatingRepository {
     fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating?
-    fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<TvRating>
-    fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating>
+    fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Pair<Rank, TvRating>>
     fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRating>
 
     fun save(rating: TvRating)

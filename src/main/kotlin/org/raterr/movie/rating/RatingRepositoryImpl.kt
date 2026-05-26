@@ -1,5 +1,6 @@
 package org.raterr.movie.rating
 
+import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.movie.Movie
 import org.raterr.user.User
@@ -27,8 +28,13 @@ class RatingRepositoryImpl(
 
     override fun findRankedByUserIdWithFilters(
         userId: User.Id, category: String?, limit: Int, name: String?
-    ): List<Rating> =
-        ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score?.value ?: 0.0 }.take(limit)
+    ): List<Pair<Rank, Rating>> {
+        val ranking = ratingDAO.findRanking(userId.value)
+            .mapIndexed { index, id -> id to Rank(index + 1) }.toMap()
+
+        return ratingDAO.findRankedByUserIdWithFilters(userId.value, category, name, limit)
+            .map { ranking[it.id]!! to it.toDomain() }
+    }
 
     override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating> {
         val sinceEpochMs = since.toEpochMilli()

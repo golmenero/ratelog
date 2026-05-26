@@ -70,9 +70,9 @@ class TopTvShowController(
     }
 
     private fun map(list: List<TopTvShowItem>): List<GetTopTvShowsResponse> =
-        list.mapIndexed { index, item ->
+        list.map { item ->
             GetTopTvShowsResponse(
-                rank = index + 1,
+                rank = item.rank.value,
                 id = item.tvShow.id!!.value,
                 tmdbId = item.tvShow.tmdbId.value,
                 name = item.tvShow.name.value,

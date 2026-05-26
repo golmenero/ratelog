@@ -1,5 +1,6 @@
 package org.raterr.tvshow.top
 
+import org.raterr.Rank
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvshow.rating.TvRating
@@ -15,6 +16,7 @@ data class TopTvShow(
 )
 
 data class TopTvShowItem(
+    val rank: Rank,
     val rating: TvRating,
     val tvShow: TvShow,
 )
@@ -28,8 +30,9 @@ class TopTvShowHandler(
         tvRatingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
             .map(::toItem)
 
-    private fun toItem(tvRating: TvRating) = TopTvShowItem(
-        rating = tvRating,
-        tvShow = tvShowRepository.findById(tvRating.tvShowId)!!
+    private fun toItem(item: Pair<Rank, TvRating>) = TopTvShowItem(
+        rank = item.first,
+        rating = item.second,
+        tvShow = tvShowRepository.findById(item.second.tvShowId)!!
     )
 }

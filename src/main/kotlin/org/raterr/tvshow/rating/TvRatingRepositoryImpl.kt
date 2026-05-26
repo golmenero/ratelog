@@ -1,5 +1,6 @@
 package org.raterr.tvshow.rating
 
+import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.SeasonNumber
 import org.raterr.tvshow.TvShow
@@ -37,11 +38,13 @@ class TvRatingRepositoryImpl(
         category: String?,
         limit: Int,
         name: String?
-    ): List<TvRating> =
-        tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score?.value ?: 0.0 }.take(limit)
+    ): List<Pair<Rank, TvRating>> {
+        val ranking = tvRatingDAO.findRanking(userId.value)
+            .mapIndexed { index, id -> id to Rank(index + 1) }.toMap()
 
-    override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating> =
-        tvRatingDAO.findByUserIdOrderByScore(userId.value).map { it.toDomain() }
+        return tvRatingDAO.findRankedByUserIdWithFilters(userId.value, category, name, limit)
+            .map { ranking[it.id]!! to it.toDomain() }
+    }
 
     override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRating> {
         val sinceEpochMs = since.toEpochMilli()

@@ -1,5 +1,6 @@
 package org.raterr.movie.rating
 
+import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.movie.Movie
 import org.raterr.tvshow.rating.TvRating
@@ -28,7 +29,7 @@ data class Rating(
 interface RatingRepository {
     fun findFirstByMovieId(movieId: Movie.Id): Rating?
     fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Rating?
-    fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Rating>
+    fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Pair<Rank, Rating>>
     fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating>
 
     fun save(rating: Rating)
