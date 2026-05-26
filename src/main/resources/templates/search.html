@@ -35,29 +35,16 @@
             <div th:if="${results != null}" id="results" class="results-grid">
                 <div th:if="${#lists.isEmpty(results)}" class="empty-state">Try with another title, year or original name.</div>
                 
-                <a th:each="item : ${results}" th:if="${item.type == 'movie'}" th:href="@{/movie/{id}(id=${item.tmdbId})}" class="result-card result-card-link">
+                <a th:each="item : ${results}"
+                   th:href="${item.type == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
+                   class="result-card result-card-link">
                     <div class="poster-frame">
                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                         <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                     </div>
                     <div class="result-content">
                         <div class="tag-row result-meta-row">
-                            <span class="tag tag-movie">Movie</span>
-                            <span class="tag" th:text="${item.year != null} ? ${item.year} : 'Unknown year'">Year</span>
-                        </div>
-                        <h3 class="result-title" th:text="${item.title}">Title</h3>
-                        <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : 'No synopsis available right now.'">Overview</p>
-                    </div>
-                </a>
-
-                <a th:each="item : ${results}" th:if="${item.type == 'tvshow'}" th:href="@{/tv/{id}(id=${item.tmdbId})}" class="result-card result-card-link">
-                    <div class="poster-frame">
-                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
-                        <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
-                    </div>
-                    <div class="result-content">
-                        <div class="tag-row result-meta-row">
-                            <span class="tag tag-tvshow">TV</span>
+                            <span th:class="${item.type == 'movie'} ? 'tag tag-movie' : 'tag tag-tvshow'" th:text="${item.type == 'movie'} ? 'Movie' : 'TV'">Type</span>
                             <span class="tag" th:text="${item.year != null} ? ${item.year} : 'Unknown year'">Year</span>
                         </div>
                         <h3 class="result-title" th:text="${item.title}">Title</h3>
