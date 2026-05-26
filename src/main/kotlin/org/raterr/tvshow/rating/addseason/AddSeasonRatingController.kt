@@ -4,6 +4,7 @@ import org.raterr.Score
 import org.raterr.SeasonNumber
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
+import org.raterr.tvshow.TvShow
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,6 +19,7 @@ class AddSeasonRatingController(
     @PostMapping("/tv/rate")
     fun saveRating(
         @CurrentUser user: User,
+        @RequestParam("tvShowId") tvShowId: Long,
         @RequestParam("tmdbId") tmdbId: Int,
         @RequestParam("seasonNumber") seasonNumber: Int,
         @RequestParam("directing") directing: Double,
@@ -28,6 +30,7 @@ class AddSeasonRatingController(
         redirectAttributes: RedirectAttributes
     ): String =
         AddSeasonRating(
+            tvShowId = TvShow.Id(tvShowId),
             tmdbId = TmdbId(tmdbId),
             seasonNumber = seasonNumber.let(::SeasonNumber),
             userId = user.id!!,
@@ -40,13 +43,12 @@ class AddSeasonRatingController(
             .mapLeft(::mapError)
             .fold(
                 {
-                    redirectAttributes.addAttribute("id", tmdbId)
                     redirectAttributes.addFlashAttribute("error", it)
-                    "redirect:/tv/rate"
+                    "redirect:/tv/${tmdbId}"
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
-                    "redirect:/tvshows"
+                    "redirect:/tv/${tmdbId}"
                 }
             )
 

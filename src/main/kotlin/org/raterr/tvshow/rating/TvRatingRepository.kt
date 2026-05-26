@@ -13,7 +13,7 @@ data class TvRating(
     val seasonRatings: List<SeasonRating>,
     val userId: User.Id,
     val createdAt: Instant,
-    val score: Score = Score(0.0),
+    val score: Score? = null,
 ) {
     data class Id(val value: Long)
 

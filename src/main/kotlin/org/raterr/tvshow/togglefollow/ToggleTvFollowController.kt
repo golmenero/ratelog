@@ -1,7 +1,7 @@
 package org.raterr.tvshow.togglefollow
 
-import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
+import org.raterr.tvshow.TvShow
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,11 +15,11 @@ class ToggleTvFollowController(
     @PostMapping("/tvshow/follow")
     fun toggleTvFollow(
         @CurrentUser user: User,
-        @RequestParam("tmdbId") tmdbId: Int,
+        @RequestParam("tvShowId") tvShowId: Long,
         @RequestParam("q", required = false) query: String?
     ): String {
         ToggleTvFollow(
-            tmdbId = TmdbId(tmdbId),
+            tvShowId = TvShow.Id(tvShowId),
             userId = user.id!!,
         ).let(handler::handle)
 

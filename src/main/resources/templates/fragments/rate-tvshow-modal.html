@@ -1,0 +1,76 @@
+<div th:fragment="rateTvShowModal(show)" th:if="${show != null}" id="rateModal" class="rating-modal">
+    <div class="rating-modal-content">
+        <button id="btnCloseModal" class="modal-close">
+            <i data-lucide="x"></i>
+        </button>
+        <div class="modal-header">
+            <h2 class="modal-title" th:text="${show.name}">TV Show Title</h2>
+            <p class="modal-year" th:text="${show.firstAirYear}">Year</p>
+        </div>
+        <form th:action="@{/tv/rate}" method="post" class="modal-categories">
+            <input type="hidden" name="tmdbId" th:value="${show.tmdbId}">
+
+            <div class="modal-slider-row">
+                <label class="modal-slider-label" for="seasonNumber">
+                    <span><i data-lucide="layers"></i>Season</span>
+                </label>
+                <select id="seasonNumber" name="seasonNumber" class="season-select">
+                    <option value="1">Season 1</option>
+                    <option value="2">Season 2</option>
+                    <option value="3">Season 3</option>
+                    <option value="4">Season 4</option>
+                    <option value="5">Season 5</option>
+                    <option value="6">Season 6</option>
+                    <option value="7">Season 7</option>
+                    <option value="8">Season 8</option>
+                    <option value="9">Season 9</option>
+                    <option value="10">Season 10</option>
+                </select>
+            </div>
+
+            <div class="modal-slider-row">
+                <label class="modal-slider-label" for="directing">
+                    <span><i data-lucide="clapperboard"></i>Direction</span>
+                    <span class="modal-slider-value" id="directingValue">5.00</span>
+                </label>
+                <input id="directing" name="directing" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('directingValue').textContent = parseFloat(this.value).toFixed(2)">
+            </div>
+
+            <div class="modal-slider-row">
+                <label class="modal-slider-label" for="cinematography">
+                    <span><i data-lucide="camera"></i>Photography</span>
+                    <span class="modal-slider-value" id="cinematographyValue">5.00</span>
+                </label>
+                <input id="cinematography" name="cinematography" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('cinematographyValue').textContent = parseFloat(this.value).toFixed(2)">
+            </div>
+
+            <div class="modal-slider-row">
+                <label class="modal-slider-label" for="acting">
+                    <span><i data-lucide="hat-glasses"></i>Acting</span>
+                    <span class="modal-slider-value" id="actingValue">5.00</span>
+                </label>
+                <input id="acting" name="acting" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('actingValue').textContent = parseFloat(this.value).toFixed(2)">
+            </div>
+
+            <div class="modal-slider-row">
+                <label class="modal-slider-label" for="soundtrack">
+                    <span><i data-lucide="music"></i>Soundtrack</span>
+                    <span class="modal-slider-value" id="soundtrackValue">5.00</span>
+                </label>
+                <input id="soundtrack" name="soundtrack" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('soundtrackValue').textContent = parseFloat(this.value).toFixed(2)">
+            </div>
+
+            <div class="modal-slider-row">
+                <label class="modal-slider-label" for="screenplay">
+                    <span><i data-lucide="file-text"></i>Script</span>
+                    <span class="modal-slider-value" id="screenplayValue">5.00</span>
+                </label>
+                <input id="screenplay" name="screenplay" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('screenplayValue').textContent = parseFloat(this.value).toFixed(2)">
+            </div>
+
+            <div class="top-actions">
+                <button class="raterr-btn primary" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

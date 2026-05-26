@@ -36,7 +36,7 @@ class AddRatingHandler(
             ensure(value in 1.0..10.0) { AddRatingHandlerError.InvalidRatingValue }
         }
 
-        val existingRating = ratingRepository.findByMovieIdAndUserId(command.movieId, command.userId).firstOrNull()
+        val existingRating = ratingRepository.findByMovieIdAndUserId(command.movieId, command.userId)
         ensure(existingRating == null) { AddRatingHandlerError.RatingAlreadyExists }
 
         Rating(

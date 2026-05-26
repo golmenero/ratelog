@@ -7,6 +7,7 @@ import org.raterr.TmdbId
 import org.raterr.movie.Movie
 import org.raterr.movie.MovieRepository
 import org.raterr.movie.rating.RatingRepository
+import org.raterr.tvshow.rating.deleteseason.DeleteSeasonRatingHandlerError
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 
@@ -25,7 +26,9 @@ class DeleteRatingHandler(
 
         ensure(movie != null && movie.id != null) { DeleteRatingHandlerError.MovieNotFound }
 
-        val deletedCount = ratingRepository.deleteByMovieIdAndUserId(movie.id, command.userId)
-        ensure(deletedCount > 0) { DeleteRatingHandlerError.RatingNotFound }
+        val rating = ratingRepository.findFirstByMovieId(movie.id) ?:
+        raise(DeleteRatingHandlerError.RatingNotFound)
+
+        ratingRepository.deleteById(rating.id!!)
     }
 }

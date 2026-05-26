@@ -41,7 +41,7 @@ class TvRatingRepositoryImpl(
         limit: Int,
         name: String?
     ): List<TvRating> =
-        tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score.value }.take(limit)
+        tvRatingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score?.value ?: 0.0 }.take(limit)
 
     override fun findByUserIdOrderedByRank(userId: User.Id): List<TvRating> =
         tvRatingDAO.findByUserIdOrderByScore(userId.value).map { it.toDomain() }
@@ -63,7 +63,7 @@ class TvRatingRepositoryImpl(
             userId = userId.let(User::Id),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
             seasonRatings = seasonRatings,
-            score = score.let(::Score),
+            score = score?.let(::Score),
         )
     }
 
@@ -73,7 +73,7 @@ class TvRatingRepositoryImpl(
             tvShowId = tvShowId.value,
             userId = userId.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
-            score = score.value,
+            score = score?.value,
         )
     }
 

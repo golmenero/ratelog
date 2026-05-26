@@ -6,8 +6,9 @@ import arrow.core.raise.ensure
 import org.raterr.Score
 import org.raterr.SeasonNumber
 import org.raterr.TmdbId
-import org.raterr.tvshow.get.GetTvShow
-import org.raterr.tvshow.get.GetTvShowHandler
+import org.raterr.tvshow.TvShow
+import org.raterr.tvshow.detail.GetTvShowDetail
+import org.raterr.tvshow.detail.DetailTvShowHandler
 import org.raterr.tvshow.rating.TvRating
 import org.raterr.tvshow.rating.TvRatingRepository
 import org.raterr.user.User
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component
 import java.time.Instant
 
 data class AddSeasonRating(
+    val tvShowId: TvShow.Id,
     val tmdbId: TmdbId,
     val seasonNumber: SeasonNumber,
     val userId: User.Id,
@@ -27,7 +29,6 @@ data class AddSeasonRating(
 
 @Component
 class AddSeasonRatingHandler(
-    private val getTvShowHandler: GetTvShowHandler,
     private val tvRatingRepository: TvRatingRepository,
 ) {
     fun handle(command: AddSeasonRating): Either<AddSeasonRatingHandlerError, Unit> = either {
@@ -41,12 +42,8 @@ class AddSeasonRatingHandler(
             ensure(score.value in 1.0..10.0) { AddSeasonRatingHandlerError.InvalidRatingValue }
         }
 
-        val result = GetTvShow(TmdbId(command.tmdbId.value))
-            .let(getTvShowHandler::handle)
-            .mapLeft { AddSeasonRatingHandlerError.TvShowNotFound }
-            .bind()
+        val tvRating = tvRatingRepository.findFirstByTvShowId(command.tvShowId) ?: TvRating.create(command.tvShowId, command.userId, Instant.now())
 
-        val tvRating = tvRatingRepository.findFirstByTvShowId(result.show.id!!) ?: TvRating.create(result.show.id, command.userId, Instant.now())
         tvRating.addSeasonRating(
             seasonNumber = command.seasonNumber,
             directing = command.directing,

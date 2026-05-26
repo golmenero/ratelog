@@ -77,7 +77,7 @@
                             <div class="top-header-row">
                                 <span class="top-rank-num" th:text="${s.rank}">#1</span>
                                 <span class="top-title-wrap">
-                                    <h3 class="top-title top-title-clickable" th:text="${s.name}" th:data-tmdb-id="${s.tmdbId}" th:data-title="${s.name}" th:data-year="${s.firstAirYear}" th:attr="data-seasons=${s.seasons.![seasonNumber + ',' + directing + ',' + cinematography + ',' + acting + ',' + soundtrack + ',' + screenplay + ',' + score].join(';')}" style="cursor: pointer;">Title</h3>
+                                    <a th:href="@{'/tv/' + ${s.tmdbId}}" class="top-title" th:text="${s.name}">Title</a>
                                     <span class="top-year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : 'Unknown year'">Year</span>
                                 </span>
                             </div>
@@ -123,7 +123,7 @@
                                         <span class="premiere-date premiere-date-released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                                     </div>
                                     <div class="premiere-actions">
-                                        <a th:href="@{/tv/rate(id=${item.tmdbId})}" class="raterr-btn" title="Rate">
+                                        <a th:href="@{'/tv/' + ${item.tmdbId}}" class="raterr-btn" title="Rate">
                                             <i data-lucide="star"></i>
                                         </a>
                                         <form th:action="@{/tvshow/follow}" method="post" style="display: inline;">
@@ -199,9 +199,6 @@
     </main>
 </div>
 
-<div th:replace="~{fragments/rating-modal :: ratingModal}"></div>
-
-</body>
 <script>
     lucide.createIcons();
     
@@ -211,4 +208,5 @@
         });
     });
 </script>
+</body>
 </html>

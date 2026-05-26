@@ -4,14 +4,14 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.raterr.SeasonNumber
-import org.raterr.TmdbId
+import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvshow.rating.TvRatingRepository
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 
 data class DeleteSeasonRating(
-    val tmdbId: TmdbId,
+    val tvShowId: TvShow.Id,
     val seasonNumber: SeasonNumber,
     val userId: User.Id,
 )
@@ -22,7 +22,7 @@ class DeleteSeasonRatingHandler(
     private val tvRatingRepository: TvRatingRepository,
 ) {
     fun handle(command: DeleteSeasonRating): Either<DeleteSeasonRatingHandlerError, Unit> = either {
-        val show = command.tmdbId.let(tvShowRepository::findByTmdbId)
+        val show = command.tvShowId.let(tvShowRepository::findById)
 
         ensure(show != null && show.id != null) { DeleteSeasonRatingHandlerError.TvShowNotFound }
 

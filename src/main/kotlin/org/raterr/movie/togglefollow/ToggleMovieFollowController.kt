@@ -1,6 +1,5 @@
 package org.raterr.movie.togglefollow
 
-import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
 import org.raterr.movie.Movie
 import org.raterr.user.User

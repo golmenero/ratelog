@@ -3,9 +3,11 @@ package org.raterr.tvshow.togglefollow
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.TmdbId
+import org.raterr.movie.togglefollow.ToggleMovieFollowHandlerError
+import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
-import org.raterr.tvshow.get.GetTvShow
-import org.raterr.tvshow.get.GetTvShowHandler
+import org.raterr.tvshow.detail.GetTvShowDetail
+import org.raterr.tvshow.detail.DetailTvShowHandler
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 
@@ -14,21 +16,17 @@ sealed interface ToggleTvFollowHandlerError {
 }
 
 data class ToggleTvFollow(
-    val tmdbId: TmdbId,
+    val tvShowId: TvShow.Id,
     val userId: User.Id,
 )
 
 @Component
 class ToggleTvFollowHandler(
-    private val getTvShowHandler: GetTvShowHandler,
     private val tvShowRepository: TvShowRepository,
 ) {
     fun handle(command: ToggleTvFollow): Either<ToggleTvFollowHandlerError, Unit> = either {
-        val result = GetTvShow(tmdbId = command.tmdbId)
-            .let(getTvShowHandler::handle)
-            .mapLeft { ToggleTvFollowHandlerError.TvShowNotFound }
-            .bind()
+        val show = tvShowRepository.findById(command.tvShowId) ?: raise(ToggleTvFollowHandlerError.TvShowNotFound)
 
-        result.show.toggleFollow(System.currentTimeMillis()).let(tvShowRepository::save)
+        show.toggleFollow(System.currentTimeMillis()).let(tvShowRepository::save)
     }
 }

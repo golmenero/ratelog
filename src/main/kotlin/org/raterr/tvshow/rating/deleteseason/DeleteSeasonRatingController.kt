@@ -3,6 +3,7 @@ package org.raterr.tvshow.rating.deleteseason
 import org.raterr.SeasonNumber
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
+import org.raterr.tvshow.TvShow
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
@@ -20,12 +21,12 @@ class DeleteSeasonRatingController(
     @Transactional
     fun deleteRating(
         @CurrentUser user: User,
-        @PathVariable("id") tmdbId: Int,
+        @PathVariable("id") tvShowId: Long,
         @RequestParam("seasonNumber") seasonNumber: Int,
         redirectAttributes: RedirectAttributes
     ): String =
         DeleteSeasonRating(
-            tmdbId = TmdbId(tmdbId),
+            tvShowId = TvShow.Id(tvShowId),
             seasonNumber = seasonNumber.let(::SeasonNumber),
             userId = user.id!!,
         ).let(handler::handle)

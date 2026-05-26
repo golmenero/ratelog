@@ -78,7 +78,7 @@ class TopTvShowController(
                 name = item.tvShow.name.value,
                 firstAirYear = item.tvShow.firstAirYear,
                 posterPath = item.tvShow.posterPath?.value,
-                averageScore = item.rating.score.value,
+                averageScore = item.rating.score?.value ?: 0.0,
                 seasons = item.rating.seasonRatings.map { sr ->
                     GetSeasonResponse(
                         seasonNumber = sr.seasonNumber.value,

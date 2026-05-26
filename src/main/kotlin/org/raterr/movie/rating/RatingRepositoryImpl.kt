@@ -1,11 +1,8 @@
 package org.raterr.movie.rating
 
-import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.movie.Movie
-import org.raterr.movie.MovieRepository
 import org.raterr.user.User
-import org.raterr.user.UserRepository
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import kotlin.jvm.optionals.getOrNull
@@ -14,38 +11,24 @@ import kotlin.jvm.optionals.getOrNull
 class RatingRepositoryImpl(
         private val ratingDAO: RatingDAO,
     ) : RatingRepository {
-
-    override fun findById(id: Rating.Id): Rating? =
-        id.value.let(ratingDAO::findById).getOrNull()?.toDomain()
-
     override fun findFirstByMovieId(movieId: Movie.Id): Rating? =
         movieId.value.let(ratingDAO::findFirstByMovieId).getOrNull()?.toDomain()
 
-    override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): List<Rating> =
-        ratingDAO.findByMovieIdAndUserId(movieId.value, userId.value).map { it.toDomain() }
-
-    override fun findByUserId(userId: User.Id): List<Rating> =
-        ratingDAO.findByUserId(userId.value).map { it.toDomain() }
-
-    override fun findAllWithoutUser(): List<Rating> =
-        ratingDAO.findAll().filter { it.userId == 0L }.map { it.toDomain() }
+    override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Rating? =
+        ratingDAO.findFirstByMovieIdAndUserId(movieId.value, userId.value)?.toDomain()
 
     override fun save(rating: Rating) {
         rating.toEntity().let(ratingDAO::save)
     }
 
-    override fun deleteByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Int {
-        val ratings = ratingDAO.findByMovieIdAndUserId(movieId.value, userId.value)
-        return ratings.filter { ratingDAO.delete(it); true }.size
+    override fun deleteById(ratingId: Rating.Id) {
+        ratingDAO.deleteById(ratingId.value)
     }
 
     override fun findRankedByUserIdWithFilters(
         userId: User.Id, category: String?, limit: Int, name: String?
     ): List<Rating> =
         ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score?.value ?: 0.0 }.take(limit)
-
-    override fun findByUserIdOrderedByRank(userId: User.Id): List<Rating> =
-        ratingDAO.findByUserIdOrderByScore(userId.value).map { it.toDomain() }
 
     override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating> {
         val sinceEpochMs = since.toEpochMilli()
