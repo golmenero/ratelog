@@ -606,12 +606,12 @@ a {
 }
 
 .premiere-season {
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 700;
   color: var(--accent);
   background: var(--accent-bg);
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
   white-space: nowrap;
   font-family: var(--font-ui);
 }
@@ -732,15 +732,25 @@ a {
   display: flex;
   align-items: center;
   gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
 }
 
 .season-row-label {
-  font-size: 1.1rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  color: var(--text);
-  font-family: var(--font-serif);
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-family: var(--font-ui);
   flex-shrink: 0;
-  min-width: 90px;
 }
 
 .rating-cat-score {

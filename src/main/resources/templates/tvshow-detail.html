@@ -50,7 +50,7 @@
 
         <div th:if="${show != null && !#lists.isEmpty(show.seasons)}" class="seasons-card">
             <div th:each="season : ${show.seasons}" class="season-row">
-                <span class="season-row-label">Season <span th:text="${season.seasonNumber}">1</span></span>
+                <span class="season-row-label" th:text="'S' + ${season.seasonNumber}">S1</span>
                 <div th:if="${season.hasRating}" class="season-row-rated">
                     <div class="rating-cat rating-cat-score">
                         <i data-lucide="star"></i>
