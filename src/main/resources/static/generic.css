@@ -593,6 +593,7 @@ a {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .premiere-name {
@@ -600,9 +601,7 @@ a {
   font-weight: 600;
   letter-spacing: -0.02em;
   font-family: var(--font-serif);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .premiere-season {
