@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raterr - Movie Detail</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/lucide.min.js"></script>
+</head>
+<body>
+<div class="page-shell">
+    <header class="site-header" th:replace="~{fragments/nav :: nav(active='movies')}"></header>
+
+    <main class="main-stack">
+        <section class="hero-card">
+            <div class="hero-content">
+                <div>
+                    <h1 class="hero-title" id="title" th:text="${movie != null} ? ${movie.name} : 'Movie not found'">Loading movie...</h1>
+                </div>
+            </div>
+        </section>
+
+        <article th:if="${movie != null}" class="movie-inline-bar" id="movieSummary">
+            <div class="poster-frame movie-inline-poster">
+                <img th:if="${movie.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
+                <div th:unless="${movie.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(movie.name, 0, 1))}">?</div>
+            </div>
+            <div class="movie-inline-body">
+                <div class="tag-row" id="movieTags">
+                    <span class="tag" th:text="${movie.firstAirYear != null} ? ${movie.firstAirYear} : 'Unknown year'">Year</span>
+                    <span class="tag">TMDB: <span th:text="${movie.tmdbVoteAverage != null} ? ${movie.tmdbVoteAverage} : '&#8212;'">0</span></span>
+                </div>
+                <p class="movie-inline-overview muted" id="movieOverview" th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : 'No synopsis available for this title.'">Loading movie information.</p>
+                <div class="movie-inline-actions">
+                    <button th:if="${!movie.hasRating}" id="btnOpenRateModal" class="raterr-btn">
+                        <i data-lucide="star"></i>
+                    </button>
+                    <form th:action="@{/movie/follow}" method="post">
+                        <input type="hidden" name="movieId" th:value="${movie.id}" />
+                        <button type="submit" th:class="${movie.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
+                            <i data-lucide="heart"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </article>
+
+        <section th:if="${movie != null && movie.directing != null}" class="panel score-panel">
+            <div class="score-panel-header">
+                <h3 class="score-panel-title">Your Rating</h3>
+                <div class="score-panel-overall">
+                    <i data-lucide="star" class="score-panel-star"></i>
+                    <span class="score-panel-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
+                </div>
+            </div>
+            <div class="category-breakdown">
+                <div class="category-breakdown-item">
+                    <span class="category-breakdown-label"><i data-lucide="clapperboard"></i>Direction</span>
+                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <div class="category-breakdown-item">
+                    <span class="category-breakdown-label"><i data-lucide="camera"></i>Photography</span>
+                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.cinematography, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <div class="category-breakdown-item">
+                    <span class="category-breakdown-label"><i data-lucide="hat-glasses"></i>Acting</span>
+                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.acting, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <div class="category-breakdown-item">
+                    <span class="category-breakdown-label"><i data-lucide="music"></i>Soundtrack</span>
+                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.soundtrack, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <div class="category-breakdown-item">
+                    <span class="category-breakdown-label"><i data-lucide="file-text"></i>Script</span>
+                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
+                </div>
+            </div>
+        </section>
+
+        <div th:if="${error}" id="msg" class="feedback error" th:text="${error}"></div>
+        <div th:if="${success}" id="msg" class="feedback success" th:text="${success}"></div>
+    </main>
+
+    <div th:replace="~{fragments/rate-movie-modal :: rateMovieModal(${movie})}"></div>
+</div>
+</body>
+<script>
+    lucide.createIcons();
+
+    const btnOpenRateModal = document.getElementById('btnOpenRateModal');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+    const rateModal = document.getElementById('rateModal');
+
+    if (btnOpenRateModal) {
+        btnOpenRateModal.addEventListener('click', () => {
+            rateModal.classList.add('visible');
+        });
+    }
+
+    if (btnCloseModal) {
+        btnCloseModal.addEventListener('click', () => {
+            rateModal.classList.remove('visible');
+        });
+    }
+
+    if (rateModal) {
+        rateModal.addEventListener('click', (e) => {
+            if (e.target === rateModal) {
+                rateModal.classList.remove('visible');
+            }
+        });
+    }
+</script>
+</html>
