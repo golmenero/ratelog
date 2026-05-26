@@ -17,11 +17,7 @@ data class GetTopMoviesResponse(
     val releaseYear: Int?,
     val posterPath: String?,
     val averageScore: Double,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double
+    val genres: List<String>
 )
 
 @Controller
@@ -73,11 +69,7 @@ class TopMovieController(
                 releaseYear = item.movie.releaseYear,
                 posterPath = item.movie.posterPath?.value,
                 averageScore = item.rating.score?.value ?: 0.0,
-                directing = item.rating.directing.value,
-                cinematography = item.rating.cinematography.value,
-                acting = item.rating.acting.value,
-                soundtrack = item.rating.soundtrack.value,
-                screenplay = item.rating.screenplay.value,
+                genres = item.movie.genres.map { it.value }
             )
         }
 }

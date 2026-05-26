@@ -3,13 +3,11 @@ package org.raterr.tvshow.top
 import org.raterr.annotations.CurrentUser
 import org.raterr.tvshow.premieres.TvShowPremieresHandler
 import org.raterr.tvshow.premieres.TvShowPremieresQuery
-import org.raterr.tvshow.rating.TvRating
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
-import kotlin.collections.map
 
 data class GetTopTvShowsResponse(
     val rank: Int,
@@ -19,7 +17,7 @@ data class GetTopTvShowsResponse(
     val firstAirYear: Int?,
     val posterPath: String?,
     val averageScore: Double,
-    val seasons: List<GetSeasonResponse>
+    val genres: List<String>
 )
 
 data class GetSeasonResponse(
@@ -81,17 +79,7 @@ class TopTvShowController(
                 firstAirYear = item.tvShow.firstAirYear,
                 posterPath = item.tvShow.posterPath?.value,
                 averageScore = item.rating.score?.value ?: 0.0,
-                seasons = item.rating.seasonRatings.map { sr ->
-                    GetSeasonResponse(
-                        seasonNumber = sr.seasonNumber.value,
-                        score = sr.score.value,
-                        directing = sr.directing.value,
-                        cinematography = sr.cinematography.value,
-                        acting = sr.acting.value,
-                        soundtrack = sr.soundtrack.value,
-                        screenplay = sr.screenplay.value
-                    )
-                }
+                genres = item.tvShow.genres.map { it.value }
             )
         }
 }

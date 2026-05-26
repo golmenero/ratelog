@@ -274,8 +274,19 @@ a {
 
 .top-info {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.top-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
 }
 
 .top-header-row {
@@ -674,6 +685,22 @@ a {
   padding-left: 20px;
   border-left: 1px solid var(--border);
   flex-shrink: 0;
+}
+
+.top-card .show-detail-rating {
+  flex-direction: row;
+  gap: 8px;
+  padding-left: 0;
+  border-left: none;
+  align-items: baseline;
+}
+
+.top-card .rating-display-score {
+  font-size: 1.4rem;
+}
+
+.top-card .rating-display-label {
+  font-size: 0.72rem;
 }
 
 .seasons-card {

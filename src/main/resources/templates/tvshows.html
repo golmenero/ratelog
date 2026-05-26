@@ -75,21 +75,20 @@
                             <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${s.posterPath}}" th:alt="'Poster of ' + ${s.name}">
                         </div>
                         <div class="top-info">
-                            <div class="top-header-row">
-                                <span class="top-rank-num" th:text="${s.rank}">#1</span>
-                                <span class="top-title-wrap">
-                                    <span class="top-title" th:text="${s.name}">Title</span>
-                                    <span class="top-year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : 'Unknown year'">Year</span>
-                                </span>
-                            </div>
-                            <div class="rating-display">
-                                <span th:each="i : ${#numbers.sequence(1, 5)}">
-                                    <span class="star-wrapper">
-                                        <span class="star-empty">&#9734;</span>
-                                        <span class="star-filled" th:style="${s.averageScore >= i * 2} ? 'clip-path: inset(0 0 0 0);' : (${s.averageScore > (i - 1) * 2} ? 'clip-path: inset(0 ' + ${((i * 2 - s.averageScore) * 50)} + '% 0 0);' : 'clip-path: inset(0 100% 0 0);')">&#9733;</span>
+                            <div class="top-info-left">
+                                <div class="top-header-row">
+                                    <span class="top-rank-num" th:text="${s.rank}">#1</span>
+                                    <span class="top-title-wrap">
+                                        <span class="top-title" th:text="${s.name}">Title</span>
+                                        <span class="top-year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : 'Unknown year'">Year</span>
                                     </span>
-                                </span>
-                                <span class="rating-score-value" th:text="${#strings.replace(#numbers.formatDecimal(s.averageScore, 1, 2), ',', '.')}">0.0</span>
+                                </div>
+                                <div th:if="${!#lists.isEmpty(s.genres)}" class="genre-tags">
+                                    <span th:each="genre : ${s.genres}" class="genre-tag" th:text="${genre}">Genre</span>
+                                </div>
+                            </div>
+                            <div class="show-detail-rating">
+                                <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(s.averageScore, 1, 2), ',', '.')}">0.00</span>
                             </div>
                         </div>
                     </article>
