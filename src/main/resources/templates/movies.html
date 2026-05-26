@@ -48,7 +48,7 @@
                                 <option value="Western" th:selected="${selectedCategory == 'Western'}">Western</option>
                             </select>
                             <input id="name" name="name" type="text" th:value="${selectedName}" placeholder="Search by name" aria-label="Filter by name">
-                            <select id="limit" name="limit" aria-label="Number of items">
+                            <select id="limit" name="limit" aria-label="Number of items" style="width: auto; min-width: 0;">
                                 <option value="5" th:selected="${selectedLimit == 5}">5</option>
                                 <option value="10" th:selected="${selectedLimit == null || selectedLimit == 10}">10</option>
                                 <option value="25" th:selected="${selectedLimit == 25}">25</option>
