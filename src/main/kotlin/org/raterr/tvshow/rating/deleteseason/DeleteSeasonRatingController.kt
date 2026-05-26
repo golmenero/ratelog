@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import jakarta.servlet.http.HttpServletRequest
 
 @Controller
 class DeleteSeasonRatingController(
@@ -22,24 +23,34 @@ class DeleteSeasonRatingController(
         @CurrentUser user: User,
         @PathVariable("id") tvShowId: Long,
         @RequestParam("seasonNumber") seasonNumber: Int,
-        redirectAttributes: RedirectAttributes
-    ): String =
-        DeleteSeasonRating(
+        redirectAttributes: RedirectAttributes,
+        request: HttpServletRequest
+    ): String {
+        val result = DeleteSeasonRating(
             tvShowId = TvShow.Id(tvShowId),
             seasonNumber = seasonNumber.let(::SeasonNumber),
             userId = user.id!!,
         ).let(handler::handle)
+
+        val referer = request.getHeader("Referer")
+        val redirectTarget = when {
+            !referer.isNullOrBlank() && referer.contains("/tv/") -> "redirect:$referer"
+            else -> "redirect:/tvshows"
+        }
+
+        return result
             .mapLeft(::mapError)
             .fold(
                 {
                     redirectAttributes.addFlashAttribute("error", it)
-                    "redirect:/tvshows"
+                    redirectTarget
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "Rating deleted successfully.")
-                    "redirect:/tvshows"
+                    redirectTarget
                 }
             )
+    }
 
     private fun mapError(error: DeleteSeasonRatingHandlerError): String = when (error) {
         DeleteSeasonRatingHandlerError.TvShowNotFound,

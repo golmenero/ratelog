@@ -70,6 +70,7 @@
                 <div th:if="${tops != null}" id="list" class="top-list spacer-top">
                     <div th:if="${#lists.isEmpty(tops)}" class="empty-state">No rated TV shows yet for this filter.</div>
                     <article th:each="s, iterStat : ${tops}" th:class="'top-card list-poster-card' + (${s.posterPath != null} ? '' : ' no-poster')">
+                        <a th:href="@{'/tv/' + ${s.tmdbId}}" class="top-card-link"></a>
                         <div th:if="${s.posterPath != null}" class="top-poster poster-frame">
                             <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${s.posterPath}}" th:alt="'Poster of ' + ${s.name}">
                         </div>
@@ -77,7 +78,7 @@
                             <div class="top-header-row">
                                 <span class="top-rank-num" th:text="${s.rank}">#1</span>
                                 <span class="top-title-wrap">
-                                    <a th:href="@{'/tv/' + ${s.tmdbId}}" class="top-title" th:text="${s.name}">Title</a>
+                                    <span class="top-title" th:text="${s.name}">Title</span>
                                     <span class="top-year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : 'Unknown year'">Year</span>
                                 </span>
                             </div>
@@ -90,13 +91,6 @@
                                 </span>
                                 <span class="rating-score-value" th:text="${#strings.replace(#numbers.formatDecimal(s.averageScore, 1, 2), ',', '.')}">0.0</span>
                             </div>
-                        </div>
-                        <div class="top-actions">
-                            <form th:action="@{'/tvshows/delete/' + ${s.id}}" method="post">
-                                <button class="raterr-btn" type="submit" aria-label="Delete rating">
-                                    <i data-lucide="trash" aria-hidden="true"></i>
-                                </button>
-                            </form>
                         </div>
                     </article>
                 </div>

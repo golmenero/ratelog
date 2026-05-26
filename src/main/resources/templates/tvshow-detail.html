@@ -45,42 +45,42 @@
             </div>
         </article>
 
-        <section th:if="${show != null && !#lists.isEmpty(show.seasonRatings)}" class="panel score-panel">
-            <div class="score-panel-header">
-                <h3 class="score-panel-title">Your Rating</h3>
-                <div class="score-panel-overall">
-                    <i data-lucide="star" class="score-panel-star"></i>
-                    <span class="score-panel-value" th:text="${show.overallScore != null} ? ${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')} : '0.00'">0.00</span>
-                </div>
+        <div th:if="${show != null && !#lists.isEmpty(show.seasonRatings)}" class="inline-rating-bar">
+            <span class="inline-rating-score">
+                <i data-lucide="star"></i>
+                <span th:text="${show.overallScore != null} ? ${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')} : '0.00'">0.00</span>
+            </span>
+            <span class="inline-rating-divider"></span>
+            <div th:each="season : ${show.seasonRatings}" class="inline-rating-season">
+                <span class="inline-rating-season-label">S<span th:text="${season.seasonNumber}">1</span></span>
+                <span class="inline-rating-item">
+                    <i data-lucide="clapperboard"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.00</span>
+                </span>
+                <span class="inline-rating-item">
+                    <i data-lucide="camera"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.cinematography, 1, 2), ',', '.')}">0.00</span>
+                </span>
+                <span class="inline-rating-item">
+                    <i data-lucide="hat-glasses"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.acting, 1, 2), ',', '.')}">0.00</span>
+                </span>
+                <span class="inline-rating-item">
+                    <i data-lucide="music"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.soundtrack, 1, 2), ',', '.')}">0.00</span>
+                </span>
+                <span class="inline-rating-item">
+                    <i data-lucide="file-text"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.screenplay, 1, 2), ',', '.')}">0.00</span>
+                </span>
+                <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="inline-rating-delete">
+                    <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
+                    <button type="submit" class="raterr-btn" aria-label="Delete rating">
+                        <i data-lucide="trash"></i>
+                    </button>
+                </form>
             </div>
-            <div class="category-breakdown">
-                <div th:each="season : ${show.seasonRatings}" class="season-breakdown-group">
-                    <span class="season-breakdown-label">Season <span th:text="${season.seasonNumber}">1</span></span>
-                    <div class="season-breakdown-items">
-                        <div class="category-breakdown-item">
-                            <span class="category-breakdown-label"><i data-lucide="clapperboard"></i>Direction</span>
-                            <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.00</span>
-                        </div>
-                        <div class="category-breakdown-item">
-                            <span class="category-breakdown-label"><i data-lucide="camera"></i>Photography</span>
-                            <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(season.cinematography, 1, 2), ',', '.')}">0.00</span>
-                        </div>
-                        <div class="category-breakdown-item">
-                            <span class="category-breakdown-label"><i data-lucide="hat-glasses"></i>Acting</span>
-                            <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(season.acting, 1, 2), ',', '.')}">0.00</span>
-                        </div>
-                        <div class="category-breakdown-item">
-                            <span class="category-breakdown-label"><i data-lucide="music"></i>Soundtrack</span>
-                            <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(season.soundtrack, 1, 2), ',', '.')}">0.00</span>
-                        </div>
-                        <div class="category-breakdown-item">
-                            <span class="category-breakdown-label"><i data-lucide="file-text"></i>Script</span>
-                            <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(season.screenplay, 1, 2), ',', '.')}">0.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
 
         <div th:if="${error}" id="msg" class="feedback error" th:text="${error}"></div>
         <div th:if="${success}" id="msg" class="feedback success" th:text="${success}"></div>

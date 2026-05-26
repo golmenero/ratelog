@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import jakarta.servlet.http.HttpServletRequest
 
 @Controller
 class DeleteRatingController(
@@ -19,23 +20,33 @@ class DeleteRatingController(
     fun deleteRating(
         @CurrentUser user: User,
         @PathVariable("id") movieId: Long,
-        redirectAttributes: RedirectAttributes
-    ): String =
-        DeleteRating(
+        redirectAttributes: RedirectAttributes,
+        request: HttpServletRequest
+    ): String {
+        val result = DeleteRating(
             movieId = Movie.Id(movieId),
             userId = user.id!!,
         ).let(handler::handle)
+
+        val referer = request.getHeader("Referer")
+        val redirectTarget = when {
+            !referer.isNullOrBlank() && referer.contains("/movie/") -> "redirect:$referer"
+            else -> "redirect:/movies"
+        }
+
+        return result
             .mapLeft(::mapError)
             .fold(
                 {
                     redirectAttributes.addFlashAttribute("error", it)
-                    "redirect:/movies"
+                    redirectTarget
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "Rating deleted successfully.")
-                    "redirect:/movies"
+                    redirectTarget
                 }
             )
+    }
 
     private fun mapError(error: DeleteRatingHandlerError): String = when (error) {
         DeleteRatingHandlerError.MovieNotFound,

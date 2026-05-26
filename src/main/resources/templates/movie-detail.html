@@ -45,37 +45,38 @@
             </div>
         </article>
 
-        <section th:if="${movie != null && movie.directing != null}" class="panel score-panel">
-            <div class="score-panel-header">
-                <h3 class="score-panel-title">Your Rating</h3>
-                <div class="score-panel-overall">
-                    <i data-lucide="star" class="score-panel-star"></i>
-                    <span class="score-panel-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
-                </div>
-            </div>
-            <div class="category-breakdown">
-                <div class="category-breakdown-item">
-                    <span class="category-breakdown-label"><i data-lucide="clapperboard"></i>Direction</span>
-                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
-                </div>
-                <div class="category-breakdown-item">
-                    <span class="category-breakdown-label"><i data-lucide="camera"></i>Photography</span>
-                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.cinematography, 1, 2), ',', '.')}">0.00</span>
-                </div>
-                <div class="category-breakdown-item">
-                    <span class="category-breakdown-label"><i data-lucide="hat-glasses"></i>Acting</span>
-                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.acting, 1, 2), ',', '.')}">0.00</span>
-                </div>
-                <div class="category-breakdown-item">
-                    <span class="category-breakdown-label"><i data-lucide="music"></i>Soundtrack</span>
-                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.soundtrack, 1, 2), ',', '.')}">0.00</span>
-                </div>
-                <div class="category-breakdown-item">
-                    <span class="category-breakdown-label"><i data-lucide="file-text"></i>Script</span>
-                    <span class="category-breakdown-value" th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
-                </div>
-            </div>
-        </section>
+        <div th:if="${movie != null && movie.directing != null}" class="inline-rating-bar">
+            <span class="inline-rating-score">
+                <i data-lucide="star"></i>
+                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
+            </span>
+            <span class="inline-rating-divider"></span>
+            <span class="inline-rating-item">
+                <i data-lucide="clapperboard"></i>
+                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
+            </span>
+            <span class="inline-rating-item">
+                <i data-lucide="camera"></i>
+                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.cinematography, 1, 2), ',', '.')}">0.00</span>
+            </span>
+            <span class="inline-rating-item">
+                <i data-lucide="hat-glasses"></i>
+                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.acting, 1, 2), ',', '.')}">0.00</span>
+            </span>
+            <span class="inline-rating-item">
+                <i data-lucide="music"></i>
+                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.soundtrack, 1, 2), ',', '.')}">0.00</span>
+            </span>
+            <span class="inline-rating-item">
+                <i data-lucide="file-text"></i>
+                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
+            </span>
+            <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="inline-rating-delete">
+                <button type="submit" class="raterr-btn" aria-label="Delete rating">
+                    <i data-lucide="trash"></i>
+                </button>
+            </form>
+        </div>
 
         <div th:if="${error}" id="msg" class="feedback error" th:text="${error}"></div>
         <div th:if="${success}" id="msg" class="feedback success" th:text="${success}"></div>
