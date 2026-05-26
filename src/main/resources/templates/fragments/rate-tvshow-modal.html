@@ -8,6 +8,7 @@
             <p class="modal-year" th:text="${show.firstAirYear}">Year</p>
         </div>
         <form th:action="@{/tv/rate}" method="post" class="modal-categories">
+            <input type="hidden" name="tvShowId" th:value="${show.id}">
             <input type="hidden" name="tmdbId" th:value="${show.tmdbId}">
 
             <div class="modal-slider-row">
