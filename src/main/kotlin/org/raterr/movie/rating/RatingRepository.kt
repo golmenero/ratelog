@@ -16,12 +16,11 @@ data class Rating(
     val soundtrack: Score,
     val screenplay: Score,
     val createdAt: Instant,
-    val score: Score = Score(0.0),
+    val score: Score? = null,
 ) {
     data class Id(val value: Long)
 
-    fun updateScore() = copy(score = ((directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0)
-        .let(::Score))
+    fun updateScore() = copy(score = Score((directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0))
 }
 
 @Repository
