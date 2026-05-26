@@ -3,9 +3,10 @@ package org.raterr.movie.togglefollow
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.TmdbId
+import org.raterr.movie.Movie
 import org.raterr.movie.MovieRepository
-import org.raterr.movie.get.GetMovie
-import org.raterr.movie.get.GetMovieHandler
+import org.raterr.movie.detail.GetMovieDetail
+import org.raterr.movie.detail.GetMovieDetailHandler
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 
@@ -14,20 +15,16 @@ sealed interface ToggleMovieFollowHandlerError {
 }
 
 data class ToggleMovieFollow(
-    val tmdbId: TmdbId,
+    val movieId: Movie.Id,
     val userId: User.Id,
 )
 
 @Component
 class ToggleMovieFollowHandler(
-    private val getMovieHandler: GetMovieHandler,
     private val movieRepository: MovieRepository,
 ) {
     fun handle(command: ToggleMovieFollow): Either<ToggleMovieFollowHandlerError, Unit> = either {
-        val movie = GetMovie(tmdbId = command.tmdbId)
-            .let(getMovieHandler::handle)
-            .mapLeft { ToggleMovieFollowHandlerError.MovieNotFound }
-            .bind()
+        val movie = movieRepository.findById(command.movieId) ?: raise(ToggleMovieFollowHandlerError.MovieNotFound)
 
         movie.toggleFollow(System.currentTimeMillis()).let(movieRepository::save)
     }

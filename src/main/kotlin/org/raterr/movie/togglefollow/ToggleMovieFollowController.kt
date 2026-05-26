@@ -2,6 +2,7 @@ package org.raterr.movie.togglefollow
 
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
+import org.raterr.movie.Movie
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,11 +16,11 @@ class ToggleMovieFollowController(
     @PostMapping("/movie/follow")
     fun toggleMovieFollow(
         @CurrentUser user: User,
-        @RequestParam("tmdbId") tmdbId: Int,
+        @RequestParam("movieId") movieId: Long,
         @RequestParam("q", required = false) query: String?
     ): String {
         ToggleMovieFollow(
-            tmdbId = TmdbId(tmdbId),
+            movieId = Movie.Id(movieId),
             userId = user.id!!,
         ).let(handler::handle)
 

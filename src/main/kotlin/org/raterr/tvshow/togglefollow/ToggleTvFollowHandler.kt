@@ -3,9 +3,6 @@ package org.raterr.tvshow.togglefollow
 import arrow.core.Either
 import arrow.core.raise.either
 import org.raterr.TmdbId
-import org.raterr.movie.get.GetMovie
-import org.raterr.movie.get.GetMovieHandler
-import org.raterr.movie.togglefollow.ToggleMovieFollowHandlerError
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tvshow.get.GetTvShow
 import org.raterr.tvshow.get.GetTvShowHandler
