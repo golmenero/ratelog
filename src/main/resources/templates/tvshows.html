@@ -112,6 +112,7 @@
                             <div class="premieres-group-label">Released</div>
                             <div class="premiere-timeline">
                                 <div th:each="item : ${releasedPremieres}" class="premiere-card premiere-released">
+                                    <a th:href="@{'/tv/' + ${item.tmdbId}}" class="premiere-card-link"></a>
                                     <div class="premiere-poster">
                                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.name}">
                                         <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.name, 0, 1))}">?</div>
@@ -123,7 +124,7 @@
                                         <span class="premiere-date premiere-date-released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                                     </div>
                                     <div class="premiere-actions">
-                                        <a th:href="@{'/tv/' + ${item.tmdbId}" class="raterr-btn" title="Rate">
+                                        <a th:href="@{'/tv/' + ${item.tmdbId}}" class="raterr-btn" title="Rate">
                                             <i data-lucide="star"></i>
                                         </a>
                                         <form th:action="@{/tvshow/follow}" method="post" style="display: inline;">
@@ -141,6 +142,7 @@
                             <div class="premieres-group-label">Upcoming</div>
                             <div class="premiere-timeline">
                                 <div th:each="item : ${upcomingPremieres}" class="premiere-card">
+                                    <a th:href="@{'/tv/' + ${item.tmdbId}}" class="premiere-card-link"></a>
                                     <div class="premiere-poster">
                                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.name}">
                                         <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.name, 0, 1))}">?</div>
@@ -167,6 +169,7 @@
                             <div class="premieres-group-label">No release date yet</div>
                             <div class="premiere-timeline">
                                 <div th:each="item : ${noDatePremieres}" class="premiere-card">
+                                    <a th:href="@{'/tv/' + ${item.tmdbId}}" class="premiere-card-link"></a>
                                     <div class="premiere-poster">
                                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.name}">
                                         <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.name, 0, 1))}">?</div>

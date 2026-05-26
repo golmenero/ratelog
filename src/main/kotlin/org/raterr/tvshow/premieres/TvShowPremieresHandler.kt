@@ -12,6 +12,7 @@ data class TvShowPremieresQuery(val userId: User.Id)
 
 data class TvShowPremiereItem(
     val id: Long,
+    val tmdbId: Int,
     val name: String,
     val releaseDate: LocalDate,
     val posterPath: String?,
@@ -45,6 +46,7 @@ class TvShowPremieresHandler(
                 val date = LocalDate.parse(tmdbShow.firstAirDate)
                 val item = TvShowPremiereItem(
                     id = show.id!!.value,
+                    tmdbId = show.tmdbId.value,
                     name = tmdbShow.name,
                     releaseDate = date,
                     posterPath = tmdbShow.posterPath,
@@ -55,6 +57,7 @@ class TvShowPremieresHandler(
                 noDate.add(
                     TvShowPremiereItem(
                         id = show.id!!.value,
+                        tmdbId = show.tmdbId.value,
                         name = tmdbShow.name,
                         releaseDate = today,
                         posterPath = tmdbShow.posterPath,

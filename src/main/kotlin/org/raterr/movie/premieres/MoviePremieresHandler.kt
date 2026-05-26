@@ -12,6 +12,7 @@ data class MoviePremieresQuery(val userId: User.Id)
 
 data class MoviePremiereItem(
     val id: Long,
+    val tmdbId: Int,
     val title: String,
     val releaseDate: LocalDate,
     val posterPath: String?,
@@ -45,6 +46,7 @@ class MoviePremieresHandler(
                 val date = LocalDate.parse(tmdbMovie.releaseDate)
                 val item = MoviePremiereItem(
                     id = movie.id!!.value,
+                    tmdbId = movie.tmdbId.value,
                     title = tmdbMovie.title,
                     releaseDate = date,
                     posterPath = tmdbMovie.posterPath,
@@ -55,6 +57,7 @@ class MoviePremieresHandler(
                 noDate.add(
                     MoviePremiereItem(
                         id = movie.id!!.value,
+                        tmdbId = movie.tmdbId.value,
                         title = tmdbMovie.title,
                         releaseDate = today,
                         posterPath = tmdbMovie.posterPath,

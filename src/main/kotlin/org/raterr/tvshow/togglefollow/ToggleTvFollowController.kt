@@ -6,6 +6,7 @@ import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import jakarta.servlet.http.HttpServletRequest
 
 @Controller
 class ToggleTvFollowController(
@@ -16,13 +17,14 @@ class ToggleTvFollowController(
     fun toggleTvFollow(
         @CurrentUser user: User,
         @RequestParam("tvShowId") tvShowId: Long,
-        @RequestParam("q", required = false) query: String?
+        request: HttpServletRequest
     ): String {
         ToggleTvFollow(
             tvShowId = TvShow.Id(tvShowId),
             userId = user.id!!,
         ).let(handler::handle)
 
-        return if (!query.isNullOrBlank()) "redirect:/?q=${query}" else "redirect:/"
+        val referer = request.getHeader("Referer")
+        return "redirect:$referer"
     }
 }

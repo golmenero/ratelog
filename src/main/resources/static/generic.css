@@ -486,10 +486,37 @@ a {
   border: 1px solid var(--border);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow-soft);
+  position: relative;
 
   &.premiere-released {
     background: var(--surface-muted);
   }
+}
+
+.premiere-card-link {
+  position: absolute;
+  inset: 0;
+  text-decoration: none;
+  color: inherit;
+  z-index: 1;
+
+  &:focus-visible {
+    outline: none;
+
+    .premiere-card {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px hsl(var(--_brand-clay) / 0.24), var(--shadow);
+    }
+  }
+}
+
+.premiere-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .premiere-poster {
@@ -552,13 +579,6 @@ a {
   &.premiere-date-released {
     color: var(--success-text);
   }
-}
-
-.premiere-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
 }
 
 .premiere-empty {
