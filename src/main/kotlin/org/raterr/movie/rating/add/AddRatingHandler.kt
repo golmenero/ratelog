@@ -3,11 +3,8 @@ package org.raterr.movie.rating.add
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
-import org.raterr.Rank
 import org.raterr.Score
-import org.raterr.TmdbId
-import org.raterr.movie.get.GetMovie
-import org.raterr.movie.get.GetMovieHandler
+import org.raterr.movie.Movie
 import org.raterr.movie.rating.Rating
 import org.raterr.movie.rating.RatingRepository
 import org.raterr.user.User
@@ -15,7 +12,7 @@ import org.springframework.stereotype.Component
 import java.time.Instant
 
 data class AddRating(
-    val tmdbId: TmdbId,
+    val movieId: Movie.Id,
     val userId: User.Id,
     val directing: Double,
     val cinematography: Double,
@@ -26,7 +23,6 @@ data class AddRating(
 
 @Component
 class AddRatingHandler(
-    private val getMovieHandler: GetMovieHandler,
     private val ratingRepository: RatingRepository,
 ) {
     fun handle(command: AddRating): Either<AddRatingHandlerError, Unit> = either {
@@ -40,17 +36,12 @@ class AddRatingHandler(
             ensure(value in 1.0..10.0) { AddRatingHandlerError.InvalidRatingValue }
         }
 
-        val movie = GetMovie(TmdbId(command.tmdbId.value))
-            .let(getMovieHandler::handle)
-            .mapLeft { AddRatingHandlerError.MovieNotFound }
-            .bind()
-
-        val existingRating = ratingRepository.findByMovieIdAndUserId(movie.id!!, command.userId).firstOrNull()
+        val existingRating = ratingRepository.findByMovieIdAndUserId(command.movieId, command.userId).firstOrNull()
         ensure(existingRating == null) { AddRatingHandlerError.RatingAlreadyExists }
 
         Rating(
             id = null,
-            movieId = movie.id,
+            movieId = command.movieId,
             userId = command.userId,
             directing = Score(command.directing),
             cinematography = Score(command.cinematography),

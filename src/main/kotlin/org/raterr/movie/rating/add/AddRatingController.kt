@@ -2,6 +2,7 @@ package org.raterr.movie.rating.add
 
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
+import org.raterr.movie.Movie
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,7 +17,7 @@ class AddRatingController(
     @PostMapping("/movie/rate")
     fun saveRating(
         @CurrentUser user: User,
-        @RequestParam("tmdbId") tmdbId: Int,
+        @RequestParam("movieId") movieId: Long,
         @RequestParam("directing") directing: Double,
         @RequestParam("cinematography") cinematography: Double,
         @RequestParam("acting") acting: Double,
@@ -25,7 +26,7 @@ class AddRatingController(
         redirectAttributes: RedirectAttributes
     ): String =
         AddRating(
-            tmdbId = TmdbId(tmdbId),
+            movieId = Movie.Id(movieId),
             userId = user.id!!,
             directing = directing,
             cinematography = cinematography,
@@ -36,13 +37,13 @@ class AddRatingController(
             .mapLeft(::mapError)
             .fold(
                 {
-                    redirectAttributes.addAttribute("id", tmdbId)
+                    redirectAttributes.addAttribute("id", movieId)
                     redirectAttributes.addFlashAttribute("error", it)
-                    "redirect:/movie/rate"
+                    "redirect:/movie/${movieId}"
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
-                    "redirect:/movies"
+                    "redirect:/movie/${movieId}"
                 }
             )
 
