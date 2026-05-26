@@ -1,12 +1,9 @@
 package org.raterr.tvshow.rating
 
-import org.raterr.Rank
 import org.raterr.Score
 import org.raterr.SeasonNumber
 import org.raterr.tvshow.TvShow
-import org.raterr.tvshow.TvShowRepository
 import org.raterr.user.User
-import org.raterr.user.UserRepository
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import kotlin.jvm.optionals.getOrNull
@@ -94,7 +91,7 @@ class TvRatingRepositoryImpl(
 
     private fun SeasonRating.toEntity(): SeasonRatingEntity {
         return SeasonRatingEntity(
-            id = id?.value,
+            id = null,
             tvShowId = tvShowId.value,
             seasonNumber = seasonNumber.value,
             userId = userId.value,
