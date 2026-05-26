@@ -15,16 +15,7 @@
                     <span><i data-lucide="layers"></i>Season</span>
                 </label>
                 <select id="seasonNumber" name="seasonNumber" class="season-select">
-                    <option value="1">Season 1</option>
-                    <option value="2">Season 2</option>
-                    <option value="3">Season 3</option>
-                    <option value="4">Season 4</option>
-                    <option value="5">Season 5</option>
-                    <option value="6">Season 6</option>
-                    <option value="7">Season 7</option>
-                    <option value="8">Season 8</option>
-                    <option value="9">Season 9</option>
-                    <option value="10">Season 10</option>
+                    <option th:each="season : ${show.seasons}" th:value="${season.seasonNumber}" th:text="'Season ' + ${season.seasonNumber}" th:selected="${season.seasonNumber == 1}">Season 1</option>
                 </select>
             </div>
 

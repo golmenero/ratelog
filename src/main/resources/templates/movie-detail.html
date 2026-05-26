@@ -20,62 +20,66 @@
             </div>
         </section>
 
-        <article th:if="${movie != null}" class="movie-inline-bar" id="movieSummary">
-            <div class="poster-frame movie-inline-poster">
+        <article th:if="${movie != null}" class="show-detail-card" id="movieSummary">
+            <div class="poster-frame show-detail-poster">
                 <img th:if="${movie.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
                 <div th:unless="${movie.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(movie.name, 0, 1))}">?</div>
             </div>
-            <div class="movie-inline-body">
+            <div class="show-detail-body">
                 <div class="tag-row" id="movieTags">
                     <span class="tag" th:text="${movie.firstAirYear != null} ? ${movie.firstAirYear} : 'Unknown year'">Year</span>
                     <span class="tag">TMDB: <span th:text="${movie.tmdbVoteAverage != null} ? ${movie.tmdbVoteAverage} : '&#8212;'">0</span></span>
                 </div>
-                <p class="movie-inline-overview muted" id="movieOverview" th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : 'No synopsis available for this title.'">Loading movie information.</p>
-                <div class="movie-inline-actions">
-                    <button th:if="${!movie.hasRating}" id="btnOpenRateModal" class="raterr-btn">
-                        <i data-lucide="star"></i>
+                <p class="show-detail-overview muted" id="movieOverview" th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : 'No synopsis available for this title.'">Loading movie information.</p>
+            </div>
+            <div class="show-detail-actions">
+                <button th:if="${!movie.hasRating}" id="btnOpenRateModal" class="raterr-btn">
+                    <i data-lucide="star"></i>
+                </button>
+                <form th:action="@{/movie/follow}" method="post">
+                    <input type="hidden" name="movieId" th:value="${movie.id}" />
+                    <button type="submit" th:class="${movie.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
+                        <i data-lucide="heart"></i>
                     </button>
-                    <form th:action="@{/movie/follow}" method="post">
-                        <input type="hidden" name="movieId" th:value="${movie.id}" />
-                        <button type="submit" th:class="${movie.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
-                            <i data-lucide="heart"></i>
+                </form>
+            </div>
+            <div th:if="${movie.directing != null}" class="show-detail-rating">
+                <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
+                <span class="rating-display-label">Your Rating</span>
+            </div>
+        </article>
+
+        <div th:if="${movie != null && movie.directing != null}" class="seasons-card">
+            <div class="season-row">
+                <span class="season-row-label">Rating</span>
+                <div class="season-row-rated">
+                    <div class="rating-cat">
+                        <i data-lucide="clapperboard"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="camera"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.cinematography, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="hat-glasses"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.acting, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="music"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.soundtrack, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="file-text"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="season-delete-form">
+                        <button type="submit" class="raterr-btn" aria-label="Delete rating">
+                            <i data-lucide="trash"></i>
                         </button>
                     </form>
                 </div>
             </div>
-        </article>
-
-        <div th:if="${movie != null && movie.directing != null}" class="inline-rating-bar">
-            <span class="inline-rating-score">
-                <i data-lucide="star"></i>
-                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
-            </span>
-            <span class="inline-rating-divider"></span>
-            <span class="inline-rating-item">
-                <i data-lucide="clapperboard"></i>
-                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
-            </span>
-            <span class="inline-rating-item">
-                <i data-lucide="camera"></i>
-                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.cinematography, 1, 2), ',', '.')}">0.00</span>
-            </span>
-            <span class="inline-rating-item">
-                <i data-lucide="hat-glasses"></i>
-                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.acting, 1, 2), ',', '.')}">0.00</span>
-            </span>
-            <span class="inline-rating-item">
-                <i data-lucide="music"></i>
-                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.soundtrack, 1, 2), ',', '.')}">0.00</span>
-            </span>
-            <span class="inline-rating-item">
-                <i data-lucide="file-text"></i>
-                <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
-            </span>
-            <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="inline-rating-delete">
-                <button type="submit" class="raterr-btn" aria-label="Delete rating">
-                    <i data-lucide="trash"></i>
-                </button>
-            </form>
         </div>
 
         <div th:if="${error}" id="msg" class="feedback error" th:text="${error}"></div>

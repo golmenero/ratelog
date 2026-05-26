@@ -15,20 +15,23 @@ data class TvShowDetailResponse(
     val firstAirYear: Int?,
     val posterPath: String?,
     val tmdbVoteAverage: Double?,
-    val seasonRatings: List<SeasonRatingResponse>,
+    val seasons: List<SeasonResponse>,
     val overallScore: Double?,
     val isFollowed: Boolean,
     val hasRating: Boolean,
 )
 
-data class SeasonRatingResponse(
+data class SeasonResponse(
     val seasonNumber: Int,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double,
-    val score: Double,
+    val episodeCount: Int?,
+    val airDate: String?,
+    val hasRating: Boolean,
+    val directing: Double?,
+    val cinematography: Double?,
+    val acting: Double?,
+    val soundtrack: Double?,
+    val screenplay: Double?,
+    val score: Double?,
 )
 
 @Controller
@@ -64,15 +67,18 @@ class DetailTvShowController(
             firstAirYear = result.show.firstAirYear,
             posterPath = result.show.posterPath?.value,
             tmdbVoteAverage = result.show.tmdbVoteAverage,
-            seasonRatings = result.seasonRatings.map { sr ->
-                SeasonRatingResponse(
-                    seasonNumber = sr.seasonNumber,
-                    directing = sr.directing,
-                    cinematography = sr.cinematography,
-                    acting = sr.acting,
-                    soundtrack = sr.soundtrack,
-                    screenplay = sr.screenplay,
-                    score = sr.score,
+            seasons = result.seasons.map { s ->
+                SeasonResponse(
+                    seasonNumber = s.seasonNumber,
+                    episodeCount = s.episodeCount,
+                    airDate = s.airDate,
+                    hasRating = s.rating != null,
+                    directing = s.rating?.directing,
+                    cinematography = s.rating?.cinematography,
+                    acting = s.rating?.acting,
+                    soundtrack = s.rating?.soundtrack,
+                    screenplay = s.rating?.screenplay,
+                    score = s.rating?.score,
                 )
             },
             overallScore = result.overallScore,

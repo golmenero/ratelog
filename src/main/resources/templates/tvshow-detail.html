@@ -20,65 +20,70 @@
             </div>
         </section>
 
-        <article th:if="${show != null}" class="movie-inline-bar" id="showSummary">
-            <div class="poster-frame movie-inline-poster">
+        <article th:if="${show != null}" class="show-detail-card" id="showSummary">
+            <div class="poster-frame show-detail-poster">
                 <img th:if="${show.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${show.posterPath}}" th:alt="'Poster of ' + ${show.name}">
                 <div th:unless="${show.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(show.name, 0, 1))}">?</div>
             </div>
-            <div class="movie-inline-body">
+            <div class="show-detail-body">
                 <div class="tag-row" id="showTags">
                     <span class="tag" th:text="${show.firstAirYear != null} ? ${show.firstAirYear} : 'Unknown year'">Year</span>
                     <span class="tag">TMDB: <span th:text="${show.tmdbVoteAverage != null} ? ${show.tmdbVoteAverage} : '&#8212;'">0</span></span>
                 </div>
-                <p class="movie-inline-overview muted" id="showOverview" th:text="${show.overview != null and show.overview.trim().length() > 0} ? ${show.overview} : 'No synopsis available for this title.'">Loading TV show information.</p>
-                <div class="movie-inline-actions">
-                    <button th:if="${!show.hasRating}" id="btnOpenRateModal" class="raterr-btn">
-                        <i data-lucide="star"></i>
+                <p class="show-detail-overview muted" id="showOverview" th:text="${show.overview != null and show.overview.trim().length() > 0} ? ${show.overview} : 'No synopsis available for this title.'">Loading TV show information.</p>
+            </div>
+            <div class="show-detail-actions">
+                <form th:action="@{/tvshow/follow}" method="post">
+                    <input type="hidden" name="tvShowId" th:value="${show.id}" />
+                    <button type="submit" th:class="${show.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
+                        <i data-lucide="heart"></i>
                     </button>
-                    <form th:action="@{/tvshow/follow}" method="post">
-                        <input type="hidden" name="tvShowId" th:value="${show.id}" />
-                        <button type="submit" th:class="${show.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
-                            <i data-lucide="heart"></i>
-                        </button>
-                    </form>
-                </div>
+                </form>
+            </div>
+            <div th:if="${show.overallScore != null}" class="show-detail-rating">
+                <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')}">0.00</span>
+                <span class="rating-display-label">Your Rating</span>
             </div>
         </article>
 
-        <div th:if="${show != null && !#lists.isEmpty(show.seasonRatings)}" class="inline-rating-bar">
-            <span class="inline-rating-score">
-                <i data-lucide="star"></i>
-                <span th:text="${show.overallScore != null} ? ${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')} : '0.00'">0.00</span>
-            </span>
-            <span class="inline-rating-divider"></span>
-            <div th:each="season : ${show.seasonRatings}" class="inline-rating-season">
-                <span class="inline-rating-season-label">S<span th:text="${season.seasonNumber}">1</span></span>
-                <span class="inline-rating-item">
-                    <i data-lucide="clapperboard"></i>
-                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.00</span>
-                </span>
-                <span class="inline-rating-item">
-                    <i data-lucide="camera"></i>
-                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.cinematography, 1, 2), ',', '.')}">0.00</span>
-                </span>
-                <span class="inline-rating-item">
-                    <i data-lucide="hat-glasses"></i>
-                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.acting, 1, 2), ',', '.')}">0.00</span>
-                </span>
-                <span class="inline-rating-item">
-                    <i data-lucide="music"></i>
-                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.soundtrack, 1, 2), ',', '.')}">0.00</span>
-                </span>
-                <span class="inline-rating-item">
-                    <i data-lucide="file-text"></i>
-                    <span th:text="${#strings.replace(#numbers.formatDecimal(season.screenplay, 1, 2), ',', '.')}">0.00</span>
-                </span>
-                <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="inline-rating-delete">
-                    <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
-                    <button type="submit" class="raterr-btn" aria-label="Delete rating">
-                        <i data-lucide="trash"></i>
-                    </button>
-                </form>
+        <div th:if="${show != null && !#lists.isEmpty(show.seasons)}" class="seasons-card">
+            <div th:each="season : ${show.seasons}" class="season-row">
+                <span class="season-row-label">Season <span th:text="${season.seasonNumber}">1</span></span>
+                <div th:if="${season.hasRating}" class="season-row-rated">
+                    <div class="rating-cat rating-cat-score">
+                        <i data-lucide="star"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="clapperboard"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="camera"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.cinematography, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="hat-glasses"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.acting, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="music"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.soundtrack, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <div class="rating-cat">
+                        <i data-lucide="file-text"></i>
+                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.screenplay, 1, 2), ',', '.')}">0.00</span>
+                    </div>
+                    <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="season-delete-form">
+                        <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
+                        <button type="submit" class="raterr-btn" aria-label="Delete rating">
+                            <i data-lucide="trash"></i>
+                        </button>
+                    </form>
+                </div>
+                <button th:unless="${season.hasRating}" class="raterr-btn season-rate-btn" th:data-season="${season.seasonNumber}">
+                    <i data-lucide="star"></i>
+                </button>
             </div>
         </div>
 
@@ -95,12 +100,23 @@
     const btnOpenRateModal = document.getElementById('btnOpenRateModal');
     const btnCloseModal = document.getElementById('btnCloseModal');
     const rateModal = document.getElementById('rateModal');
+    const seasonSelect = document.getElementById('seasonNumber');
 
     if (btnOpenRateModal) {
         btnOpenRateModal.addEventListener('click', () => {
             rateModal.classList.add('visible');
         });
     }
+
+    document.querySelectorAll('.season-rate-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const season = btn.getAttribute('data-season');
+            if (seasonSelect) {
+                seasonSelect.value = season;
+            }
+            rateModal.classList.add('visible');
+        });
+    });
 
     if (btnCloseModal) {
         btnCloseModal.addEventListener('click', () => {

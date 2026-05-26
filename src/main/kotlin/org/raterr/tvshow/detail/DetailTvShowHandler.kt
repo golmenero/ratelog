@@ -18,8 +18,15 @@ data class GetTvShowDetail(val tmdbId: TmdbId)
 
 data class GetTvShowDetailResult(
     val show: TvShow,
-    val seasonRatings: List<SeasonRatingInfo>,
+    val seasons: List<SeasonInfo>,
     val overallScore: Double?,
+)
+
+data class SeasonInfo(
+    val seasonNumber: Int,
+    val episodeCount: Int?,
+    val airDate: String?,
+    val rating: SeasonRatingInfo?,
 )
 
 data class SeasonRatingInfo(
@@ -72,22 +79,34 @@ class DetailTvShowHandler(
         val updatedShow = show.let(tvShowRepository::save)
 
         val rating = tvRatingRepository.findFirstByTvShowId(updatedShow.id!!)
+        val ratingMap = rating?.seasonRatings?.associateBy { it.seasonNumber.value } ?: emptyMap()
 
-        val seasonRatings = rating?.seasonRatings?.map { sr ->
-            SeasonRatingInfo(
-                seasonNumber = sr.seasonNumber.value,
-                directing = sr.directing.value,
-                cinematography = sr.cinematography.value,
-                acting = sr.acting.value,
-                soundtrack = sr.soundtrack.value,
-                screenplay = sr.screenplay.value,
-                score = sr.score.value,
-            )
-        } ?: emptyList()
+        val seasons = tmdbShow.seasons
+            .filter { it.seasonNumber > 0 }
+            .map { tmdbSeason ->
+                val seasonRating = ratingMap[tmdbSeason.seasonNumber]
+                val ratingInfo = seasonRating?.let { sr ->
+                    SeasonRatingInfo(
+                        seasonNumber = sr.seasonNumber.value,
+                        directing = sr.directing.value,
+                        cinematography = sr.cinematography.value,
+                        acting = sr.acting.value,
+                        soundtrack = sr.soundtrack.value,
+                        screenplay = sr.screenplay.value,
+                        score = sr.score.value,
+                    )
+                }
+                SeasonInfo(
+                    seasonNumber = tmdbSeason.seasonNumber,
+                    episodeCount = tmdbSeason.episodeCount,
+                    airDate = tmdbSeason.airDate,
+                    rating = ratingInfo,
+                )
+            }
 
         GetTvShowDetailResult(
             show = updatedShow,
-            seasonRatings = seasonRatings,
+            seasons = seasons,
             overallScore = rating?.score?.value,
         )
     }
