@@ -505,6 +505,7 @@ a {
 .premiere-timeline {
   display: grid;
   gap: 10px;
+  width: 100%;
 }
 
 .premiere-card {
@@ -518,6 +519,8 @@ a {
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow-soft);
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
 
   &.premiere-released {
     background: var(--surface-muted);
@@ -600,6 +603,17 @@ a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.premiere-season {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-family: var(--font-ui);
 }
 
 .premiere-date {

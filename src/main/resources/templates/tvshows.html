@@ -113,19 +113,9 @@
                                     <div class="premiere-info">
                                         <div class="premiere-title-row">
                                             <span class="premiere-name" th:text="${item.name}">Title</span>
+                                            <span class="premiere-season" th:text="'S' + ${item.seasonNumber}">S1</span>
                                         </div>
                                         <span class="premiere-date premiere-date-released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
-                                    </div>
-                                    <div class="premiere-actions">
-                                        <a th:href="@{'/tv/' + ${item.tmdbId}}" class="raterr-btn" title="Rate">
-                                            <i data-lucide="star"></i>
-                                        </a>
-                                        <form th:action="@{/tvshow/follow}" method="post" style="display: inline;">
-                                            <input type="hidden" name="id" th:value="${item.id}" />
-                                            <button type="submit" class="raterr-btn green" title="Unfollow">
-                                                <i data-lucide="heart"></i>
-                                            </button>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -143,16 +133,9 @@
                                     <div class="premiere-info">
                                         <div class="premiere-title-row">
                                             <span class="premiere-name" th:text="${item.name}">Title</span>
+                                            <span class="premiere-season" th:text="'S' + ${item.seasonNumber}">S1</span>
                                         </div>
                                         <span class="premiere-date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Date</span>
-                                    </div>
-                                    <div class="premiere-actions">
-                                        <form th:action="@{/tvshow/follow}" method="post" style="display: inline;">
-                                            <input type="hidden" name="id" th:value="${item.id}" />
-                                            <button type="submit" class="raterr-btn green" title="Unfollow">
-                                                <i data-lucide="heart"></i>
-                                            </button>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -170,16 +153,9 @@
                                     <div class="premiere-info">
                                         <div class="premiere-title-row">
                                             <span class="premiere-name" th:text="${item.name}">Title</span>
+                                            <span class="premiere-season" th:text="'S' + ${item.seasonNumber}">S1</span>
                                         </div>
                                         <span class="premiere-date">TBA</span>
-                                    </div>
-                                    <div class="premiere-actions">
-                                        <form th:action="@{/tvshow/follow}" method="post" style="display: inline;">
-                                            <input type="hidden" name="id" th:value="${item.id}" />
-                                            <button type="submit" class="raterr-btn green" title="Unfollow">
-                                                <i data-lucide="heart"></i>
-                                            </button>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
