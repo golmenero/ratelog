@@ -25,18 +25,11 @@ data class SearchResultItem(
     val posterPath: String?,
     val tmdbVoteAverage: Double?,
     val type: String,
-    val isFollowed: Boolean = false,
-    val canRate: Boolean = true,
-    val canFollow: Boolean = true
 )
 
 @org.springframework.stereotype.Service
 class SearchHandler(
     private val tmdbClient: TmdbClient,
-    private val tvShowRepository: TvShowRepository,
-    private val movieRepository: MovieRepository,
-    private val ratingRepository: RatingRepository,
-    private val tvRatingRepository: TvRatingRepository,
 ) {
     fun handle(query: SearchQuery): Either<SearchHandlerError, List<SearchResultItem>> = either {
         if (query.query.isBlank()) return@either emptyList()
@@ -61,10 +54,6 @@ class SearchHandler(
             val movies = tmdbClient.searchMovies(query).bind()
 
             movies.map { tmdbMovie ->
-                val movie = tmdbMovie.id.let(::TmdbId).let(movieRepository::findByTmdbId)
-                val rating = movie?.id?.let(ratingRepository::findFirstByMovieId)
-                val isReleased = tmdbMovie.releaseDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
-
                 SearchResultItem(
                     tmdbId = tmdbMovie.id,
                     title = tmdbMovie.title,
@@ -73,9 +62,6 @@ class SearchHandler(
                     posterPath = tmdbMovie.posterPath,
                     tmdbVoteAverage = tmdbMovie.voteAverage,
                     type = MediaType.movie.name,
-                    isFollowed = movie?.followed ?: false,
-                    canRate = isReleased,
-                    canFollow = rating == null
                 )
             }
         }
@@ -85,11 +71,6 @@ class SearchHandler(
             val tvshows = tmdbClient.searchTvShows(query).bind()
 
             tvshows.map { tmdbShow ->
-                val show = tmdbShow.id.let(::TmdbId).let(tvShowRepository::findByTmdbId)
-                val rating = show?.id?.let(tvRatingRepository::findFirstByTvShowId)
-                val isReleased = tmdbShow.firstAirDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) <= LocalDate.now() } ?: false
-
-
                 SearchResultItem(
                     tmdbId = tmdbShow.id,
                     title = tmdbShow.name,
@@ -98,9 +79,6 @@ class SearchHandler(
                     posterPath = tmdbShow.posterPath,
                     tmdbVoteAverage = tmdbShow.voteAverage,
                     type = MediaType.tvshow.name,
-                    isFollowed = show?.followed ?: false,
-                    canRate = isReleased,
-                    canFollow = rating == null
                 )
         }
     }

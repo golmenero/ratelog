@@ -42,7 +42,7 @@ class RatingRepositoryImpl(
     override fun findRankedByUserIdWithFilters(
         userId: User.Id, category: String?, limit: Int, name: String?
     ): List<Rating> =
-        ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score.value }.take(limit)
+        ratingDAO.findByUserId(userId.value).map { it.toDomain() }.sortedByDescending { it.score?.value ?: 0.0 }.take(limit)
 
     override fun findByUserIdOrderedByRank(userId: User.Id): List<Rating> =
         ratingDAO.findByUserIdOrderByScore(userId.value).map { it.toDomain() }
@@ -67,7 +67,7 @@ class RatingRepositoryImpl(
             soundtrack = Score(soundtrack),
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            score = score.let(::Score),
+            score = score?.let(::Score),
         )
     }
 
@@ -82,7 +82,7 @@ class RatingRepositoryImpl(
             soundtrack = soundtrack.value,
             screenplay = screenplay.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
-            score = score.value,
+            score = score?.value,
         )
     }
 }

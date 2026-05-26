@@ -70,7 +70,7 @@ class TopMovieController(
                 title = item.movie.title.value,
                 releaseYear = item.movie.releaseYear,
                 posterPath = item.movie.posterPath?.value,
-                averageScore = item.rating.score.value,
+                averageScore = item.rating.score?.value ?: 0.0,
                 directing = item.rating.directing.value,
                 cinematography = item.rating.cinematography.value,
                 acting = item.rating.acting.value,

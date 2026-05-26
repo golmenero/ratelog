@@ -18,6 +18,7 @@ class AddRatingController(
     fun saveRating(
         @CurrentUser user: User,
         @RequestParam("movieId") movieId: Long,
+        @RequestParam("tmdbId") tmdbId: Int,
         @RequestParam("directing") directing: Double,
         @RequestParam("cinematography") cinematography: Double,
         @RequestParam("acting") acting: Double,
@@ -37,13 +38,12 @@ class AddRatingController(
             .mapLeft(::mapError)
             .fold(
                 {
-                    redirectAttributes.addAttribute("id", movieId)
                     redirectAttributes.addFlashAttribute("error", it)
-                    "redirect:/movie/${movieId}"
+                    "redirect:/movie/${tmdbId}"
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
-                    "redirect:/movie/${movieId}"
+                    "redirect:/movie/${tmdbId}"
                 }
             )
 

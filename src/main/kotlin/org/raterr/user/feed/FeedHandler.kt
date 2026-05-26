@@ -58,7 +58,7 @@ class FeedHandler(
                 posterPath = movie.posterPath?.value,
                 tmdbId = movie.tmdbId.value,
                 type = MediaType.movie.name,
-                score = rating.score.value,
+                score = rating.score!!.value,
                 ratedAt = dateFormatter.format(rating.createdAt),
                 createdAtEpochMs = rating.createdAt.toEpochMilli()
             )
@@ -73,7 +73,7 @@ class FeedHandler(
                 posterPath = tvShow.posterPath?.value,
                 tmdbId = tvShow.tmdbId.value,
                 type = MediaType.tvshow.name,
-                score = rating.score.value,
+                score = rating.score!!.value,
                 ratedAt = dateFormatter.format(rating.createdAt),
                 createdAtEpochMs = rating.createdAt.toEpochMilli()
             )

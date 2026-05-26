@@ -35,45 +35,36 @@
             <div th:if="${results != null}" id="results" class="results-grid">
                 <div th:if="${#lists.isEmpty(results)}" class="empty-state">Try with another title, year or original name.</div>
                 
-                <article th:each="item : ${results}" th:class="'result-card' + (${item.canRate} ? ' result-card-disabled' : '')">
+                <a th:each="item : ${results}" th:if="${item.type == 'movie'}" th:href="@{/movie/{id}(id=${item.tmdbId})}" class="result-card result-card-link">
                     <div class="poster-frame">
                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                         <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                     </div>
                     <div class="result-content">
                         <div class="tag-row result-meta-row">
-                            <span th:if="${item.type == 'movie'}" class="tag tag-movie">Movie</span>
-                            <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow">TV</span>
+                            <span class="tag tag-movie">Movie</span>
                             <span class="tag" th:text="${item.year != null} ? ${item.year} : 'Unknown year'">Year</span>
                         </div>
                         <h3 class="result-title" th:text="${item.title}">Title</h3>
                         <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : 'No synopsis available right now.'">Overview</p>
-                        <div class="result-actions">
-                            <a th:if="${item.type == 'movie' && item.canRate}" th:href="@{/movie/rate(id=${item.tmdbId})}" class="raterr-btn">
-                                <i data-lucide="star"></i>
-                            </a>
-                            <a th:if="${item.type == 'tvshow' && item.canRate}" th:href="@{/tv/rate(id=${item.tmdbId})}" class="raterr-btn">
-                                <i data-lucide="star"></i>
-                            </a>
-                            <form th:if="${item.type == 'movie' && item.canFollow}" th:action="@{/movie/follow}" method="post" style="display: inline;">
-                                <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
-                                <input type="hidden" name="q" th:value="${query}" />
-                                <button type="submit" th:class="${item.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
-                                    <i data-lucide="heart"></i>
-                                </button>
-                            </form>
-                            <form th:if="${item.type == 'tvshow' && item.canFollow}" th:action="@{/tvshow/follow}" method="post" style="display: inline;">
-                                <input type="hidden" name="tmdbId" th:value="${item.tmdbId}" />
-                                <input type="hidden" name="q" th:value="${query}" />
-                                <button type="submit" th:class="${item.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
-                                    <i data-lucide="heart"></i>
-                                </button>
-                            </form>
+                    </div>
+                </a>
+
+                <article th:each="item : ${results}" th:if="${item.type == 'tvshow'}" class="result-card'">
+                    <div class="poster-frame">
+                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                        <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                    </div>
+                    <div class="result-content">
+                        <div class="tag-row result-meta-row">
+                            <span class="tag tag-tvshow">TV</span>
+                            <span class="tag" th:text="${item.year != null} ? ${item.year} : 'Unknown year'">Year</span>
                         </div>
+                        <h3 class="result-title" th:text="${item.title}">Title</h3>
+                        <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : 'No synopsis available right now.'">Overview</p>
                     </div>
                 </article>
             </div>
-            <div th:unless="${results != null}" id="results" class="results-grid"></div>
         </section>
     </main>
 </div>

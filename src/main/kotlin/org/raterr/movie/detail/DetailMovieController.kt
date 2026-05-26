@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable
 
 data class MovieDetailResponse(
     val id: Long,
+    val tmdbId: Int,
     val name: String,
     val overview: String?,
     val firstAirYear: Int?,
@@ -53,6 +54,7 @@ class MovieDetailController(
     private fun buildResponse(result: GetMovieDetailResult): MovieDetailResponse =
         MovieDetailResponse(
             id = result.movie.id!!.value,
+            tmdbId = result.movie.tmdbId.value,
             name = result.movie.title.value,
             overview = result.movie.overview?.value,
             firstAirYear = result.movie.releaseYear,
@@ -65,6 +67,6 @@ class MovieDetailController(
             screenplay = result.screenplay,
             score = result.score,
             isFollowed = result.movie.followed,
-            hasRating = result.movie.id?.let { ratingRepository.findFirstByMovieId(it) } != null,
+            hasRating = result.movie.id.let { ratingRepository.findFirstByMovieId(it) } != null,
         )
 }

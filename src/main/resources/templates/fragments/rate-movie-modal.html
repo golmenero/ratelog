@@ -9,6 +9,7 @@
         </div>
         <form th:action="@{/movie/rate}" method="post" class="modal-categories">
             <input type="hidden" name="movieId" th:value="${movie.id}">
+            <input type="hidden" name="tmdbId" th:value="${movie.tmdbId}">
 
             <div class="score-field">
                 <label class="score-label" for="directing">
