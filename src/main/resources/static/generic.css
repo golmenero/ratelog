@@ -293,8 +293,10 @@ a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-decoration: none;
+  display: inline;
 
-  &.top-title-clickable:hover {
+  &:hover {
     color: var(--accent);
   }
 }
@@ -402,6 +404,26 @@ a {
   display: flex;
   align-self: end;
   justify-self: end;
+}
+
+.modal-categories .score-field {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  display: grid;
+  gap: 8px;
+}
+
+.modal-categories .top-actions {
+  margin-top: 8px;
+
+  .raterr-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .premieres-heading {
@@ -621,8 +643,8 @@ a {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 28px;
-  max-width: 420px;
+  padding: 24px;
+  max-width: 400px;
   width: 90%;
   position: relative;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
@@ -677,7 +699,52 @@ a {
 
 .modal-categories {
   display: grid;
+  gap: 16px;
+}
+
+.modal-slider-row {
+  display: grid;
+  gap: 8px;
+}
+
+.modal-slider-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
+  font-weight: 700;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+
+  > span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-soft);
+
+    i {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+    }
+  }
+}
+
+.modal-slider-value {
+  min-width: 42px;
+  text-align: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: hsl(20 83% 84%);
+  font-weight: 800;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+}
+
+.modal-categories input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
 }
 
 .modal-category-row {
