@@ -44,7 +44,8 @@ data class TvRating(
             createdAt = createdAt
         )).updateScore()
 
-    private fun updateScore() = copy(score = seasonRatings.map { it.score.value }.average().let(::Score))
+    private fun updateScore() = if (seasonRatings.isEmpty()) copy(score = null)
+        else  copy(score = seasonRatings.map { it.score.value }.average().let(::Score))
 
     companion object {
         fun create(tvShowId: TvShow.Id, userId: User.Id, now: Instant) = TvRating(
