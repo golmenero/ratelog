@@ -2,6 +2,7 @@ package org.raterr.movie.rating.delete
 
 import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
+import org.raterr.movie.Movie
 import org.raterr.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
@@ -18,11 +19,11 @@ class DeleteRatingController(
     @Transactional
     fun deleteRating(
         @CurrentUser user: User,
-        @PathVariable("id") tmdbId: Int,
+        @PathVariable("id") movieId: Long,
         redirectAttributes: RedirectAttributes
     ): String =
         DeleteRating(
-            tmdbId = TmdbId(tmdbId),
+            movieId = Movie.Id(movieId),
             userId = user.id!!,
         ).let(handler::handle)
             .mapLeft(::mapError)

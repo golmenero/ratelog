@@ -90,7 +90,7 @@
                             </div>
                         </div>
                         <div class="top-actions">
-                            <form th:action="@{'/movies/delete/' + ${m.tmdbId}}" method="post">
+                            <form th:action="@{'/movies/delete/' + ${m.id}}" method="post">
                                 <button class="raterr-btn" type="submit" aria-label="Delete rating">
                                     <i data-lucide="trash" aria-hidden="true"></i>
                                 </button>
