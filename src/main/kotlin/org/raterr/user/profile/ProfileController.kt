@@ -25,8 +25,8 @@ class ProfileController(
                     "search"
                 },
                 {
-                    model.addAttribute("username", it.username)
-                    model.addAttribute("email", it.email)
+                    model.addAttribute("username", it.username.value)
+                    model.addAttribute("email", it.email.value)
                     model.addAttribute("memberSince", it.memberSince)
                     "profile"
                 }
