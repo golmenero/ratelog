@@ -2,7 +2,6 @@ package org.raterr.tvshow.premieres
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.raterr.TmdbId
 import org.raterr.tvshow.TvShowRepository
 import org.raterr.tmdb.TmdbClient
 import org.raterr.user.User

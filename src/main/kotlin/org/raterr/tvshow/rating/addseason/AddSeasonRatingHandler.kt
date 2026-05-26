@@ -5,10 +5,7 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.raterr.Score
 import org.raterr.SeasonNumber
-import org.raterr.TmdbId
 import org.raterr.tvshow.TvShow
-import org.raterr.tvshow.detail.GetTvShowDetail
-import org.raterr.tvshow.detail.DetailTvShowHandler
 import org.raterr.tvshow.rating.TvRating
 import org.raterr.tvshow.rating.TvRatingRepository
 import org.raterr.user.User
@@ -17,7 +14,6 @@ import java.time.Instant
 
 data class AddSeasonRating(
     val tvShowId: TvShow.Id,
-    val tmdbId: TmdbId,
     val seasonNumber: SeasonNumber,
     val userId: User.Id,
     val directing: Score,

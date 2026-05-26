@@ -2,12 +2,8 @@ package org.raterr.tvshow.togglefollow
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.raterr.TmdbId
-import org.raterr.movie.togglefollow.ToggleMovieFollowHandlerError
 import org.raterr.tvshow.TvShow
 import org.raterr.tvshow.TvShowRepository
-import org.raterr.tvshow.detail.GetTvShowDetail
-import org.raterr.tvshow.detail.DetailTvShowHandler
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 

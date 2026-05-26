@@ -2,11 +2,8 @@ package org.raterr.movie.togglefollow
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.raterr.TmdbId
 import org.raterr.movie.Movie
 import org.raterr.movie.MovieRepository
-import org.raterr.movie.detail.GetMovieDetail
-import org.raterr.movie.detail.GetMovieDetailHandler
 import org.raterr.user.User
 import org.springframework.stereotype.Component
 

@@ -13,7 +13,7 @@ import kotlin.collections.map
 
 data class GetTopTvShowsResponse(
     val rank: Int,
-    val tmdbId: Int,
+    val id: Long,
     val name: String,
     val firstAirYear: Int?,
     val posterPath: String?,
@@ -74,7 +74,7 @@ class TopTvShowController(
         list.mapIndexed { index, item ->
             GetTopTvShowsResponse(
                 rank = index + 1,
-                tmdbId = item.tvShow.tmdbId.value,
+                id = item.tvShow.id!!.value,
                 name = item.tvShow.name.value,
                 firstAirYear = item.tvShow.firstAirYear,
                 posterPath = item.tvShow.posterPath?.value,

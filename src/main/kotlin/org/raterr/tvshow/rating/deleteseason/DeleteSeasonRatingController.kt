@@ -1,7 +1,6 @@
 package org.raterr.tvshow.rating.deleteseason
 
 import org.raterr.SeasonNumber
-import org.raterr.TmdbId
 import org.raterr.annotations.CurrentUser
 import org.raterr.tvshow.TvShow
 import org.raterr.user.User
