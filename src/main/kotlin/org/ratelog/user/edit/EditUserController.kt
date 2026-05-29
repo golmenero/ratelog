@@ -42,7 +42,10 @@ class EditUserController(
             .fold(
                 {
                     redirectAttributes.addFlashAttribute("error", it)
-                    "redirect:/edit-profile"
+                    redirectAttributes.addFlashAttribute("username", username)
+                    redirectAttributes.addFlashAttribute("email", email)
+                    redirectAttributes.addFlashAttribute("lang", lang)
+                    "redirect:/profile"
                 },
                 { "redirect:/profile" }
             )

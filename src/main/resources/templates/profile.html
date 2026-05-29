@@ -16,16 +16,82 @@
             <div class="profile-header">
                 <div class="profile-avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
                 <div class="profile-details">
-                    <h2 class="profile-username" th:text="${username}">Username</h2>
+                    <div class="profile-details-top">
+                        <h2 class="profile-username" th:text="${username}">Username</h2>
+                        <button id="btnOpenEditModal" class="edit-profile-btn" type="button">
+                            <i data-lucide="pencil"></i>
+                        </button>
+                    </div>
                     <p class="profile-email" th:text="${email}">email@example.com</p>
                     <p class="profile-since" th:text="'Member since ' + ${memberSince}">Member since 2024-01-01</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="editProfileModal" class="rating-modal">
+        <div class="rating-modal-content">
+            <button id="btnCloseEditModal" class="modal-close" type="button">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Profile</h2>
+            </div>
+            <form th:action="@{/edit-profile}" method="post" class="modal-categories">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" th:value="${username}" required minlength="3" maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" th:value="${email}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" name="currentPassword" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">New Password (optional)</label>
+                    <input type="password" id="newPassword" name="newPassword" minlength="8">
+                </div>
+
+                <div class="form-group">
+                    <label for="lang">Language</label>
+                    <select id="lang" name="lang">
+                        <option value="en" th:selected="${lang == 'en'}">English</option>
+                        <option value="es" th:selected="${lang == 'es'}">Español</option>
+                    </select>
+                </div>
+
+                <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+                <div class="top-actions">
+                    <button class="ratelog-btn primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 <script>
     lucide.createIcons();
+
+    const btnOpenEditModal = document.getElementById('btnOpenEditModal');
+    const btnCloseEditModal = document.getElementById('btnCloseEditModal');
+    const editProfileModal = document.getElementById('editProfileModal');
+
+    btnOpenEditModal.addEventListener('click', () => editProfileModal.classList.add('visible'));
+    btnCloseEditModal.addEventListener('click', () => editProfileModal.classList.remove('visible'));
+
+    editProfileModal.addEventListener('click', (e) => {
+        if (e.target === editProfileModal) {
+            editProfileModal.classList.remove('visible');
+        }
+    });
 </script>
 </html>

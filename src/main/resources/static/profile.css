@@ -64,6 +64,24 @@
       color: rgba(245, 238, 229, 0.48);
     }
   }
+
+  select {
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: var(--font-ui);
+    cursor: pointer;
+
+    &:focus {
+      border-color: rgba(230, 120, 60, 0.45);
+      box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
+    }
+  }
 }
 
 .auth-footer {
@@ -128,6 +146,35 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.profile-details-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.edit-profile-btn {
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--accent);
+  }
+
+  i {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .profile-username {

@@ -3,6 +3,7 @@ package org.ratelog.user.profile
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.ratelog.Lang
 import org.ratelog.test.InMemoryUserRepository
 import org.ratelog.test.UserFactory
 import org.ratelog.user.User
@@ -24,6 +25,7 @@ class ProfileHandlerTest {
             id = 1,
             username = "testuser",
             email = "test@example.com",
+            lang = Lang("es"),
             createdAtEpochMs = 1609459200000
         )
         userRepository.save(user)
@@ -37,6 +39,7 @@ class ProfileHandlerTest {
             { profile ->
                 assertEquals("testuser", profile.username.value)
                 assertEquals("test@example.com", profile.email.value)
+                assertEquals("es", profile.lang.value)
             }
         )
     }

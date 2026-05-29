@@ -3,6 +3,7 @@ package org.ratelog.user.profile
 import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.Email
+import org.ratelog.Lang
 import org.ratelog.Username
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
@@ -16,6 +17,7 @@ data class Profile(
     val username: Username,
     val email: Email,
     val memberSince: String,
+    val lang: Lang,
 )
 
 @Service
@@ -30,6 +32,7 @@ class ProfileHandler(
             username = user.username,
             email = user.email,
             memberSince = LocalDate.ofEpochDay(user.createdAtEpochMs / 86400000).toString(),
+            lang = user.lang,
         )
     }
 }
