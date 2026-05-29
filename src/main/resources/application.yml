@@ -1,12 +1,12 @@
 spring:
   application:
-    name: raterr
+    name: ratelog
   mvc:
     hiddenmethod:
       filter:
         enabled: true
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:raterr}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:ratelog}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -24,7 +24,7 @@ server:
   servlet:
     context-path: /
 
-raterr:
+ratelog:
   tmdb:
     api-key: ${TMDB_API_KEY:}
     base-url: https://api.themoviedb.org/3
