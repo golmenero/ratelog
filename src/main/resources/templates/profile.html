@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ratelog - Profile</title>
+    <title th:text="#{profile.title}">Ratelog - Profile</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -23,7 +23,7 @@
                         </button>
                     </div>
                     <p class="profile-email" th:text="${email}">email@example.com</p>
-                    <p class="profile-since" th:text="'Member since ' + ${memberSince}">Member since 2024-01-01</p>
+                    <p class="profile-since"><span th:text="#{profile.member.since}">Member since</span> <span th:text="${memberSince}">2024-01-01</span></p>
                 </div>
             </div>
         </div>
@@ -35,43 +35,43 @@
                 <i data-lucide="x"></i>
             </button>
             <div class="modal-header">
-                <h2 class="modal-title">Edit Profile</h2>
+                <h2 class="modal-title" th:text="#{profile.edit.title}">Edit Profile</h2>
             </div>
             <form th:action="@{/edit-profile}" method="post" class="modal-categories">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="username" th:text="#{auth.username}">Username</label>
                     <input type="text" id="username" name="username" th:value="${username}" required minlength="3" maxlength="50">
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email" th:text="#{auth.email}">Email</label>
                     <input type="email" id="email" name="email" th:value="${email}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="currentPassword">Current Password</label>
+                    <label for="currentPassword" th:text="#{profile.current.password}">Current Password</label>
                     <input type="password" id="currentPassword" name="currentPassword" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="newPassword">New Password (optional)</label>
+                    <label for="newPassword" th:text="#{profile.new.password}">New Password (optional)</label>
                     <input type="password" id="newPassword" name="newPassword" minlength="8">
                 </div>
 
                 <div class="form-group">
-                    <label for="lang">Language</label>
+                    <label for="lang" th:text="#{profile.language}">Language</label>
                     <select id="lang" name="lang">
-                        <option value="en" th:selected="${lang == 'en'}">English</option>
-                        <option value="es" th:selected="${lang == 'es'}">Español</option>
+                        <option value="en" th:text="#{profile.lang.en}" th:selected="${lang == 'en'}">English</option>
+                        <option value="es" th:text="#{profile.lang.es}" th:selected="${lang == 'es'}">Español</option>
                     </select>
                 </div>
 
                 <div th:if="${error}" class="error-message" th:text="${error}"></div>
 
                 <div class="top-actions">
-                    <button class="ratelog-btn primary" type="submit">Save</button>
+                    <button class="ratelog-btn primary" type="submit" th:text="#{profile.save}">Save</button>
                 </div>
             </form>
         </div>

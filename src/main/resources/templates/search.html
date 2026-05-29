@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ratelog - Search</title>
+    <title th:text="#{search.title}">Ratelog - Search</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -15,8 +15,8 @@
         <section class="hero-card">
             <div class="hero-content">
                 <div>
-                    <img src="/img/logo-name.svg" alt="Ratelog" class="hero-logo">
-                    <h1 class="hero-title">Find movies and TV shows.</h1>
+                    <img src="/img/logo-name.svg" th:alt="#{app.name}" class="hero-logo">
+                    <h1 class="hero-title" th:text="#{search.hero}">Find movies and TV shows.</h1>
                 </div>
             </div>
         </section>
@@ -25,8 +25,8 @@
             <div class="search-toolbar-centered">
                 <div class="heading-filter search-inline">
                     <form th:action="@{/}" method="get" style="display: contents;">
-                        <input id="q" name="q" type="text" th:value="${query}" placeholder="Search movies & TV shows" autocomplete="off" aria-label="Search">
-                        <button class="ratelog-btn primary" type="submit" aria-label="Search" title="Search">
+                        <input id="q" name="q" type="text" th:value="${query}" th:placeholder="#{search.placeholder}" autocomplete="off" th:aria-label="#{search.btn}">
+                        <button class="ratelog-btn primary" type="submit" th:aria-label="#{search.btn}" th:title="#{search.btn}">
                             <i data-lucide="search" aria-hidden="true"></i>
                         </button>
                     </form>
@@ -34,7 +34,7 @@
             </div>
             
             <div th:if="${results != null}" id="results" class="results-grid">
-                <div th:if="${#lists.isEmpty(results)}" class="empty-state">Try with another title, year or original name.</div>
+                <div th:if="${#lists.isEmpty(results)}" class="empty-state" th:text="#{search.empty}">Try with another title, year or original name.</div>
                 
                 <a th:each="item : ${results}"
                    th:href="${item.type == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
@@ -45,11 +45,11 @@
                     </div>
                     <div class="result-content">
                         <div class="tag-row result-meta-row">
-                            <span th:class="${item.type == 'movie'} ? 'tag tag-movie' : 'tag tag-tvshow'" th:text="${item.type == 'movie'} ? 'Movie' : 'TV'">Type</span>
-                            <span class="tag" th:text="${item.year != null} ? ${item.year} : 'Unknown year'">Year</span>
+                            <span th:class="${item.type == 'movie'} ? 'tag tag-movie' : 'tag tag-tvshow'" th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
+                            <span class="tag" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
                         </div>
                         <h3 class="result-title" th:text="${item.title}">Title</h3>
-                        <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : 'No synopsis available right now.'">Overview</p>
+                        <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : #{search.no.synopsis}">Overview</p>
                     </div>
                 </a>
             </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ratelog - TV Show Detail</title>
+    <title th:text="#{tvshow.detail.title}">Ratelog - TV Show Detail</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -16,7 +16,7 @@
             <div class="hero-content">
                 <div>
                     <h1 class="hero-title" id="title">
-                        <span th:text="${show != null} ? ${show.name} : 'TV show not found'">Loading TV show...</span>
+                        <span th:text="${show != null} ? ${show.name} : #{tvshow.detail.not.found}">Loading TV show...</span>
                         <span th:if="${show != null && show.firstAirYear != null}" class="hero-year" th:text="${show.firstAirYear}">Year</span>
                     </h1>
                 </div>
@@ -29,7 +29,7 @@
                 <div th:unless="${show.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(show.name, 0, 1))}">?</div>
             </div>
             <div class="show-detail-body">
-                <p class="show-detail-overview muted" id="showOverview" th:text="${show.overview != null and show.overview.trim().length() > 0} ? ${show.overview} : 'No synopsis available for this title.'">Loading TV show information.</p>
+                <p class="show-detail-overview muted" id="showOverview" th:text="${show.overview != null and show.overview.trim().length() > 0} ? ${show.overview} : #{tvshow.detail.no.synopsis}">Loading TV show information.</p>
                 <div th:if="${!#lists.isEmpty(show.genres)}" class="genre-tags">
                     <span th:each="genre : ${show.genres}" class="genre-tag" th:text="${genre}">Genre</span>
                 </div>
@@ -44,13 +44,13 @@
             </div>
             <div th:if="${show.overallScore != null}" class="show-detail-rating">
                 <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')}">0.00</span>
-                <span class="rating-display-label">Your Rating</span>
+                <span class="rating-display-label" th:text="#{tvshow.detail.your.rating}">Your Rating</span>
             </div>
         </article>
 
         <div th:if="${show != null && !#lists.isEmpty(show.seasons)}" class="seasons-card">
             <div th:each="season : ${show.seasons}" class="season-row">
-                <span class="season-row-label" th:text="'S' + ${season.seasonNumber}">S1</span>
+                <span class="season-row-label" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
                 <div th:if="${season.hasRating}" class="season-row-rated">
                     <div class="rating-cat rating-cat-score">
                         <i data-lucide="star"></i>
@@ -78,7 +78,7 @@
                     </div>
                     <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="season-delete-form">
                         <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
-                        <button type="submit" class="ratelog-btn" aria-label="Delete rating">
+                        <button type="submit" class="ratelog-btn" th:aria-label="#{tvshow.detail.delete.rating}">
                             <i data-lucide="trash"></i>
                         </button>
                     </form>

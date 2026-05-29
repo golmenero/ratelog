@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ratelog - Community</title>
+    <title th:text="#{community.title}">Ratelog - Community</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/community.css">
     <script src="/lucide.min.js"></script>
@@ -16,14 +16,14 @@
         <section class="hero-card">
             <div class="hero-content">
                 <div>
-                    <h1 class="hero-title">Community.</h1>
+                    <h1 class="hero-title" th:text="#{community.title}">Community.</h1>
                 </div>
             </div>
         </section>
 
         <div class="community-grid">
             <section class="panel">
-                <h2 class="section-heading-title">Activity Feed</h2>
+                <h2 class="section-heading-title" th:text="#{community.activity.feed}">Activity Feed</h2>
 
                 <div th:if="${feed != null and !#lists.isEmpty(feed)}" class="feed-list">
                     <div th:each="item : ${feed}" class="feed-card">
@@ -41,27 +41,27 @@
                             </div>
                             <div class="feed-content-row">
                                 <span class="feed-title" th:text="${item.title}">Title</span>
-                                <span th:if="${item.type == 'movie'}" class="tag tag-movie">Movie</span>
-                                <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow">TV</span>
+                                <span th:if="${item.type == 'movie'}" class="tag tag-movie" th:text="#{community.type.movie}">Movie</span>
+                                <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow" th:text="#{community.type.tv}">TV</span>
                                 <span class="feed-date" th:text="${item.ratedAt}">Date</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div th:if="${feed != null and #lists.isEmpty(feed)}" class="empty-state">No recent activity from users you follow.</div>
+                <div th:if="${feed != null and #lists.isEmpty(feed)}" class="empty-state" th:text="#{community.activity.empty}">No recent activity from users you follow.</div>
             </section>
 
             <aside class="community-sidebar">
                 <section class="panel">
-                    <h2 class="section-heading-title">Search Users</h2>
+                    <h2 class="section-heading-title" th:text="#{community.search.users}">Search Users</h2>
 
                     <div th:if="${followError}" class="community-feedback error" th:text="${followError}"></div>
 
                     <div class="community-search-section">
                         <form th:action="@{/community}" method="get" class="community-search-form">
-                            <input type="text" name="username" class="community-search-input" placeholder="Search users..." autocomplete="off" th:value="${searchedUsername}" />
-                            <button type="submit" class="ratelog-btn primary" title="Search users">
+                            <input type="text" name="username" class="community-search-input" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" />
+                            <button type="submit" class="ratelog-btn primary" th:title="#{community.search.users}">
                                 <i data-lucide="search" aria-hidden="true"></i>
                             </button>
                         </form>
@@ -74,7 +74,7 @@
                             <form th:action="@{/user/follow}" method="post" class="user-follow-form">
                                 <input type="hidden" name="username" th:value="${user.username}" />
                                 <input type="hidden" name="from" value="community" />
-                                <button type="submit" class="ratelog-btn primary" th:title="${user.isFollowed} ? 'Unfollow' : 'Follow'">
+                                <button type="submit" class="ratelog-btn primary" th:title="${user.isFollowed} ? #{community.unfollow} : #{community.follow}">
                                     <i th:data-lucide="${user.isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
                                 </button>
                             </form>
@@ -85,7 +85,7 @@
                 <div class="sidebar-separator"></div>
 
                 <section class="panel">
-                    <h2 class="section-heading-title">Followed Users</h2>
+                    <h2 class="section-heading-title" th:text="#{community.followed.users}">Followed Users</h2>
 
                     <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}" class="followed-users-list">
                         <div th:each="followedUser : ${followedUsers}" class="followed-user-item">
@@ -93,14 +93,14 @@
                             <form th:action="@{/user/follow}" method="post" class="followed-user-form">
                                 <input type="hidden" name="username" th:value="${followedUser.username}" />
                                 <input type="hidden" name="from" value="followed" />
-                                <button type="submit" class="followed-user-unfollow" title="Unfollow">
+                                <button type="submit" class="followed-user-unfollow" th:title="#{community.unfollow}">
                                     <i data-lucide="user-round-x" aria-hidden="true"></i>
                                 </button>
                             </form>
                         </div>
                     </div>
 
-                    <div th:if="${followedUsers != null and #lists.isEmpty(followedUsers)}" class="empty-state">You are not following anyone yet.</div>
+                    <div th:if="${followedUsers != null and #lists.isEmpty(followedUsers)}" class="empty-state" th:text="#{community.followed.empty}">You are not following anyone yet.</div>
                 </section>
             </aside>
         </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ratelog - Movie Detail</title>
+    <title th:text="#{movie.detail.title}">Ratelog - Movie Detail</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -16,7 +16,7 @@
             <div class="hero-content">
                 <div>
                     <h1 class="hero-title" id="title">
-                        <span th:text="${movie != null} ? ${movie.name} : 'Movie not found'">Loading movie...</span>
+                        <span th:text="${movie != null} ? ${movie.name} : #{movie.detail.not.found}">Loading movie...</span>
                         <span th:if="${movie != null && movie.firstAirYear != null}" class="hero-year" th:text="${movie.firstAirYear}">Year</span>
                     </h1>
                 </div>
@@ -29,7 +29,7 @@
                 <div th:unless="${movie.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(movie.name, 0, 1))}">?</div>
             </div>
             <div class="show-detail-body">
-                <p class="show-detail-overview muted" id="movieOverview" th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : 'No synopsis available for this title.'">Loading movie information.</p>
+                <p class="show-detail-overview muted" id="movieOverview" th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : #{movie.detail.no.synopsis}">Loading movie information.</p>
                 <div th:if="${!#lists.isEmpty(movie.genres)}" class="genre-tags">
                     <span th:each="genre : ${movie.genres}" class="genre-tag" th:text="${genre}">Genre</span>
                 </div>
@@ -47,13 +47,13 @@
             </div>
             <div th:if="${movie.directing != null}" class="show-detail-rating">
                 <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
-                <span class="rating-display-label">Your Rating</span>
+                <span class="rating-display-label" th:text="#{movie.detail.your.rating}">Your Rating</span>
             </div>
         </article>
 
         <div th:if="${movie != null && movie.directing != null}" class="seasons-card">
             <div class="season-row">
-                <span class="season-row-label">Rating</span>
+                <span class="season-row-label" th:text="#{movie.detail.rating}">Rating</span>
                 <div class="season-row-rated">
                     <div class="rating-cat">
                         <i data-lucide="clapperboard"></i>
@@ -76,7 +76,7 @@
                         <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
                     </div>
                     <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="season-delete-form">
-                        <button type="submit" class="ratelog-btn" aria-label="Delete rating">
+                        <button type="submit" class="ratelog-btn" th:aria-label="#{movie.detail.delete.rating}">
                             <i data-lucide="trash"></i>
                         </button>
                     </form>

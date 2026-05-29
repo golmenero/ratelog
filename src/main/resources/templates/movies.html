@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ratelog - Tops</title>
+    <title th:text="#{movies.top.title}">Ratelog - Tops</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -15,7 +15,7 @@
         <section class="hero-card">
             <div class="hero-content">
                 <div>
-                    <h1 class="hero-title">Movies.</h1>
+                    <h1 class="hero-title" th:text="#{movies.title}">Movies.</h1>
                 </div>
             </div>
         </section>
@@ -25,8 +25,8 @@
                 <div class="section-heading">
                     <div class="heading-filter">
                         <form th:action="@{/movies}" method="get" style="display: contents;">
-                            <select id="category" name="category" aria-label="Filter by category">
-                                <option value="">All categories</option>
+                            <select id="category" name="category" th:aria-label="#{movies.category.all}">
+                                <option value="" th:text="#{movies.category.all}">All categories</option>
                                 <option value="Action" th:selected="${selectedCategory == 'Action'}">Action</option>
                                 <option value="Adventure" th:selected="${selectedCategory == 'Adventure'}">Adventure</option>
                                 <option value="Animation" th:selected="${selectedCategory == 'Animation'}">Animation</option>
@@ -47,15 +47,15 @@
                                 <option value="War" th:selected="${selectedCategory == 'War'}">War</option>
                                 <option value="Western" th:selected="${selectedCategory == 'Western'}">Western</option>
                             </select>
-                            <input id="name" name="name" type="text" th:value="${selectedName}" placeholder="Search by name" aria-label="Filter by name">
-                            <select id="limit" name="limit" aria-label="Number of items" style="width: auto; min-width: 0;">
+                            <input id="name" name="name" type="text" th:value="${selectedName}" th:placeholder="#{movies.search.placeholder}" th:aria-label="#{movies.search.placeholder}">
+                            <select id="limit" name="limit" th:aria-label="#{movies.refresh.ranking}" style="width: auto; min-width: 0;">
                                 <option value="5" th:selected="${selectedLimit == 5}">5</option>
                                 <option value="10" th:selected="${selectedLimit == null || selectedLimit == 10}">10</option>
                                 <option value="25" th:selected="${selectedLimit == 25}">25</option>
                                 <option value="50" th:selected="${selectedLimit == 50}">50</option>
                                 <option value="100" th:selected="${selectedLimit == 100}">100</option>
                             </select>
-                            <button class="ratelog-btn primary" type="submit" aria-label="Refresh ranking">
+                            <button class="ratelog-btn primary" type="submit" th:aria-label="#{movies.refresh.ranking}">
                                 <span class="button-icon" aria-hidden="true">↻</span>
                             </button>
                         </form>
@@ -66,7 +66,7 @@
                 <div th:if="${success}" id="msg" class="feedback success spacer-top" th:text="${success}"></div>
                 
                 <div th:if="${tops != null}" id="list" class="top-list spacer-top">
-                    <div th:if="${#lists.isEmpty(tops)}" class="empty-state">No rated movies yet for this filter.</div>
+                    <div th:if="${#lists.isEmpty(tops)}" class="empty-state" th:text="#{movies.empty.filter}">No rated movies yet for this filter.</div>
                     <article th:each="m, iterStat : ${tops}" th:class="'top-card list-poster-card' + (${m.posterPath != null} ? '' : ' no-poster')">
                         <a th:href="@{'/movie/' + ${m.tmdbId}}" class="top-card-link"></a>
                         <div th:if="${m.posterPath != null}" class="top-poster poster-frame">
@@ -78,7 +78,7 @@
                                     <span class="top-rank-num" th:text="${m.rank}">#1</span>
                                     <span class="top-title-wrap">
                                         <span class="top-title" th:text="${m.title}">Title</span>
-                                        <span class="top-year" th:text="${m.releaseYear != null} ? ${m.releaseYear} : 'Unknown year'">Year</span>
+                                        <span class="top-year" th:text="${m.releaseYear != null} ? ${m.releaseYear} : #{movies.year.unknown}">Year</span>
                                     </span>
                                 </div>
                                 <div th:if="${!#lists.isEmpty(m.genres)}" class="genre-tags">
@@ -96,11 +96,11 @@
 
             <aside class="premieres-sidebar">
                 <section class="panel">
-                    <h2 class="section-heading-title">Premieres</h2>
+                    <h2 class="section-heading-title" th:text="#{movies.premieres}">Premieres</h2>
 
                     <div th:if="${(releasedPremieres != null and !#lists.isEmpty(releasedPremieres)) or (upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)) or (noDatePremieres != null and !#lists.isEmpty(noDatePremieres))}">
                         <div class="premieres-group" th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
-                            <div class="premieres-group-label">Released</div>
+                            <div class="premieres-group-label" th:text="#{movies.premieres.released}">Released</div>
                             <div class="premiere-timeline">
                                 <div th:each="item : ${releasedPremieres}" class="premiere-card premiere-released">
                                     <a th:href="@{'/movie/' + ${item.tmdbId}}" class="premiere-card-link"></a>
@@ -119,7 +119,7 @@
                         </div>
 
                         <div class="premieres-group" th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
-                            <div class="premieres-group-label">Upcoming</div>
+                            <div class="premieres-group-label" th:text="#{movies.premieres.upcoming}">Upcoming</div>
                             <div class="premiere-timeline">
                                 <div th:each="item : ${upcomingPremieres}" class="premiere-card">
                                     <a th:href="@{'/movie/' + ${item.tmdbId}}" class="premiere-card-link"></a>
@@ -138,7 +138,7 @@
                         </div>
 
                         <div class="premieres-group" th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
-                            <div class="premieres-group-label">No release date yet</div>
+                            <div class="premieres-group-label" th:text="#{movies.premieres.no.date}">No release date yet</div>
                             <div class="premiere-timeline">
                                 <div th:each="item : ${noDatePremieres}" class="premiere-card">
                                     <a th:href="@{'/movie/' + ${item.tmdbId}}" class="premiere-card-link"></a>
@@ -150,7 +150,7 @@
                                         <div class="premiere-title-row">
                                             <span class="premiere-name" th:text="${item.title}">Title</span>
                                         </div>
-                                        <span class="premiere-date">TBA</span>
+                                        <span class="premiere-date" th:text="#{movies.tba}">TBA</span>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@
                     </div>
 
                     <div th:if="${(releasedPremieres == null or #lists.isEmpty(releasedPremieres)) and (upcomingPremieres == null or #lists.isEmpty(upcomingPremieres)) and (noDatePremieres == null or #lists.isEmpty(noDatePremieres))}">
-                        <div class="empty-state">No followed movies yet.</div>
+                        <div class="empty-state" th:text="#{movies.empty}">No followed movies yet.</div>
                     </div>
                 </section>
             </aside>
@@ -177,5 +177,3 @@
 </script>
 </body>
 </html>
-
-
