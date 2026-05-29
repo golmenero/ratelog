@@ -24,9 +24,7 @@ class TvRatingRepositoryImpl(
         seasonRatingDAO.findByTvShowIdAndUserId(savedEntity.tvShowId, savedEntity.userId)
             .forEach { seasonRatingDAO.deleteById(it.id!!) }
 
-        rating.seasonRatings
-            .map { it.toEntity() }
-            .forEach(seasonRatingDAO::save)
+        seasonRatingDAO.saveAll(rating.seasonRatings.map { it.toEntity() })
     }
 
     override fun deleteById(tvRatingId: TvRating.Id) {
