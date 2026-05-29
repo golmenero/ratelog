@@ -28,5 +28,5 @@ jobs:
         run: mvn -B package -DskipTests
 
       - name: Build Docker image
-        run: docker build -t raterr:ci .
+        run: docker build -t ratelog:ci .
 

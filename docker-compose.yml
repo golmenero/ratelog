@@ -1,9 +1,9 @@
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: raterr-postgres
+    container_name: ratelog-postgres
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-raterr}
+      POSTGRES_DB: ${POSTGRES_DB:-ratelog}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
@@ -16,18 +16,18 @@ services:
       timeout: 3s
       retries: 5
 
-  raterr:
+  ratelog:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: raterr
+    container_name: ratelog
     ports:
       - "${PORT:-8080}:${PORT:-8080}"
     environment:
       PORT: ${PORT:-8080}
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: ${POSTGRES_DB:-raterr}
+      POSTGRES_DB: ${POSTGRES_DB:-ratelog}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       TMDB_API_KEY: ${TMDB_API_KEY}

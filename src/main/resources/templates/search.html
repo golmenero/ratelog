@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raterr - Search</title>
+    <title>Ratelog - Search</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -25,7 +25,7 @@
                 <div class="heading-filter search-inline">
                     <form th:action="@{/}" method="get" style="display: contents;">
                         <input id="q" name="q" type="text" th:value="${query}" placeholder="Search movies & TV shows" autocomplete="off" aria-label="Search">
-                        <button class="raterr-btn primary" type="submit" aria-label="Search" title="Search">
+                        <button class="ratelog-btn primary" type="submit" aria-label="Search" title="Search">
                             <i data-lucide="search" aria-hidden="true"></i>
                         </button>
                     </form>

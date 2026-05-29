@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raterr - Movie Detail</title>
+    <title>Ratelog - Movie Detail</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -35,12 +35,12 @@
                 </div>
             </div>
             <div class="show-detail-actions">
-                <button th:if="${!movie.hasRating}" id="btnOpenRateModal" class="raterr-btn">
+                <button th:if="${!movie.hasRating}" id="btnOpenRateModal" class="ratelog-btn">
                     <i data-lucide="star"></i>
                 </button>
                 <form th:action="@{/movie/follow}" method="post">
                     <input type="hidden" name="movieId" th:value="${movie.id}" />
-                    <button type="submit" th:class="${movie.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
+                    <button type="submit" th:class="${movie.isFollowed} ? 'ratelog-btn green' : 'ratelog-btn'">
                         <i data-lucide="heart"></i>
                     </button>
                 </form>
@@ -76,7 +76,7 @@
                         <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
                     </div>
                     <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="season-delete-form">
-                        <button type="submit" class="raterr-btn" aria-label="Delete rating">
+                        <button type="submit" class="ratelog-btn" aria-label="Delete rating">
                             <i data-lucide="trash"></i>
                         </button>
                     </form>

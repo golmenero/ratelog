@@ -451,7 +451,7 @@ a {
 .modal-categories .top-actions {
   margin-top: 8px;
 
-  .raterr-btn {
+  .ratelog-btn {
     width: 100%;
     justify-content: center;
   }
@@ -774,7 +774,7 @@ a {
   flex-shrink: 0;
   margin-left: auto;
 
-  .raterr-btn {
+  .ratelog-btn {
     width: 32px;
     height: 32px;
     padding: 0;
@@ -908,7 +908,7 @@ a {
 .rating-delete-form {
   flex-shrink: 0;
 
-  .raterr-btn {
+  .ratelog-btn {
     width: 32px;
     height: 32px;
     padding: 0;

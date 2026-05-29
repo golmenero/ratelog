@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raterr - Login</title>
+    <title>Ratelog - Login</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -13,7 +13,7 @@
 
     <main class="main-stack">
         <section class="auth-card">
-            <h1 class="auth-title">Sign in to Raterr</h1>
+            <h1 class="auth-title">Sign in to Ratelog</h1>
             
             <div th:if="${param.error}" class="error-message">Invalid username or password.</div>
             <div th:if="${param.logout}" class="success-message">You have been logged out successfully.</div>
@@ -31,7 +31,7 @@
                     <input type="password" id="password" name="password" required>
                 </div>
 
-                <button type="submit" class="raterr-btn primary full-width">Sign In</button>
+                <button type="submit" class="ratelog-btn primary full-width">Sign In</button>
             </form>
 
             <p class="auth-footer">

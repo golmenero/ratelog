@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raterr - Community</title>
+    <title>Ratelog - Community</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/community.css">
     <script src="/lucide.min.js"></script>
@@ -61,7 +61,7 @@
                     <div class="community-search-section">
                         <form th:action="@{/community}" method="get" class="community-search-form">
                             <input type="text" name="username" class="community-search-input" placeholder="Search users..." autocomplete="off" th:value="${searchedUsername}" />
-                            <button type="submit" class="raterr-btn primary" title="Search users">
+                            <button type="submit" class="ratelog-btn primary" title="Search users">
                                 <i data-lucide="search" aria-hidden="true"></i>
                             </button>
                         </form>
@@ -74,7 +74,7 @@
                             <form th:action="@{/user/follow}" method="post" class="user-follow-form">
                                 <input type="hidden" name="username" th:value="${user.username}" />
                                 <input type="hidden" name="from" value="community" />
-                                <button type="submit" class="raterr-btn primary" th:title="${user.isFollowed} ? 'Unfollow' : 'Follow'">
+                                <button type="submit" class="ratelog-btn primary" th:title="${user.isFollowed} ? 'Unfollow' : 'Follow'">
                                     <i th:data-lucide="${user.isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
                                 </button>
                             </form>

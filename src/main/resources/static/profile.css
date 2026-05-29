@@ -156,7 +156,7 @@
   margin-left: auto;
 }
 
-.profile-actions .raterr-btn {
+.profile-actions .ratelog-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -222,11 +222,11 @@
   margin-left: auto;
 }
 
-.unfollow-form .raterr-btn {
+.unfollow-form .ratelog-btn {
   padding: 6px;
 }
 
-.unfollow-form .raterr-btn:hover {
+.unfollow-form .ratelog-btn:hover {
   color: var(--danger);
 }
 

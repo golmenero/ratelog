@@ -1,0 +1,26 @@
+package org.ratelog.annotations
+
+import org.ratelog.user.User
+import org.ratelog.user.UserDetailsService
+import org.springframework.core.MethodParameter
+import org.springframework.web.bind.support.WebDataBinderFactory
+import org.springframework.web.context.request.NativeWebRequest
+import org.springframework.web.method.support.HandlerMethodArgumentResolver
+import org.springframework.web.method.support.ModelAndViewContainer
+
+class CurrentUserArgumentResolver : HandlerMethodArgumentResolver {
+
+    override fun supportsParameter(parameter: MethodParameter): Boolean {
+        return parameter.hasParameterAnnotation(CurrentUser::class.java) &&
+                parameter.parameterType == User::class.java
+    }
+
+    override fun resolveArgument(
+        parameter: MethodParameter,
+        mavContainer: ModelAndViewContainer?,
+        webRequest: NativeWebRequest,
+        binderFactory: WebDataBinderFactory?
+    ): Any? {
+        return UserDetailsService.getCurrentUser()
+    }
+}

@@ -1,4 +1,4 @@
-# Raterr
+# Ratelog
 
 Web app to search for movies and TV shows on TMDB, rate them by categories, and generate ranked top lists. Supports multi-user accounts with authentication.
 
@@ -41,9 +41,9 @@ Web app to search for movies and TV shows on TMDB, rate them by categories, and 
 | `PORT` | No | `8080` | HTTP port |
 | `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
 | `POSTGRES_PORT` | No | `5432` | PostgreSQL port |
-| `POSTGRES_DB` | No | `raterr` | Database name |
-| `POSTGRES_USER` | No | `raterr` | Database user |
-| `POSTGRES_PASSWORD` | No | `raterr` | Database password |
+| `POSTGRES_DB` | No | `ratelog` | Database name |
+| `POSTGRES_USER` | No | `ratelog` | Database user |
+| `POSTGRES_PASSWORD` | No | `ratelog` | Database password |
 
 ## Run Locally
 
@@ -66,7 +66,7 @@ Open in browser:
 
 ### Build Image
 ```powershell
-docker build -t raterr .
+docker build -t ratelog .
 ```
 
 ### Run with Docker Compose
@@ -82,7 +82,7 @@ docker compose up --build
 
 Compose services:
 - **postgres** — PostgreSQL 17 (port 5432, volume `pgdata`)
-- **raterr** — App (port 8080, depends on healthy postgres)
+- **ratelog** — App (port 8080, depends on healthy postgres)
 
 ## Endpoints
 
@@ -123,8 +123,8 @@ git push origin v1.0.0
 ```
 
 Produces:
-- `ghcr.io/<owner>/raterr:vX.Y.Z`
-- `ghcr.io/<owner>/raterr:latest`
+- `ghcr.io/<owner>/ratelog:vX.Y.Z`
+- `ghcr.io/<owner>/ratelog:latest`
 
 ## Deploy to TrueNAS SCALE (Dockge)
 
@@ -134,6 +134,6 @@ Files in `deploy/dockge/`:
 Minimal flow:
 1. Copy `deploy/dockge/.env.example` to `.env` in your Dockge stack
 2. Set `TMDB_API_KEY` and `POSTGRES_DATA_DIR` (path `/mnt/<pool>/...`)
-3. Set `RATERR_IMAGE=ghcr.io/<owner>/raterr:latest` (or specific version)
+3. Set `RATLOG_IMAGE=ghcr.io/<owner>/ratelog:latest` (or specific version)
 4. Deploy with compose
 5. Verify at `http://IP_TRUENAS:8080/api/health`

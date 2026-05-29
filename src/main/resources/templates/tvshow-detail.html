@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raterr - TV Show Detail</title>
+    <title>Ratelog - TV Show Detail</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
 </head>
@@ -37,7 +37,7 @@
             <div class="show-detail-actions">
                 <form th:action="@{/tvshow/follow}" method="post">
                     <input type="hidden" name="tvShowId" th:value="${show.id}" />
-                    <button type="submit" th:class="${show.isFollowed} ? 'raterr-btn green' : 'raterr-btn'">
+                    <button type="submit" th:class="${show.isFollowed} ? 'ratelog-btn green' : 'ratelog-btn'">
                         <i data-lucide="heart"></i>
                     </button>
                 </form>
@@ -78,12 +78,12 @@
                     </div>
                     <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="season-delete-form">
                         <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
-                        <button type="submit" class="raterr-btn" aria-label="Delete rating">
+                        <button type="submit" class="ratelog-btn" aria-label="Delete rating">
                             <i data-lucide="trash"></i>
                         </button>
                     </form>
                 </div>
-                <button th:unless="${season.hasRating}" class="raterr-btn season-rate-btn" th:data-season="${season.seasonNumber}">
+                <button th:unless="${season.hasRating}" class="ratelog-btn season-rate-btn" th:data-season="${season.seasonNumber}">
                     <i data-lucide="star"></i>
                 </button>
             </div>
