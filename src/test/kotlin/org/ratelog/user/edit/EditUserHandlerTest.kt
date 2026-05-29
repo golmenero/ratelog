@@ -42,7 +42,6 @@ class EditUserHandlerTest {
             email = Email("new@example.com"),
             currentPassword = Password("oldpassword"),
             newPassword = null,
-            lang = Lang("en"),
         )
 
         val result = handler.handle(command)
@@ -51,7 +50,7 @@ class EditUserHandlerTest {
         val updatedUser = userRepository.findById(User.Id(1))
         assertEquals("newuser", updatedUser!!.username.value)
         assertEquals("new@example.com", updatedUser.email.value)
-        assertEquals("en", updatedUser.lang.value)
+        assertEquals("es", updatedUser.lang.value)
     }
 
     @Test
@@ -70,7 +69,6 @@ class EditUserHandlerTest {
             email = Email("test@example.com"),
             currentPassword = Password("oldpassword"),
             newPassword = Password("newpassword123"),
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -88,7 +86,6 @@ class EditUserHandlerTest {
             email = Email("test@example.com"),
             currentPassword = Password("password"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -113,7 +110,6 @@ class EditUserHandlerTest {
             email = Email("test@example.com"),
             currentPassword = Password("wrongpassword"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -133,7 +129,6 @@ class EditUserHandlerTest {
             email = Email("test@example.com"),
             currentPassword = Password("password"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -153,7 +148,6 @@ class EditUserHandlerTest {
             email = Email(""),
             currentPassword = Password("password"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -173,7 +167,6 @@ class EditUserHandlerTest {
             email = Email("test@example.com"),
             currentPassword = Password("password"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -193,7 +186,6 @@ class EditUserHandlerTest {
             email = Email("test@example.com"),
             currentPassword = Password("password"),
             newPassword = Password("short"),
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -215,7 +207,6 @@ class EditUserHandlerTest {
             email = Email("new@example.com"),
             currentPassword = Password("password"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -235,7 +226,6 @@ class EditUserHandlerTest {
             email = Email("new@example.com"),
             currentPassword = Password("password"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -256,7 +246,6 @@ class EditUserHandlerTest {
             email = Email("user2@example.com"),
             currentPassword = Password("password"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -276,7 +265,6 @@ class EditUserHandlerTest {
             email = Email("test@example.com"),
             currentPassword = Password("password"),
             newPassword = null,
-            lang = Lang("es"),
         )
 
         val result = handler.handle(command)

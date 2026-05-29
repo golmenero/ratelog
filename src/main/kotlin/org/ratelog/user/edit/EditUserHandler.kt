@@ -4,7 +4,6 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.ratelog.Email
-import org.ratelog.Lang
 import org.ratelog.Password
 import org.ratelog.Username
 import org.ratelog.user.User
@@ -18,7 +17,6 @@ data class EditUserCommand(
     val email: Email,
     val currentPassword: Password,
     val newPassword: Password?,
-    val lang: Lang,
 )
 
 @Component
@@ -57,7 +55,6 @@ class EditUserHandler(
             username = command.username,
             email = command.email,
             passwordHash = newPasswordHash,
-            lang = command.lang,
         )
 
         userRepository.save(updatedUser)

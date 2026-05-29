@@ -1,7 +1,6 @@
 package org.ratelog.user.edit
 
 import org.ratelog.Email
-import org.ratelog.Lang
 import org.ratelog.Password
 import org.ratelog.Username
 import org.ratelog.annotations.CurrentUser
@@ -33,7 +32,6 @@ class EditUserController(
         @RequestParam("email") email: String,
         @RequestParam("currentPassword") currentPassword: String,
         @RequestParam("newPassword", required = false) newPassword: String?,
-        @RequestParam("lang") lang: String,
         redirectAttributes: RedirectAttributes,
         locale: Locale
     ): String =
@@ -43,7 +41,6 @@ class EditUserController(
             email = Email(email),
             currentPassword = Password(currentPassword),
             newPassword = newPassword?.ifEmpty { null }?.let { Password(it) },
-            lang = Lang(lang),
         ).let(handler::handle)
             .mapLeft { mapError(it, locale) }
             .fold(
@@ -51,16 +48,15 @@ class EditUserController(
                     redirectAttributes.addFlashAttribute("error", it)
                     redirectAttributes.addFlashAttribute("username", username)
                     redirectAttributes.addFlashAttribute("email", email)
-                    redirectAttributes.addFlashAttribute("lang", lang)
                     "redirect:/profile"
                 },
                 {
-                    refreshUserLang(Lang(lang), username, email)
+                    refreshUserDetails(username, email, newPassword)
                     "redirect:/profile"
                 }
             )
 
-    private fun refreshUserLang(newLang: Lang, username: String, email: String) {
+    private fun refreshUserDetails(username: String, email: String, password: String?) {
         val auth = SecurityContextHolder.getContext().authentication
         val currentDetails = auth.principal as? AppUserDetails ?: return
 
@@ -69,8 +65,8 @@ class EditUserController(
                 id = currentDetails.id,
                 username = username,
                 email = email,
-                password = currentDetails.password,
-                lang = newLang,
+                password = password ?: currentDetails.password,
+                lang = currentDetails.lang,
             ),
             auth.credentials,
             auth.authorities
