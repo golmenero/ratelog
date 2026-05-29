@@ -15,12 +15,15 @@ class UserAwareLocaleResolver : LocaleResolver {
                 "es" -> Locale("es")
                 else -> Locale("en")
             }
-        } else Locale("en")
+        } else {
+            val browserLocales = request.locales.toList().map { it.language }
+            when(browserLocales.first()) {
+                "es" -> Locale("es")
+                else -> Locale("en")
+            }
+        }
     }
 
-    override fun setLocale(
-        request: HttpServletRequest,
-        response: HttpServletResponse?,
-        locale: Locale?
-    ) {}
+    override fun setLocale(request: HttpServletRequest, response: HttpServletResponse, locale: Locale?) {
+    }
 }
