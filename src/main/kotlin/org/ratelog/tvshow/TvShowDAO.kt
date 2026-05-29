@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.Optional
 
-@Table("tv_shows")
+@Table("tv")
 data class TvShowEntity(
     @Id val id: Long? = null,
     @Column("tmdb_id") val tmdbId: Int,
@@ -36,7 +36,7 @@ interface TvShowDAO : CrudRepository<TvShowEntity, Long> {
 
     @Query(
         """
-        SELECT tv.* FROM tv_shows tv
+        SELECT tv.* FROM tv tv
         INNER JOIN tv_follows tf ON tv.id = tf.tv_show_id
         WHERE tf.user_id = :userId
         """

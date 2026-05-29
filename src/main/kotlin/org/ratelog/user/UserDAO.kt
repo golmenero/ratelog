@@ -17,7 +17,7 @@ data class UserEntity(
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long = System.currentTimeMillis()
 )
 
-@Table("follows_users")
+@Table("users_follows")
 data class UserFollowEntity(
     @Id val id: Long? = null,
     @Column("follower_id") val followerId: Long,
@@ -38,9 +38,9 @@ interface UserDAO : CrudRepository<UserEntity, Long> {
 interface UserFollowDAO : CrudRepository<UserFollowEntity, Long> {
     fun findByFollowerIdAndFollowedId(followerId: Long, followedId: Long): Optional<UserFollowEntity>
 
-    @Query("SELECT fu.followed_id FROM follows_users fu WHERE fu.follower_id = :userId")
+    @Query("SELECT fu.followed_id FROM users_follows fu WHERE fu.follower_id = :userId")
     fun findFollowedUserIds(userId: Long): List<Long>
 
-    @Query("SELECT fu.followed_id FROM follows_users fu WHERE fu.follower_id = :userId ORDER BY fu.created_at_epoch_ms DESC")
+    @Query("SELECT fu.followed_id FROM users_follows fu WHERE fu.follower_id = :userId ORDER BY fu.created_at_epoch_ms DESC")
     fun findFollowingUserIds(userId: Long): List<Long>
 }
