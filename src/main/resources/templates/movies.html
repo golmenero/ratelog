@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,25 +27,25 @@
                         <form th:action="@{/movies}" method="get" style="display: contents;">
                             <select id="category" name="category" th:aria-label="#{movies.category.all}">
                                 <option value="" th:text="#{movies.category.all}">All categories</option>
-                                <option value="Action" th:selected="${selectedCategory == 'Action'}">Action</option>
-                                <option value="Adventure" th:selected="${selectedCategory == 'Adventure'}">Adventure</option>
-                                <option value="Animation" th:selected="${selectedCategory == 'Animation'}">Animation</option>
-                                <option value="Comedy" th:selected="${selectedCategory == 'Comedy'}">Comedy</option>
-                                <option value="Crime" th:selected="${selectedCategory == 'Crime'}">Crime</option>
-                                <option value="Documentary" th:selected="${selectedCategory == 'Documentary'}">Documentary</option>
-                                <option value="Drama" th:selected="${selectedCategory == 'Drama'}">Drama</option>
-                                <option value="Family" th:selected="${selectedCategory == 'Family'}">Family</option>
-                                <option value="Fantasy" th:selected="${selectedCategory == 'Fantasy'}">Fantasy</option>
-                                <option value="History" th:selected="${selectedCategory == 'History'}">History</option>
-                                <option value="Horror" th:selected="${selectedCategory == 'Horror'}">Horror</option>
-                                <option value="Music" th:selected="${selectedCategory == 'Music'}">Music</option>
-                                <option value="Mystery" th:selected="${selectedCategory == 'Mystery'}">Mystery</option>
-                                <option value="Romance" th:selected="${selectedCategory == 'Romance'}">Romance</option>
-                                <option value="Science Fiction" th:selected="${selectedCategory == 'Science Fiction'}">Science Fiction</option>
-                                <option value="Thriller" th:selected="${selectedCategory == 'Thriller'}">Thriller</option>
-                                <option value="TV Movie" th:selected="${selectedCategory == 'TV Movie'}">TV Movie</option>
-                                <option value="War" th:selected="${selectedCategory == 'War'}">War</option>
-                                <option value="Western" th:selected="${selectedCategory == 'Western'}">Western</option>
+                                <option value="Action" th:selected="${selectedCategory == 'Action'}" th:text="#{genre.action}">Action</option>
+                                <option value="Adventure" th:selected="${selectedCategory == 'Adventure'}" th:text="#{genre.adventure}">Adventure</option>
+                                <option value="Animation" th:selected="${selectedCategory == 'Animation'}" th:text="#{genre.animation}">Animation</option>
+                                <option value="Comedy" th:selected="${selectedCategory == 'Comedy'}" th:text="#{genre.comedy}">Comedy</option>
+                                <option value="Crime" th:selected="${selectedCategory == 'Crime'}" th:text="#{genre.crime}">Crime</option>
+                                <option value="Documentary" th:selected="${selectedCategory == 'Documentary'}" th:text="#{genre.documentary}">Documentary</option>
+                                <option value="Drama" th:selected="${selectedCategory == 'Drama'}" th:text="#{genre.drama}">Drama</option>
+                                <option value="Family" th:selected="${selectedCategory == 'Family'}" th:text="#{genre.family}">Family</option>
+                                <option value="Fantasy" th:selected="${selectedCategory == 'Fantasy'}" th:text="#{genre.fantasy}">Fantasy</option>
+                                <option value="History" th:selected="${selectedCategory == 'History'}" th:text="#{genre.history}">History</option>
+                                <option value="Horror" th:selected="${selectedCategory == 'Horror'}" th:text="#{genre.horror}">Horror</option>
+                                <option value="Music" th:selected="${selectedCategory == 'Music'}" th:text="#{genre.music}">Music</option>
+                                <option value="Mystery" th:selected="${selectedCategory == 'Mystery'}" th:text="#{genre.mystery}">Mystery</option>
+                                <option value="Romance" th:selected="${selectedCategory == 'Romance'}" th:text="#{genre.romance}">Romance</option>
+                                <option value="Science Fiction" th:selected="${selectedCategory == 'Science Fiction'}" th:text="#{genre.science.fiction}">Science Fiction</option>
+                                <option value="Thriller" th:selected="${selectedCategory == 'Thriller'}" th:text="#{genre.thriller}">Thriller</option>
+                                <option value="TV Movie" th:selected="${selectedCategory == 'TV Movie'}" th:text="#{genre.tv.movie}">TV Movie</option>
+                                <option value="War" th:selected="${selectedCategory == 'War'}" th:text="#{genre.war}">War</option>
+                                <option value="Western" th:selected="${selectedCategory == 'Western'}" th:text="#{genre.western}">Western</option>
                             </select>
                             <input id="name" name="name" type="text" th:value="${selectedName}" th:placeholder="#{movies.search.placeholder}" th:aria-label="#{movies.search.placeholder}">
                             <select id="limit" name="limit" th:aria-label="#{movies.refresh.ranking}" style="width: auto; min-width: 0;">
