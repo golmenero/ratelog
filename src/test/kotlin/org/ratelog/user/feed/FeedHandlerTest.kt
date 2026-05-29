@@ -68,7 +68,23 @@ class FeedHandlerTest {
         val tvShow = TvShowFactory.aTvShow(id = 1, tmdbId = 456, name = "Test Show")
         tvShowRepository.save(tvShow)
 
-        val tvRating = TvRatingFactory.aTvRating(tvShowId = TvShow.Id(1), userId = User.Id(2), createdAt = Instant.now())
+        val seasonRating = TvRatingFactory.aSeasonRating(
+            tvShowId = TvShow.Id(1),
+            seasonNumber = 1,
+            userId = User.Id(2),
+            directing = 5.0,
+            cinematography = 5.0,
+            acting = 5.0,
+            soundtrack = 5.0,
+            screenplay = 5.0,
+            createdAt = Instant.now()
+        )
+        val tvRating = TvRatingFactory.aTvRating(
+            tvShowId = TvShow.Id(1),
+            userId = User.Id(2),
+            seasonRatings = listOf(seasonRating),
+            createdAt = Instant.now()
+        )
         tvRatingRepository.save(tvRating)
 
         val query = FeedQuery(User.Id(1))
