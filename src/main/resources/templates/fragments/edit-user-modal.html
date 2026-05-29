@@ -1,0 +1,39 @@
+<div th:fragment="editUserModal" id="editProfileModal" class="rating-modal">
+    <div class="rating-modal-content">
+        <button id="btnCloseEditModal" class="modal-close" type="button">
+            <i data-lucide="x"></i>
+        </button>
+        <div class="modal-header">
+            <h2 class="modal-title" th:text="#{profile.edit.title}">Edit Profile</h2>
+        </div>
+        <form th:action="@{/edit-profile}" method="post" class="modal-categories">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="form-group">
+                <label for="username" th:text="#{auth.username}">Username</label>
+                <input type="text" id="username" name="username" th:value="${username}" required minlength="3" maxlength="50">
+            </div>
+
+            <div class="form-group">
+                <label for="email" th:text="#{auth.email}">Email</label>
+                <input type="email" id="email" name="email" th:value="${email}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="currentPassword" th:text="#{profile.current.password}">Current Password</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+
+            <div class="form-group">
+                <label for="newPassword" th:text="#{profile.new.password}">New Password (optional)</label>
+                <input type="password" id="newPassword" name="newPassword" minlength="8">
+            </div>
+
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+            <div class="top-actions">
+                <button class="ratelog-btn primary" type="submit" th:text="#{profile.save}">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
