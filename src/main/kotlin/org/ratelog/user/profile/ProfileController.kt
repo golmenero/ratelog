@@ -28,7 +28,7 @@ class ProfileController(
                     model.addAttribute("username", it.username.value)
                     model.addAttribute("email", it.email.value)
                     model.addAttribute("memberSince", it.memberSince)
-                    model.addAttribute("lang", it.lang.value)
+                    model.addAttribute("currentLang", it.lang.value)
                     "profile"
                 }
             )

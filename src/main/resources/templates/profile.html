@@ -26,6 +26,16 @@
                     <p class="profile-since"><span th:text="#{profile.member.since}">Member since</span> <span th:text="${memberSince}">2024-01-01</span></p>
                 </div>
             </div>
+
+            <div class="lang-selector">
+                <form th:action="@{/lang}" method="post">
+                    <label for="lang" th:text="#{profile.language}">Language</label>
+                    <select id="lang" name="lang" onchange="this.form.submit()">
+                        <option value="en" th:text="#{profile.lang.en}" th:selected="${currentLang == 'en'}">English</option>
+                        <option value="es" th:text="#{profile.lang.es}" th:selected="${currentLang == 'es'}">Español</option>
+                    </select>
+                </form>
+            </div>
         </div>
     </div>
 
