@@ -45,6 +45,13 @@
   gap: 12px;
 }
 
+.hero-logo {
+  width: 180px;
+  height: auto;
+  display: block;
+  margin-bottom: 16px;
+}
+
 .hero-year {
   font-size: clamp(1rem, 2vw, 1.4rem);
   color: var(--text-soft);

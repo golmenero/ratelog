@@ -8,6 +8,15 @@
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-logo {
+  width: 140px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 .auth-title {

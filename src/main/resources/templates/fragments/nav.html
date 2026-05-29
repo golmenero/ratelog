@@ -3,7 +3,7 @@
 <body>
 <header class="site-header" th:fragment="nav(active)">
     <div class="nav-brand">
-        <a href="/" class="nav-monogram" aria-label="Home">R</a>
+        <a href="/" class="nav-monogram" aria-label="Home"><img src="/img/logo.svg" alt="Ratelog"></a>
     </div>
     <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
         <span class="hamburger-line"></span>

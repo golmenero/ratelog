@@ -13,7 +13,8 @@
 
     <main class="main-stack">
         <section class="auth-card">
-            <h1 class="auth-title">Sign in to Ratelog</h1>
+            <img src="/img/logo-name.svg" alt="Ratelog" class="auth-logo">
+            <h1 class="auth-title">Sign in</h1>
             
             <div th:if="${param.error}" class="error-message">Invalid username or password.</div>
             <div th:if="${param.logout}" class="success-message">You have been logged out successfully.</div>
