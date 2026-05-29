@@ -43,45 +43,6 @@
     color: var(--text-soft);
     font-family: var(--font-ui);
   }
-
-  input {
-    width: 100%;
-    padding: 16px 18px;
-    border-radius: 18px;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    font-family: var(--font-ui);
-
-    &:focus {
-      border-color: rgba(230, 120, 60, 0.45);
-      box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
-    }
-
-    &::placeholder {
-      color: rgba(245, 238, 229, 0.48);
-    }
-  }
-
-  select {
-    width: 100%;
-    padding: 16px 18px;
-    border-radius: 18px;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    font-family: var(--font-ui);
-    cursor: pointer;
-
-    &:focus {
-      border-color: rgba(230, 120, 60, 0.45);
-      box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
-    }
-  }
 }
 
 .auth-footer {
@@ -329,34 +290,6 @@
     letter-spacing: 0.02em;
     text-transform: uppercase;
     white-space: nowrap;
-  }
-
-  select {
-    padding: 10px 16px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text);
-    outline: none;
-    font-family: var(--font-ui);
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 36px;
-
-    &:hover {
-      border-color: rgba(230, 120, 60, 0.3);
-    }
-
-    &:focus {
-      border-color: rgba(230, 120, 60, 0.45);
-      box-shadow: 0 0 0 3px rgba(230, 120, 60, 0.12);
-    }
   }
 }
 

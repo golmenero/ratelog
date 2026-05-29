@@ -1102,11 +1102,6 @@ a {
   font-size: 0.85rem;
 }
 
-.modal-categories input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-}
-
 .modal-category-row {
   display: flex;
   align-items: center;
