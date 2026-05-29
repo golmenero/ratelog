@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
 import org.ratelog.Email
+import org.ratelog.Lang
 import org.ratelog.Password
 import org.ratelog.Username
 import org.ratelog.user.User
@@ -15,6 +16,7 @@ data class RegisterUser(
     val username: Username,
     val email: Email,
     val password: Password,
+    val lang: Lang,
 )
 
 @Component
@@ -39,7 +41,10 @@ class RegisterHandler(
             id = null,
             username = command.username,
             email = command.email,
-            passwordHash = hashedPassword
+            passwordHash = hashedPassword,
+            lang = command.lang,
+            followed = false,
+            followedAtEpochMs = System.currentTimeMillis(),
         ).let(userRepository::save)
     }
 }

@@ -61,3 +61,5 @@ data class Score(val value: Double) {
         require(value in 1.0..10.0) { "Score must be between 1.0 and 10.0" }
     }
 }
+
+data class Lang(val value: String)

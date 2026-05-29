@@ -1,8 +1,8 @@
 package org.ratelog.user
 
 import org.ratelog.Email
+import org.ratelog.Lang
 import org.ratelog.Username
-import kotlin.time.Instant
 
 data class User(
     val id: Id?,
@@ -10,8 +10,9 @@ data class User(
     val email: Email,
     val passwordHash: String,
     val createdAtEpochMs: Long = System.currentTimeMillis(),
-    val followed: Boolean = false,
-    val followedAtEpochMs: Long? = null
+    val followed: Boolean,
+    val followedAtEpochMs: Long?,
+    val lang: Lang,
 ) {
     data class Id(val value: Long)
 

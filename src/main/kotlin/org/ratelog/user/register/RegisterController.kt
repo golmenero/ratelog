@@ -1,6 +1,7 @@
 package org.ratelog.user.register
 
 import org.ratelog.Email
+import org.ratelog.Lang
 import org.ratelog.Password
 import org.ratelog.Username
 import org.springframework.stereotype.Controller
@@ -28,6 +29,7 @@ class RegisterController(
             username = username.let(::Username),
             email = email.let(::Email),
             password = password.let(::Password),
+            lang = DEFAULT_LANG,
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(
@@ -44,5 +46,9 @@ class RegisterController(
         RegisterHandlerError.InvalidPasswordLength -> "Password must be at least 8 characters."
         RegisterHandlerError.UsernameAlreadyExists -> "Username already exists."
         RegisterHandlerError.EmailAlreadyExists -> "Email already exists."
+    }
+
+    companion object {
+        private val DEFAULT_LANG = Lang("es")
     }
 }

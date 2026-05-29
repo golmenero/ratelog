@@ -24,6 +24,7 @@ object UserFactory {
         email: String = "user${idGenerator.get()}@example.com",
         passwordHash: String = "hashedPassword",
         createdAtEpochMs: Long = System.currentTimeMillis(),
+        lang: Lang = Lang("es"),
         followed: Boolean = false,
         followedAtEpochMs: Long? = null
     ) = User(
@@ -32,6 +33,7 @@ object UserFactory {
         email = Email(email),
         passwordHash = passwordHash,
         createdAtEpochMs = createdAtEpochMs,
+        lang = lang,
         followed = followed,
         followedAtEpochMs = followedAtEpochMs
     )

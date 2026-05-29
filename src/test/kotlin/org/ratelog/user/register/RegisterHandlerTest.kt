@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.ratelog.Email
+import org.ratelog.Lang
 import org.ratelog.Password
 import org.ratelog.Username
 import org.ratelog.test.FakePasswordEncoder
@@ -27,7 +28,8 @@ class RegisterHandlerTest {
         val command = RegisterUser(
             username = Username("testuser"),
             email = Email("test@example.com"),
-            Password("password123")
+            password = Password("password123"),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -43,7 +45,8 @@ class RegisterHandlerTest {
         val command = RegisterUser(
             username = Username(""),
             email = Email("test@example.com"),
-            Password("password123")
+            Password("password123"),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -57,7 +60,8 @@ class RegisterHandlerTest {
         val command = RegisterUser(
             username = Username("testuser"),
             Email(""),
-            Password("password123")
+            Password("password123"),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -70,7 +74,8 @@ class RegisterHandlerTest {
         val command = RegisterUser(
             username = Username("testuser"),
             email = Email("test@example.com"),
-            Password("")
+            Password(""),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -83,7 +88,8 @@ class RegisterHandlerTest {
         val command = RegisterUser(
             username = Username("ab"),
             email = Email("test@example.com"),
-            Password("password123")
+            Password("password123"),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -97,7 +103,8 @@ class RegisterHandlerTest {
         val command = RegisterUser(
             username = Username("a".repeat(51)),
             email = Email("test@example.com"),
-            Password("password123")
+            Password("password123"),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -110,7 +117,8 @@ class RegisterHandlerTest {
         val command = RegisterUser(
             username = Username("testuser"),
             email = Email("test@example.com"),
-            Password("short")
+            Password("short"),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(command)
@@ -124,14 +132,16 @@ class RegisterHandlerTest {
         val existingCommand = RegisterUser(
             username = Username("testuser"),
             email = Email("existing@example.com"),
-            Password("password123")
+            Password("password123"),
+            lang = Lang("es"),
         )
         handler.handle(existingCommand)
 
         val newCommand = RegisterUser(
             username = Username("testuser"),
             email = Email("new@example.com"),
-            Password("password123")
+            Password("password123"),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(newCommand)
@@ -145,14 +155,16 @@ class RegisterHandlerTest {
         val existingCommand = RegisterUser(
             username = Username("existinguser"),
             email = Email("test@example.com"),
-            Password("password123")
+            Password("password123"),
+            lang = Lang("es"),
         )
         handler.handle(existingCommand)
 
         val newCommand = RegisterUser(
             username = Username("newuser"),
             Email("test@example.com"),
-            Password("password123")
+            Password("password123"),
+            lang = Lang("es"),
         )
 
         val result = handler.handle(newCommand)

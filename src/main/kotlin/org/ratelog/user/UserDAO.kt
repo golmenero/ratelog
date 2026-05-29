@@ -14,7 +14,8 @@ data class UserEntity(
     val username: String,
     val email: String,
     @Column("password_hash") val passwordHash: String,
-    @Column("created_at_epoch_ms") val createdAtEpochMs: Long = System.currentTimeMillis()
+    @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
+    val lang: String,
 )
 
 @Table("users_follows")

@@ -1,6 +1,7 @@
 package org.ratelog.user
 
 import org.ratelog.Email
+import org.ratelog.Lang
 import org.ratelog.Username
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -15,6 +16,7 @@ class AppUserDetails(
     private val username: String,
     val email: String,
     private val password: String,
+    val lang: Lang,
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority> =
         listOf(SimpleGrantedAuthority("ROLE_USER"))
@@ -40,6 +42,7 @@ class UserDetailsService(
             username = user.username.value,
             email = user.email.value,
             password = user.passwordHash,
+            lang = user.lang,
         )
     }
 
@@ -51,6 +54,9 @@ class UserDetailsService(
                 username = Username(p.username),
                 email = Email(p.email),
                 passwordHash = p.password,
+                followed = false,
+                lang = p.lang,
+                followedAtEpochMs = null,
             )
         }
     }

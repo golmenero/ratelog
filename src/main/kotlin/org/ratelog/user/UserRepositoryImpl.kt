@@ -1,6 +1,7 @@
 package org.ratelog.user
 
 import org.ratelog.Email
+import org.ratelog.Lang
 import org.ratelog.Username
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
@@ -65,7 +66,8 @@ class UserRepositoryImpl(
             passwordHash = passwordHash,
             createdAtEpochMs = createdAtEpochMs,
             followed = follow != null,
-            followedAtEpochMs = follow?.createdAtEpochMs
+            followedAtEpochMs = follow?.createdAtEpochMs,
+            lang = Lang(lang)
         )
     }
 
@@ -75,6 +77,7 @@ class UserRepositoryImpl(
             username = username.value,
             email = email.value,
             passwordHash = passwordHash,
-            createdAtEpochMs = createdAtEpochMs
+            createdAtEpochMs = createdAtEpochMs,
+            lang = lang.value
         )
 }
