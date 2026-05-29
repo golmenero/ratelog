@@ -5,14 +5,17 @@ import org.ratelog.SeasonNumber
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.util.Locale
 
 @Controller
 class AddSeasonRatingController(
     private val handler: AddSeasonRatingHandler,
+    private val messageSource: MessageSource,
 ) {
 
     @PostMapping("/tv/rate")
@@ -26,7 +29,8 @@ class AddSeasonRatingController(
         @RequestParam("acting") acting: Double,
         @RequestParam("soundtrack") soundtrack: Double,
         @RequestParam("screenplay") screenplay: Double,
-        redirectAttributes: RedirectAttributes
+        redirectAttributes: RedirectAttributes,
+        locale: Locale
     ): String =
         AddSeasonRating(
             tvShowId = TvShow.Id(tvShowId),
@@ -45,7 +49,7 @@ class AddSeasonRatingController(
                     "redirect:/tv/${tmdbId}"
                 },
                 {
-                    redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
+                    redirectAttributes.addFlashAttribute("success", messageSource.getMessage("success.rating.saved", null, locale))
                     "redirect:/tv/${tmdbId}"
                 }
             )

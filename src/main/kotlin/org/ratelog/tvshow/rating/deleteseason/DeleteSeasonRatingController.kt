@@ -4,6 +4,7 @@ import org.ratelog.SeasonNumber
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import jakarta.servlet.http.HttpServletRequest
+import java.util.Locale
 
 @Controller
 class DeleteSeasonRatingController(
     private val handler: DeleteSeasonRatingHandler,
+    private val messageSource: MessageSource,
 ) {
 
     @PostMapping("/tvshows/delete/{id}")
@@ -24,7 +27,8 @@ class DeleteSeasonRatingController(
         @PathVariable("id") tvShowId: Long,
         @RequestParam("seasonNumber") seasonNumber: Int,
         redirectAttributes: RedirectAttributes,
-        request: HttpServletRequest
+        request: HttpServletRequest,
+        locale: Locale
     ): String {
         val result = DeleteSeasonRating(
             tvShowId = TvShow.Id(tvShowId),
@@ -46,7 +50,7 @@ class DeleteSeasonRatingController(
                     redirectTarget
                 },
                 {
-                    redirectAttributes.addFlashAttribute("success", "Rating deleted successfully.")
+                    redirectAttributes.addFlashAttribute("success", messageSource.getMessage("success.rating.deleted", null, locale))
                     redirectTarget
                 }
             )

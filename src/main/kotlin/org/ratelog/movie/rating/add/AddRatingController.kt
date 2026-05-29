@@ -3,14 +3,17 @@ package org.ratelog.movie.rating.add
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.movie.Movie
 import org.ratelog.user.User
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.util.Locale
 
 @Controller
 class AddRatingController(
     private val handler: AddRatingHandler,
+    private val messageSource: MessageSource,
 ) {
 
     @PostMapping("/movie/rate")
@@ -23,7 +26,8 @@ class AddRatingController(
         @RequestParam("acting") acting: Double,
         @RequestParam("soundtrack") soundtrack: Double,
         @RequestParam("screenplay") screenplay: Double,
-        redirectAttributes: RedirectAttributes
+        redirectAttributes: RedirectAttributes,
+        locale: Locale
     ): String =
         AddRating(
             movieId = Movie.Id(movieId),
@@ -41,7 +45,7 @@ class AddRatingController(
                     "redirect:/movie/${tmdbId}"
                 },
                 {
-                    redirectAttributes.addFlashAttribute("success", "Rating saved successfully.")
+                    redirectAttributes.addFlashAttribute("success", messageSource.getMessage("success.rating.saved", null, locale))
                     "redirect:/movie/${tmdbId}"
                 }
             )
