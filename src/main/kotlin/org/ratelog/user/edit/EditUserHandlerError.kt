@@ -8,5 +8,4 @@ sealed interface EditUserHandlerError {
     data object UsernameAlreadyExists : EditUserHandlerError
     data object EmailAlreadyExists : EditUserHandlerError
     data object InvalidCurrentPassword : EditUserHandlerError
-    data object Unauthorized : EditUserHandlerError
 }
