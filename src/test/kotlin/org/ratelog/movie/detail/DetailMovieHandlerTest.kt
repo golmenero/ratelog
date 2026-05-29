@@ -10,6 +10,7 @@ import org.ratelog.*
 import org.ratelog.movie.Movie
 import org.ratelog.test.InMemoryMovieRepository
 import org.ratelog.test.InMemoryRatingRepository
+import org.ratelog.test.MovieFactory
 import org.ratelog.test.RatingFactory
 import org.ratelog.test.TmdbFactory
 import org.ratelog.tmdb.TmdbClient

@@ -1,5 +1,6 @@
 package org.ratelog.user.followed
 
+import arrow.core.getOrElse
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

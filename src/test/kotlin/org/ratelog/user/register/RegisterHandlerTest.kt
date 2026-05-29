@@ -8,9 +8,6 @@ import org.ratelog.Password
 import org.ratelog.Username
 import org.ratelog.test.FakePasswordEncoder
 import org.ratelog.test.InMemoryUserRepository
-import org.ratelog.test.UserFactory
-import arrow.core.isLeft
-import arrow.core.isRight
 
 class RegisterHandlerTest {
 

@@ -1,5 +1,6 @@
 package org.ratelog.search
 
+import arrow.core.getOrElse
 import arrow.core.right
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

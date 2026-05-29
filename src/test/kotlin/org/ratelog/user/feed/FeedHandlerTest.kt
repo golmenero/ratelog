@@ -1,9 +1,12 @@
 package org.ratelog.user.feed
 
+import arrow.core.getOrElse
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.ratelog.movie.Movie
 import org.ratelog.test.*
+import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
 import java.time.Instant
 
