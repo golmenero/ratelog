@@ -5,8 +5,11 @@ import org.ratelog.Lang
 import org.ratelog.Password
 import org.ratelog.Username
 import org.ratelog.annotations.CurrentUser
+import org.ratelog.user.AppUserDetails
 import org.ratelog.user.User
 import org.springframework.context.MessageSource
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -51,8 +54,29 @@ class EditUserController(
                     redirectAttributes.addFlashAttribute("lang", lang)
                     "redirect:/profile"
                 },
-                { "redirect:/profile" }
+                {
+                    refreshUserLang(Lang(lang), username, email)
+                    "redirect:/profile"
+                }
             )
+
+    private fun refreshUserLang(newLang: Lang, username: String, email: String) {
+        val auth = SecurityContextHolder.getContext().authentication
+        val currentDetails = auth.principal as? AppUserDetails ?: return
+
+        val newAuth = UsernamePasswordAuthenticationToken(
+            AppUserDetails(
+                id = currentDetails.id,
+                username = username,
+                email = email,
+                password = currentDetails.password,
+                lang = newLang,
+            ),
+            auth.credentials,
+            auth.authorities
+        )
+        SecurityContextHolder.getContext().authentication = newAuth
+    }
 
     private fun mapError(error: EditUserHandlerError, locale: Locale): String = when (error) {
         EditUserHandlerError.UserNotFound -> messageSource.getMessage("edit.error.user.not.found", null, locale)
