@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.util.Locale
+import jakarta.servlet.http.HttpServletRequest
+import org.ratelog.user.BrowserLangResolver
 
 @Controller
 class RegisterController(
@@ -27,13 +29,16 @@ class RegisterController(
         @RequestParam("email") email: String,
         @RequestParam("password") password: String,
         redirectAttributes: RedirectAttributes,
-        locale: Locale
-    ): String =
-        RegisterUser(
+        locale: Locale,
+        request: HttpServletRequest
+    ): String {
+        val browserLang = BrowserLangResolver.resolve(request)
+
+        return RegisterUser(
             username = username.let(::Username),
             email = email.let(::Email),
             password = password.let(::Password),
-            lang = DEFAULT_LANG,
+            lang = Lang(browserLang.language),
         ).let(handler::handle)
             .mapLeft { mapError(it, locale) }
             .fold(
@@ -43,6 +48,7 @@ class RegisterController(
                 },
                 { "redirect:/login" }
             )
+    }
 
     private fun mapError(error: RegisterHandlerError, locale: Locale): String = when (error) {
         RegisterHandlerError.EmptyFields -> messageSource.getMessage("register.error.empty.fields", null, locale)
@@ -50,9 +56,5 @@ class RegisterController(
         RegisterHandlerError.InvalidPasswordLength -> messageSource.getMessage("register.error.invalid.password.length", null, locale)
         RegisterHandlerError.UsernameAlreadyExists -> messageSource.getMessage("register.error.username.already.exists", null, locale)
         RegisterHandlerError.EmailAlreadyExists -> messageSource.getMessage("register.error.email.already.exists", null, locale)
-    }
-
-    companion object {
-        private val DEFAULT_LANG = Lang("es")
     }
 }
