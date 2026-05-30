@@ -981,15 +981,6 @@ a {
   margin-bottom: 18px;
 }
 
-.modal-title {
-  font-size: 1.5rem;
-  line-height: 1.2;
-  letter-spacing: -0.04em;
-  font-family: var(--font-serif);
-  margin-bottom: 4px;
-  padding-right: 30px;
-}
-
 .modal-year {
   font-size: 0.85rem;
   color: var(--text-soft);
@@ -1085,7 +1076,6 @@ a {
     position: static;
   }
 
-  .hero-content,
   .movie-layout {
     grid-template-columns: 1fr;
   }

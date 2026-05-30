@@ -12,13 +12,7 @@
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='movies')}"></header>
 
     <main class="main-stack">
-        <section class="hero-card">
-            <div class="hero-content">
-                <div>
-                    <h1 class="hero-title" th:text="#{movies.title}">Movies.</h1>
-                </div>
-            </div>
-        </section>
+        <h1 th:text="#{movies.title}">Movies.</h1>
 
         <div class="tops-premieres-grid">
             <section class="panel tops-panel">
@@ -92,7 +86,7 @@
 
             <aside class="premieres-sidebar">
                 <section class="panel">
-                    <h2 class="section-heading-title" th:text="#{movies.premieres}">Premieres</h2>
+                    <h2 th:text="#{movies.premieres}">Premieres</h2>
 
                     <div th:if="${(releasedPremieres != null and !#lists.isEmpty(releasedPremieres)) or (upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)) or (noDatePremieres != null and !#lists.isEmpty(noDatePremieres))}">
                         <div class="premieres-group" th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">

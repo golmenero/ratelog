@@ -12,16 +12,10 @@
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='tvshows')}"></header>
 
     <main class="main-stack">
-        <section class="hero-card">
-            <div class="hero-content">
-                <div>
-                    <h1 class="hero-title" id="title">
-                        <span th:text="${show != null} ? ${show.name} : #{tvshow.detail.not.found}">Loading TV show...</span>
-                        <span th:if="${show != null && show.firstAirYear != null}" class="hero-year" th:text="${show.firstAirYear}">Year</span>
-                    </h1>
-                </div>
-            </div>
-        </section>
+        <h1>
+            <span th:text="${show != null} ? ${show.name} : #{tvshow.detail.not.found}">Loading TV show...</span>
+            <span th:if="${show != null && show.firstAirYear != null}" class="hero-year" th:text="${show.firstAirYear}">Year</span>
+        </h1>
 
         <article th:if="${show != null}" class="show-detail-card" id="showSummary">
             <div class="poster-frame show-detail-poster">

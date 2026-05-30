@@ -4,7 +4,7 @@
             <i data-lucide="x"></i>
         </button>
         <div class="modal-header">
-            <h2 class="modal-title" th:text="#{profile.edit.title}">Edit Profile</h2>
+            <h2 th:text="#{profile.edit.title}">Edit Profile</h2>
         </div>
         <form th:action="@{/edit-profile}" method="post" class="modal-categories">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

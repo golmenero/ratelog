@@ -138,13 +138,6 @@
   }
 }
 
-.profile-username {
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  font-family: var(--font-serif);
-}
-
 .profile-email {
   color: var(--text-soft);
   font-size: 1rem;

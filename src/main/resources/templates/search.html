@@ -12,14 +12,7 @@
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='search')}"></header>
 
     <main class="main-stack">
-        <section class="hero-card">
-            <div class="hero-content">
-                <div>
-                    <img src="/img/logo-name.svg" th:alt="#{app.name}" class="hero-logo">
-                    <h1 class="hero-title" th:text="#{search.hero}">Find movies and TV shows.</h1>
-                </div>
-            </div>
-        </section>
+        <h1 th:text="#{search.hero}">Find movies and TV shows.</h1>
 
         <section class="panel">
             <form th:action="@{/}" class="filter" method="get">

@@ -13,17 +13,11 @@
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='community')}"></header>
 
     <main class="main-stack">
-        <section class="hero-card">
-            <div class="hero-content">
-                <div>
-                    <h1 class="hero-title" th:text="#{community.title}">Community.</h1>
-                </div>
-            </div>
-        </section>
+        <h1 th:text="#{community.title}">Community.</h1>
 
         <div class="community-grid">
             <section class="panel">
-                <h2 class="section-heading-title" th:text="#{community.activity.feed}">Activity Feed</h2>
+                <h2 th:text="#{community.activity.feed}">Activity Feed</h2>
 
                 <div th:if="${feed != null and !#lists.isEmpty(feed)}" class="feed-list">
                     <div th:each="item : ${feed}" class="feed-card">
@@ -54,7 +48,7 @@
 
             <aside class="community-sidebar">
                 <section class="panel">
-                    <h2 class="section-heading-title" th:text="#{community.search.users}">Search Users</h2>
+                    <h2 th:text="#{community.search.users}">Search Users</h2>
 
                     <div th:if="${followError}" class="community-feedback error" th:text="${followError}"></div>
 
@@ -85,7 +79,7 @@
                 <div class="sidebar-separator"></div>
 
                 <section class="panel">
-                    <h2 class="section-heading-title" th:text="#{community.followed.users}">Followed Users</h2>
+                    <h2 th:text="#{community.followed.users}">Followed Users</h2>
 
                     <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}" class="followed-users-list">
                         <div th:each="followedUser : ${followedUsers}" class="followed-user-item">

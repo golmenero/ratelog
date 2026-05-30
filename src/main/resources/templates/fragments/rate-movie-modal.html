@@ -4,7 +4,7 @@
             <i data-lucide="x"></i>
         </button>
         <div class="modal-header">
-            <h2 class="modal-title" th:text="${movie.name}">Movie Title</h2>
+            <h2 th:text="${movie.name}">Movie Title</h2>
             <p class="modal-year" th:text="${movie.firstAirYear}">Year</p>
         </div>
         <form th:action="@{/movie/rate}" method="post" class="modal-categories">

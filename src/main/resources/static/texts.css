@@ -1,0 +1,26 @@
+h1 {
+  font-size: clamp(2.3rem, 4vw, 4.3rem);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+  max-width: 100%;
+  margin: 16px 0;
+  font-family: var(--font-serif);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 50%;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-family: var(--font-serif);
+  margin-bottom: 16px;
+}
+
+@media (max-width: 720px) {
+  h1 {
+    width: 100%;
+  }
+}

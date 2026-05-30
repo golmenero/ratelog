@@ -1,14 +1,3 @@
-.hero-card {
-  padding: 8px 0 4px;
-  display: grid;
-  gap: 14px;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  backdrop-filter: none;
-  box-shadow: none;
-}
-
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -24,25 +13,6 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-family: var(--font-ui);
-}
-
-.hero-content {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
-  gap: 24px;
-  align-items: end;
-}
-
-.hero-title {
-  font-size: clamp(2.3rem, 4vw, 4.3rem);
-  line-height: 0.96;
-  letter-spacing: -0.06em;
-  max-width: 100%;
-  margin-bottom: 14px;
-  font-family: var(--font-serif);
-  display: inline-flex;
-  align-items: baseline;
-  gap: 12px;
 }
 
 .hero-logo {
@@ -343,10 +313,6 @@
 }
 
 @media (max-width: 720px) {
-  .hero-card {
-    padding: 4px 0 0;
-  }
-
   .movie-inline-bar {
     flex-direction: column;
     align-items: stretch;

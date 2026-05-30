@@ -17,7 +17,7 @@
                 <div class="profile-avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
                 <div class="profile-details">
                     <div class="profile-details-top">
-                        <h2 class="profile-username" th:text="${username}">Username</h2>
+                        <h2 th:text="${username}">Username</h2>
                         <button id="btnOpenEditModal" class="edit-profile-btn" type="button">
                             <i data-lucide="pencil"></i>
                         </button>

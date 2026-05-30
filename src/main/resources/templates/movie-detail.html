@@ -12,16 +12,10 @@
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='movies')}"></header>
 
     <main class="main-stack">
-        <section class="hero-card">
-            <div class="hero-content">
-                <div>
-                    <h1 class="hero-title" id="title">
-                        <span th:text="${movie != null} ? ${movie.name} : #{movie.detail.not.found}">Loading movie...</span>
-                        <span th:if="${movie != null && movie.firstAirYear != null}" class="hero-year" th:text="${movie.firstAirYear}">Year</span>
-                    </h1>
-                </div>
-            </div>
-        </section>
+        <h1>
+            <span th:text="${movie != null} ? ${movie.name} : #{movie.detail.not.found}">Loading movie...</span>
+            <span th:if="${movie != null && movie.firstAirYear != null}" class="hero-year" th:text="${movie.firstAirYear}">Year</span>
+        </h1>
 
         <article th:if="${movie != null}" class="show-detail-card" id="movieSummary">
             <div class="poster-frame show-detail-poster">
