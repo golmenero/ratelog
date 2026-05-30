@@ -129,28 +129,6 @@
   gap: 12px;
 }
 
-.community-search-input {
-  flex: 1;
-  padding: 14px 18px;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
-  font-size: 1rem;
-  font-family: var(--font-ui);
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.community-search-input:focus {
-  border-color: rgba(230, 120, 60, 0.45);
-  box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
-}
-
-.community-search-input::placeholder {
-  color: rgba(245, 238, 229, 0.48);
-}
-
 .community-feedback {
   padding: 14px 18px;
   border-radius: 14px;

@@ -272,52 +272,6 @@
   font-size: 0.88rem;
 }
 
-.lang-selector {
-  margin-top: 24px;
-  padding: 16px 20px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 32px;
-
-  label {
-    font-weight: 600;
-    font-size: 0.88rem;
-    color: var(--text-soft);
-    font-family: var(--font-ui);
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-}
-
-  select {
-    padding: 8px 14px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text);
-    outline: none;
-    font-family: var(--font-ui);
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-
-    &:focus {
-      border-color: rgba(230, 120, 60, 0.45);
-    }
-  }
-
-  .auth-card {
-    padding: 28px;
-  }
-
-  .auth-title {
-    font-size: 1.5rem;
-  }
-}
-
 @media (max-width: 900px) {
   .profile-layout {
     grid-template-columns: 1fr;
