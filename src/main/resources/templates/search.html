@@ -11,39 +11,37 @@
 <div class="page-shell">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='search')}"></header>
 
-    <main class="main-stack">
-        <h1 th:text="#{search.hero}">Find movies and TV shows.</h1>
+    <h1 th:text="#{search.hero}">Find movies and TV shows.</h1>
 
-        <section class="panel">
-            <form th:action="@{/}" class="filter" method="get">
-                <input class="full-width" id="q" name="q" type="text" th:value="${query}" th:placeholder="#{search.placeholder}" autocomplete="off" th:aria-label="#{search.btn}">
-                <button class="primary" type="submit" th:aria-label="#{search.btn}" th:title="#{search.btn}">
-                    <i data-lucide="search" aria-hidden="true"></i>
-                </button>
-            </form>
-            
-            <div th:if="${results != null}" id="results" class="results-grid">
-                <div th:if="${#lists.isEmpty(results)}" class="empty-state" th:text="#{search.empty}">Try with another title, year or original name.</div>
-                
-                <a th:each="item : ${results}"
-                   th:href="${item.type == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
-                   class="result-card">
-                    <div class="poster-frame">
-                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
-                        <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+    <section class="panel">
+        <form th:action="@{/}" class="filter" method="get">
+            <input class="full-width" id="q" name="q" type="text" th:value="${query}" th:placeholder="#{search.placeholder}" autocomplete="off" th:aria-label="#{search.btn}">
+            <button class="primary" type="submit" th:aria-label="#{search.btn}" th:title="#{search.btn}">
+                <i data-lucide="search" aria-hidden="true"></i>
+            </button>
+        </form>
+
+        <div th:if="${results != null}" id="results" class="results-grid">
+            <div th:if="${#lists.isEmpty(results)}" class="empty-state" th:text="#{search.empty}">Try with another title, year or original name.</div>
+
+            <a th:each="item : ${results}"
+               th:href="${item.type == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
+               class="result-card">
+                <div class="poster-frame">
+                    <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                    <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                </div>
+                <div class="result-content">
+                    <div class="tag-row result-meta-row">
+                        <span th:class="${item.type == 'movie'} ? 'tag tag-movie' : 'tag tag-tvshow'" th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
+                        <span class="tag" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
                     </div>
-                    <div class="result-content">
-                        <div class="tag-row result-meta-row">
-                            <span th:class="${item.type == 'movie'} ? 'tag tag-movie' : 'tag tag-tvshow'" th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
-                            <span class="tag" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
-                        </div>
-                        <h3 th:text="${item.title}">Title</h3>
-                        <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : #{search.no.synopsis}">Overview</p>
-                    </div>
-                </a>
-            </div>
-        </section>
-    </main>
+                    <h3 th:text="${item.title}">Title</h3>
+                    <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : #{search.no.synopsis}">Overview</p>
+                </div>
+            </a>
+        </div>
+    </section>
 </div>
 </body>
 <script>

@@ -11,76 +11,74 @@
 <div class="page-shell">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='movies')}"></header>
 
-    <main class="main-stack">
-        <h1>
-            <span th:text="${movie != null} ? ${movie.name} : #{movie.detail.not.found}">Loading movie...</span>
-            <span th:if="${movie != null && movie.firstAirYear != null}" class="hero-year" th:text="${movie.firstAirYear}">Year</span>
-        </h1>
+    <h1>
+        <span th:text="${movie != null} ? ${movie.name} : #{movie.detail.not.found}">Loading movie...</span>
+        <span th:if="${movie != null && movie.firstAirYear != null}" class="hero-year" th:text="${movie.firstAirYear}">Year</span>
+    </h1>
 
-        <article th:if="${movie != null}" class="show-detail-card" id="movieSummary">
-            <div class="poster-frame show-detail-poster">
-                <img th:if="${movie.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
-                <div th:unless="${movie.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(movie.name, 0, 1))}">?</div>
+    <article th:if="${movie != null}" class="show-detail-card" id="movieSummary">
+        <div class="poster-frame show-detail-poster">
+            <img th:if="${movie.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
+            <div th:unless="${movie.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(movie.name, 0, 1))}">?</div>
+        </div>
+        <div class="show-detail-body">
+            <p class="show-detail-overview muted" id="movieOverview" th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : #{movie.detail.no.synopsis}">Loading movie information.</p>
+            <div th:if="${!#lists.isEmpty(movie.genres)}" class="genre-tags">
+                <span th:each="genre : ${movie.genres}" class="genre-tag" th:text="${genre}">Genre</span>
             </div>
-            <div class="show-detail-body">
-                <p class="show-detail-overview muted" id="movieOverview" th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : #{movie.detail.no.synopsis}">Loading movie information.</p>
-                <div th:if="${!#lists.isEmpty(movie.genres)}" class="genre-tags">
-                    <span th:each="genre : ${movie.genres}" class="genre-tag" th:text="${genre}">Genre</span>
-                </div>
-            </div>
-            <div class="show-detail-actions">
-                <button th:if="${!movie.hasRating}" id="btnOpenRateModal">
-                    <i data-lucide="star"></i>
+        </div>
+        <div class="show-detail-actions">
+            <button th:if="${!movie.hasRating}" id="btnOpenRateModal">
+                <i data-lucide="star"></i>
+            </button>
+            <form th:action="@{/movie/follow}" method="post">
+                <input type="hidden" name="movieId" th:value="${movie.id}" />
+                <button type="submit" th:class="${movie.isFollowed} ? 'green' : ''">
+                    <i data-lucide="heart"></i>
                 </button>
-                <form th:action="@{/movie/follow}" method="post">
-                    <input type="hidden" name="movieId" th:value="${movie.id}" />
-                    <button type="submit" th:class="${movie.isFollowed} ? 'green' : ''">
-                        <i data-lucide="heart"></i>
+            </form>
+        </div>
+        <div th:if="${movie.directing != null}" class="show-detail-rating">
+            <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
+            <span class="rating-display-label" th:text="#{movie.detail.your.rating}">Your Rating</span>
+        </div>
+    </article>
+
+    <div th:if="${movie != null && movie.directing != null}" class="seasons-card">
+        <div class="season-row">
+            <span class="season-row-label" th:text="#{movie.detail.rating}">Rating</span>
+            <div class="season-row-rated">
+                <div class="rating-cat">
+                    <i data-lucide="clapperboard"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <div class="rating-cat">
+                    <i data-lucide="camera"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(movie.cinematography, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <div class="rating-cat">
+                    <i data-lucide="hat-glasses"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(movie.acting, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <div class="rating-cat">
+                    <i data-lucide="music"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(movie.soundtrack, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <div class="rating-cat">
+                    <i data-lucide="file-text"></i>
+                    <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
+                </div>
+                <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="season-delete-form">
+                    <button type="submit" th:aria-label="#{movie.detail.delete.rating}">
+                        <i data-lucide="trash"></i>
                     </button>
                 </form>
             </div>
-            <div th:if="${movie.directing != null}" class="show-detail-rating">
-                <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
-                <span class="rating-display-label" th:text="#{movie.detail.your.rating}">Your Rating</span>
-            </div>
-        </article>
-
-        <div th:if="${movie != null && movie.directing != null}" class="seasons-card">
-            <div class="season-row">
-                <span class="season-row-label" th:text="#{movie.detail.rating}">Rating</span>
-                <div class="season-row-rated">
-                    <div class="rating-cat">
-                        <i data-lucide="clapperboard"></i>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <div class="rating-cat">
-                        <i data-lucide="camera"></i>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.cinematography, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <div class="rating-cat">
-                        <i data-lucide="hat-glasses"></i>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.acting, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <div class="rating-cat">
-                        <i data-lucide="music"></i>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.soundtrack, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <div class="rating-cat">
-                        <i data-lucide="file-text"></i>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="season-delete-form">
-                        <button type="submit" th:aria-label="#{movie.detail.delete.rating}">
-                            <i data-lucide="trash"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
         </div>
+    </div>
 
-        <div th:if="${error}" id="msg" class="feedback error" th:text="${error}"></div>
-        <div th:if="${success}" id="msg" class="feedback success" th:text="${success}"></div>
-    </main>
+    <div th:if="${error}" id="msg" class="feedback error" th:text="${error}"></div>
+    <div th:if="${success}" id="msg" class="feedback success" th:text="${success}"></div>
 
     <div th:replace="~{fragments/rate-movie-modal :: rateMovieModal(${movie})}"></div>
 </div>

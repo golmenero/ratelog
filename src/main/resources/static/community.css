@@ -1,15 +1,3 @@
-.community-grid {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 32px;
-  align-items: start;
-}
-
-.community-sidebar {
-  position: sticky;
-  top: 80px;
-}
-
 .sidebar-separator {
   height: 1px;
   background: var(--border);
@@ -206,14 +194,4 @@
 
 .followed-user-unfollow:hover {
   color: var(--danger);
-}
-
-@media (max-width: 900px) {
-  .community-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .community-sidebar {
-    position: static;
-  }
 }
