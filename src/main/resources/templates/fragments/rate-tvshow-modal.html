@@ -15,7 +15,7 @@
                 <label class="modal-slider-label" for="seasonNumber">
                     <span><i data-lucide="layers"></i><span th:text="#{modal.season}">Season</span></span>
                 </label>
-                <select id="seasonNumber" name="seasonNumber" class="season-select">
+                <select id="seasonNumber" name="seasonNumber">
                     <option th:each="season : ${show.seasons}" th:value="${season.seasonNumber}" th:text="${#messages.msg('modal.season.prefix')} + ${season.seasonNumber}" th:selected="${season.seasonNumber == 1}">Season 1</option>
                 </select>
             </div>

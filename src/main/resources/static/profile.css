@@ -173,12 +173,6 @@
   margin-left: auto;
 }
 
-.profile-actions .ratelog-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .user-profile-layout {
   max-width: 800px;
   margin: 0 auto;
@@ -237,14 +231,6 @@
 
 .unfollow-form {
   margin-left: auto;
-}
-
-.unfollow-form .ratelog-btn {
-  padding: 6px;
-}
-
-.unfollow-form .ratelog-btn:hover {
-  color: var(--danger);
 }
 
 .friend-avatar {

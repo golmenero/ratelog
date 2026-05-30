@@ -450,11 +450,6 @@ a {
 
 .modal-categories .top-actions {
   margin-top: 8px;
-
-  .ratelog-btn {
-    width: 100%;
-    justify-content: center;
-  }
 }
 
 .premieres-heading {
@@ -773,20 +768,6 @@ a {
 .season-delete-form {
   flex-shrink: 0;
   margin-left: auto;
-
-  .ratelog-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    i {
-      width: 16px;
-      height: 16px;
-    }
-  }
 }
 
 .rating-display-score {
@@ -907,20 +888,6 @@ a {
 
 .rating-delete-form {
   flex-shrink: 0;
-
-  .ratelog-btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    i {
-      width: 16px;
-      height: 16px;
-    }
-  }
 }
 
 .season-rate-btn {

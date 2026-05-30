@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="lang-selector">
+            <div>
                 <form th:action="@{/lang}" method="post">
                     <label for="lang" th:text="#{profile.language}">Language</label>
                     <select id="lang" name="lang" onchange="this.form.submit()">

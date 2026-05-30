@@ -181,12 +181,6 @@
   margin-left: auto;
 }
 
-.user-follow-form .ratelog-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .followed-users-list {
   display: flex;
   flex-direction: column;

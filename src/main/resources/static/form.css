@@ -1,0 +1,97 @@
+/* input, select, button, a */
+
+input,
+select {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  accent-color: var(--accent);
+
+  &::placeholder {
+    color: rgba(245, 238, 229, 0.48);
+  }
+
+  &:focus {
+    border-color: rgba(230, 120, 60, 0.45);
+    box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
+  }
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23e6783c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 42px;
+
+  option {
+    background: var(--bg-soft);
+    color: var(--text);
+    padding: 12px;
+  }
+
+  &:focus {
+    border-color: rgba(230, 120, 60, 0.45);
+    box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
+  }
+}
+
+.ratelog-btn {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  transition: color 0.2s ease;
+  box-shadow: none;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:hover {
+    color: var(--text);
+  }
+
+  &.green {
+    color: var(--success-text);
+
+    svg {
+      fill: var(--success-text);
+      stroke: var(--success-text);
+    }
+  }
+
+  &.primary {
+    padding: 10px 10px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 10px 24px hsl(var(--_brand-clay) / 0.28);
+    font-family: var(--font-ui);
+
+    &:hover {
+      background: var(--accent-strong);
+    }
+  }
+}

@@ -17,11 +17,11 @@
             <a class="nav-link" href="/community" th:text="#{nav.community}">Community</a>
         </nav>
         <div class="nav-auth" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
-            <a href="/profile" class="nav-link profile-button" th:aria-label="#{nav.profile}">
+            <a href="/profile" class="nav-link ratelog-btn" th:aria-label="#{nav.profile}">
                 <i data-lucide="user" aria-hidden="true"></i>
             </a>
             <form th:action="@{/logout}" method="post">
-                <button type="submit" class="nav-link logout-button" th:aria-label="#{auth.logout}">
+                <button type="submit" class="nav-link ratelog-btn" th:aria-label="#{auth.logout}">
                     <i data-lucide="log-out" aria-hidden="true"></i>
                 </button>
             </form>
