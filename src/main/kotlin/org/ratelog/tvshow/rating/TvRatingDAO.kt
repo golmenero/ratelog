@@ -41,7 +41,7 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
     @Query(
         """
         SELECT r.* FROM tv_ratings r
-            INNER JOIN tv_shows t ON r.tv_show_id = t.id
+            INNER JOIN tv t ON r.tv_show_id = t.id
         WHERE r.user_id = :userId
             AND (:category IS NULL OR t.genres LIKE CONCAT('%', :category, '%'))
             AND (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))
