@@ -1,13 +1,4 @@
-.sidebar-separator {
-  height: 1px;
-  background: var(--border);
-  margin: 24px 0;
-}
 
-.feed-list {
-  display: grid;
-  gap: 16px;
-}
 
 .feed-card {
   display: grid;
@@ -21,6 +12,7 @@
 }
 
 .feed-poster {
+  padding: 16px 20px;
   width: 48px;
   height: 72px;
   border-radius: 8px;

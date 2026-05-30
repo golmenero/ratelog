@@ -13,8 +13,11 @@
 
     <h1 th:text="#{tvshows.title}">TV Shows.</h1>
 
+    <div th:if="${error}" class="feedback error" th:text="${error}"></div>
+    <div th:if="${success}" class="feedback success" th:text="${success}"></div>
+
     <div class="grid">
-        <section class="panel tops-panel">
+        <div>
             <form th:action="@{/tvshows}" class="filter" method="get">
                 <select id="category" name="category" th:aria-label="#{tvshows.category.all}">
                     <option value="" th:text="#{tvshows.category.all}">All categories</option>
@@ -53,109 +56,61 @@
                 </button>
             </form>
 
-            <div th:if="${error}" id="msg" class="feedback error spacer-top" th:text="${error}"></div>
-            <div th:if="${success}" id="msg" class="feedback success spacer-top" th:text="${success}"></div>
-
-            <div th:if="${tops != null}" id="list" class="top-list spacer-top">
+            <div th:if="${tops != null}">
                 <div th:if="${#lists.isEmpty(tops)}" class="empty-state" th:text="#{tvshows.empty.filter}">No rated TV shows yet for this filter.</div>
-                <article th:each="s, iterStat : ${tops}" th:class="'top-card list-poster-card' + (${s.posterPath != null} ? '' : ' no-poster')">
-                    <a th:href="@{'/tv/' + ${s.tmdbId}}" class="top-card-link"></a>
-                    <div th:if="${s.posterPath != null}" class="top-poster poster-frame">
+                <a th:href="@{'/tv/' + ${s.tmdbId}}" th:each="s, iterStat : ${tops}" class="top-card">
+                    <div>
                         <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${s.posterPath}}" th:alt="'Poster of ' + ${s.name}">
-                    </div>
-                    <div class="top-info">
-                        <div class="top-info-left">
-                            <div class="top-header-row">
-                                <span class="top-rank-num" th:text="${s.rank}">#1</span>
-                                <span class="top-title-wrap">
-                                    <span class="top-title" th:text="${s.name}">Title</span>
-                                    <span class="top-year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : #{tvshows.year.unknown}">Year</span>
-                                </span>
-                            </div>
+                        <div>
+                            <span class="rank" th:text="${s.rank}">#1</span>
+                            <span class="title" th:text="${s.name}">Title</span>
+                            <span class="year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : #{tvshows.year.unknown}">Year</span>
                             <div th:if="${!#lists.isEmpty(s.genres)}" class="tags">
                                 <span th:each="genre : ${s.genres}" th:text="${genre}">Genre</span>
                             </div>
                         </div>
-                        <div class="show-detail-rating">
-                            <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(s.averageScore, 1, 2), ',', '.')}">0.00</span>
-                        </div>
                     </div>
-                </article>
+                    <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(s.averageScore, 1, 2), ',', '.')}">0.00</span>
+                </a>
             </div>
-            <div th:unless="${tops != null}" id="list" class="top-list spacer-top"></div>
-        </section>
+        </div>
 
-        <aside class="premieres-sidebar">
-            <section class="panel">
-                <h2 th:text="#{tvshows.premieres}">Premieres</h2>
+        <div>
+            <h2 th:text="#{tvshows.premieres}">Premieres</h2>
 
-                <div th:if="${(releasedPremieres != null and !#lists.isEmpty(releasedPremieres)) or (upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)) or (noDatePremieres != null and !#lists.isEmpty(noDatePremieres))}">
-                    <div class="premieres-group" th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
-                        <div class="premieres-group-label" th:text="#{tvshows.premieres.released}">Released</div>
-                        <div class="premiere-timeline">
-                            <div th:each="item : ${releasedPremieres}" class="premiere-card premiere-released">
-                                <a th:href="@{'/tv/' + ${item.tmdbId}}" class="premiere-card-link"></a>
-                                <div class="premiere-poster">
-                                    <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.name}">
-                                    <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.name, 0, 1))}">?</div>
-                                </div>
-                                <div class="premiere-info">
-                                    <div class="premiere-title-row">
-                                        <span class="premiere-name" th:text="${item.name}">Title</span>
-                                        <span class="premiere-season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
-                                    </div>
-                                    <span class="premiere-date premiere-date-released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
+                <div class="separator"></div>
+                <h3 th:text="#{tvshows.premieres.released}">Released</h3>
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
+                    <span class="title" th:text="${item.name}">Title</span>
+                    <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
+                    <br>
+                    <span class="date released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
+                </a>
+            </div>
 
-                    <div class="premieres-group" th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
-                        <div class="premieres-group-label" th:text="#{tvshows.premieres.upcoming}">Upcoming</div>
-                        <div class="premiere-timeline">
-                            <div th:each="item : ${upcomingPremieres}" class="premiere-card">
-                                <a th:href="@{'/tv/' + ${item.tmdbId}}" class="premiere-card-link"></a>
-                                <div class="premiere-poster">
-                                    <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.name}">
-                                    <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.name, 0, 1))}">?</div>
-                                </div>
-                                <div class="premiere-info">
-                                    <div class="premiere-title-row">
-                                        <span class="premiere-name" th:text="${item.name}">Title</span>
-                                        <span class="premiere-season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
-                                    </div>
-                                    <span class="premiere-date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Date</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
+                <div class="separator"></div>
+                <div th:text="#{tvshows.premieres.upcoming}">Upcoming</div>
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
+                    <span class="title" th:text="${item.name}">Title</span>
+                    <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
+                    <br>
+                    <span class="date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
+                </a>
+            </div>
 
-                    <div class="premieres-group" th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
-                        <div class="premieres-group-label" th:text="#{tvshows.premieres.no.date}">No release date yet</div>
-                        <div class="premiere-timeline">
-                            <div th:each="item : ${noDatePremieres}" class="premiere-card">
-                                <a th:href="@{'/tv/' + ${item.tmdbId}}" class="premiere-card-link"></a>
-                                <div class="premiere-poster">
-                                    <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.name}">
-                                    <div th:unless="${item.posterPath != null}" class="premiere-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.name, 0, 1))}">?</div>
-                                </div>
-                                <div class="premiere-info">
-                                    <div class="premiere-title-row">
-                                        <span class="premiere-name" th:text="${item.name}">Title</span>
-                                        <span class="premiere-season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
-                                    </div>
-                                    <span class="premiere-date" th:text="#{tvshows.tba}">TBA</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div th:if="${(releasedPremieres == null or #lists.isEmpty(releasedPremieres)) and (upcomingPremieres == null or #lists.isEmpty(upcomingPremieres)) and (noDatePremieres == null or #lists.isEmpty(noDatePremieres))}">
-                    <div class="empty-state" th:text="#{tvshows.empty}">No followed TV shows yet.</div>
-                </div>
-            </section>
-        </aside>
+            <div th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
+                <div class="separator"></div>
+                <div th:text="#{tvshows.premieres.no.date}">No release date yet</div>
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
+                    <span class="title" th:text="${item.name}">Title</span>
+                    <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
+                    <br>
+                    <span class="date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -122,14 +122,6 @@ a {
   width: 100%;
 }
 
-.spacer-top {
-  margin-top: 18px;
-}
-
-.premieres-sidebar {
-  position: sticky;
-  top: 80px;
-}
 
 .poster-frame {
   background: linear-gradient(135deg, #312924, #1e1916);
@@ -156,29 +148,11 @@ a {
   font-family: var(--font-serif);
 }
 
-.movie-title,
-.top-title {
+.movie-title {
   font-size: 1.3rem;
   line-height: 1.15;
   letter-spacing: -0.04em;
   font-family: var(--font-serif);
-}
-
-.top-list {
-  display: grid;
-  gap: 14px;
-}
-
-.top-card-link {
-  position: absolute;
-  inset: 0;
-  text-decoration: none;
-  color: inherit;
-  z-index: 1;
-
-  &:focus-visible {
-    outline: none;
-  }
 }
 
 .top-poster {
@@ -200,21 +174,6 @@ a {
   gap: 16px;
 }
 
-.top-info-left {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-  flex: 1;
-}
-
-.top-header-row {
-  display: flex;
-  align-items: baseline;
-  gap: 0;
-  width: 100%;
-}
-
 .top-rank-num {
   flex-shrink: 0;
   color: var(--accent);
@@ -226,30 +185,7 @@ a {
   margin-right: 10px;
 }
 
-.top-title-wrap {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.top-title {
-  min-width: 0;
-  font-size: 1.3rem;
-  line-height: 1.15;
-  letter-spacing: -0.04em;
-  font-family: var(--font-serif);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-decoration: none;
-  display: inline;
-
-  &:hover {
-    color: var(--accent);
-  }
-}
 
 .top-year {
   flex-shrink: 0;
@@ -353,16 +289,6 @@ a {
   margin-top: 8px;
 }
 
-.premieres-group {
-  display: grid;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.premieres-group:last-child {
-  margin-bottom: 0;
-}
-
 .premieres-group-label {
   font-size: 0.82rem;
   text-transform: uppercase;
@@ -380,102 +306,12 @@ a {
   width: 100%;
 }
 
-.premiere-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 18px;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow-soft);
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
-
-  &.premiere-released {
-    background: var(--surface-muted);
-  }
-}
-
-.premiere-card-link {
-  position: absolute;
-  inset: 0;
-  text-decoration: none;
-  color: inherit;
-  z-index: 1;
-
-  &:focus-visible {
-    outline: none;
-
-    .premiere-card {
-      border-color: var(--border-strong);
-      box-shadow: 0 0 0 3px hsl(var(--_brand-clay) / 0.24), var(--shadow);
-    }
-  }
-}
-
-.premiere-poster {
-  width: 48px;
-  height: 72px;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #312924, #1e1916);
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-}
-
-.premiere-poster-fallback {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  color: hsl(var(--_brand-clay) / 0.75);
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  font-family: var(--font-serif);
-}
-
 .premiere-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
   flex: 1;
-}
-
-.premiere-title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.premiere-name {
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  font-family: var(--font-serif);
-  word-break: break-word;
-}
-
-.premiere-season {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--accent);
-  background: var(--accent-bg);
-  padding: 3px 8px;
-  border-radius: 6px;
-  white-space: nowrap;
-  font-family: var(--font-ui);
 }
 
 .premiere-date {
@@ -527,16 +363,6 @@ a {
   form {
     display: inline;
   }
-}
-
-.show-detail-rating {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding-left: 20px;
-  border-left: 1px solid var(--border);
-  flex-shrink: 0;
 }
 
 .seasons-card {
@@ -922,10 +748,6 @@ a {
 }
 
 @media (max-width: 900px) {
-  .premieres-sidebar {
-    position: static;
-  }
-
   .movie-layout {
     grid-template-columns: 1fr;
   }
@@ -938,16 +760,6 @@ a {
   .show-detail-actions {
     grid-column: 1 / -1;
     justify-content: flex-end;
-  }
-
-  .show-detail-rating {
-    grid-column: 1 / -1;
-    padding-left: 0;
-    padding-top: 12px;
-    border-left: none;
-    border-top: 1px solid var(--border);
-    flex-direction: row;
-    gap: 10px;
   }
 }
 
@@ -985,4 +797,8 @@ a {
 .scores-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.flex {
+  display: flex;
 }

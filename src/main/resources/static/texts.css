@@ -14,7 +14,7 @@ h1 {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.04em;
   font-family: var(--font-serif);
@@ -35,12 +35,54 @@ h3 {
 }
 
 span {
+  &.date {
+    font-size: 0.84rem;
+    color: var(--text-soft);
+    font-family: var(--font-ui);
+
+    &.released {
+      color: var(--success-text);
+    }
+  }
+
   &.year {
-    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-size: 0.7rem;
     color: var(--text-soft);
     font-weight: 500;
     opacity: 0.5;
     font-family: var(--font-ui);
     letter-spacing: -0.02em;
+  }
+
+  &.rank {
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-right: 10px;
+  }
+
+  &.title {
+    font-size: 1.3rem;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    font-family: var(--font-serif);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    display: inline;
+  }
+
+  &.season {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--accent);
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-family: var(--font-ui);
   }
 }

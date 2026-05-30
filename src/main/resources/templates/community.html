@@ -14,12 +14,12 @@
 
         <h1 th:text="#{community.title}">Community.</h1>
 
-        <section class="grid">
+        <div class="grid">
             <div>
                 <h2 th:text="#{community.activity.feed}">Activity Feed</h2>
                 <div th:if="${feed != null and #lists.isEmpty(feed)}" class="empty-state" th:text="#{community.activity.empty}">No recent activity from users you follow.</div>
 
-                <div th:if="${feed != null and !#lists.isEmpty(feed)}" class="feed-list">
+                <div th:if="${feed != null and !#lists.isEmpty(feed)}">
                     <div th:each="item : ${feed}" class="feed-card">
                         <div class="feed-poster">
                             <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}" />
@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                <div class="sidebar-separator"></div>
+                <div class="separator"></div>
 
                 <h2 th:text="#{community.followed.users}">Followed Users</h2>
                 <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}" class="followed-users-list">
@@ -84,7 +84,7 @@
                 </div>
                 <div th:if="${followedUsers != null and #lists.isEmpty(followedUsers)}" class="empty-state" th:text="#{community.followed.empty}">You are not following anyone yet.</div>
             </div>
-        </section>
+        </div>
     </div>
 </body>
 <script>
