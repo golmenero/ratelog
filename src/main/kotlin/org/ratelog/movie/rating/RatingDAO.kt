@@ -24,7 +24,6 @@ data class RatingEntity(
 
 @Repository
 interface RatingDAO : CrudRepository<RatingEntity, Long> {
-    fun findFirstByMovieId(movieId: Long): Optional<RatingEntity>
     fun findFirstByMovieIdAndUserId(movieId: Long, userId: Long): RatingEntity?
 
     @Query("SELECT r.id FROM movie_ratings r WHERE r.user_id = :userId ORDER BY r.score DESC")

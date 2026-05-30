@@ -1,7 +1,9 @@
 package org.ratelog.tvshow.detail
 
 import org.ratelog.TmdbId
+import org.ratelog.annotations.CurrentUser
 import org.ratelog.tvshow.rating.TvRatingRepository
+import org.ratelog.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -43,10 +45,14 @@ class DetailTvShowController(
 
     @GetMapping("/tv/{id}")
     fun detailPage(
+        @CurrentUser user: User,
         @PathVariable("id") tmdbId: Int,
         model: Model
     ): String =
-        GetTvShowDetail(tmdbId = TmdbId(tmdbId))
+        GetTvShowDetail(
+            userId = user.id!!,
+            tmdbId = TmdbId(tmdbId),
+            )
             .let(handler::handle)
             .fold(
                 {
@@ -85,6 +91,6 @@ class DetailTvShowController(
             },
             overallScore = result.overallScore,
             isFollowed = result.show.followed,
-            hasRating = result.show.id.let { tvRatingRepository.findFirstByTvShowId(it) } != null,
+            hasRating = result.isRated,
         )
 }

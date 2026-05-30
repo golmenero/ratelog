@@ -47,7 +47,7 @@ class DeleteRatingHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        assertNull(ratingRepository.findFirstByMovieId(Movie.Id(1)))
+        assertNull(ratingRepository.findByMovieIdAndUserId(Movie.Id(1), command.userId))
     }
 
     @Test

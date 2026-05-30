@@ -77,7 +77,7 @@ data class SeasonRating(
 
 @Repository
 interface TvRatingRepository {
-    fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating?
+    fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): TvRating?
     fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Pair<Rank, TvRating>>
     fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRating>
 

@@ -13,8 +13,8 @@ class InMemoryTvRatingRepository : TvRatingRepository {
     private val store = ConcurrentHashMap<TvRating.Id, TvRating>()
     private val idGenerator = AtomicLong(1)
 
-    override fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating? =
-        store.values.find { it.tvShowId == tvShowId }
+    override fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): TvRating? =
+        store.values.find { it.tvShowId == tvShowId && it.userId == userId }
 
     override fun findRankedByUserIdWithFilters(
         userId: User.Id,

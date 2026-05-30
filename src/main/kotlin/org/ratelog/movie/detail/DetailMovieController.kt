@@ -1,7 +1,9 @@
 package org.ratelog.movie.detail
 
 import org.ratelog.TmdbId
+import org.ratelog.annotations.CurrentUser
 import org.ratelog.movie.rating.RatingRepository
+import org.ratelog.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,15 +31,18 @@ data class MovieDetailResponse(
 @Controller
 class MovieDetailController(
     private val handler: GetMovieDetailHandler,
-    private val ratingRepository: RatingRepository,
 ) {
 
     @GetMapping("/movie/{id}")
     fun detailPage(
+        @CurrentUser user: User,
         @PathVariable("id") tmdbId: Int,
         model: Model
     ): String =
-        GetMovieDetail(tmdbId = TmdbId(tmdbId))
+        GetMovieDetail(
+            userId = user.id!!,
+            tmdbId = TmdbId(tmdbId),
+        )
             .let(handler::handle)
             .fold(
                 {
@@ -67,6 +72,6 @@ class MovieDetailController(
             screenplay = result.screenplay,
             score = result.score,
             isFollowed = result.movie.followed,
-            hasRating = result.movie.id.let { ratingRepository.findFirstByMovieId(it) } != null,
+            hasRating = result.isRated,
         )
 }

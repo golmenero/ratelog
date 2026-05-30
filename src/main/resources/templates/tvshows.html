@@ -72,8 +72,8 @@
                                     <span class="top-year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : #{tvshows.year.unknown}">Year</span>
                                 </span>
                             </div>
-                            <div th:if="${!#lists.isEmpty(s.genres)}" class="genre-tags">
-                                <span th:each="genre : ${s.genres}" class="genre-tag" th:text="${genre}">Genre</span>
+                            <div th:if="${!#lists.isEmpty(s.genres)}" class="tags">
+                                <span th:each="genre : ${s.genres}" th:text="${genre}">Genre</span>
                             </div>
                         </div>
                         <div class="show-detail-rating">
@@ -161,12 +161,6 @@
 
 <script>
     lucide.createIcons();
-    
-    document.querySelectorAll('.top-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            lucide.createIcons();
-        });
-    });
 </script>
 </body>
 </html>

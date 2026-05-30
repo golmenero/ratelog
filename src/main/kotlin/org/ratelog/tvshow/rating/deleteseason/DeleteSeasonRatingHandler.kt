@@ -26,7 +26,7 @@ class DeleteSeasonRatingHandler(
 
         ensure(show != null && show.id != null) { DeleteSeasonRatingHandlerError.TvShowNotFound }
 
-        val tvRating = tvRatingRepository.findFirstByTvShowId(show.id) ?:
+        val tvRating = tvRatingRepository.findByTvShowIdAndUserId(show.id, command.userId) ?:
             raise(DeleteSeasonRatingHandlerError.RatingNotFound)
 
         val updatedTvRating = tvRating.deleteSeasonRating(command.seasonNumber)

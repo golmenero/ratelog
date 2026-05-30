@@ -15,8 +15,8 @@ class TvRatingRepositoryImpl(
         private val seasonRatingDAO: SeasonRatingDAO,
     ) : TvRatingRepository {
 
-    override fun findFirstByTvShowId(tvShowId: TvShow.Id): TvRating? =
-        tvShowId.value.let(tvRatingDAO::findFirstByTvShowId).getOrNull()?.toDomain()
+    override fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): TvRating? =
+        tvRatingDAO.findFirstByTvShowIdAndUserId(tvShowId.value, userId.value).getOrNull()?.toDomain()
 
     override fun save(rating: TvRating) {
         val savedEntity = tvRatingDAO.save(rating.toEntity())

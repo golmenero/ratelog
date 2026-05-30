@@ -37,7 +37,7 @@ class AddSeasonRatingHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val savedRating = tvRatingRepository.findFirstByTvShowId(TvShow.Id(1))
+        val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
         assertNotNull(savedRating)
         assertEquals(1, savedRating!!.seasonRatings.size)
         assertEquals(7.0, savedRating.score!!.value)
@@ -71,7 +71,7 @@ class AddSeasonRatingHandlerTest {
         val result = handler.handle(command2)
 
         assertTrue(result.isRight())
-        val savedRating = tvRatingRepository.findFirstByTvShowId(TvShow.Id(1))
+        val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
         assertEquals(2, savedRating!!.seasonRatings.size)
         assertEquals(6.5, savedRating.score!!.value)
     }

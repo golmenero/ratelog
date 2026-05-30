@@ -66,7 +66,7 @@ class DeleteSeasonRatingHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val updatedRating = tvRatingRepository.findFirstByTvShowId(TvShow.Id(1))
+        val updatedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
         assertNotNull(updatedRating)
         assertEquals(1, updatedRating!!.seasonRatings.size)
         assertEquals(2, updatedRating.seasonRatings[0].seasonNumber.value)
@@ -102,7 +102,7 @@ class DeleteSeasonRatingHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        assertNull(tvRatingRepository.findFirstByTvShowId(TvShow.Id(1)))
+        assertNull(tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1)))
     }
 
     @Test

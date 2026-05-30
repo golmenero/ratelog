@@ -45,7 +45,7 @@ class DetailMovieHandlerTest {
         )
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
-        val query = GetMovieDetail(TmdbId(123))
+        val query = GetMovieDetail(User.Id(1), TmdbId(123))
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -70,7 +70,7 @@ class DetailMovieHandlerTest {
         )
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
-        val query = GetMovieDetail(TmdbId(123))
+        val query = GetMovieDetail(User.Id(1),TmdbId(123))
         handler.handle(query)
 
         val savedMovie = movieRepository.findByTmdbId(TmdbId(123))
@@ -99,7 +99,7 @@ class DetailMovieHandlerTest {
         )
         ratingRepository.save(rating)
 
-        val query = GetMovieDetail(TmdbId(123))
+        val query = GetMovieDetail(User.Id(1), TmdbId(123))
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -121,7 +121,7 @@ class DetailMovieHandlerTest {
         val tmdbMovie = TmdbFactory.aTmdbMovie(id = 123, title = "Test Movie", releaseDate = "2023-01-15")
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
-        val query = GetMovieDetail(TmdbId(123))
+        val query = GetMovieDetail(User.Id(1), TmdbId(123))
         val result = handler.handle(query)
 
         assertTrue(result.isRight())

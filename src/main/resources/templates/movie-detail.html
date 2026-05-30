@@ -13,7 +13,7 @@
 
     <h1>
         <span th:text="${movie != null} ? ${movie.name} : #{movie.detail.not.found}">Loading movie...</span>
-        <span th:if="${movie != null && movie.firstAirYear != null}" class="hero-year" th:text="${movie.firstAirYear}">Year</span>
+        <span th:if="${movie != null && movie.firstAirYear != null}" class="year" th:text="${movie.firstAirYear}">Year</span>
     </h1>
 
     <article th:if="${movie != null}" class="show-detail-card" id="movieSummary">
@@ -23,8 +23,8 @@
         </div>
         <div class="show-detail-body">
             <p class="show-detail-overview muted" id="movieOverview" th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : #{movie.detail.no.synopsis}">Loading movie information.</p>
-            <div th:if="${!#lists.isEmpty(movie.genres)}" class="genre-tags">
-                <span th:each="genre : ${movie.genres}" class="genre-tag" th:text="${genre}">Genre</span>
+            <div th:if="${!#lists.isEmpty(movie.genres)}" class="tags">
+                <span th:each="genre : ${movie.genres}" th:text="${genre}">Genre</span>
             </div>
         </div>
         <div class="show-detail-actions">

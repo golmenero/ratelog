@@ -11,15 +11,20 @@ import org.ratelog.tvshow.TvShow
 import org.ratelog.tvshow.TvShowRepository
 import org.ratelog.tmdb.TmdbClient
 import org.ratelog.tvshow.rating.TvRatingRepository
+import org.ratelog.user.User
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
-data class GetTvShowDetail(val tmdbId: TmdbId)
+data class GetTvShowDetail(
+    val userId: User.Id,
+    val tmdbId: TmdbId,
+    )
 
 data class GetTvShowDetailResult(
     val show: TvShow,
     val seasons: List<SeasonInfo>,
     val overallScore: Double?,
+    val isRated: Boolean,
 )
 
 data class SeasonInfo(
@@ -78,7 +83,7 @@ class DetailTvShowHandler(
 
         val updatedShow = show.let(tvShowRepository::save)
 
-        val rating = tvRatingRepository.findFirstByTvShowId(updatedShow.id!!)
+        val rating = tvRatingRepository.findByTvShowIdAndUserId(updatedShow.id!!, query.userId)
         val ratingMap = rating?.seasonRatings?.associateBy { it.seasonNumber.value } ?: emptyMap()
 
         val seasons = tmdbShow.seasons
@@ -108,6 +113,7 @@ class DetailTvShowHandler(
             show = updatedShow,
             seasons = seasons,
             overallScore = rating?.score?.value,
+            isRated = rating != null,
         )
     }
 }

@@ -49,7 +49,7 @@ class DetailTvShowHandlerTest {
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
-        val query = GetTvShowDetail(TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -73,7 +73,7 @@ class DetailTvShowHandlerTest {
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
-        val query = GetTvShowDetail(TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
         handler.handle(query)
 
         val savedShow = tvShowRepository.findByTmdbId(TmdbId(123))
@@ -117,7 +117,7 @@ class DetailTvShowHandlerTest {
         )
         tvRatingRepository.save(tvRating)
 
-        val query = GetTvShowDetail(TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -146,7 +146,7 @@ class DetailTvShowHandlerTest {
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
-        val query = GetTvShowDetail(TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -171,7 +171,7 @@ class DetailTvShowHandlerTest {
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
-        val query = GetTvShowDetail(TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
         val result = handler.handle(query)
 
         assertTrue(result.isRight())

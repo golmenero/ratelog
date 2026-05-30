@@ -1,5 +1,6 @@
 package org.ratelog.tvshow.rating
 
+import org.ratelog.movie.rating.RatingEntity
 import org.springframework.data.annotation.Id
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.relational.core.mapping.Column
@@ -33,7 +34,7 @@ data class SeasonRatingEntity(
 
 @Repository
 interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
-    fun findFirstByTvShowId(tvShowId: Long): Optional<TvRatingEntity>
+    fun findFirstByTvShowIdAndUserId(tvShowId: Long, userId: Long): Optional<TvRatingEntity>
 
     @Query("SELECT r.id FROM tv_ratings r WHERE r.user_id = :userId ORDER BY r.score DESC")
     fun findRanking(userId: Long): List<Long>

@@ -12,9 +12,6 @@ import kotlin.jvm.optionals.getOrNull
 class RatingRepositoryImpl(
         private val ratingDAO: RatingDAO,
     ) : RatingRepository {
-    override fun findFirstByMovieId(movieId: Movie.Id): Rating? =
-        movieId.value.let(ratingDAO::findFirstByMovieId).getOrNull()?.toDomain()
-
     override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Rating? =
         ratingDAO.findFirstByMovieIdAndUserId(movieId.value, userId.value)?.toDomain()
 

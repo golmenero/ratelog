@@ -35,8 +35,8 @@
                             </div>
                             <div class="feed-content-row">
                                 <span class="feed-title" th:text="${item.title}">Title</span>
-                                <span th:if="${item.type == 'movie'}" class="tag tag-movie" th:text="#{community.type.movie}">Movie</span>
-                                <span th:if="${item.type == 'tvshow'}" class="tag tag-tvshow" th:text="#{community.type.tv}">TV</span>
+                                <span th:if="${item.type == 'movie'}" class="tag" th:text="#{community.type.movie}">Movie</span>
+                                <span th:if="${item.type == 'tvshow'}" class="tag" th:text="#{community.type.tv}">TV</span>
                                 <span class="feed-date" th:text="${item.ratedAt}">Date</span>
                             </div>
                         </div>

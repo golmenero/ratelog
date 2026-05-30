@@ -1,5 +1,3 @@
-/* search.html */
-
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -34,5 +32,21 @@
         overflow: hidden;
       }
     }
+  }
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  & > span {
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-soft);
+    font-weight: 500;
+    letter-spacing: 0.02em;
   }
 }

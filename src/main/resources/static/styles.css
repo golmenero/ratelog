@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,700&display=swap');
 
+@import './components.css';
 @import './texts.css';
 @import './generic.css';
 @import './form.css';
 @import './nav.css';
-@import './search.css';
-@import './movies.css';
-@import './tvshows.css';
 @import './profile.css';
 @import './community.css';

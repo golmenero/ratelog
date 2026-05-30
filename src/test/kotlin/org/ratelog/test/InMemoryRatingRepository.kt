@@ -13,9 +13,6 @@ class InMemoryRatingRepository : RatingRepository {
     private val store = ConcurrentHashMap<Rating.Id, Rating>()
     private val idGenerator = AtomicLong(1)
 
-    override fun findFirstByMovieId(movieId: Movie.Id): Rating? =
-        store.values.find { it.movieId == movieId }
-
     override fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Rating? =
         store.values.find { it.movieId == movieId && it.userId == userId }
 

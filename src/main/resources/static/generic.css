@@ -77,7 +77,6 @@ a {
   margin: 0 auto;
 }
 
-.top-card,
 .movie-summary,
 .score-field,
 .empty-state,
@@ -119,10 +118,6 @@ a {
   color: var(--text-soft);
 }
 
-.hidden {
-  display: none !important;
-}
-
 .full-width {
   width: 100%;
 }
@@ -161,19 +156,6 @@ a {
   font-family: var(--font-serif);
 }
 
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 11px;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: hsl(20 78% 86%);
-  font-size: 0.84rem;
-  font-weight: 700;
-  font-family: var(--font-ui);
-}
-
 .movie-title,
 .top-title {
   font-size: 1.3rem;
@@ -187,19 +169,6 @@ a {
   gap: 14px;
 }
 
-.top-card {
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 50px minmax(0, 1fr);
-  gap: 18px;
-  align-items: start;
-  position: relative;
-
-  &.no-poster {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 .top-card-link {
   position: absolute;
   inset: 0;
@@ -209,16 +178,7 @@ a {
 
   &:focus-visible {
     outline: none;
-
-    .top-card {
-      border-color: var(--border-strong);
-      box-shadow: 0 0 0 3px hsl(var(--_brand-clay) / 0.24), var(--shadow);
-    }
   }
-}
-
-.list-poster-card {
-  background: rgba(255, 255, 255, 0.03);
 }
 
 .top-poster {
@@ -298,24 +258,6 @@ a {
   font-family: var(--font-ui);
   font-weight: 500;
   opacity: 0.5;
-}
-
-.top-rank {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, hsl(var(--_brand-clay)), hsl(8 54% 68%));
-  color: white;
-  font-weight: 800;
-  font-size: 1.05rem;
-  font-family: var(--font-ui);
-}
-
-.top-subtitle {
-  color: var(--text-soft);
-  margin-top: 4px;
 }
 
 .rating-display {
@@ -411,30 +353,6 @@ a {
   margin-top: 8px;
 }
 
-.premieres-heading {
-  font-size: clamp(1.4rem, 2vw, 1.8rem);
-  letter-spacing: -0.04em;
-  font-family: var(--font-serif);
-  margin-bottom: 16px;
-}
-
-.premieres-section {
-  display: grid;
-  gap: 24px;
-}
-
-.premieres-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.premieres-title {
-  font-size: clamp(1.4rem, 2vw, 1.8rem);
-  letter-spacing: -0.04em;
-  font-family: var(--font-serif);
-}
-
 .premieres-group {
   display: grid;
   gap: 12px;
@@ -496,15 +414,6 @@ a {
       box-shadow: 0 0 0 3px hsl(var(--_brand-clay) / 0.24), var(--shadow);
     }
   }
-}
-
-.premiere-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 2;
 }
 
 .premiere-poster {
@@ -579,13 +488,6 @@ a {
   }
 }
 
-.premiere-empty {
-  padding: 24px;
-  text-align: center;
-  color: var(--text-soft);
-  font-size: 0.92rem;
-}
-
 .show-detail-card {
   display: grid;
   grid-template-columns: 60px minmax(0, 1fr) auto auto;
@@ -617,23 +519,6 @@ a {
   line-height: 1.55;
 }
 
-.genre-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.genre-tag {
-  font-size: 0.78rem;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-soft);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
 .show-detail-actions {
   display: flex;
   gap: 8px;
@@ -652,22 +537,6 @@ a {
   padding-left: 20px;
   border-left: 1px solid var(--border);
   flex-shrink: 0;
-}
-
-.top-card .show-detail-rating {
-  flex-direction: row;
-  gap: 8px;
-  padding-left: 0;
-  border-left: none;
-  align-items: baseline;
-}
-
-.top-card .rating-display-score {
-  font-size: 1.4rem;
-}
-
-.top-card .rating-display-label {
-  font-size: 0.72rem;
 }
 
 .seasons-card {
@@ -1080,10 +949,6 @@ a {
     flex-direction: row;
     gap: 10px;
   }
-
-  .top-card {
-    align-items: start;
-  }
 }
 
 @media (max-width: 720px) {
@@ -1097,14 +962,6 @@ a {
 
   .category-rating {
     white-space: normal;
-  }
-
-  .top-card {
-    grid-template-columns: 50px minmax(0, 1fr);
-
-    &.no-poster {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 
   .movie-detail-info {

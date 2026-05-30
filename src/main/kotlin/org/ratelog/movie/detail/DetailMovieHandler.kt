@@ -11,13 +11,18 @@ import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieRepository
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.tmdb.TmdbClient
+import org.ratelog.user.User
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
-data class GetMovieDetail(val tmdbId: TmdbId)
+data class GetMovieDetail(
+    val userId: User.Id,
+    val tmdbId: TmdbId
+)
 
 data class GetMovieDetailResult(
     val movie: Movie,
+    val isRated: Boolean,
     val directing: Double?,
     val cinematography: Double?,
     val acting: Double?,
@@ -63,10 +68,11 @@ class GetMovieDetailHandler(
 
         val updatedMovie = movie.let(movieRepository::save)
 
-        val rating = ratingRepository.findFirstByMovieId(updatedMovie.id!!)
+        val rating = ratingRepository.findByMovieIdAndUserId(updatedMovie.id!!, query.userId)
 
         GetMovieDetailResult(
             movie = updatedMovie,
+            isRated = rating != null,
             directing = rating?.directing?.value,
             cinematography = rating?.cinematography?.value,
             acting = rating?.acting?.value,

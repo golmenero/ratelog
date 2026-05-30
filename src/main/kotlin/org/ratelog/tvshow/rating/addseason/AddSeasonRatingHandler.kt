@@ -38,7 +38,7 @@ class AddSeasonRatingHandler(
             ensure(score.value in 1.0..10.0) { AddSeasonRatingHandlerError.InvalidRatingValue }
         }
 
-        val tvRating = tvRatingRepository.findFirstByTvShowId(command.tvShowId) ?: TvRating.create(command.tvShowId, command.userId, Instant.now())
+        val tvRating = tvRatingRepository.findByTvShowIdAndUserId(command.tvShowId, command.userId) ?: TvRating.create(command.tvShowId, command.userId, Instant.now())
 
         tvRating.addSeasonRating(
             seasonNumber = command.seasonNumber,

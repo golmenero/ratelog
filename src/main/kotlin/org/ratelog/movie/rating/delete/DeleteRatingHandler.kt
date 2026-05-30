@@ -24,7 +24,7 @@ class DeleteRatingHandler(
 
         ensure(movie != null && movie.id != null) { DeleteRatingHandlerError.MovieNotFound }
 
-        val rating = ratingRepository.findFirstByMovieId(movie.id) ?:
+        val rating = ratingRepository.findByMovieIdAndUserId(movie.id, command.userId) ?:
         raise(DeleteRatingHandlerError.RatingNotFound)
 
         ratingRepository.deleteById(rating.id!!)

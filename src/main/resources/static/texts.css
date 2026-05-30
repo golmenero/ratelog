@@ -1,4 +1,4 @@
-/* h1, h2 */
+/* h1, h2, span */
 
 h1 {
   font-size: clamp(2.3rem, 4vw, 4.3rem);
@@ -31,5 +31,16 @@ h3 {
 @media (max-width: 720px) {
   h1 {
     width: 100%;
+  }
+}
+
+span {
+  &.year {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    color: var(--text-soft);
+    font-weight: 500;
+    opacity: 0.5;
+    font-family: var(--font-ui);
+    letter-spacing: -0.02em;
   }
 }
