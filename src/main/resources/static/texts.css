@@ -1,3 +1,5 @@
+/* h1, h2 */
+
 h1 {
   font-size: clamp(2.3rem, 4vw, 4.3rem);
   line-height: 0.96;
@@ -17,6 +19,13 @@ h2 {
   letter-spacing: -0.04em;
   font-family: var(--font-serif);
   margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 1.3rem;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  font-family: var(--font-serif);
 }
 
 @media (max-width: 720px) {

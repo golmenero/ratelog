@@ -78,7 +78,6 @@ a {
   box-shadow: none;
 }
 
-.result-card,
 .top-card,
 .movie-summary,
 .score-field,
@@ -188,7 +187,6 @@ a {
   font-family: var(--font-ui);
 }
 
-.result-title,
 .movie-title,
 .top-title {
   font-size: 1.3rem;
