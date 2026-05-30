@@ -22,47 +22,43 @@
 
         <div class="tops-premieres-grid">
             <section class="panel tops-panel">
-                <div class="section-heading">
-                    <div class="heading-filter">
-                        <form th:action="@{/tvshows}" method="get" style="display: contents;">
-                            <select id="category" name="category" th:aria-label="#{tvshows.category.all}">
-                                <option value="" th:text="#{tvshows.category.all}">All categories</option>
-                                <option value="Action" th:selected="${selectedCategory == 'Action'}" th:text="#{genre.action}">Action</option>
-                                <option value="Adventure" th:selected="${selectedCategory == 'Adventure'}" th:text="#{genre.adventure}">Adventure</option>
-                                <option value="Animation" th:selected="${selectedCategory == 'Animation'}" th:text="#{genre.animation}">Animation</option>
-                                <option value="Comedy" th:selected="${selectedCategory == 'Comedy'}" th:text="#{genre.comedy}">Comedy</option>
-                                <option value="Crime" th:selected="${selectedCategory == 'Crime'}" th:text="#{genre.crime}">Crime</option>
-                                <option value="Documentary" th:selected="${selectedCategory == 'Documentary'}" th:text="#{genre.documentary}">Documentary</option>
-                                <option value="Drama" th:selected="${selectedCategory == 'Drama'}" th:text="#{genre.drama}">Drama</option>
-                                <option value="Family" th:selected="${selectedCategory == 'Family'}" th:text="#{genre.family}">Family</option>
-                                <option value="Fantasy" th:selected="${selectedCategory == 'Fantasy'}" th:text="#{genre.fantasy}">Fantasy</option>
-                                <option value="History" th:selected="${selectedCategory == 'History'}" th:text="#{genre.history}">History</option>
-                                <option value="Horror" th:selected="${selectedCategory == 'Horror'}" th:text="#{genre.horror}">Horror</option>
-                                <option value="Mystery" th:selected="${selectedCategory == 'Mystery'}" th:text="#{genre.mystery}">Mystery</option>
-                                <option value="Romance" th:selected="${selectedCategory == 'Romance'}" th:text="#{genre.romance}">Romance</option>
-                                <option value="Science Fiction" th:selected="${selectedCategory == 'Science Fiction'}" th:text="#{genre.science.fiction}">Science Fiction</option>
-                                <option value="Sci-Fi &amp; Fantasy" th:selected="${selectedCategory == 'Sci-Fi &amp; Fantasy'}" th:text="#{genre.sci.fi.fantasy}">Sci-Fi &amp; Fantasy</option>
-                                <option value="Soap" th:selected="${selectedCategory == 'Soap'}" th:text="#{genre.soap}">Soap</option>
-                                <option value="Talk" th:selected="${selectedCategory == 'Talk'}" th:text="#{genre.talk}">Talk</option>
-                                <option value="Thriller" th:selected="${selectedCategory == 'Thriller'}" th:text="#{genre.thriller}">Thriller</option>
-                                <option value="War" th:selected="${selectedCategory == 'War'}" th:text="#{genre.war}">War</option>
-                                <option value="War &amp; Politics" th:selected="${selectedCategory == 'War &amp; Politics'}" th:text="#{genre.war.politics}">War &amp; Politics</option>
-                                <option value="Western" th:selected="${selectedCategory == 'Western'}" th:text="#{genre.western}">Western</option>
-                            </select>
-                            <input id="name" name="name" type="text" th:value="${selectedName}" th:placeholder="#{tvshows.search.placeholder}" th:aria-label="#{tvshows.search.placeholder}">
-                            <select id="limit" name="limit" th:aria-label="#{tvshows.refresh.ranking}" style="width: auto; min-width: 0;">
-                                <option value="5" th:selected="${selectedLimit == 5}">5</option>
-                                <option value="10" th:selected="${selectedLimit == null || selectedLimit == 10}">10</option>
-                                <option value="25" th:selected="${selectedLimit == 25}">25</option>
-                                <option value="50" th:selected="${selectedLimit == 50}">50</option>
-                                <option value="100" th:selected="${selectedLimit == 100}">100</option>
-                            </select>
-                            <button class="ratelog-btn primary" type="submit" th:aria-label="#{tvshows.refresh.ranking}">
-                                <i data-lucide="search" aria-hidden="true"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                <form th:action="@{/tvshows}" class="filter" method="get">
+                    <select id="category" name="category" th:aria-label="#{tvshows.category.all}">
+                        <option value="" th:text="#{tvshows.category.all}">All categories</option>
+                        <option value="Action" th:selected="${selectedCategory == 'Action'}" th:text="#{genre.action}">Action</option>
+                        <option value="Adventure" th:selected="${selectedCategory == 'Adventure'}" th:text="#{genre.adventure}">Adventure</option>
+                        <option value="Animation" th:selected="${selectedCategory == 'Animation'}" th:text="#{genre.animation}">Animation</option>
+                        <option value="Comedy" th:selected="${selectedCategory == 'Comedy'}" th:text="#{genre.comedy}">Comedy</option>
+                        <option value="Crime" th:selected="${selectedCategory == 'Crime'}" th:text="#{genre.crime}">Crime</option>
+                        <option value="Documentary" th:selected="${selectedCategory == 'Documentary'}" th:text="#{genre.documentary}">Documentary</option>
+                        <option value="Drama" th:selected="${selectedCategory == 'Drama'}" th:text="#{genre.drama}">Drama</option>
+                        <option value="Family" th:selected="${selectedCategory == 'Family'}" th:text="#{genre.family}">Family</option>
+                        <option value="Fantasy" th:selected="${selectedCategory == 'Fantasy'}" th:text="#{genre.fantasy}">Fantasy</option>
+                        <option value="History" th:selected="${selectedCategory == 'History'}" th:text="#{genre.history}">History</option>
+                        <option value="Horror" th:selected="${selectedCategory == 'Horror'}" th:text="#{genre.horror}">Horror</option>
+                        <option value="Mystery" th:selected="${selectedCategory == 'Mystery'}" th:text="#{genre.mystery}">Mystery</option>
+                        <option value="Romance" th:selected="${selectedCategory == 'Romance'}" th:text="#{genre.romance}">Romance</option>
+                        <option value="Science Fiction" th:selected="${selectedCategory == 'Science Fiction'}" th:text="#{genre.science.fiction}">Science Fiction</option>
+                        <option value="Sci-Fi &amp; Fantasy" th:selected="${selectedCategory == 'Sci-Fi &amp; Fantasy'}" th:text="#{genre.sci.fi.fantasy}">Sci-Fi &amp; Fantasy</option>
+                        <option value="Soap" th:selected="${selectedCategory == 'Soap'}" th:text="#{genre.soap}">Soap</option>
+                        <option value="Talk" th:selected="${selectedCategory == 'Talk'}" th:text="#{genre.talk}">Talk</option>
+                        <option value="Thriller" th:selected="${selectedCategory == 'Thriller'}" th:text="#{genre.thriller}">Thriller</option>
+                        <option value="War" th:selected="${selectedCategory == 'War'}" th:text="#{genre.war}">War</option>
+                        <option value="War &amp; Politics" th:selected="${selectedCategory == 'War &amp; Politics'}" th:text="#{genre.war.politics}">War &amp; Politics</option>
+                        <option value="Western" th:selected="${selectedCategory == 'Western'}" th:text="#{genre.western}">Western</option>
+                    </select>
+                    <input id="name" name="name" type="text" th:value="${selectedName}" th:placeholder="#{tvshows.search.placeholder}" th:aria-label="#{tvshows.search.placeholder}">
+                    <select id="limit" name="limit" th:aria-label="#{tvshows.refresh.ranking}" style="width: auto; min-width: 0;">
+                        <option value="5" th:selected="${selectedLimit == 5}">5</option>
+                        <option value="10" th:selected="${selectedLimit == null || selectedLimit == 10}">10</option>
+                        <option value="25" th:selected="${selectedLimit == 25}">25</option>
+                        <option value="50" th:selected="${selectedLimit == 50}">50</option>
+                        <option value="100" th:selected="${selectedLimit == 100}">100</option>
+                    </select>
+                    <button class="primary" type="submit" th:aria-label="#{tvshows.refresh.ranking}">
+                        <i data-lucide="search" aria-hidden="true"></i>
+                    </button>
+                </form>
 
                 <div th:if="${error}" id="msg" class="feedback error spacer-top" th:text="${error}"></div>
                 <div th:if="${success}" id="msg" class="feedback success spacer-top" th:text="${success}"></div>

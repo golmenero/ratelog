@@ -1,4 +1,10 @@
-/* input, select, button, a */
+/* form, input, select, button, a */
+
+form.filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
 
 input,
 select {
@@ -21,7 +27,6 @@ select {
 
   &:focus {
     border-color: rgba(230, 120, 60, 0.45);
-    box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
   }
 }
 
@@ -38,14 +43,10 @@ select {
     color: var(--text);
     padding: 12px;
   }
-
-  &:focus {
-    border-color: rgba(230, 120, 60, 0.45);
-    box-shadow: 0 0 0 4px rgba(230, 120, 60, 0.12);
-  }
 }
 
-.ratelog-btn {
+button,
+a.btn {
   background: transparent;
   border: none;
   padding: 8px;
@@ -87,7 +88,6 @@ select {
     background: var(--accent);
     color: white;
     font-weight: 700;
-    box-shadow: 0 10px 24px hsl(var(--_brand-clay) / 0.28);
     font-family: var(--font-ui);
 
     &:hover {

@@ -15,20 +15,6 @@
   position: relative;
 }
 
-.search-toolbar-centered {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 18px;
-
-  .search-inline {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 75%;
-    max-width: 900px;
-  }
-}
-
 .suggestions {
   position: absolute;
   top: calc(100% + 8px);
@@ -70,25 +56,5 @@
   .search-row,
   .filter-row {
     grid-template-columns: 1fr;
-  }
-
-  .search-toolbar-centered {
-    justify-content: stretch;
-
-    .search-inline {
-      width: 100%;
-    }
-  }
-
-  .heading-filter {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-
-    form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      width: 100%;
-    }
   }
 }

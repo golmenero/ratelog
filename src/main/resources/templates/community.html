@@ -58,10 +58,10 @@
 
                     <div th:if="${followError}" class="community-feedback error" th:text="${followError}"></div>
 
-                    <div class="community-search-section">
-                        <form th:action="@{/community}" method="get" class="community-search-form">
-                            <input type="text" name="username" class="community-search-input" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" />
-                            <button type="submit" class="ratelog-btn primary" th:title="#{community.search.users}">
+                    <div>
+                        <form th:action="@{/community}" method="get" class="filter">
+                            <input type="text" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" />
+                            <button type="submit" class="primary" th:title="#{community.search.users}">
                                 <i data-lucide="search" aria-hidden="true"></i>
                             </button>
                         </form>
@@ -74,7 +74,7 @@
                             <form th:action="@{/user/follow}" method="post" class="user-follow-form">
                                 <input type="hidden" name="username" th:value="${user.username}" />
                                 <input type="hidden" name="from" value="community" />
-                                <button type="submit" class="ratelog-btn primary" th:title="${user.isFollowed} ? #{community.unfollow} : #{community.follow}">
+                                <button type="submit" class="primary" th:title="${user.isFollowed} ? #{community.unfollow} : #{community.follow}">
                                     <i th:data-lucide="${user.isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
                                 </button>
                             </form>

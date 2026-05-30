@@ -150,32 +150,6 @@ a {
   top: 80px;
 }
 
-.section-heading {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: end;
-  margin-bottom: 18px;
-
-  h2,
-  h3 {
-    font-size: clamp(1.4rem, 2vw, 2rem);
-    letter-spacing: -0.04em;
-    font-family: var(--font-serif);
-  }
-
-  p,
-  .helper-text,
-  .muted {
-    color: var(--text-soft);
-    line-height: 1.65;
-  }
-}
-
-.tops-panel .heading-filter {
-  flex-wrap: wrap;
-}
-
 .poster-frame {
   background: linear-gradient(135deg, #312924, #1e1916);
   position: relative;
@@ -1148,12 +1122,6 @@ a {
 
   .panel {
     padding: 0;
-  }
-
-  .section-heading {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
   }
 
   .category-ratings {

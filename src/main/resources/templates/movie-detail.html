@@ -35,12 +35,12 @@
                 </div>
             </div>
             <div class="show-detail-actions">
-                <button th:if="${!movie.hasRating}" id="btnOpenRateModal" class="ratelog-btn">
+                <button th:if="${!movie.hasRating}" id="btnOpenRateModal">
                     <i data-lucide="star"></i>
                 </button>
                 <form th:action="@{/movie/follow}" method="post">
                     <input type="hidden" name="movieId" th:value="${movie.id}" />
-                    <button type="submit" th:class="${movie.isFollowed} ? 'ratelog-btn green' : 'ratelog-btn'">
+                    <button type="submit" th:class="${movie.isFollowed} ? 'green' : ''">
                         <i data-lucide="heart"></i>
                     </button>
                 </form>
@@ -76,7 +76,7 @@
                         <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
                     </div>
                     <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="season-delete-form">
-                        <button type="submit" class="ratelog-btn" th:aria-label="#{movie.detail.delete.rating}">
+                        <button type="submit" th:aria-label="#{movie.detail.delete.rating}">
                             <i data-lucide="trash"></i>
                         </button>
                     </form>

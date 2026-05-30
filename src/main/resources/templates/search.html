@@ -22,16 +22,12 @@
         </section>
 
         <section class="panel">
-            <div class="search-toolbar-centered">
-                <div class="heading-filter search-inline">
-                    <form th:action="@{/}" method="get" style="display: contents;">
-                        <input class="full-width" id="q" name="q" type="text" th:value="${query}" th:placeholder="#{search.placeholder}" autocomplete="off" th:aria-label="#{search.btn}">
-                        <button class="ratelog-btn primary" type="submit" th:aria-label="#{search.btn}" th:title="#{search.btn}">
-                            <i data-lucide="search" aria-hidden="true"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
+            <form th:action="@{/}" class="filter" method="get">
+                <input class="full-width" id="q" name="q" type="text" th:value="${query}" th:placeholder="#{search.placeholder}" autocomplete="off" th:aria-label="#{search.btn}">
+                <button class="primary" type="submit" th:aria-label="#{search.btn}" th:title="#{search.btn}">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                </button>
+            </form>
             
             <div th:if="${results != null}" id="results" class="results-grid">
                 <div th:if="${#lists.isEmpty(results)}" class="empty-state" th:text="#{search.empty}">Try with another title, year or original name.</div>

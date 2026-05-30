@@ -37,7 +37,7 @@
             <div class="show-detail-actions">
                 <form th:action="@{/tvshow/follow}" method="post">
                     <input type="hidden" name="tvShowId" th:value="${show.id}" />
-                    <button type="submit" th:class="${show.isFollowed} ? 'ratelog-btn green' : 'ratelog-btn'">
+                    <button type="submit" th:class="${show.isFollowed} ? 'green' : ''">
                         <i data-lucide="heart"></i>
                     </button>
                 </form>
@@ -78,12 +78,12 @@
                     </div>
                     <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="season-delete-form">
                         <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
-                        <button type="submit" class="ratelog-btn" th:aria-label="#{tvshow.detail.delete.rating}">
+                        <button type="submit" th:aria-label="#{tvshow.detail.delete.rating}">
                             <i data-lucide="trash"></i>
                         </button>
                     </form>
                 </div>
-                <button th:unless="${season.hasRating}" class="ratelog-btn season-rate-btn" th:data-season="${season.seasonNumber}">
+                <button th:unless="${season.hasRating}" class="season-rate-btn" th:data-season="${season.seasonNumber}">
                     <i data-lucide="star"></i>
                 </button>
             </div>
