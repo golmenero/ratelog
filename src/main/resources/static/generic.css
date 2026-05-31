@@ -67,6 +67,10 @@ body {
   }
 }
 
+.flex {
+  display: flex;
+}
+
 a {
   color: inherit;
 }
@@ -77,7 +81,6 @@ a {
   margin: 0 auto;
 }
 
-.movie-summary,
 .score-field,
 .empty-state,
 .feedback {
@@ -148,13 +151,6 @@ a {
   font-family: var(--font-serif);
 }
 
-.movie-title {
-  font-size: 1.3rem;
-  line-height: 1.15;
-  letter-spacing: -0.04em;
-  font-family: var(--font-serif);
-}
-
 .top-poster {
   width: 50px;
   min-height: 72px;
@@ -163,37 +159,6 @@ a {
   .poster-fallback {
     font-size: 2rem;
   }
-}
-
-.top-info {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 100%;
-  gap: 16px;
-}
-
-.top-rank-num {
-  flex-shrink: 0;
-  color: var(--accent);
-  font-family: var(--font-serif);
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin-right: 10px;
-}
-
-
-
-.top-year {
-  flex-shrink: 0;
-  font-size: 0.75rem;
-  color: var(--text-soft);
-  font-family: var(--font-ui);
-  font-weight: 500;
-  opacity: 0.5;
 }
 
 .rating-display {
@@ -287,41 +252,6 @@ a {
 
 .modal-categories .top-actions {
   margin-top: 8px;
-}
-
-.premieres-group-label {
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-soft);
-  font-weight: 700;
-  font-family: var(--font-ui);
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--border);
-}
-
-.premiere-timeline {
-  display: grid;
-  gap: 10px;
-  width: 100%;
-}
-
-.premiere-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  flex: 1;
-}
-
-.premiere-date {
-  font-size: 0.84rem;
-  color: var(--text-soft);
-  font-family: var(--font-ui);
-
-  &.premiere-date-released {
-    color: var(--success-text);
-  }
 }
 
 .show-detail-card {
@@ -424,14 +354,6 @@ a {
   margin-left: auto;
 }
 
-.rating-display-score {
-  font-size: 2.4rem;
-  font-weight: 800;
-  font-family: var(--font-serif);
-  color: hsl(20 83% 84%);
-  line-height: 1;
-}
-
 .rating-display-label {
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -467,14 +389,6 @@ a {
   }
 }
 
-.rating-display-score {
-  font-size: 2.4rem;
-  font-weight: 800;
-  font-family: var(--font-serif);
-  color: hsl(20 83% 84%);
-  line-height: 1;
-}
-
 .rating-display-label {
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -483,11 +397,6 @@ a {
   font-weight: 600;
 }
 
-.rating-display-categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
 
 .rating-cat {
   display: inline-flex;
@@ -505,43 +414,6 @@ a {
     height: 14px;
     opacity: 0.7;
   }
-}
-
-.rating-display-seasons {
-  display: grid;
-  gap: 12px;
-}
-
-.rating-season-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.rating-season-label {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-family: var(--font-serif);
-  flex-shrink: 0;
-  min-width: 32px;
-}
-
-.rating-season-categories {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-}
-
-.rating-delete-form {
-  flex-shrink: 0;
 }
 
 .season-rate-btn {
@@ -714,39 +586,6 @@ a {
   font-size: 0.85rem;
 }
 
-.modal-category-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.modal-category-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-soft);
-  font-family: var(--font-ui);
-  font-size: 0.9rem;
-
-  i {
-    width: 16px;
-    height: 16px;
-    opacity: 0.7;
-  }
-}
-
-.modal-category-value {
-  font-weight: 700;
-  color: hsl(20 78% 86%);
-  font-family: var(--font-ui);
-  font-size: 0.95rem;
-  min-width: 36px;
-  text-align: right;
-}
-
 @media (max-width: 900px) {
   .movie-layout {
     grid-template-columns: 1fr;
@@ -797,8 +636,4 @@ a {
 .scores-grid {
     grid-template-columns: 1fr;
   }
-}
-
-.flex {
-  display: flex;
 }

@@ -36,7 +36,7 @@
             </form>
         </div>
         <div th:if="${show.overallScore != null}" class="show-detail-rating">
-            <span class="rating-display-score" th:text="${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')}">0.00</span>
+            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')}">0.00</span>
             <span class="rating-display-label" th:text="#{tvshow.detail.your.rating}">Your Rating</span>
         </div>
     </article>

@@ -17,50 +17,44 @@
         <div class="grid">
             <div>
                 <h2 th:text="#{community.activity.feed}">Activity Feed</h2>
-                <div th:if="${feed != null and #lists.isEmpty(feed)}" class="empty-state" th:text="#{community.activity.empty}">No recent activity from users you follow.</div>
 
-                <div th:if="${feed != null and !#lists.isEmpty(feed)}">
-                    <div th:each="item : ${feed}" class="feed-card">
-                        <div class="feed-poster">
-                            <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}" />
-                            <div th:unless="${item.posterPath != null}" class="feed-poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
-                        </div>
-                        <div class="feed-info">
-                            <div class="feed-user-row">
-                                <div class="feed-user">
-                                    <div class="feed-user-avatar" th:text="${#strings.toUpperCase(#strings.substring(item.username, 0, 1))}">U</div>
-                                    <span class="feed-user-name" th:text="${item.username}">Username</span>
-                                </div>
-                                <div th:replace="~{fragments/score :: feedScoreBlock(${item.score})}"></div>
-                            </div>
-                            <div class="feed-content-row">
-                                <span class="feed-title" th:text="${item.title}">Title</span>
+                <a th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}" th:each="item : ${feed}" class="card">
+                    <div>
+                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}" />
+                        <div>
+                            <span class="username" th:text="${item.username}">Username</span>
+                            <br>
+                            <span class="title" th:text="${item.title}">Title</span>
+                            <div class="tags">
                                 <span th:if="${item.type == 'movie'}" class="tag" th:text="#{community.type.movie}">Movie</span>
                                 <span th:if="${item.type == 'tvshow'}" class="tag" th:text="#{community.type.tv}">TV</span>
-                                <span class="feed-date" th:text="${item.ratedAt}">Date</span>
                             </div>
                         </div>
                     </div>
-                </div>
+                    <div>
+                        <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                        <br>
+                        <span class="date" th:text="${item.ratedAt}">Rated at</span>
+                    </div>
+                </a>
             </div>
 
             <div>
                 <h2 th:text="#{community.search.users}">Search Users</h2>
-                <div th:if="${followError}" class="community-feedback error" th:text="${followError}"></div>
                 <form th:action="@{/community}" method="get" class="filter">
                     <input type="text" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" />
                     <button type="submit" class="primary" th:title="#{community.search.users}">
                         <i data-lucide="search" aria-hidden="true"></i>
                     </button>
                 </form>
-                <div th:if="${users != null and !#lists.isEmpty(users)}" class="users-list">
-                    <div th:each="user : ${users}" class="user-card">
-                        <div class="user-avatar" th:text="${#strings.toUpperCase(#strings.substring(user.username, 0, 1))}">U</div>
-                        <span class="user-username" th:text="${user.username}">Username</span>
-                        <form th:action="@{/user/follow}" method="post" class="user-follow-form">
+
+                <div th:if="${users != null and !#lists.isEmpty(users)}">
+                    <div th:each="user : ${users}" class="feed-card">
+                        <form th:action="@{/user/follow}" method="post">
+                            <span class="username" th:text="${user.username}">Username</span>
                             <input type="hidden" name="username" th:value="${user.username}" />
                             <input type="hidden" name="from" value="community" />
-                            <button type="submit" class="primary" th:title="${user.isFollowed} ? #{community.unfollow} : #{community.follow}">
+                            <button type="submit" th:title="${user.isFollowed} ? #{community.unfollow} : #{community.follow}">
                                 <i th:data-lucide="${user.isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
                             </button>
                         </form>
@@ -70,19 +64,18 @@
                 <div class="separator"></div>
 
                 <h2 th:text="#{community.followed.users}">Followed Users</h2>
-                <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}" class="followed-users-list">
-                    <div th:each="followedUser : ${followedUsers}" class="followed-user-item">
-                        <span class="followed-user-username" th:text="${followedUser.username}">Username</span>
-                        <form th:action="@{/user/follow}" method="post" class="followed-user-form">
+                <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}">
+                    <div th:each="followedUser : ${followedUsers}" class="feed-card">
+                        <form th:action="@{/user/follow}" method="post">
+                            <span class="username" th:text="${followedUser.username}">Username</span>
                             <input type="hidden" name="username" th:value="${followedUser.username}" />
                             <input type="hidden" name="from" value="followed" />
-                            <button type="submit" class="followed-user-unfollow" th:title="#{community.unfollow}">
+                            <button type="submit" th:title="#{community.unfollow}">
                                 <i data-lucide="user-round-x" aria-hidden="true"></i>
                             </button>
                         </form>
                     </div>
                 </div>
-                <div th:if="${followedUsers != null and #lists.isEmpty(followedUsers)}" class="empty-state" th:text="#{community.followed.empty}">You are not following anyone yet.</div>
             </div>
         </div>
     </div>

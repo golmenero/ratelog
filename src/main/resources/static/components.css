@@ -1,6 +1,6 @@
-.top-card {
+.card {
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   background: var(--surface);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
@@ -24,7 +24,7 @@
       flex-shrink: 0;
   }
 
-  & > div {
+  & > div:first-child {
     display: flex;
     gap: 12px;
   }
@@ -37,7 +37,7 @@
 
   .result-card {
     border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     background: var(--surface);
     backdrop-filter: blur(14px);
     box-shadow: var(--shadow);
@@ -84,6 +84,22 @@
   z-index: 1;
   gap: 16px;
   display: block;
+}
+
+.feed-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  margin-bottom: 8px;
+
+  form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .tags {
