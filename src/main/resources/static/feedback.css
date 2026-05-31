@@ -1,8 +1,9 @@
 .feedback {
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
   line-height: 1.6;
+  margin-bottom: 16px;
 
   &.success {
     background: var(--success-bg);
