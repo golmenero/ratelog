@@ -57,7 +57,7 @@
             </form>
 
             <div th:if="${tops != null}">
-                <div th:if="${#lists.isEmpty(tops)}" class="empty-state" th:text="#{tvshows.empty.filter}">No rated TV shows yet for this filter.</div>
+                <div th:if="${#lists.isEmpty(tops)}" class="empty-card" th:text="#{tvshows.empty.filter}">No rated TV shows yet for this filter.</div>
                 <a th:href="@{'/tv/' + ${s.tmdbId}}" th:each="s, iterStat : ${tops}" class="card">
                     <div>
                         <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${s.posterPath}}" th:alt="'Poster of ' + ${s.name}">

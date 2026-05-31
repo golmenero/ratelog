@@ -97,23 +97,6 @@ a {
   margin: 0 auto;
 }
 
-.score-field,
-.empty-state {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
-}
-
-
-
-.empty-state {
-  padding: 28px;
-  text-align: center;
-  color: var(--text-soft);
-}
-
 .full-width {
   width: 100%;
 }
@@ -142,13 +125,6 @@ a {
   font-weight: 800;
   letter-spacing: -0.05em;
   font-family: var(--font-serif);
-}
-
-
-.category-ratings {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
 }
 
 .top-actions {
@@ -193,99 +169,6 @@ a {
 
   form {
     display: inline;
-  }
-}
-
-.season-row-label {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--accent);
-  background: var(--accent-bg);
-  padding: 3px 8px;
-  border-radius: 6px;
-  white-space: nowrap;
-  font-family: var(--font-ui);
-  flex-shrink: 0;
-}
-
-.rating-cat-score {
-  background: var(--accent-soft);
-  color: hsl(20 78% 86%);
-
-  i {
-    color: var(--accent);
-    opacity: 1;
-  }
-}
-
-.season-row-rated {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-  flex-wrap: wrap;
-}
-
-.season-delete-form {
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.rating-display-label {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-soft);
-  font-weight: 600;
-}
-
-.rating-cat {
-
-}
-
-.season-rate-btn {
-  flex-shrink: 0;
-
-  i {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.rating-display-label {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-soft);
-  font-weight: 600;
-}
-
-
-.rating-cat {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-soft);
-
-  i {
-    width: 14px;
-    height: 14px;
-    opacity: 0.7;
-  }
-}
-
-.season-rate-btn {
-  flex-shrink: 0;
-  margin-left: auto;
-
-  i {
-    width: 16px;
-    height: 16px;
   }
 }
 
@@ -441,17 +324,5 @@ a {
   font-weight: 800;
   font-family: var(--font-ui);
   font-size: 0.85rem;
-}
-
-@media (max-width: 900px) {
-  .show-detail-card {
-    grid-template-columns: 60px minmax(0, 1fr);
-    gap: 14px;
-  }
-
-  .show-detail-actions {
-    grid-column: 1 / -1;
-    justify-content: flex-end;
-  }
 }
 

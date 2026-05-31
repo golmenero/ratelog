@@ -51,8 +51,8 @@
     <div th:if="${show != null && !#lists.isEmpty(show.seasons)}" class="category-card">
         <div th:each="season : ${show.seasons}" class="flex gap separate">
             <div class="flex centered gap">
-                <span class="season-row-label" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
-                <div th:if="${season.hasRating}" class="season-row-rated">
+                <span class="season" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
+                <div th:if="${season.hasRating}" class="flex gap centered">
                     <div class="category">
                         <i data-lucide="star"></i>
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">0.00</span>
@@ -86,7 +86,7 @@
                         <i data-lucide="trash"></i>
                     </button>
                 </form>
-                <button th:unless="${season.hasRating}" class="season-rate-btn" th:data-season="${season.seasonNumber}">
+                <button th:unless="${season.hasRating}" th:data-season="${season.seasonNumber}">
                     <i data-lucide="star"></i>
                 </button>
             </div>
