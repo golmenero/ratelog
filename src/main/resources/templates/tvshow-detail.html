@@ -86,7 +86,7 @@
                         <i data-lucide="trash"></i>
                     </button>
                 </form>
-                <button th:unless="${season.hasRating}" th:data-season="${season.seasonNumber}">
+                <button class="season-rate-btn" th:unless="${season.hasRating}" th:data-season="${season.seasonNumber}">
                     <i data-lucide="star"></i>
                 </button>
             </div>
