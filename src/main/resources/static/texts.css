@@ -34,6 +34,11 @@ h3 {
   }
 }
 
+p {
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
 span {
   &.date {
     font-size: 0.84rem;

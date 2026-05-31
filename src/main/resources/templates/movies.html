@@ -63,6 +63,7 @@
                             <span class="rank" th:text="${m.rank}">#1</span>
                             <span class="title" th:text="${m.title}">Title</span>
                             <span class="year" th:text="${m.releaseYear != null} ? ${m.releaseYear} : #{movies.year.unknown}">Year</span>
+                            <br>
                             <div th:if="${!#lists.isEmpty(m.genres)}" class="tags">
                                 <span th:each="genre : ${m.genres}" th:text="${genre}">Genre</span>
                             </div>

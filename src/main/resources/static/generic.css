@@ -77,6 +77,14 @@ body {
   &.gap {
     gap: 8px;
   }
+
+  &.gap-lg {
+    gap: 16px;
+  }
+
+  &.separate {
+    justify-content: space-between;
+  }
 }
 
 a {
@@ -165,29 +173,12 @@ a {
 }
 
 .show-detail-card {
-  display: grid;
-  grid-template-columns: 60px minmax(0, 1fr) auto auto;
-  gap: 20px;
-  align-items: center;
-  padding: 24px;
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
 }
 
 .show-detail-poster {
   width: 60px;
   min-height: 90px;
   border-radius: 10px;
-}
-
-.show-detail-body {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
 }
 
 .show-detail-overview {
@@ -202,30 +193,6 @@ a {
 
   form {
     display: inline;
-  }
-}
-
-.seasons-card {
-  padding: 20px 24px;
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
-  display: grid;
-  gap: 12px;
-}
-
-.season-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-
-  &:last-child {
-    padding-bottom: 0;
-    border-bottom: none;
   }
 }
 
@@ -273,21 +240,7 @@ a {
 }
 
 .rating-cat {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-soft);
 
-  i {
-    width: 14px;
-    height: 14px;
-    opacity: 0.7;
-  }
 }
 
 .season-rate-btn {

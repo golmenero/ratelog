@@ -65,6 +65,7 @@
                             <span class="rank" th:text="${s.rank}">#1</span>
                             <span class="title" th:text="${s.name}">Title</span>
                             <span class="year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : #{tvshows.year.unknown}">Year</span>
+                            <br>
                             <div th:if="${!#lists.isEmpty(s.genres)}" class="tags">
                                 <span th:each="genre : ${s.genres}" th:text="${genre}">Genre</span>
                             </div>
