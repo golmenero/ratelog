@@ -1,0 +1,23 @@
+.feedback {
+  padding: 16px 18px;
+  border-radius: 18px;
+  line-height: 1.6;
+
+  &.success {
+    background: var(--success-bg);
+    color: var(--success-text);
+    border-color: rgba(40, 84, 59, 0.12);
+  }
+
+  &.error {
+    background: var(--error-bg);
+    color: var(--error-text);
+    border-color: rgba(126, 47, 47, 0.12);
+  }
+
+  &.info {
+    background: var(--info-bg);
+    color: var(--info-text);
+    border-color: rgba(83, 56, 122, 0.12);
+  }
+}

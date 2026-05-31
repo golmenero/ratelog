@@ -95,29 +95,7 @@ a {
   box-shadow: var(--shadow);
 }
 
-.feedback {
-  padding: 16px 18px;
-  border-radius: 18px;
-  line-height: 1.6;
 
-  &.success {
-    background: var(--success-bg);
-    color: var(--success-text);
-    border-color: rgba(40, 84, 59, 0.12);
-  }
-
-  &.error {
-    background: var(--error-bg);
-    color: var(--error-text);
-    border-color: rgba(126, 47, 47, 0.12);
-  }
-
-  &.info {
-    background: var(--info-bg);
-    color: var(--info-text);
-    border-color: rgba(83, 56, 122, 0.12);
-  }
-}
 
 .empty-state {
   padding: 28px;
@@ -155,86 +133,11 @@ a {
   font-family: var(--font-serif);
 }
 
-.top-poster {
-  width: 50px;
-  min-height: 72px;
-  border-radius: 18px;
-
-  .poster-fallback {
-    font-size: 2rem;
-  }
-}
-
-.rating-display {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.star-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-}
-
-.star-filled {
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: var(--accent);
-  font-size: 1rem;
-}
-
-.star-empty {
-  color: var(--text-soft);
-  font-size: 1rem;
-}
-
-.rating-score-value {
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--text-soft);
-}
 
 .category-ratings {
   display: flex;
   gap: 8px;
   margin-top: 12px;
-}
-
-.category-rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-
-.category-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-soft);
-  font-family: var(--font-ui);
-}
-
-.category-icon {
-  width: 14px;
-  height: 14px;
-  opacity: 0.8;
-}
-
-.category-score {
-  font-weight: 700;
-  color: hsl(20 78% 86%);
-  font-family: var(--font-ui);
-  min-width: 36px;
-  text-align: right;
 }
 
 .top-actions {
@@ -428,12 +331,6 @@ a {
     width: 16px;
     height: 16px;
   }
-}
-
-.scores-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
 }
 
 .score-field {
@@ -707,22 +604,3 @@ a {
   }
 }
 
-.error-message {
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: var(--error-bg);
-  color: var(--error-text);
-  border: 1px solid rgba(126, 47, 47, 0.12);
-  margin-bottom: 20px;
-  font-size: 0.92rem;
-}
-
-.success-message {
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: var(--success-bg);
-  color: var(--success-text);
-  border: 1px solid rgba(40, 84, 59, 0.12);
-  margin-bottom: 20px;
-  font-size: 0.92rem;
-}

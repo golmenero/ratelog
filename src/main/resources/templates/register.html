@@ -15,7 +15,7 @@
         <img src="/img/logo-name.svg" th:alt="#{app.name}" class="auth-logo">
         <h1 class="auth-title" th:text="#{auth.create.account}">Create your account</h1>
 
-        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+        <div th:if="${error}"  class="feedback error" th:text="${error}"></div>
 
         <form th:action="@{/register}" method="post" class="auth-form">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

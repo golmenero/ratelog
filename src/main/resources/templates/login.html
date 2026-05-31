@@ -15,8 +15,8 @@
         <img src="/img/logo-name.svg" th:alt="#{app.name}" class="auth-logo">
         <h1 class="auth-title" th:text="#{auth.signin}">Sign in</h1>
 
-        <div th:if="${param.error}" class="error-message" th:text="#{auth.login.error}">Invalid username or password.</div>
-        <div th:if="${param.logout}" class="success-message" th:text="#{auth.logout.success}">You have been logged out successfully.</div>
+        <div th:if="${param.error}"  class="feedback error" th:text="${auth.login.error}"></div>
+        <div th:if="${param.logout}" class="feedback success" th:text="${auth.logout.success}"></div>
 
         <form th:action="@{/login/process}" method="post" class="auth-form">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
