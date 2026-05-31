@@ -22,13 +22,13 @@ class DetailMovieHandlerTest {
     private val tmdbClient: TmdbClient = mock()
     private lateinit var movieRepository: InMemoryMovieRepository
     private lateinit var ratingRepository: InMemoryRatingRepository
-    private lateinit var handler: GetMovieDetailHandler
+    private lateinit var handler: DetailMovieHandler
 
     @BeforeEach
     fun setUp() {
         movieRepository = InMemoryMovieRepository()
         ratingRepository = InMemoryRatingRepository()
-        handler = GetMovieDetailHandler(tmdbClient, movieRepository, ratingRepository)
+        handler = DetailMovieHandler(tmdbClient, movieRepository, ratingRepository)
     }
 
     @Test

@@ -32,7 +32,7 @@ data class GetMovieDetailResult(
 )
 
 @Component
-class GetMovieDetailHandler(
+class DetailMovieHandler(
     private val tmdbClient: TmdbClient,
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,

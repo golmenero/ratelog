@@ -2,7 +2,6 @@ package org.ratelog.movie.detail
 
 import org.ratelog.TmdbId
 import org.ratelog.annotations.CurrentUser
-import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -29,8 +28,8 @@ data class MovieDetailResponse(
 )
 
 @Controller
-class MovieDetailController(
-    private val handler: GetMovieDetailHandler,
+class DetailMovieController(
+    private val handler: DetailMovieHandler,
 ) {
 
     @GetMapping("/movie/{id}")

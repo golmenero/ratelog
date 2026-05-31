@@ -40,7 +40,6 @@ data class SeasonResponse(
 @Controller
 class DetailTvShowController(
     private val handler: DetailTvShowHandler,
-    private val tvRatingRepository: TvRatingRepository,
 ) {
 
     @GetMapping("/tv/{id}")
