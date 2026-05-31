@@ -18,7 +18,7 @@
         <img src="/img/logo-name.svg" th:alt="#{app.name}">
         <h2 th:text="#{auth.signin}">Sign in</h2>
 
-        <form th:action="@{/login/process}" class="full-width" method="post">
+        <form th:action="@{/login/process}" class="w-100" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
             <div class="form-group">
@@ -31,7 +31,7 @@
                 <input type="password" id="password" name="password" required>
             </div>
 
-            <button type="submit" class="primary full-width" th:text="#{auth.signin.btn}">Sign In</button>
+            <button type="submit" class="primary w-100" th:text="#{auth.signin.btn}">Sign In</button>
         </form>
 
         <br>

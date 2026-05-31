@@ -15,7 +15,7 @@
 
     <section class="panel">
         <form th:action="@{/}" class="filter" method="get">
-            <input class="full-width" id="q" name="q" type="text" th:value="${query}" th:placeholder="#{search.placeholder}" autocomplete="off" th:aria-label="#{search.btn}">
+            <input class="w-75" id="q" name="q" type="text" th:value="${query}" th:placeholder="#{search.placeholder}" autocomplete="off" th:aria-label="#{search.btn}">
             <button class="primary" type="submit" th:aria-label="#{search.btn}" th:title="#{search.btn}">
                 <i data-lucide="search" aria-hidden="true"></i>
             </button>

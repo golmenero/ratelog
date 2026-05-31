@@ -65,7 +65,7 @@
             </div>
             <p th:text="${season.overview != null and season.overview.trim().length() > 0} ? ${season.overview} : #{tvshow.detail.no.synopsis}">Loading TV show information.</p>
             <br>
-            <div th:if="${season.hasRating}" class="flex gap centered">
+            <div th:if="${season.hasRating}" class="categories">
                 <div class="category">
                     <i data-lucide="star"></i>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">0.00</span>

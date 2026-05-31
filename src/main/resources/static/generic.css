@@ -101,8 +101,12 @@ a {
   margin: 0 auto;
 }
 
-.full-width {
+.w-100 {
   width: 100%;
+}
+
+.w-75 {
+  width: 75%;
 }
 
 .mb-2 {
