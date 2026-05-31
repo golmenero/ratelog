@@ -11,33 +11,30 @@
 <div class="page-shell">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='profile')}"></header>
 
-    <div class="profile-layout">
-        <div class="profile-main">
-            <div class="profile-header">
-                <div class="profile-avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
-                <div class="profile-details">
-                    <div class="profile-details-top">
-                        <h2 th:text="${username}">Username</h2>
-                        <button id="btnOpenEditModal" class="edit-profile-btn" type="button">
-                            <i data-lucide="pencil"></i>
-                        </button>
-                    </div>
-                    <p class="profile-email" th:text="${email}">email@example.com</p>
-                    <p class="profile-since"><span th:text="#{profile.member.since}">Member since</span> <span th:text="${memberSince}">2024-01-01</span></p>
-                </div>
+    <div class="profile">
+        <div class="avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
+        <div>
+            <div class="flex centered">
+                <h1 th:text="${username}">Username</h1>
+                <button id="btnOpenEditModal" class="edit-profile-btn" type="button">
+                    <i data-lucide="pencil"></i>
+                </button>
             </div>
-
-            <div>
-                <form th:action="@{/lang}" method="post">
-                    <label for="lang" th:text="#{profile.language}">Language</label>
-                    <select id="lang" name="lang" onchange="this.form.submit()">
-                        <option value="en" th:text="#{profile.lang.en}" th:selected="${currentLang == 'en'}">English</option>
-                        <option value="es" th:text="#{profile.lang.es}" th:selected="${currentLang == 'es'}">Español</option>
-                    </select>
-                </form>
-            </div>
+            <span th:text="${email}">email@example.com</span>
+            <br>
+            <span class="date"><span th:text="#{profile.member.since}">Member since</span> <span th:text="${memberSince}">2024-01-01</span></span>
         </div>
     </div>
+
+    <div class="separator"></div>
+
+    <form th:action="@{/lang}" method="post">
+        <label for="lang" th:text="#{profile.language}">Language</label>
+        <select id="lang" name="lang" onchange="this.form.submit()">
+            <option value="en" th:text="#{profile.lang.en}" th:selected="${currentLang == 'en'}">English</option>
+            <option value="es" th:text="#{profile.lang.es}" th:selected="${currentLang == 'es'}">Español</option>
+        </select>
+    </form>
 
     <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
 </div>

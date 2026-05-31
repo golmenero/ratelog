@@ -102,6 +102,11 @@
   }
 }
 
+.profile {
+  display: flex;
+  gap: 16px;
+}
+
 .tags {
   display: flex;
   gap: 8px;
@@ -122,4 +127,18 @@
   height: 1px;
   background: var(--border);
   margin: 24px 0;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, hsl(var(--_brand-clay)), hsl(8 54% 68%));
+  color: white;
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: var(--font-serif);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
 }
