@@ -172,7 +172,9 @@ data class TmdbTvSeason(
     @JsonProperty("episode_count")
     val episodeCount: Int? = null,
     @JsonProperty("air_date")
-    val airDate: String? = null
+    val airDate: String? = null,
+    @JsonProperty("overview")
+    val overview: String? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

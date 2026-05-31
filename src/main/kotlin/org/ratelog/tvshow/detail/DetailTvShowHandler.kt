@@ -32,6 +32,7 @@ data class SeasonInfo(
     val episodeCount: Int?,
     val airDate: String?,
     val rating: SeasonRatingInfo?,
+    val overview: Overview?,
 )
 
 data class SeasonRatingInfo(
@@ -106,6 +107,7 @@ class DetailTvShowHandler(
                     episodeCount = tmdbSeason.episodeCount,
                     airDate = tmdbSeason.airDate,
                     rating = ratingInfo,
+                    overview = tmdbSeason.overview?.let(::Overview),
                 )
             }
 
