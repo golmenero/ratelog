@@ -90,8 +90,7 @@ a {
 }
 
 .score-field,
-.empty-state,
-.feedback {
+.empty-state {
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   background: var(--surface);
@@ -492,10 +491,6 @@ a {
 }
 
 @media (max-width: 900px) {
-  .movie-layout {
-    grid-template-columns: 1fr;
-  }
-
   .show-detail-card {
     grid-template-columns: 60px minmax(0, 1fr);
     gap: 14px;
@@ -506,41 +501,4 @@ a {
     justify-content: flex-end;
   }
 }
-
-@media (max-width: 720px) {
-  body {
-    padding: 16px;
-  }
-
-  .category-ratings {
-    flex-wrap: wrap;
-  }
-
-  .category-rating {
-    white-space: normal;
-  }
-
-  .movie-detail-info {
-    grid-template-columns: 50px minmax(0, 1fr);
-  }
-
-  .top-poster {
-    width: 50px;
-    min-height: 72px;
-  }
-
-  .movie-meta-grid {
-    grid-template-columns: 1fr;
-  }
-
-.score-panel {
-  display: grid;
-  gap: 18px;
-}
-
-.scores-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 
