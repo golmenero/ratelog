@@ -22,7 +22,7 @@ object UserFactory {
         id: Long? = null,
         username: String = "user${idGenerator.getAndIncrement()}",
         email: String = "user${idGenerator.get()}@example.com",
-        passwordHash: String = "hashedPassword",
+        passwordHash: String = "encoded_password",
         createdAtEpochMs: Long = System.currentTimeMillis(),
         lang: Lang = Lang("es"),
         followed: Boolean = false,

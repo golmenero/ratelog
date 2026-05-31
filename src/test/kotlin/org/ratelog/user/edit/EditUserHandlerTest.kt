@@ -59,7 +59,7 @@ class EditUserHandlerTest {
             id = 1,
             username = "testuser",
             email = "test@example.com",
-            passwordHash = "oldpassword",
+            passwordHash = "encoded_oldpassword",
         )
         userRepository.save(user)
 
