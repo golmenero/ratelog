@@ -1,18 +1,18 @@
-<div th:fragment="rateTvShowModal(show)" th:if="${show != null}" id="rateModal" class="rating-modal">
-    <div class="rating-modal-content">
-        <button id="btnCloseModal" class="modal-close">
-            <i data-lucide="x"></i>
-        </button>
-        <div class="modal-header">
+<div th:fragment="rateTvShowModal(show)" th:if="${show != null}" id="rateModal" class="modal">
+    <div>
+        <div class="flex separate top">
             <h2 th:text="${show.name}">TV Show Title</h2>
-            <p class="modal-year" th:text="${show.firstAirYear}">Year</p>
+            <button id="btnCloseModal" type="button">
+                <i data-lucide="x"></i>
+            </button>
         </div>
-        <form th:action="@{/tv/rate}" method="post" class="modal-categories">
+
+        <form th:action="@{/tv/rate}" method="post">
             <input type="hidden" name="tvShowId" th:value="${show.id}">
             <input type="hidden" name="tmdbId" th:value="${show.tmdbId}">
 
-            <div class="modal-slider-row">
-                <label class="modal-slider-label" for="seasonNumber">
+            <div class="slider">
+                <label class="flex separate" for="seasonNumber">
                     <span><i data-lucide="layers"></i><span th:text="#{modal.season}">Season</span></span>
                 </label>
                 <select id="seasonNumber" name="seasonNumber">
@@ -20,49 +20,47 @@
                 </select>
             </div>
 
-            <div class="modal-slider-row">
-                <label class="modal-slider-label" for="directing">
-                    <span><i data-lucide="clapperboard"></i><span th:text="#{modal.direction}">Direction</span></span>
-                    <span class="modal-slider-value" id="directingValue">5.00</span>
+            <div class="slider">
+                <label class="flex separate" for="directing">
+                    <span class="flex centered gap"><i data-lucide="clapperboard"></i><span th:text="#{modal.direction}">Direction</span></span>
+                    <span class="score-value" id="directingValue">5.00</span>
                 </label>
                 <input id="directing" name="directing" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('directingValue').textContent = parseFloat(this.value).toFixed(2)">
             </div>
 
-            <div class="modal-slider-row">
-                <label class="modal-slider-label" for="cinematography">
-                    <span><i data-lucide="camera"></i><span th:text="#{modal.photography}">Photography</span></span>
-                    <span class="modal-slider-value" id="cinematographyValue">5.00</span>
+            <div class="slider">
+                <label class="flex separate" for="cinematography">
+                    <span class="flex centered gap"><i data-lucide="camera"></i><span th:text="#{modal.photography}">Photography</span></span>
+                    <span class="score-value" id="cinematographyValue">5.00</span>
                 </label>
                 <input id="cinematography" name="cinematography" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('cinematographyValue').textContent = parseFloat(this.value).toFixed(2)">
             </div>
 
-            <div class="modal-slider-row">
-                <label class="modal-slider-label" for="acting">
-                    <span><i data-lucide="hat-glasses"></i><span th:text="#{modal.acting}">Acting</span></span>
-                    <span class="modal-slider-value" id="actingValue">5.00</span>
+            <div class="slider">
+                <label class="flex separate" for="acting">
+                    <span class="flex centered gap"><i data-lucide="hat-glasses"></i><span th:text="#{modal.acting}">Acting</span></span>
+                    <span class="score-value" id="actingValue">5.00</span>
                 </label>
                 <input id="acting" name="acting" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('actingValue').textContent = parseFloat(this.value).toFixed(2)">
             </div>
 
-            <div class="modal-slider-row">
-                <label class="modal-slider-label" for="soundtrack">
-                    <span><i data-lucide="music"></i><span th:text="#{modal.soundtrack}">Soundtrack</span></span>
-                    <span class="modal-slider-value" id="soundtrackValue">5.00</span>
+            <div class="slider">
+                <label class="flex separate" for="soundtrack">
+                    <span class="flex centered gap"><i data-lucide="music"></i><span th:text="#{modal.soundtrack}">Soundtrack</span></span>
+                    <span class="score-value" id="soundtrackValue">5.00</span>
                 </label>
                 <input id="soundtrack" name="soundtrack" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('soundtrackValue').textContent = parseFloat(this.value).toFixed(2)">
             </div>
 
-            <div class="modal-slider-row">
-                <label class="modal-slider-label" for="screenplay">
-                    <span><i data-lucide="file-text"></i><span th:text="#{modal.script}">Script</span></span>
-                    <span class="modal-slider-value" id="screenplayValue">5.00</span>
+            <div class="slider">
+                <label class="flex separate" for="screenplay">
+                    <span class="flex centered gap"><i data-lucide="file-text"></i><span th:text="#{modal.script}">Script</span></span>
+                    <span class="score-value" id="screenplayValue">5.00</span>
                 </label>
                 <input id="screenplay" name="screenplay" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('screenplayValue').textContent = parseFloat(this.value).toFixed(2)">
             </div>
 
-            <div class="top-actions">
-                <button class="primary" type="submit" th:text="#{profile.save}">Save</button>
-            </div>
+            <button class="primary full-width" type="submit" th:text="#{profile.save}">Save</button>
         </form>
     </div>
 </div>
