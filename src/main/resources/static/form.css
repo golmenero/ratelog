@@ -94,19 +94,6 @@ a.btn {
   }
 }
 
-.form-group {
-  display: grid;
-  gap: 8px;
-  margin-bottom: 16px;
-
-  label {
-    font-weight: 600;
-    font-size: 0.92rem;
-    color: var(--text-soft);
-    font-family: var(--font-ui);
-  }
-}
-
 a.link {
   color: var(--accent);
   font-weight: 600;
@@ -115,4 +102,10 @@ a.link {
   &:hover {
     text-decoration: underline;
   }
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
 }
