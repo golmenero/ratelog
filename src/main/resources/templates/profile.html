@@ -15,7 +15,7 @@
         <div class="avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
         <div>
             <div class="flex centered">
-                <h1 th:text="${username}">Username</h1>
+                <h1 class="full-width" th:text="${username}">Username</h1>
                 <button id="btnOpenEditModal" type="button">
                     <i data-lucide="pencil"></i>
                 </button>
