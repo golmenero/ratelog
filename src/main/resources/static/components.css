@@ -5,6 +5,7 @@
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
   display: flex;
+  flex-wrap: wrap;
   overflow: hidden;
   grid-template-rows: 220px 1fr;
   position: relative;

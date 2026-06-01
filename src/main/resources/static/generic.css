@@ -59,6 +59,10 @@ body {
   grid-template-columns: 3fr 1fr;
   gap: 32px;
   align-items: start;
+
+  & > div {
+    min-width: 0;
+  }
 }
 
 @media (max-width: 900px) {
