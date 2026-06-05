@@ -41,4 +41,13 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
         """
     )
     fun findRankedByUserIdWithFilters(userId: Long, category: String?, name: String?, limit: Int): List<RatingEntity>
+
+    @Query(
+        """
+        SELECT r.* FROM movie_ratings r
+        WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
+        ORDER BY r.created_at_epoch_ms DESC
+        """
+    )
+    fun findByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<RatingEntity>
 }

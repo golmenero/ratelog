@@ -51,6 +51,15 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
         """
     )
     fun findRankedByUserIdWithFilters(userId: Long, category: String?, name: String?, limit: Int): List<TvRatingEntity>
+
+    @Query(
+        """
+        SELECT r.* FROM tv_ratings r
+        WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
+        ORDER BY r.created_at_epoch_ms DESC
+        """
+    )
+    fun findByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<TvRatingEntity>
 }
 
 @Repository
