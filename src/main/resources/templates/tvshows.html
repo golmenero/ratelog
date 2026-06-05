@@ -93,7 +93,7 @@
             <div th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
                 <div class="separator"></div>
                 <div th:text="#{tvshows.premieres.upcoming}">Upcoming</div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="premiere-card">
                     <span class="title" th:text="${item.name}">Title</span>
                     <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
                     <br>
@@ -104,7 +104,7 @@
             <div th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
                 <div class="separator"></div>
                 <div th:text="#{tvshows.premieres.no.date}">No release date yet</div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="premiere-card">
                     <span class="title" th:text="${item.name}">Title</span>
                     <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
                     <br>

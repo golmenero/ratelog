@@ -90,7 +90,7 @@
             <div th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
                 <div class="separator"></div>
                 <h3 th:text="#{movies.premieres.upcoming}">Upcoming</h3>
-                <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
+                <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="premiere-card">
                     <span class="title" th:text="${item.title}">Title</span>
                     <br>
                     <span class="date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
@@ -100,7 +100,7 @@
             <div th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
                 <div class="separator"></div>
                 <h3 th:text="#{movies.premieres.no.date}">No release date yet</h3>
-                <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
+                <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="premiere-card">
                     <span class="title" th:text="${item.title}">Title</span>
                     <br>
                     <span class="date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
