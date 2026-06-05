@@ -30,8 +30,8 @@ class InMemoryMovieRepository : MovieRepository {
     override fun findFollowedMovies(userId: User.Id): List<Movie> =
         store.values.filter { follows[Pair(userId.value, it.id!!.value)] == true }
 
-    override fun findAll(): List<Movie> =
-        store.values.toList()
+    override fun findActiveMovies(): List<Movie> =
+        store.values.filter { it.status !in listOf(Status.RELEASED, Status.CANCELED)  }
 
     override fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean =
         follows[Pair(userId.value, movieId.value)] == true

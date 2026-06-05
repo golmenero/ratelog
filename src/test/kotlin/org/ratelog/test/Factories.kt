@@ -53,7 +53,7 @@ object MovieFactory {
         posterPath: String? = null,
         tmdbVoteAverage: Double? = null,
         genres: List<Genre> = emptyList(),
-        status: String? = null,
+        status: Status? = null,
     ) = Movie(
         id = id?.let { Movie.Id(it) },
         tmdbId = TmdbId(tmdbId),
@@ -83,7 +83,7 @@ object TvShowFactory {
         posterPath: String? = null,
         tmdbVoteAverage: Double? = null,
         genres: List<Genre> = emptyList(),
-        status: String? = null,
+        status: Status? = null,
         lastSeasonNumber: Int? = null,
         lastSeasonAirDate: LocalDate? = null,
         nextSeasonAirDate: LocalDate? = null,

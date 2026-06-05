@@ -43,6 +43,14 @@ interface MovieDAO : CrudRepository<MovieEntity, Long> {
         """
     )
     fun findFollowedMovies(userId: Long): List<MovieEntity>
+
+    @Query(
+        """
+        SELECT * FROM movies
+        WHERE status IS NULL OR status NOT IN ('Released', 'Canceled')
+        """
+    )
+    fun findActiveMovies(): List<MovieEntity>
 }
 
 @Repository

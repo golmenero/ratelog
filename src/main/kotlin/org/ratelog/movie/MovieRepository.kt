@@ -2,6 +2,7 @@ package org.ratelog.movie
 
 import org.ratelog.Genre
 import org.ratelog.Overview
+import org.ratelog.Status
 import org.ratelog.Title
 import org.ratelog.TmdbId
 import org.ratelog.Url
@@ -19,7 +20,7 @@ data class Movie(
     val posterPath: Url?,
     val tmdbVoteAverage: Double?,
     val genres: List<Genre>,
-    val status: String?,
+    val status: Status?,
 ) {
     data class Id(val value: Long)
 }
@@ -29,7 +30,7 @@ interface MovieRepository {
     fun findByTmdbId(tmdbId: TmdbId): Movie?
     fun save(movie: Movie)
     fun findFollowedMovies(userId: User.Id): List<Movie>
-    fun findAll(): List<Movie>
+    fun findActiveMovies(): List<Movie>
     fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean
     fun toggleFollow(movieId: Movie.Id)
 }

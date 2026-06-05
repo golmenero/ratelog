@@ -2,6 +2,7 @@ package org.ratelog.movie
 
 import org.ratelog.Genre
 import org.ratelog.Overview
+import org.ratelog.Status
 import org.ratelog.TmdbId
 import org.ratelog.Title
 import org.ratelog.Url
@@ -30,8 +31,8 @@ class MovieRepositoryImpl(
     override fun findFollowedMovies(userId: User.Id): List<Movie> =
         movieDAO.findFollowedMovies(userId.value).map { it.toDomain() }
 
-    override fun findAll(): List<Movie> =
-        movieDAO.findAll().map { it.toDomain() }
+    override fun findActiveMovies(): List<Movie> =
+        movieDAO.findActiveMovies().map { it.toDomain() }
 
     override fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean =
         movieFollowDAO.findByUserIdAndMovieId(userId.value, movieId.value).getOrNull() != null
@@ -63,7 +64,7 @@ class MovieRepositoryImpl(
             posterPath = posterPath?.let { Url(it) },
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres,
-            status = status,
+            status = status?.let { Status.fromValue(it) },
         )
     }
 
@@ -79,7 +80,7 @@ class MovieRepositoryImpl(
             posterPath = posterPath?.value,
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres.joinToString(",") { it.value },
-            status = status,
+            status = status?.value,
         )
     }
 }
