@@ -45,8 +45,8 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should categorize shows into released and upcoming based on latest season`() {
-        val show1 = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Released Show", followed = true)
-        val show2 = TvShowFactory.aTvShow(id = 2, tmdbId = 456, name = "Upcoming Show", followed = true)
+        val show1 = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Released Show")
+        val show2 = TvShowFactory.aTvShow(id = 2, tmdbId = 456, name = "Upcoming Show")
         tvShowRepository.save(show1)
         tvShowRepository.save(show2)
 
@@ -85,7 +85,7 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should categorize shows with no date into noDate list`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "No Date Show", followed = true)
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "No Date Show")
         tvShowRepository.save(show)
 
         val tmdbShow = TmdbFactory.aTmdbTvShow(
@@ -111,7 +111,7 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should use latest season for premiere date`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Multi Season Show", followed = true)
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Multi Season Show")
         tvShowRepository.save(show)
 
         val tmdbShow = TmdbFactory.aTmdbTvShow(

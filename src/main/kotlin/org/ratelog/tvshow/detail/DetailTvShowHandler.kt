@@ -25,6 +25,7 @@ data class GetTvShowDetailResult(
     val seasons: List<SeasonInfo>,
     val overallScore: Double?,
     val isRated: Boolean,
+    val isFollowed: Boolean,
 )
 
 data class SeasonInfo(
@@ -86,6 +87,7 @@ class DetailTvShowHandler(
         val updatedShow = show.tmdbId.let(tvShowRepository::findByTmdbId)!!
 
         val rating = tvRatingRepository.findByTvShowIdAndUserId(updatedShow.id!!, query.userId)
+        val isFollowed = tvShowRepository.isFollowed(query.userId, updatedShow.id)
         val ratingMap = rating?.seasonRatings?.associateBy { it.seasonNumber.value } ?: emptyMap()
 
         val seasons = tmdbShow.seasons
@@ -117,6 +119,7 @@ class DetailTvShowHandler(
             seasons = seasons,
             overallScore = rating?.score?.value,
             isRated = rating != null,
+            isFollowed = isFollowed,
         )
     }
 }

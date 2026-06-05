@@ -23,6 +23,6 @@ class ToggleTvFollowHandler(
     fun handle(command: ToggleTvFollow): Either<ToggleTvFollowHandlerError, Unit> = either {
         val show = tvShowRepository.findById(command.tvShowId) ?: raise(ToggleTvFollowHandlerError.TvShowNotFound)
 
-        show.toggleFollow(System.currentTimeMillis()).let(tvShowRepository::save)
+        tvShowRepository.toggleFollow(show.id!!)
     }
 }

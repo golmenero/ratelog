@@ -29,8 +29,7 @@ class ToggleTvFollowHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val savedShow = tvShowRepository.findById(TvShow.Id(1))
-        assertTrue(savedShow!!.followed)
+        assertTrue(tvShowRepository.isFollowed(User.Id(1), TvShow.Id(1)))
     }
 
     @Test
@@ -45,15 +44,15 @@ class ToggleTvFollowHandlerTest {
 
     @Test
     fun `should unfollow tv show when already followed`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Test Show", followed = true, followedAtEpochMs = System.currentTimeMillis())
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Test Show")
         tvShowRepository.save(show)
+        tvShowRepository.toggleFollow(TvShow.Id(1))
 
         val command = ToggleTvFollow(TvShow.Id(1), User.Id(1))
 
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val savedShow = tvShowRepository.findById(TvShow.Id(1))
-        assertFalse(savedShow!!.followed)
+        assertFalse(tvShowRepository.isFollowed(User.Id(1), TvShow.Id(1)))
     }
 }

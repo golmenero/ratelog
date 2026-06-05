@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 class InMemoryTvShowRepository : TvShowRepository {
     private val store = ConcurrentHashMap<TvShow.Id, TvShow>()
+    private val follows = ConcurrentHashMap<Pair<Long, Long>, Boolean>()
     private val idGenerator = AtomicLong(1)
 
     override fun findById(id: TvShow.Id): TvShow? = store[id]
@@ -27,10 +28,19 @@ class InMemoryTvShowRepository : TvShowRepository {
     }
 
     override fun findFollowedTvShows(userId: User.Id): List<TvShow> =
-        store.values.filter { it.followed }
+        store.values.filter { follows[Pair(userId.value, it.id!!.value)] == true }
+
+    override fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean =
+        follows[Pair(userId.value, showId.value)] == true
+
+    override fun toggleFollow(showId: TvShow.Id) {
+        val key = Pair(1L, showId.value)
+        follows[key] = follows[key] != true
+    }
 
     fun clear() {
         store.clear()
+        follows.clear()
         idGenerator.set(1)
     }
 }

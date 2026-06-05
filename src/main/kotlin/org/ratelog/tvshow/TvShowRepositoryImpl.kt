@@ -23,34 +23,30 @@ class TvShowRepositoryImpl(
         tmdbId.value.let(tvShowDAO::findByTmdbId).getOrNull()?.toDomain()
 
     override fun save(show: TvShow) {
-        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
-
-        if (currentUserId != null && show.id != null) {
-            val follow = tvFollowDAO.findByUserIdAndTvShowId(currentUserId, show.id.value).getOrNull()
-
-            when {
-                show.followed && follow == null -> {
-                    TvFollowEntity(
-                        userId = currentUserId,
-                        tvShowId = show.id.value,
-                    ).let(tvFollowDAO::save)
-                }
-                !show.followed && follow != null -> {
-                    follow.let(tvFollowDAO::delete)
-                }
-            }
-        }
-
         show.toEntity().let(tvShowDAO::save)
     }
 
     override fun findFollowedTvShows(userId: User.Id): List<TvShow> =
         tvShowDAO.findFollowedTvShows(userId.value).map { it.toDomain() }
 
+    override fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean =
+        tvFollowDAO.findByUserIdAndTvShowId(userId.value, showId.value).getOrNull() != null
+
+    override fun toggleFollow(showId: TvShow.Id) {
+        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value ?: return
+
+        val follow = tvFollowDAO.findByUserIdAndTvShowId(currentUserId, showId.value).getOrNull()
+
+        if (follow == null) {
+            TvFollowEntity(
+                userId = currentUserId,
+                tvShowId = showId.value,
+            ).let(tvFollowDAO::save)
+        } else follow.let(tvFollowDAO::delete)
+    }
+
     private fun TvShowEntity.toDomain(): TvShow {
         val genres = genres?.split(',')?.mapNotNull(Genre::fromValue) ?: emptyList()
-        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
-        val follow = currentUserId?.let { tvFollowDAO.findByUserIdAndTvShowId(it, id!!) }?.getOrNull()
 
         return TvShow(
             id = TvShow.Id(id!!),
@@ -63,8 +59,6 @@ class TvShowRepositoryImpl(
             posterPath = posterPath?.let { Url(it) },
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres,
-            followed = follow != null,
-            followedAtEpochMs = follow?.createdAtEpochMs
         )
     }
 

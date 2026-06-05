@@ -91,7 +91,7 @@ class DetailTvShowController(
                 )
             },
             overallScore = result.overallScore,
-            isFollowed = result.show.followed,
+            isFollowed = result.isFollowed,
             hasRating = result.isRated,
         )
 }

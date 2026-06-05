@@ -81,8 +81,6 @@ object TvShowFactory {
         posterPath: String? = null,
         tmdbVoteAverage: Double? = null,
         genres: List<Genre> = emptyList(),
-        followed: Boolean = false,
-        followedAtEpochMs: Long? = null
     ) = TvShow(
         id = id?.let { TvShow.Id(it) },
         tmdbId = TmdbId(tmdbId),
@@ -94,8 +92,6 @@ object TvShowFactory {
         posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = tmdbVoteAverage,
         genres = genres,
-        followed = followed,
-        followedAtEpochMs = followedAtEpochMs
     )
 }
 
