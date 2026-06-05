@@ -17,14 +17,13 @@ class InMemoryMovieRepository : MovieRepository {
     override fun findByTmdbId(tmdbId: TmdbId): Movie? =
         store.values.find { it.tmdbId == tmdbId }
 
-    override fun save(movie: Movie): Movie {
+    override fun save(movie: Movie) {
         val movieToSave = if (movie.id == null) {
             movie.copy(id = Movie.Id(idGenerator.getAndIncrement()))
         } else {
             movie
         }
         store[movieToSave.id!!] = movieToSave
-        return movieToSave
     }
 
     override fun findFollowedMovies(userId: User.Id): List<Movie> =

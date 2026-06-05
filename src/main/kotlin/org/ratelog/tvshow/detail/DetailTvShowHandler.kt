@@ -82,7 +82,8 @@ class DetailTvShowHandler(
                 genres = genres
             )
 
-        val updatedShow = show.let(tvShowRepository::save)
+        show.let(tvShowRepository::save)
+        val updatedShow = show.tmdbId.let(tvShowRepository::findByTmdbId)!!
 
         val rating = tvRatingRepository.findByTvShowIdAndUserId(updatedShow.id!!, query.userId)
         val ratingMap = rating?.seasonRatings?.associateBy { it.seasonNumber.value } ?: emptyMap()

@@ -22,7 +22,7 @@ class TvShowRepositoryImpl(
     override fun findByTmdbId(tmdbId: TmdbId): TvShow? =
         tmdbId.value.let(tvShowDAO::findByTmdbId).getOrNull()?.toDomain()
 
-    override fun save(show: TvShow): TvShow {
+    override fun save(show: TvShow) {
         val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
 
         if (currentUserId != null && show.id != null) {
@@ -41,7 +41,7 @@ class TvShowRepositoryImpl(
             }
         }
 
-        return show.toEntity().let(tvShowDAO::save).toDomain()
+        show.toEntity().let(tvShowDAO::save)
     }
 
     override fun findFollowedTvShows(userId: User.Id): List<TvShow> =

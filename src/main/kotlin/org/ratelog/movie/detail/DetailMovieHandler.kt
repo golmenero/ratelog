@@ -66,7 +66,8 @@ class DetailMovieHandler(
                 genres = genres
             )
 
-        val updatedMovie = movie.let(movieRepository::save)
+        movie.let(movieRepository::save)
+        val updatedMovie = movieRepository.findByTmdbId(movie.tmdbId)!!
 
         val rating = ratingRepository.findByMovieIdAndUserId(updatedMovie.id!!, query.userId)
 

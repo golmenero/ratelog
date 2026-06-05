@@ -32,6 +32,6 @@ data class Movie(
 interface MovieRepository {
     fun findById(id: Movie.Id): Movie?
     fun findByTmdbId(tmdbId: TmdbId): Movie?
-    fun save(movie: Movie): Movie
+    fun save(movie: Movie)
     fun findFollowedMovies(userId: User.Id): List<Movie>
 }

@@ -23,7 +23,7 @@ class MovieRepositoryImpl(
     override fun findByTmdbId(tmdbId: TmdbId): Movie? =
         tmdbId.value.let(movieDAO::findByTmdbId).getOrNull()?.toDomain()
 
-    override fun save(movie: Movie): Movie {
+    override fun save(movie: Movie) {
         val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
 
         if (currentUserId != null && movie.id != null) {
@@ -42,7 +42,7 @@ class MovieRepositoryImpl(
             }
         }
 
-        return movie.toEntity().let(movieDAO::save).toDomain()
+        movie.toEntity().let(movieDAO::save)
     }
 
     override fun findFollowedMovies(userId: User.Id): List<Movie> =
