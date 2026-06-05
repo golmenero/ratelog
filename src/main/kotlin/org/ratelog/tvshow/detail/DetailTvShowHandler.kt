@@ -58,19 +58,10 @@ class DetailTvShowHandler(
             .bind()
         val genres = tmdbShow.genres.mapNotNull { Genre.fromValue(it.name) }
 
-        val show = query.tmdbId
-            .let(tvShowRepository::findByTmdbId)
-            ?.copy(
-                name = tmdbShow.name.let(::Title),
-                originalName = tmdbShow.originalName?.let(::Title),
-                overview = tmdbShow.overview?.let(::Overview),
-                firstAirDate = tmdbShow.firstAirDate?.let(LocalDate::parse),
-                firstAirYear = tmdbShow.firstAirDate?.take(4)?.toIntOrNull(),
-                posterPath = tmdbShow.posterPath?.let(::Url),
-                tmdbVoteAverage = tmdbShow.voteAverage,
-                genres = genres
-            )
-            ?: TvShow(
+        val show = query.tmdbId.let(tvShowRepository::findByTmdbId)
+
+        if (show == null) {
+            TvShow(
                 id = null,
                 tmdbId = tmdbShow.id.let(::TmdbId),
                 name = tmdbShow.name.let(::Title),
@@ -80,10 +71,14 @@ class DetailTvShowHandler(
                 firstAirYear = tmdbShow.firstAirDate?.take(4)?.toIntOrNull(),
                 posterPath = tmdbShow.posterPath?.let(::Url),
                 tmdbVoteAverage = tmdbShow.voteAverage,
-                genres = genres
-            )
+                genres = genres,
+                status = tmdbShow.status,
+                lastSeasonNumber = TODO(),
+                lastSeasonAirDate = TODO(),
+                nextSeasonAirDate = TODO(),
+            ).let(tvShowRepository::save)
+        }
 
-        show.let(tvShowRepository::save)
         val updatedShow = show.tmdbId.let(tvShowRepository::findByTmdbId)!!
 
         val rating = tvRatingRepository.findByTvShowIdAndUserId(updatedShow.id!!, query.userId)

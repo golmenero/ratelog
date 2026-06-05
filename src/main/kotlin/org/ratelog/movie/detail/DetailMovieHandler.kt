@@ -42,19 +42,10 @@ class DetailMovieHandler(
         val tmdbMovie = query.tmdbId.value.let(tmdbClient::movieDetails).bind()
         val genres = tmdbMovie.genres.mapNotNull { Genre.fromValue(it.name) }
 
-        val movie = query.tmdbId
-            .let(movieRepository::findByTmdbId)
-            ?.copy(
-                title = tmdbMovie.title.let(::Title),
-                originalTitle = tmdbMovie.originalTitle?.let(::Title),
-                overview = tmdbMovie.overview?.let(::Overview),
-                releaseDate = tmdbMovie.releaseDate?.let(LocalDate::parse),
-                releaseYear = tmdbMovie.releaseDate?.take(4)?.toIntOrNull(),
-                posterPath = tmdbMovie.posterPath?.let(::Url),
-                tmdbVoteAverage = tmdbMovie.voteAverage,
-                genres = genres
-            )
-            ?: Movie(
+        val movie = query.tmdbId.let(movieRepository::findByTmdbId)
+
+        if (movie == null) {
+            Movie(
                 id = null,
                 tmdbId = tmdbMovie.id.let(::TmdbId),
                 title = tmdbMovie.title.let(::Title),
@@ -64,11 +55,12 @@ class DetailMovieHandler(
                 releaseYear = tmdbMovie.releaseDate?.take(4)?.toIntOrNull(),
                 posterPath = tmdbMovie.posterPath?.let(::Url),
                 tmdbVoteAverage = tmdbMovie.voteAverage,
-                genres = genres
-            )
+                genres = genres,
+                status = tmdbMovie.status,
+            ).let(movieRepository::save)
+        }
 
-        movie.let(movieRepository::save)
-        val updatedMovie = movieRepository.findByTmdbId(movie.tmdbId)!!
+        val updatedMovie = movieRepository.findByTmdbId(query.tmdbId)!!
 
         val rating = ratingRepository.findByMovieIdAndUserId(updatedMovie.id!!, query.userId)
         val isFollowed = movieRepository.isFollowed(query.userId, updatedMovie.id)
