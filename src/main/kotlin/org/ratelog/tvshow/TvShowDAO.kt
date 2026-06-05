@@ -46,6 +46,14 @@ interface TvShowDAO : CrudRepository<TvShowEntity, Long> {
         """
     )
     fun findFollowedTvShows(userId: Long): List<TvShowEntity>
+
+    @Query(
+        """
+        SELECT * FROM tv
+        WHERE status IS NULL OR status NOT IN ('Ended', 'Canceled')
+        """
+    )
+    fun findActiveTvShows(): List<TvShowEntity>
 }
 
 @Repository

@@ -2,6 +2,7 @@ package org.ratelog.tvshow
 
 import org.ratelog.Genre
 import org.ratelog.Overview
+import org.ratelog.Status
 import org.ratelog.TmdbId
 import org.ratelog.Title
 import org.ratelog.Url
@@ -29,8 +30,8 @@ class TvShowRepositoryImpl(
     override fun findFollowedTvShows(userId: User.Id): List<TvShow> =
         tvShowDAO.findFollowedTvShows(userId.value).map { it.toDomain() }
 
-    override fun findAll(): List<TvShow> =
-        tvShowDAO.findAll().map { it.toDomain() }
+    override fun findActiveTvShows(): List<TvShow> =
+        tvShowDAO.findActiveTvShows().map { it.toDomain() }
 
     override fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean =
         tvFollowDAO.findByUserIdAndTvShowId(userId.value, showId.value).getOrNull() != null
@@ -62,7 +63,7 @@ class TvShowRepositoryImpl(
             posterPath = posterPath?.let { Url(it) },
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres,
-            status = status,
+            status = status?.let { Status.fromValue(it) },
             lastSeasonNumber = lastSeasonNumber,
             lastSeasonAirDate = lastSeasonAirDate?.let { LocalDate.parse(it) },
             nextSeasonAirDate = nextSeasonAirDate?.let { LocalDate.parse(it) },
@@ -81,7 +82,7 @@ class TvShowRepositoryImpl(
             posterPath = posterPath?.value,
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres.joinToString(",") { it.value },
-            status = status,
+            status = status?.value,
             lastSeasonNumber = lastSeasonNumber,
             lastSeasonAirDate = lastSeasonAirDate?.toString(),
             nextSeasonAirDate = nextSeasonAirDate?.toString(),

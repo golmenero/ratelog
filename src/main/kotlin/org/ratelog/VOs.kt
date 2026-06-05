@@ -46,6 +46,22 @@ enum class Genre(val value: String) {
     }
 }
 
+enum class Status(val value: String) {
+    RUMORED("Rumored"),
+    PLANNED("Planned"),
+    IN_PRODUCTION("In Production"),
+    POST_PRODUCTION("Post Production"),
+    RELEASED("Released"),
+    CANCELED("Canceled"),
+    RETURNING_SERIES("Returning Series"),
+    ENDED("Ended"),
+    PILOT("Pilot");
+
+    companion object {
+        fun fromValue(value: String): Status? = entries.find { it.value == value }
+    }
+}
+
 data class Rank(val value: Int)
 
 data class SeasonNumber(val value: Int)
