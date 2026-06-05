@@ -20,9 +20,9 @@
     <div th:if="${success}" class="feedback success" th:text="${success}"></div>
 
     <div class="detail-card">
-        <div class="flex gap-lg">
+        <div class="flex gap-lg w-100">
             <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
-            <div>
+            <div class="flex-1">
                 <div class="flex gap-lg separate">
                     <p th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : #{movie.detail.no.synopsis}">Loading movie information.</p>
                     <span th:if="${movie.score != null}" class="rating" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>

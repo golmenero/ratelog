@@ -95,6 +95,10 @@ body {
   }
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 a {
   color: inherit;
 }
