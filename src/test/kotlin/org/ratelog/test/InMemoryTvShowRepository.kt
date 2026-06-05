@@ -30,6 +30,9 @@ class InMemoryTvShowRepository : TvShowRepository {
     override fun findFollowedTvShows(userId: User.Id): List<TvShow> =
         store.values.filter { follows[Pair(userId.value, it.id!!.value)] == true }
 
+    override fun findAll(): List<TvShow> =
+        store.values.toList()
+
     override fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean =
         follows[Pair(userId.value, showId.value)] == true
 
