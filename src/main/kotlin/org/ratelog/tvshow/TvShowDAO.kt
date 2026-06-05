@@ -19,7 +19,11 @@ data class TvShowEntity(
     @Column("first_air_year") val firstAirYear: Int?,
     @Column("poster_path") val posterPath: String?,
     @Column("tmdb_vote_average") val tmdbVoteAverage: Double?,
-    val genres: String?
+    val genres: String?,
+    val status: String?,
+    @Column("last_season_number") val lastSeasonNumber: Int?,
+    @Column("last_season_air_date") val lastSeasonAirDate: String?,
+    @Column("next_season_air_date") val nextSeasonAirDate: String?,
 )
 
 @Table("tv_follows")

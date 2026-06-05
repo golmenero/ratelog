@@ -19,7 +19,8 @@ data class MovieEntity(
     @Column("release_year") val releaseYear: Int?,
     @Column("poster_path") val posterPath: String?,
     @Column("tmdb_vote_average") val tmdbVoteAverage: Double?,
-    val genres: String?
+    val genres: String?,
+    val status: String?,
 )
 
 @Table("movie_follows")

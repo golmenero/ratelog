@@ -1,0 +1,5 @@
+ALTER TABLE tv ADD COLUMN status VARCHAR(50);
+ALTER TABLE tv ADD COLUMN last_season_number INT;
+ALTER TABLE tv ADD COLUMN last_season_air_date VARCHAR(10);
+ALTER TABLE tv ADD COLUMN next_season_air_date VARCHAR(10);
+ALTER TABLE movies ADD COLUMN status VARCHAR(50);

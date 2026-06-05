@@ -29,6 +29,9 @@ class TvShowRepositoryImpl(
     override fun findFollowedTvShows(userId: User.Id): List<TvShow> =
         tvShowDAO.findFollowedTvShows(userId.value).map { it.toDomain() }
 
+    override fun findAll(): List<TvShow> =
+        tvShowDAO.findAll().map { it.toDomain() }
+
     override fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean =
         tvFollowDAO.findByUserIdAndTvShowId(userId.value, showId.value).getOrNull() != null
 
@@ -59,6 +62,10 @@ class TvShowRepositoryImpl(
             posterPath = posterPath?.let { Url(it) },
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres,
+            status = status,
+            lastSeasonNumber = lastSeasonNumber,
+            lastSeasonAirDate = lastSeasonAirDate?.let { LocalDate.parse(it) },
+            nextSeasonAirDate = nextSeasonAirDate?.let { LocalDate.parse(it) },
         )
     }
 
@@ -73,7 +80,11 @@ class TvShowRepositoryImpl(
             firstAirYear = firstAirYear,
             posterPath = posterPath?.value,
             tmdbVoteAverage = tmdbVoteAverage,
-            genres = genres.joinToString(",") { it.value }
+            genres = genres.joinToString(",") { it.value },
+            status = status,
+            lastSeasonNumber = lastSeasonNumber,
+            lastSeasonAirDate = lastSeasonAirDate?.toString(),
+            nextSeasonAirDate = nextSeasonAirDate?.toString(),
         )
     }
 }

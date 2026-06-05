@@ -30,6 +30,9 @@ class MovieRepositoryImpl(
     override fun findFollowedMovies(userId: User.Id): List<Movie> =
         movieDAO.findFollowedMovies(userId.value).map { it.toDomain() }
 
+    override fun findAll(): List<Movie> =
+        movieDAO.findAll().map { it.toDomain() }
+
     override fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean =
         movieFollowDAO.findByUserIdAndMovieId(userId.value, movieId.value).getOrNull() != null
 
@@ -60,6 +63,7 @@ class MovieRepositoryImpl(
             posterPath = posterPath?.let { Url(it) },
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres,
+            status = status,
         )
     }
 
@@ -74,7 +78,8 @@ class MovieRepositoryImpl(
             releaseYear = releaseYear,
             posterPath = posterPath?.value,
             tmdbVoteAverage = tmdbVoteAverage,
-            genres = genres.joinToString(",") { it.value }
+            genres = genres.joinToString(",") { it.value },
+            status = status,
         )
     }
 }

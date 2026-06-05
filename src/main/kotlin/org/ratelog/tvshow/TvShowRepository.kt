@@ -19,6 +19,10 @@ data class TvShow(
     val posterPath: Url?,
     val tmdbVoteAverage: Double?,
     val genres: List<Genre>,
+    val status: String?,
+    val lastSeasonNumber: Int?,
+    val lastSeasonAirDate: LocalDate?,
+    val nextSeasonAirDate: LocalDate?,
 ) {
     data class Id(val value: Long)
 }
@@ -28,6 +32,7 @@ interface TvShowRepository {
     fun findByTmdbId(tmdbId: TmdbId): TvShow?
     fun save(show: TvShow)
     fun findFollowedTvShows(userId: User.Id): List<TvShow>
+    fun findAll(): List<TvShow>
     fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean
     fun toggleFollow(showId: TvShow.Id)
 }
