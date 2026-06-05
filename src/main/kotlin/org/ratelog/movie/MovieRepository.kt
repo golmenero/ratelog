@@ -19,14 +19,8 @@ data class Movie(
     val posterPath: Url?,
     val tmdbVoteAverage: Double?,
     val genres: List<Genre>,
-    val followed: Boolean = false,
-    val followedAtEpochMs: Long? = null
 ) {
     data class Id(val value: Long)
-
-    fun toggleFollow(now: Long) =
-        if (followed) copy(followed = false, followedAtEpochMs = null)
-        else copy(followed = true, followedAtEpochMs = now)
 }
 
 interface MovieRepository {
@@ -34,4 +28,6 @@ interface MovieRepository {
     fun findByTmdbId(tmdbId: TmdbId): Movie?
     fun save(movie: Movie)
     fun findFollowedMovies(userId: User.Id): List<Movie>
+    fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean
+    fun toggleFollow(movieId: Movie.Id)
 }

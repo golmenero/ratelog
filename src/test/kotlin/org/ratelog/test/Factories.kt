@@ -53,8 +53,6 @@ object MovieFactory {
         posterPath: String? = null,
         tmdbVoteAverage: Double? = null,
         genres: List<Genre> = emptyList(),
-        followed: Boolean = false,
-        followedAtEpochMs: Long? = null
     ) = Movie(
         id = id?.let { Movie.Id(it) },
         tmdbId = TmdbId(tmdbId),
@@ -66,8 +64,6 @@ object MovieFactory {
         posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = tmdbVoteAverage,
         genres = genres,
-        followed = followed,
-        followedAtEpochMs = followedAtEpochMs
     )
 }
 

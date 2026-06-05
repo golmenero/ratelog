@@ -24,35 +24,30 @@ class MovieRepositoryImpl(
         tmdbId.value.let(movieDAO::findByTmdbId).getOrNull()?.toDomain()
 
     override fun save(movie: Movie) {
-        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
-
-        if (currentUserId != null && movie.id != null) {
-            val follow = movieFollowDAO.findByUserIdAndMovieId(currentUserId, movie.id.value).getOrNull()
-
-            when {
-                movie.followed && follow == null -> {
-                    MovieFollowEntity(
-                        userId = currentUserId,
-                        movieId = movie.id.value,
-                    ).let(movieFollowDAO::save)
-                }
-                !movie.followed && follow != null -> {
-                    follow.let(movieFollowDAO::delete)
-                }
-            }
-        }
-
         movie.toEntity().let(movieDAO::save)
     }
 
     override fun findFollowedMovies(userId: User.Id): List<Movie> =
         movieDAO.findFollowedMovies(userId.value).map { it.toDomain() }
 
+    override fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean =
+        movieFollowDAO.findByUserIdAndMovieId(userId.value, movieId.value).getOrNull() != null
+
+    override fun toggleFollow(movieId: Movie.Id) {
+        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value ?: return
+
+        val follow = movieFollowDAO.findByUserIdAndMovieId(currentUserId, movieId.value).getOrNull()
+
+        if (follow == null) {
+            MovieFollowEntity(
+                userId = currentUserId,
+                movieId = movieId.value,
+            ).let(movieFollowDAO::save)
+        } else follow.let(movieFollowDAO::delete)
+    }
 
     private fun MovieEntity.toDomain(): Movie {
         val genres = genres?.split(',')?.mapNotNull(Genre::fromValue) ?: emptyList()
-        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
-        val follow = currentUserId?.let { movieFollowDAO.findByUserIdAndMovieId(it, id!!) }?.getOrNull()
 
         return Movie(
             id = Movie.Id(id!!),
@@ -65,8 +60,6 @@ class MovieRepositoryImpl(
             posterPath = posterPath?.let { Url(it) },
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres,
-            followed = follow != null,
-            followedAtEpochMs = follow?.createdAtEpochMs
         )
     }
 

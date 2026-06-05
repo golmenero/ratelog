@@ -45,8 +45,8 @@ class MoviePremieresHandlerTest {
 
     @Test
     fun `should categorize movies into released and upcoming`() {
-        val movie1 = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Released Movie", followed = true)
-        val movie2 = MovieFactory.aMovie(id = 2, tmdbId = 456, title = "Upcoming Movie", followed = true)
+        val movie1 = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Released Movie")
+        val movie2 = MovieFactory.aMovie(id = 2, tmdbId = 456, title = "Upcoming Movie")
         movieRepository.save(movie1)
         movieRepository.save(movie2)
 
@@ -72,7 +72,7 @@ class MoviePremieresHandlerTest {
 
     @Test
     fun `should categorize movies with no date into noDate list`() {
-        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "No Date Movie", followed = true)
+        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "No Date Movie")
         movieRepository.save(movie)
 
         val tmdbMovie = TmdbFactory.aTmdbMovie(id = 123, title = "No Date Movie", releaseDate = null)

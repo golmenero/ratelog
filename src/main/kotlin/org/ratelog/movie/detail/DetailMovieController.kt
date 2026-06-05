@@ -70,7 +70,7 @@ class DetailMovieController(
             soundtrack = result.soundtrack,
             screenplay = result.screenplay,
             score = result.score,
-            isFollowed = result.movie.followed,
+            isFollowed = result.isFollowed,
             hasRating = result.isRated,
         )
 }

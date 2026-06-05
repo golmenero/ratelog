@@ -29,8 +29,7 @@ class ToggleMovieFollowHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val savedMovie = movieRepository.findById(Movie.Id(1))
-        assertTrue(savedMovie!!.followed)
+        assertTrue(movieRepository.isFollowed(User.Id(1), Movie.Id(1)))
     }
 
     @Test
@@ -45,15 +44,15 @@ class ToggleMovieFollowHandlerTest {
 
     @Test
     fun `should unfollow movie when already followed`() {
-        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Test Movie", followed = true, followedAtEpochMs = System.currentTimeMillis())
+        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Test Movie")
         movieRepository.save(movie)
+        movieRepository.toggleFollow(Movie.Id(1))
 
         val command = ToggleMovieFollow(Movie.Id(1), User.Id(1))
 
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val savedMovie = movieRepository.findById(Movie.Id(1))
-        assertFalse(savedMovie!!.followed)
+        assertFalse(movieRepository.isFollowed(User.Id(1), Movie.Id(1)))
     }
 }

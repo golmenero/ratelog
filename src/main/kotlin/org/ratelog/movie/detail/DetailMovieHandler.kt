@@ -29,6 +29,7 @@ data class GetMovieDetailResult(
     val soundtrack: Double?,
     val screenplay: Double?,
     val score: Double?,
+    val isFollowed: Boolean,
 )
 
 @Component
@@ -70,6 +71,7 @@ class DetailMovieHandler(
         val updatedMovie = movieRepository.findByTmdbId(movie.tmdbId)!!
 
         val rating = ratingRepository.findByMovieIdAndUserId(updatedMovie.id!!, query.userId)
+        val isFollowed = movieRepository.isFollowed(query.userId, updatedMovie.id)
 
         GetMovieDetailResult(
             movie = updatedMovie,
@@ -80,6 +82,7 @@ class DetailMovieHandler(
             soundtrack = rating?.soundtrack?.value,
             screenplay = rating?.screenplay?.value,
             score = rating?.score?.value,
+            isFollowed = isFollowed,
         )
     }
 }
