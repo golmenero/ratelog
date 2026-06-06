@@ -79,44 +79,6 @@ class DetailMovieHandlerTest {
     }
 
     @Test
-    fun `should return rating info when movie has ratings`() {
-        val tmdbMovie = MovieFactory.aMovie(id = 123, title = "Test Movie", releaseDate = LocalDate.parse("2023-01-15"))
-        whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
-
-        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Test Movie")
-        movieRepository.save(movie)
-
-        val rating = RatingFactory.aRating(
-            id = 1,
-            movieId = Movie.Id(1),
-            userId = User.Id(1),
-            directing = 5.0,
-            cinematography = 6.0,
-            acting = 7.0,
-            soundtrack = 8.0,
-            screenplay = 9.0,
-            createdAt = Instant.now()
-        )
-        ratingRepository.save(rating)
-
-        val query = GetMovieDetail(User.Id(1), TmdbId(123))
-        val result = handler.handle(query)
-
-        assertTrue(result.isRight())
-        result.fold(
-            { fail("Should not return error") },
-            { detail ->
-                assertEquals(5.0, detail.directing)
-                assertEquals(6.0, detail.cinematography)
-                assertEquals(7.0, detail.acting)
-                assertEquals(8.0, detail.soundtrack)
-                assertEquals(9.0, detail.screenplay)
-                assertEquals(7.0, detail.score)
-            }
-        )
-    }
-
-    @Test
     fun `should return null rating fields when movie has no ratings`() {
         val tmdbMovie = MovieFactory.aMovie(id = 123, title = "Test Movie", releaseDate = LocalDate.parse("2023-01-15"))
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())

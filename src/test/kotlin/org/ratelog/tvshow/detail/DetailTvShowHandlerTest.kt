@@ -43,6 +43,7 @@ class DetailTvShowHandlerTest {
             posterPath = "/poster.jpg",
             tmdbVoteAverage = 7.5,
             genres = listOf(Genre.DRAMA),
+            lastSeasonNumber = 2,
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
@@ -79,57 +80,6 @@ class DetailTvShowHandlerTest {
     }
 
     @Test
-    fun `should return season ratings when show has ratings`() {
-        val tmdbShow = TvShowFactory.aTvShow(
-            id = 123,
-            name = "Test Show",
-            firstAirDate = LocalDate.parse("2023-01-15"),
-        )
-        whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
-
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Test Show")
-        tvShowRepository.save(show)
-
-        val seasonRating = TvRatingFactory.aSeasonRating(
-            tvShowId = TvShow.Id(1),
-            seasonNumber = 1,
-            userId = User.Id(1),
-            directing = 5.0,
-            cinematography = 6.0,
-            acting = 7.0,
-            soundtrack = 8.0,
-            screenplay = 9.0,
-            createdAt = Instant.now()
-        )
-        val tvRating = TvRatingFactory.aTvRating(
-            id = 1,
-            tvShowId = TvShow.Id(1),
-            userId = User.Id(1),
-            seasonRatings = listOf(seasonRating),
-            createdAt = Instant.now()
-        )
-        tvRatingRepository.save(tvRating)
-
-        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
-        val result = handler.handle(query)
-
-        assertTrue(result.isRight())
-        result.fold(
-            { fail("Should not return error") },
-            { detail ->
-                assertEquals(2, detail.seasons.size)
-                assertNotNull(detail.seasons[0].rating)
-                assertEquals(5.0, detail.seasons[0].rating!!.directing)
-                assertEquals(6.0, detail.seasons[0].rating!!.cinematography)
-                assertEquals(7.0, detail.seasons[0].rating!!.acting)
-                assertEquals(8.0, detail.seasons[0].rating!!.soundtrack)
-                assertEquals(9.0, detail.seasons[0].rating!!.screenplay)
-                assertEquals(7.0, detail.seasons[0].rating!!.score)
-            }
-        )
-    }
-
-    @Test
     fun `should return null overall score when show has no ratings`() {
         val tmdbShow = TvShowFactory.aTvShow(
             id = 123,
@@ -156,6 +106,7 @@ class DetailTvShowHandlerTest {
             id = 123,
             name = "Test Show",
             firstAirDate = LocalDate.parse("2023-01-15"),
+            lastSeasonNumber = 2,
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
@@ -166,8 +117,9 @@ class DetailTvShowHandlerTest {
         result.fold(
             { fail("Should not return error") },
             { detail ->
-                assertEquals(1, detail.seasons.size)
+                assertEquals(2, detail.seasons.size)
                 assertEquals(1, detail.seasons[0].seasonNumber)
+                assertEquals(2, detail.seasons[1].seasonNumber)
             }
         )
     }

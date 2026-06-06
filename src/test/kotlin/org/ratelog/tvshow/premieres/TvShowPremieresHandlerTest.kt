@@ -5,7 +5,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.ratelog.test.InMemoryTvShowRepository
 import org.ratelog.test.TvShowFactory
+import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
+import java.time.LocalDate
 
 class TvShowPremieresHandlerTest {
     private lateinit var tvShowRepository: InMemoryTvShowRepository
@@ -36,10 +38,12 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should categorize shows into released and upcoming based on latest season`() {
-        val show1 = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Released Show")
-        val show2 = TvShowFactory.aTvShow(id = 2, tmdbId = 456, name = "Upcoming Show")
+        val show1 = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Released Show", lastSeasonAirDate = LocalDate.now().minusDays(1))
+        val show2 = TvShowFactory.aTvShow(id = 2, tmdbId = 456, name = "Upcoming Show", lastSeasonAirDate = LocalDate.now().plusDays(30))
         tvShowRepository.save(show1)
         tvShowRepository.save(show2)
+        tvShowRepository.toggleFollow(TvShow.Id(1))
+        tvShowRepository.toggleFollow(TvShow.Id(2))
 
         val query = TvShowPremieresQuery(User.Id(1))
         val result = handler.handle(query)
@@ -58,8 +62,9 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should categorize shows with no date into noDate list`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "No Date Show")
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "No Date Show", lastSeasonAirDate = null)
         tvShowRepository.save(show)
+        tvShowRepository.toggleFollow(TvShow.Id(1))
 
         val query = TvShowPremieresQuery(User.Id(1))
         val result = handler.handle(query)
@@ -77,8 +82,9 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should use latest season for premiere date`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Multi Season Show")
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Multi Season Show", lastSeasonNumber = 3, lastSeasonAirDate = LocalDate.now().minusDays(1))
         tvShowRepository.save(show)
+        tvShowRepository.toggleFollow(TvShow.Id(1))
 
         val query = TvShowPremieresQuery(User.Id(1))
         val result = handler.handle(query)
