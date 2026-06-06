@@ -42,6 +42,6 @@ interface UserFollowDAO : CrudRepository<UserFollowEntity, Long> {
     @Query("SELECT fu.followed_id FROM users_follows fu WHERE fu.follower_id = :userId")
     fun findFollowedUserIds(userId: Long): List<Long>
 
-    @Query("SELECT fu.followed_id FROM users_follows fu WHERE fu.follower_id = :userId ORDER BY fu.created_at_epoch_ms DESC")
-    fun findFollowingUserIds(userId: Long): List<Long>
+    @Query("SELECT u.* FROM users u INNER JOIN users_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = :userId ORDER BY uf.created_at_epoch_ms DESC")
+    fun findFollowingUsers(userId: Long): List<UserEntity>
 }

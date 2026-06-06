@@ -45,12 +45,8 @@ class UserRepositoryImpl(
     override fun findByUsernameContaining(username: Username, followerId: User.Id): List<User> =
         userDAO.findByUsernameContaining(username.value).map { it.toDomain() }
 
-    override fun findFollowingByUserId(userId: User.Id): List<User> {
-        val followedIds = userFollowDAO.findFollowingUserIds(userId.value)
-        return followedIds.mapNotNull { id ->
-            userDAO.findById(id).getOrNull()?.toDomain()
-        }
-    }
+    override fun findFollowingByUserId(userId: User.Id): List<User> =
+        userFollowDAO.findFollowingUsers(userId.value).map { it.toDomain() }
 
     override fun findFollowedUserIds(userId: User.Id): List<User.Id> =
         userFollowDAO.findFollowedUserIds(userId.value).map { User.Id(it) }
