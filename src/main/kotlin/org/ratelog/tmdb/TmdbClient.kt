@@ -3,8 +3,8 @@ package org.ratelog.tmdb
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonProperty
+import org.ratelog.movie.Movie
+import org.ratelog.tvshow.TvShow
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
@@ -23,8 +23,8 @@ class TmdbClient(
         .build()
 
     @Cacheable(value = ["tmdb-search-movies"], key = "#query")
-    fun searchMovies(query: String): Either<TmdbError, List<TmdbMovie>> {
-        if (query.isBlank()) return emptyList<TmdbMovie>().right()
+    fun searchMovies(query: String): Either<TmdbError, List<Movie>> {
+        if (query.isBlank()) return emptyList<Movie>().right()
         requireApiKey()
 
         val results = restClient.get()
@@ -40,13 +40,14 @@ class TmdbClient(
             .retrieve()
             .body(TmdbSearchResponse::class.java)
             ?.results
+            ?.map { it.toDomain() }
             ?: emptyList()
 
         return results.right()
     }
 
     @Cacheable(value = ["tmdb-movie-details"], key = "#tmdbId")
-    fun movieDetails(tmdbId: Int): Either<TmdbError, TmdbMovie> {
+    fun movieDetails(tmdbId: Int): Either<TmdbError, Movie> {
         requireApiKey()
 
         return restClient.get()
@@ -57,14 +58,15 @@ class TmdbClient(
                     .build(tmdbId)
             }
             .retrieve()
-            .body(TmdbMovie::class.java)
+            .body(TmdbMovieResponse::class.java)
+            ?.toDomain()
             ?.right()
             ?: TmdbError.MovieNotFound.left()
     }
 
     @Cacheable(value = ["tmdb-search-tvshows"], key = "#query")
-    fun searchTvShows(query: String): Either<TmdbError, List<TmdbTvShow>> {
-        if (query.isBlank()) return emptyList<TmdbTvShow>().right()
+    fun searchTvShows(query: String): Either<TmdbError, List<TvShow>> {
+        if (query.isBlank()) return emptyList<TvShow>().right()
         requireApiKey()
 
         val results = restClient.get()
@@ -80,13 +82,14 @@ class TmdbClient(
             .retrieve()
             .body(TmdbTvShowSearchResponse::class.java)
             ?.results
+            ?.map { it.toDomain() }
             ?: emptyList()
 
         return results.right()
     }
 
     @Cacheable(value = ["tmdb-tvshow-details"], key = "#tmdbId")
-    fun tvShowDetails(tmdbId: Int): Either<TmdbError, TmdbTvShow> {
+    fun tvShowDetails(tmdbId: Int): Either<TmdbError, TvShow> {
         requireApiKey()
 
         return restClient.get()
@@ -97,7 +100,8 @@ class TmdbClient(
                     .build(tmdbId)
             }
             .retrieve()
-            .body(TmdbTvShow::class.java)
+            .body(TmdbTvShowResponse::class.java)
+            ?.toDomain()
             ?.right()
             ?: TmdbError.TvShowNotFound.left()
     }
@@ -108,81 +112,3 @@ class TmdbClient(
         }
     }
 }
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class TmdbSearchResponse(
-    @JsonProperty("results")
-    val results: List<TmdbMovie> = emptyList()
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class TmdbMovie(
-    @JsonProperty("id")
-    val id: Int,
-    @JsonProperty("title")
-    val title: String,
-    @JsonProperty("original_title")
-    val originalTitle: String? = null,
-    @JsonProperty("overview")
-    val overview: String? = null,
-    @JsonProperty("release_date")
-    val releaseDate: String? = null,
-    @JsonProperty("poster_path")
-    val posterPath: String? = null,
-    @JsonProperty("vote_average")
-    val voteAverage: Double? = null,
-    @JsonProperty("genres")
-    val genres: List<TmdbGenre> = emptyList(),
-    @JsonProperty("status")
-    val status: String? = null,
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class TmdbTvShowSearchResponse(
-    @JsonProperty("results")
-    val results: List<TmdbTvShow> = emptyList()
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class TmdbTvShow(
-    @JsonProperty("id")
-    val id: Int,
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("original_name")
-    val originalName: String? = null,
-    @JsonProperty("overview")
-    val overview: String? = null,
-    @JsonProperty("first_air_date")
-    val firstAirDate: String? = null,
-    @JsonProperty("poster_path")
-    val posterPath: String? = null,
-    @JsonProperty("vote_average")
-    val voteAverage: Double? = null,
-    @JsonProperty("genres")
-    val genres: List<TmdbGenre> = emptyList(),
-    @JsonProperty("status")
-    val status: String? = null,
-    @JsonProperty("seasons")
-    val seasons: List<TmdbTvSeason> = emptyList()
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class TmdbTvSeason(
-    @JsonProperty("season_number")
-    val seasonNumber: Int,
-    @JsonProperty("episode_count")
-    val episodeCount: Int? = null,
-    @JsonProperty("air_date")
-    val airDate: String? = null,
-    @JsonProperty("overview")
-    val overview: String? = null
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class TmdbGenre(
-    @JsonProperty("id")
-    val id: Int,
-    @JsonProperty("name")
-    val name: String
-)

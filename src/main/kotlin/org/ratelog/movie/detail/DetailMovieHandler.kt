@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.Genre
 import org.ratelog.Overview
+import org.ratelog.Status
 import org.ratelog.Title
 import org.ratelog.TmdbId
 import org.ratelog.Url
@@ -56,7 +57,7 @@ class DetailMovieHandler(
                 posterPath = tmdbMovie.posterPath?.let(::Url),
                 tmdbVoteAverage = tmdbMovie.voteAverage,
                 genres = genres,
-                status = tmdbMovie.status,
+                status = tmdbMovie.status?.let { Status.fromValue(it) },
             ).let(movieRepository::save)
         }
 

@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.Genre
 import org.ratelog.Overview
+import org.ratelog.Status
 import org.ratelog.Title
 import org.ratelog.TmdbId
 import org.ratelog.Url
@@ -30,10 +31,7 @@ data class GetTvShowDetailResult(
 
 data class SeasonInfo(
     val seasonNumber: Int,
-    val episodeCount: Int?,
-    val airDate: String?,
     val rating: SeasonRatingInfo?,
-    val overview: Overview?,
 )
 
 data class SeasonRatingInfo(
@@ -56,34 +54,17 @@ class DetailTvShowHandler(
         val tmdbShow = query.tmdbId.value.let(tmdbClient::tvShowDetails)
             .mapLeft { DetailTvShowHandlerError.TvShowNotFound }
             .bind()
-        val genres = tmdbShow.genres.mapNotNull { Genre.fromValue(it.name) }
 
         val show = query.tmdbId.let(tvShowRepository::findByTmdbId)
+        if (show == null) tmdbShow.let(tvShowRepository::save)
 
-        if (show == null) {
-            TvShow(
-                id = null,
-                tmdbId = tmdbShow.id.let(::TmdbId),
-                name = tmdbShow.name.let(::Title),
-                originalName = tmdbShow.originalName?.let(::Title),
-                overview = tmdbShow.overview?.let(::Overview),
-                firstAirDate = tmdbShow.firstAirDate?.let(LocalDate::parse),
-                firstAirYear = tmdbShow.firstAirDate?.take(4)?.toIntOrNull(),
-                posterPath = tmdbShow.posterPath?.let(::Url),
-                tmdbVoteAverage = tmdbShow.voteAverage,
-                genres = genres,
-                status = tmdbShow.status,
-                lastSeasonNumber = TODO(),
-                lastSeasonAirDate = TODO(),
-                nextSeasonAirDate = TODO(),
-            ).let(tvShowRepository::save)
-        }
-
-        val updatedShow = show.tmdbId.let(tvShowRepository::findByTmdbId)!!
+        val updatedShow = query.tmdbId.let(tvShowRepository::findByTmdbId)!!
 
         val rating = tvRatingRepository.findByTvShowIdAndUserId(updatedShow.id!!, query.userId)
         val isFollowed = tvShowRepository.isFollowed(query.userId, updatedShow.id)
         val ratingMap = rating?.seasonRatings?.associateBy { it.seasonNumber.value } ?: emptyMap()
+
+        show!!.lastSeasonNumber
 
         val seasons = tmdbShow.seasons
             .filter { it.seasonNumber > 0 }
@@ -102,10 +83,7 @@ class DetailTvShowHandler(
                 }
                 SeasonInfo(
                     seasonNumber = tmdbSeason.seasonNumber,
-                    episodeCount = tmdbSeason.episodeCount,
-                    airDate = tmdbSeason.airDate,
                     rating = ratingInfo,
-                    overview = tmdbSeason.overview?.let(::Overview),
                 )
             }
 
