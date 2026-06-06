@@ -35,6 +35,7 @@ class DetailMovieHandlerTest {
     fun `should return movie detail when movie exists in TMDB`() {
         val tmdbMovie = MovieFactory.aMovie(
             id = 123,
+            tmdbId = 123,
             title = "Test Movie",
             originalTitle = "Original Title",
             overview = "A great movie",
@@ -63,6 +64,7 @@ class DetailMovieHandlerTest {
     fun `should save movie to repository when fetching details`() {
         val tmdbMovie = MovieFactory.aMovie(
             id = 123,
+            tmdbId = 123,
             title = "Test Movie",
             releaseDate = LocalDate.parse("2023-01-15"),
             posterPath = "/poster.jpg",
@@ -70,7 +72,7 @@ class DetailMovieHandlerTest {
         )
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
-        val query = GetMovieDetail(User.Id(1),TmdbId(123))
+        val query = GetMovieDetail(User.Id(1), TmdbId(123))
         handler.handle(query)
 
         val savedMovie = movieRepository.findByTmdbId(TmdbId(123))
@@ -80,7 +82,12 @@ class DetailMovieHandlerTest {
 
     @Test
     fun `should return null rating fields when movie has no ratings`() {
-        val tmdbMovie = MovieFactory.aMovie(id = 123, title = "Test Movie", releaseDate = LocalDate.parse("2023-01-15"))
+        val tmdbMovie = MovieFactory.aMovie(
+            id = 123,
+            tmdbId = 123,
+            title = "Test Movie",
+            releaseDate = LocalDate.parse("2023-01-15")
+        )
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123))

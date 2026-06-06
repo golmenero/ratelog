@@ -65,6 +65,7 @@ class DetailTvShowHandlerTest {
     @Test
     fun `should save tv show to repository when fetching details`() {
         val tmdbShow = TvShowFactory.aTvShow(
+            tmdbId = 123,
             id = 123,
             name = "Test Show",
             firstAirDate = LocalDate.parse("2023-01-15"),
@@ -82,6 +83,7 @@ class DetailTvShowHandlerTest {
     @Test
     fun `should return null overall score when show has no ratings`() {
         val tmdbShow = TvShowFactory.aTvShow(
+            tmdbId = 123,
             id = 123,
             name = "Test Show",
             firstAirDate = LocalDate.parse("2023-01-15"),
@@ -103,6 +105,7 @@ class DetailTvShowHandlerTest {
     @Test
     fun `should filter out season 0 from seasons list`() {
         val tmdbShow = TvShowFactory.aTvShow(
+            tmdbId = 123,
             id = 123,
             name = "Test Show",
             firstAirDate = LocalDate.parse("2023-01-15"),
