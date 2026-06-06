@@ -52,13 +52,13 @@ class SearchHandler(
         either {
             val movies = tmdbClient.searchMovies(query).bind()
 
-            movies.map { tmdbMovie ->
+            movies.map {
                 SearchResultItem(
-                    tmdbId = tmdbMovie.tmdbId.value,
-                    title = tmdbMovie.title.value,
-                    overview = tmdbMovie.overview?.value,
-                    year = tmdbMovie.releaseDate?.year,
-                    posterPath = tmdbMovie.posterPath?.value,
+                    tmdbId = it.tmdbId.value,
+                    title = it.title.value,
+                    overview = it.overview?.value,
+                    year = it.releaseDate?.year,
+                    posterPath = it.posterPath?.value,
                     type = MediaType.movie.name,
                 )
             }
@@ -68,13 +68,13 @@ class SearchHandler(
         either {
             val tvshows = tmdbClient.searchTvShows(query).bind()
 
-            tvshows.map { tmdbShow ->
+            tvshows.map {
                 SearchResultItem(
-                    tmdbId = tmdbShow.tmdbId.value,
-                    title = tmdbShow.name.value,
-                    overview = tmdbShow.overview?.value,
-                    year = tmdbShow.firstAirDate?.year,
-                    posterPath = tmdbShow.posterPath?.value,
+                    tmdbId = it.tmdbId.value,
+                    title = it.name.value,
+                    overview = it.overview?.value,
+                    year = it.firstAirDate?.year,
+                    posterPath = it.posterPath?.value,
                     type = MediaType.tvshow.name,
                 )
         }

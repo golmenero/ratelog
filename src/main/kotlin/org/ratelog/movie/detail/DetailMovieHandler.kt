@@ -2,19 +2,13 @@ package org.ratelog.movie.detail
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.ratelog.Genre
-import org.ratelog.Overview
-import org.ratelog.Status
-import org.ratelog.Title
 import org.ratelog.TmdbId
-import org.ratelog.Url
 import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieRepository
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.tmdb.TmdbClient
 import org.ratelog.user.User
 import org.springframework.stereotype.Component
-import java.time.LocalDate
 
 data class GetMovieDetail(
     val userId: User.Id,

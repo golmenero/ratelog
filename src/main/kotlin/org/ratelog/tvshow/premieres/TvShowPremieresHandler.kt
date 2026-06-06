@@ -3,7 +3,6 @@ package org.ratelog.tvshow.premieres
 import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.tvshow.TvShowRepository
-import org.ratelog.tmdb.TmdbClient
 import org.ratelog.user.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
