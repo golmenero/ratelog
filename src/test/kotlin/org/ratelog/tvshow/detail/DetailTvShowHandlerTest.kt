@@ -9,13 +9,13 @@ import org.mockito.kotlin.whenever
 import org.ratelog.*
 import org.ratelog.test.InMemoryTvRatingRepository
 import org.ratelog.test.InMemoryTvShowRepository
-import org.ratelog.test.TmdbFactory
 import org.ratelog.test.TvRatingFactory
 import org.ratelog.test.TvShowFactory
 import org.ratelog.tmdb.TmdbClient
 import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
 import java.time.Instant
+import java.time.LocalDate
 
 class DetailTvShowHandlerTest {
 
@@ -33,19 +33,16 @@ class DetailTvShowHandlerTest {
 
     @Test
     fun `should return tv show detail when show exists in TMDB`() {
-        val tmdbShow = TmdbFactory.aTmdbTvShow(
+        val tmdbShow = TvShowFactory.aTvShow(
+            tmdbId = 123,
             id = 123,
             name = "Test Show",
             originalName = "Original Name",
             overview = "A great show",
-            firstAirDate = "2023-01-15",
+            firstAirDate = LocalDate.parse("2023-01-15"),
             posterPath = "/poster.jpg",
-            voteAverage = 7.5,
-            genres = listOf(TmdbFactory.aTmdbGenre(name = "Drama")),
-            seasons = listOf(
-                TmdbFactory.aTmdbSeason(1, 10, "2023-01-15"),
-                TmdbFactory.aTmdbSeason(2, 12, "2023-06-01")
-            )
+            tmdbVoteAverage = 7.5,
+            genres = listOf(Genre.DRAMA),
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
@@ -66,10 +63,10 @@ class DetailTvShowHandlerTest {
 
     @Test
     fun `should save tv show to repository when fetching details`() {
-        val tmdbShow = TmdbFactory.aTmdbTvShow(
+        val tmdbShow = TvShowFactory.aTvShow(
             id = 123,
             name = "Test Show",
-            firstAirDate = "2023-01-15"
+            firstAirDate = LocalDate.parse("2023-01-15"),
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
@@ -83,14 +80,10 @@ class DetailTvShowHandlerTest {
 
     @Test
     fun `should return season ratings when show has ratings`() {
-        val tmdbShow = TmdbFactory.aTmdbTvShow(
+        val tmdbShow = TvShowFactory.aTvShow(
             id = 123,
             name = "Test Show",
-            firstAirDate = "2023-01-15",
-            seasons = listOf(
-                TmdbFactory.aTmdbSeason(1, 10, "2023-01-15"),
-                TmdbFactory.aTmdbSeason(2, 12, "2023-06-01")
-            )
+            firstAirDate = LocalDate.parse("2023-01-15"),
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
@@ -138,11 +131,10 @@ class DetailTvShowHandlerTest {
 
     @Test
     fun `should return null overall score when show has no ratings`() {
-        val tmdbShow = TmdbFactory.aTmdbTvShow(
+        val tmdbShow = TvShowFactory.aTvShow(
             id = 123,
             name = "Test Show",
-            firstAirDate = "2023-01-15",
-            seasons = listOf(TmdbFactory.aTmdbSeason(1, 10, "2023-01-15"))
+            firstAirDate = LocalDate.parse("2023-01-15"),
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 
@@ -160,14 +152,10 @@ class DetailTvShowHandlerTest {
 
     @Test
     fun `should filter out season 0 from seasons list`() {
-        val tmdbShow = TmdbFactory.aTmdbTvShow(
+        val tmdbShow = TvShowFactory.aTvShow(
             id = 123,
             name = "Test Show",
-            firstAirDate = "2023-01-15",
-            seasons = listOf(
-                TmdbFactory.aTmdbSeason(0, 5, "2022-01-01"),
-                TmdbFactory.aTmdbSeason(1, 10, "2023-01-15")
-            )
+            firstAirDate = LocalDate.parse("2023-01-15"),
         )
         whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
 

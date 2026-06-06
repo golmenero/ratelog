@@ -12,10 +12,10 @@ import org.ratelog.test.InMemoryMovieRepository
 import org.ratelog.test.InMemoryRatingRepository
 import org.ratelog.test.MovieFactory
 import org.ratelog.test.RatingFactory
-import org.ratelog.test.TmdbFactory
 import org.ratelog.tmdb.TmdbClient
 import org.ratelog.user.User
 import java.time.Instant
+import java.time.LocalDate
 
 class DetailMovieHandlerTest {
 
@@ -33,15 +33,15 @@ class DetailMovieHandlerTest {
 
     @Test
     fun `should return movie detail when movie exists in TMDB`() {
-        val tmdbMovie = TmdbFactory.aTmdbMovie(
+        val tmdbMovie = MovieFactory.aMovie(
             id = 123,
             title = "Test Movie",
             originalTitle = "Original Title",
             overview = "A great movie",
-            releaseDate = "2023-01-15",
+            releaseDate = LocalDate.parse("2023-01-15"),
             posterPath = "/poster.jpg",
-            voteAverage = 7.5,
-            genres = listOf(TmdbFactory.aTmdbGenre(name = "Action"))
+            tmdbVoteAverage = 7.5,
+            genres = listOf(Genre.ACTION)
         )
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
@@ -61,12 +61,12 @@ class DetailMovieHandlerTest {
 
     @Test
     fun `should save movie to repository when fetching details`() {
-        val tmdbMovie = TmdbFactory.aTmdbMovie(
+        val tmdbMovie = MovieFactory.aMovie(
             id = 123,
             title = "Test Movie",
-            releaseDate = "2023-01-15",
+            releaseDate = LocalDate.parse("2023-01-15"),
             posterPath = "/poster.jpg",
-            voteAverage = 7.5
+            tmdbVoteAverage = 7.5
         )
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
@@ -80,7 +80,7 @@ class DetailMovieHandlerTest {
 
     @Test
     fun `should return rating info when movie has ratings`() {
-        val tmdbMovie = TmdbFactory.aTmdbMovie(id = 123, title = "Test Movie", releaseDate = "2023-01-15")
+        val tmdbMovie = MovieFactory.aMovie(id = 123, title = "Test Movie", releaseDate = LocalDate.parse("2023-01-15"))
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
         val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Test Movie")
@@ -118,7 +118,7 @@ class DetailMovieHandlerTest {
 
     @Test
     fun `should return null rating fields when movie has no ratings`() {
-        val tmdbMovie = TmdbFactory.aTmdbMovie(id = 123, title = "Test Movie", releaseDate = "2023-01-15")
+        val tmdbMovie = MovieFactory.aMovie(id = 123, title = "Test Movie", releaseDate = LocalDate.parse("2023-01-15"))
         whenever(tmdbClient.movieDetails(123)).thenReturn(tmdbMovie.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123))

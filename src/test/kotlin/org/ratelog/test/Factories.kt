@@ -6,10 +6,10 @@ import org.ratelog.movie.rating.Rating
 import org.ratelog.tvshow.TvShow
 import org.ratelog.tvshow.rating.SeasonRating
 import org.ratelog.tvshow.rating.TvRating
-import org.ratelog.tmdb.TmdbGenre
-import org.ratelog.tmdb.TmdbMovie
-import org.ratelog.tmdb.TmdbTvSeason
-import org.ratelog.tmdb.TmdbTvShow
+import org.ratelog.tmdb.TmdbGenreResponse
+import org.ratelog.tmdb.TmdbMovieResponse
+import org.ratelog.tmdb.TmdbTvSeasonResponse
+import org.ratelog.tmdb.TmdbTvShowResponse
 import org.ratelog.user.User
 import java.time.Instant
 import java.time.LocalDate
@@ -177,63 +177,4 @@ object TvRatingFactory {
         screenplay = Score(screenplay),
         createdAt = createdAt
     )
-}
-
-object TmdbFactory {
-    fun aTmdbMovie(
-        id: Int = 1,
-        title: String = "Tmdb Movie $id",
-        originalTitle: String? = null,
-        overview: String? = null,
-        releaseDate: String? = null,
-        posterPath: String? = null,
-        voteAverage: Double? = null,
-        genres: List<TmdbGenre> = emptyList()
-    ) = TmdbMovie(
-        id = id,
-        title = title,
-        originalTitle = originalTitle,
-        overview = overview,
-        releaseDate = releaseDate,
-        posterPath = posterPath,
-        voteAverage = voteAverage,
-        genres = genres
-    )
-
-    fun aTmdbTvShow(
-        id: Int = 1,
-        name: String = "Tmdb Show $id",
-        originalName: String? = null,
-        overview: String? = null,
-        firstAirDate: String? = null,
-        posterPath: String? = null,
-        voteAverage: Double? = null,
-        genres: List<TmdbGenre> = emptyList(),
-        seasons: List<TmdbTvSeason> = emptyList()
-    ) = TmdbTvShow(
-        id = id,
-        name = name,
-        originalName = originalName,
-        overview = overview,
-        firstAirDate = firstAirDate,
-        posterPath = posterPath,
-        voteAverage = voteAverage,
-        genres = genres,
-        seasons = seasons
-    )
-
-    fun aTmdbSeason(
-        seasonNumber: Int,
-        episodeCount: Int? = null,
-        airDate: String? = null
-    ) = TmdbTvSeason(
-        seasonNumber = seasonNumber,
-        episodeCount = episodeCount,
-        airDate = airDate
-    )
-
-    fun aTmdbGenre(
-        id: Int = 1,
-        name: String = "Action"
-    ) = TmdbGenre(id = id, name = name)
 }
