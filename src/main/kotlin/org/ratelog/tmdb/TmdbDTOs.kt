@@ -46,8 +46,8 @@ data class TmdbMovieResponse(
         title = Title(title),
         originalTitle = originalTitle?.let { Title(it) },
         overview = overview?.let { Overview(it) },
-        releaseDate = releaseDate?.let { LocalDate.parse(it) },
-        releaseYear = releaseDate?.take(4)?.toIntOrNull(),
+        releaseDate = releaseDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) },
+        releaseYear = releaseDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = voteAverage,
         genres = genres.mapNotNull { Genre.fromValue(it.name) },
@@ -90,8 +90,8 @@ data class TmdbTvShowResponse(
         name = Title(name),
         originalName = originalName?.let { Title(it) },
         overview = overview?.let { Overview(it) },
-        firstAirDate = firstAirDate?.let { LocalDate.parse(it) },
-        firstAirYear = firstAirDate?.take(4)?.toIntOrNull(),
+        firstAirDate = firstAirDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) },
+        firstAirYear = firstAirDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = voteAverage,
         genres = genres.mapNotNull { Genre.fromValue(it.name) },
@@ -100,9 +100,10 @@ data class TmdbTvShowResponse(
         lastSeasonAirDate = seasons.filter { it.seasonNumber > 0 }
             .maxByOrNull { it.seasonNumber }
             ?.airDate
+            ?.takeIf { it.isNotBlank() }
             ?.let { LocalDate.parse(it) },
         nextSeasonAirDate = seasons.filter { it.seasonNumber > 0 }
-            .mapNotNull { s -> s.airDate?.let { d -> s to LocalDate.parse(d) } }
+            .mapNotNull { s -> s.airDate?.takeIf { it.isNotBlank() }?.let { d -> s to LocalDate.parse(d) } }
             .filter { (_, date) -> date > LocalDate.now() }
             .minByOrNull { (_, date) -> date }
             ?.second,
