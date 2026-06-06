@@ -1,76 +1,121 @@
-# Ratelog
+<p align="center">
+  <img alt="Screenshot" src="assets/banner.svg" width="300"/>
+</p>
 
-Web app to search for movies and TV shows on TMDB, rate them by categories, and generate ranked top lists. Supports multi-user accounts with authentication.
+<p align="center">
+  <!-- REPLACE: Update badges with your actual repository URLs -->
+  <a href="https://github.com/golmenero/ratelog">
+  <img alt="License" src="https://img.shields.io/github/license/golmenero/ratelog.svg"/>
+  </a>
+  <a href="https://github.com/golmenero/ratelog/releases">
+  <img alt="Current Release" src="https://img.shields.io/github/release/golmenero/ratelog.svg"/>
+  </a>
+  <a href="https://github.com/golmenero/ratelog/actions/workflows/ci.yml">
+  <img alt="CI Status" src="https://img.shields.io/github/actions/workflow/status/golmenero/ratelog/ci.yml.svg"/>
+  </a>
+  <a href="https://hub.docker.com/r/golmenero/ratelog">
+  <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/golmenero/ratelog.svg"/>
+  </a>
+  <a href="https://www.buymeacoffee.com/golmenero">
+  <img alt="Buy Me a Coffee" src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=black"/>
+  </a>
 
-## Stack
-- **Backend:** Kotlin 2.3.10 + Spring Boot 3.4.5
-- **DB:** PostgreSQL 17 (with Flyway migrations)
-- **Frontend:** Thymeleaf server-rendered HTML + CSS (dark theme, responsive)
-- **Auth:** Spring Security (BCrypt, form login)
-- **Caching:** Caffeine (in-memory, TMDB responses)
+
+  <br/>
+</p>
+
+---
+
+Ratelog is a web application that lets you search for movies and TV shows on TMDB, rate them across multiple categories, and generate ranked top lists. It supports multi-user accounts with authentication, a dark-themed responsive UI, and follows/tracking for upcoming releases.
+
+No premium tiers, no hidden features — just a straightforward tool to track and rank what you watch.
+
+<strong>Want to get started?</strong><br/>
+Check out the <a href="#run-locally">installation guide</a> or jump straight to <a href="#docker">Docker deployment</a>.<br/>
+
+<strong>Something not working right?</strong><br/>
+Open an <a href="https://github.com/golmenero/ratelog/issues">Issue</a> on GitHub.<br/>
+
+<strong>Want to contribute?</strong><br/>
+Check out the contributing guide (coming soon).<br/>
+
+<strong>New idea or improvement?</strong><br/>
+Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a> on GitHub.<br/>
+---
 
 ## Features
-- Search movies and TV shows on TMDB
-- Follow content to track upcoming releases
-- Premieres page: followed content grouped by Released / Upcoming / No Date
-- Rating by categories (1-10, step 0.25):
+
+- **Search** — Find movies and TV shows via TMDB's API
+- **Follow** — Track upcoming releases and see them on the premieres page (grouped by Released / Upcoming / No Date)
+- **Rate by category** — Score each title from 1 to 10 (0.25 steps) across 5 categories:
   - Directing
   - Cinematography
   - Acting
   - Soundtrack
   - Screenplay
-- Average score calculation per title (mean of all 5 categories)
-- One rating per user per title (delete first to re-rate)
-- Tops:
-  - Movies and TV shows (separate pages with integrated premieres)
-  - Filterable by year and category
-  - Configurable limit
+- **Average score** — Automatic mean calculation across all 5 categories
+- **Top lists** — Separate pages for movies and TV shows, filterable by year and category with configurable limits
+- **Multi-user** — Each user has their own ratings, follows, and tops
+- **One rating per title** — Delete and re-rate if you change your mind
 
-## Data Model
-- `users` — user accounts (username, email, password hash)
-- `movies` — TMDB movie metadata
-- `tv_shows` — TMDB TV show metadata
-- `ratings` — movie ratings per user per category
-- `tv_ratings` — TV show ratings per user per category
-- `follows` — user follows (content type + TMDB ID)
+<!-- REPLACE: Add screenshots or demo images here -->
+<p align="center">
+  <img alt="Search" src="assets/search.png" width="900"/>
+  <br>
+  <img alt="Detail" src="assets/detail.png" width="900"/>
+  <br>
+  <img alt="Rate" src="assets/rate.png" width="900"/>
+  <br>
+  <img alt="Top" src="assets/top.png" width="900"/>
+</p>
 
-## Environment Variables
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `TMDB_API_KEY` | Yes | — | TMDB API key |
-| `PORT` | No | `8080` | HTTP port |
-| `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
-| `POSTGRES_PORT` | No | `5432` | PostgreSQL port |
-| `POSTGRES_DB` | No | `ratelog` | Database name |
-| `POSTGRES_USER` | No | `ratelog` | Database user |
-| `POSTGRES_PASSWORD` | No | `ratelog` | Database password |
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Backend** | Kotlin 2.3.10 + Spring Boot 3.4.5 |
+| **Database** | PostgreSQL 17 (Flyway migrations) |
+| **Frontend** | Thymeleaf server-rendered HTML + CSS (dark theme, responsive) |
+| **Auth** | Spring Security (BCrypt, form login) |
+
+---
 
 ## Run Locally
 
 ### Prerequisites
+
 - JDK 21
-- PostgreSQL running locally (or adjust connection vars)
+- PostgreSQL running locally (or adjust connection variables)
+- TMDB API key ([get one here](https://www.themoviedb.org/settings/api))
 
 ### Steps
+
 ```powershell
-# 1. Create .env or set variables
+# 1. Set environment variables
 $env:TMDB_API_KEY="YOUR_API_KEY"
 
 # 2. Run
 mvn clean compile exec:java
 ```
 
-Open in browser:
-- `http://localhost:8080/`
+Open in browser: `http://localhost:8080/`
+
+---
+
 ## Docker
 
 ### Build Image
+
 ```powershell
 docker build -t ratelog .
 ```
 
 ### Run with Docker Compose
+
 Includes PostgreSQL service:
+
 ```powershell
 # Option A: variables in session
 $env:TMDB_API_KEY="YOUR_API_KEY"
@@ -81,59 +126,54 @@ docker compose up --build
 ```
 
 Compose services:
-- **postgres** — PostgreSQL 17 (port 5432, volume `pgdata`)
-- **ratelog** — App (port 8080, depends on healthy postgres)
 
-## Endpoints
+| Service | Description |
+|---|---|
+| **postgres** | PostgreSQL 17 (port 5432, volume `pgdata`) |
+| **ratelog** | App (port 8080, depends on healthy postgres) |
 
-### Pages (auth required unless noted)
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/` | Search movies & TV shows |
-| `GET` | `/login` | Login page (public) |
-| `POST` | `/login/process` | Login form processing (public) |
-| `GET` | `/register` | Registration page (public) |
-| `POST` | `/register` | Create account (public) |
-| `POST` | `/logout` | Logout |
-| `GET` | `/movie/rate?id=X` | Movie rating page |
-| `POST` | `/movie/rate` | Submit movie rating |
-| `POST` | `/movies/delete/{id}` | Delete movie rating |
-| `GET` | `/movies` | Top movies + premieres (query: `limit`, `year`, `category`) |
-| `GET` | `/tv/rate?id=X` | TV show rating page |
-| `POST` | `/tv/rate` | Submit TV show rating |
-| `POST` | `/tvshows/delete/{id}` | Delete TV show rating |
-| `GET` | `/tvshows` | Top TV shows + premieres (query: `limit`, `year`, `category`) |
-| `POST` | `/follow` | Toggle follow/unfollow (params: `tmdbId`, `type`, `q`) |
+---
 
-### API
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/health` | Health check — `{"status":"ok"}` (public) |
+## Environment Variables
 
-## CI/CD
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `TMDB_API_KEY` | Yes | — | TMDB API key |
+| `PORT` | No | `8080` | HTTP port |
+| `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
+| `POSTGRES_PORT` | No | `5432` | PostgreSQL port |
+| `POSTGRES_DB` | No | `ratelog` | Database name |
+| `POSTGRES_USER` | No | `ratelog` | Database user |
+| `POSTGRES_PASSWORD` | No | `ratelog` | Database password |
 
-### GitHub Actions
-- **`ci.yml`** — Runs on push/PR to `master`: tests, package, Docker build
-- **`release.yml`** — Runs on tag `v*` or manual dispatch: builds and pushes to GHCR
+---
 
-### Publish Image to GHCR
-```powershell
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-Produces:
-- `ghcr.io/<owner>/ratelog:vX.Y.Z`
-- `ghcr.io/<owner>/ratelog:latest`
-
-## Deploy to TrueNAS SCALE (Dockge)
-
-Files in `deploy/dockge/`:
-- `.env.example` — Stack variables template
+## Deploy to TrueNAS SCALE
 
 Minimal flow:
-1. Copy `deploy/dockge/.env.example` to `.env` in your Dockge stack
+
+1. Copy `.env.example` to `.env` in your Truenas Custom App stack
 2. Set `TMDB_API_KEY` and `POSTGRES_DATA_DIR` (path `/mnt/<pool>/...`)
 3. Set `RATLOG_IMAGE=ghcr.io/<owner>/ratelog:latest` (or specific version)
 4. Deploy with compose
 5. Verify at `http://IP_TRUENAS:8080/api/health`
+
+---
+
+<p align="center">
+This project is powered by:
+<br/>
+<br/>
+<!-- REPLACE: Add sponsor/partner logos here -->
+<a href="https://www.themoviedb.org/documentation/api">
+<img alt="TMDB API" src="assets/tmdb.svg" height="20px"/>
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://spring.io/projects/spring-boot">
+<img alt="Spring Boot" src="assets/spring.svg" height="20px"/>
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://www.postgresql.org/">
+<img alt="PostgreSQL" src="assets/postgres.svg" height="20px"/>
+</a>
+</p>
