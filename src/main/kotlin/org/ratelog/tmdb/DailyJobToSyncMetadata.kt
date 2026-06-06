@@ -14,7 +14,7 @@ class DailyJobToSyncMetadata(
 ) {
     private val logger = LoggerFactory.getLogger(DailyJobToSyncMetadata::class.java)
 
-    @Scheduled(cron = "0 0 6 * * *")
+    @Scheduled(cron = "0 */10 * * * *")
     fun sync() {
         logger.info("DailyJobToSyncMetadata started")
         try {
