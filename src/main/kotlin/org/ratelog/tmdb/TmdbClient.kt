@@ -6,7 +6,6 @@ import arrow.core.right
 import org.ratelog.movie.Movie
 import org.ratelog.tvshow.TvShow
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
@@ -22,7 +21,6 @@ class TmdbClient(
         .baseUrl(baseUrl)
         .build()
 
-    @Cacheable(value = ["tmdb-search-movies"], key = "#query")
     fun searchMovies(query: String): Either<TmdbError, List<Movie>> {
         if (query.isBlank()) return emptyList<Movie>().right()
         requireApiKey()
@@ -46,7 +44,6 @@ class TmdbClient(
         return results.right()
     }
 
-    @Cacheable(value = ["tmdb-movie-details"], key = "#tmdbId")
     fun movieDetails(tmdbId: Int): Either<TmdbError, Movie> {
         requireApiKey()
 
@@ -64,7 +61,6 @@ class TmdbClient(
             ?: TmdbError.MovieNotFound.left()
     }
 
-    @Cacheable(value = ["tmdb-search-tvshows"], key = "#query")
     fun searchTvShows(query: String): Either<TmdbError, List<TvShow>> {
         if (query.isBlank()) return emptyList<TvShow>().right()
         requireApiKey()
@@ -88,7 +84,6 @@ class TmdbClient(
         return results.right()
     }
 
-    @Cacheable(value = ["tmdb-tvshow-details"], key = "#tmdbId")
     fun tvShowDetails(tmdbId: Int): Either<TmdbError, TvShow> {
         requireApiKey()
 
