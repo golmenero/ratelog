@@ -2,6 +2,7 @@ package org.ratelog.tmdb
 
 import org.ratelog.movie.MovieRepository
 import org.ratelog.tvshow.TvShowRepository
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
@@ -11,27 +12,53 @@ class DailyJobToSyncMetadata(
     private val tvShowRepository: TvShowRepository,
     private val movieRepository: MovieRepository,
 ) {
-    @Scheduled(cron = "0 0 6 * * *")
+    private val logger = LoggerFactory.getLogger(DailyJobToSyncMetadata::class.java)
+
+    @Scheduled(cron = "0 */10 * * * *")
     fun sync() {
-        syncTvShows()
-        syncMovies()
+        logger.info("DailyJobToSyncMetadata started")
+        try {
+            syncTvShows()
+            syncMovies()
+            logger.info("DailyJobToSyncMetadata completed successfully")
+        } catch (e: Exception) {
+            logger.error("DailyJobToSyncMetadata failed", e)
+        }
     }
 
     private fun syncTvShows() {
+        logger.info("Syncing TV shows")
         val showsToSync = tvShowRepository.findActiveTvShows()
+        logger.info("Found ${showsToSync.size} TV shows to sync")
 
         showsToSync.forEach { show ->
-            tmdbClient.tvShowDetails(show.tmdbId.value)
-                .fold({}, { tvShowRepository.save(it) })
+            try {
+                tmdbClient.tvShowDetails(show.tmdbId.value)
+                    .fold(
+                        { err -> logger.error("Failed to sync TV show ${show.tmdbId.value}: $err") },
+                        { tvShowRepository.save(it) }
+                    )
+            } catch (e: Exception) {
+                logger.error("Error syncing TV show ${show.tmdbId.value}", e)
+            }
         }
     }
 
     private fun syncMovies() {
+        logger.info("Syncing movies")
         val moviesToSync = movieRepository.findActiveMovies()
+        logger.info("Found ${moviesToSync.size} movies to sync")
 
         moviesToSync.forEach { movie ->
-            tmdbClient.movieDetails(movie.tmdbId.value)
-                .fold({}, { movieRepository.save(it) })
+            try {
+                tmdbClient.movieDetails(movie.tmdbId.value)
+                    .fold(
+                        { err -> logger.error("Failed to sync movie ${movie.tmdbId.value}: $err") },
+                        { movieRepository.save(it) }
+                    )
+            } catch (e: Exception) {
+                logger.error("Error syncing movie ${movie.tmdbId.value}", e)
+            }
         }
     }
 }
