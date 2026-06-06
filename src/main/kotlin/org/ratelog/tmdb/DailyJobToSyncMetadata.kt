@@ -14,7 +14,7 @@ class DailyJobToSyncMetadata(
 ) {
     private val logger = LoggerFactory.getLogger(DailyJobToSyncMetadata::class.java)
 
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 0 6 * * *")
     fun sync() {
         logger.info("DailyJobToSyncMetadata started")
         try {
@@ -36,7 +36,7 @@ class DailyJobToSyncMetadata(
                 tmdbClient.tvShowDetails(show.tmdbId.value)
                     .fold(
                         { err -> logger.error("Failed to sync TV show ${show.tmdbId.value}: $err") },
-                        { tvShowRepository.save(it) }
+                        { it.copy(id = show.id).let(tvShowRepository::save) }
                     )
             } catch (e: Exception) {
                 logger.error("Error syncing TV show ${show.tmdbId.value}", e)
@@ -54,7 +54,7 @@ class DailyJobToSyncMetadata(
                 tmdbClient.movieDetails(movie.tmdbId.value)
                     .fold(
                         { err -> logger.error("Failed to sync movie ${movie.tmdbId.value}: $err") },
-                        { movieRepository.save(it) }
+                        { it.copy(id = movie.id).let(movieRepository::save) }
                     )
             } catch (e: Exception) {
                 logger.error("Error syncing movie ${movie.tmdbId.value}", e)
