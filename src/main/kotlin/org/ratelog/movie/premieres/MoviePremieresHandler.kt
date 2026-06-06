@@ -28,7 +28,6 @@ data class MoviePremieres(
 
 @Service
 class MoviePremieresHandler(
-    private val tmdbClient: TmdbClient,
     private val movieRepository: MovieRepository,
 ) {
     fun handle(query: MoviePremieresQuery): Either<MoviePremieresHandlerError, MoviePremieres> = either {
@@ -40,17 +39,14 @@ class MoviePremieresHandler(
         val today = LocalDate.now()
 
         for (movie in followedMovies) {
-            val tmdbMovie = tmdbClient.movieDetails(movie.tmdbId.value).bind()
-
-            if (!tmdbMovie.releaseDate.isNullOrBlank()) {
-                val date = LocalDate.parse(tmdbMovie.releaseDate)
+            if (movie.releaseDate != null) {
                 val item = MoviePremiereItem(
                     id = movie.id!!.value,
                     tmdbId = movie.tmdbId.value,
-                    title = tmdbMovie.title,
-                    releaseDate = date,
-                    posterPath = tmdbMovie.posterPath,
-                    isReleased = date <= today
+                    title = movie.title.value,
+                    releaseDate = movie.releaseDate,
+                    posterPath = movie.posterPath?.value,
+                    isReleased = movie.releaseDate <= today
                 )
                 if (item.isReleased) released.add(item) else upcoming.add(item)
             } else {
@@ -58,9 +54,9 @@ class MoviePremieresHandler(
                     MoviePremiereItem(
                         id = movie.id!!.value,
                         tmdbId = movie.tmdbId.value,
-                        title = tmdbMovie.title,
+                        title = movie.title.value,
                         releaseDate = today,
-                        posterPath = tmdbMovie.posterPath,
+                        posterPath = movie.posterPath?.value,
                         isReleased = false,
                         hasDate = false
                     )

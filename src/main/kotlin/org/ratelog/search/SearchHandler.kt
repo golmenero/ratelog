@@ -23,7 +23,6 @@ data class SearchResultItem(
     val overview: String?,
     val year: Int?,
     val posterPath: String?,
-    val tmdbVoteAverage: Double?,
     val type: String,
 )
 
@@ -55,12 +54,11 @@ class SearchHandler(
 
             movies.map { tmdbMovie ->
                 SearchResultItem(
-                    tmdbId = tmdbMovie.id,
-                    title = tmdbMovie.title,
-                    overview = tmdbMovie.overview,
-                    year = tmdbMovie.releaseDate?.take(4)?.toIntOrNull(),
-                    posterPath = tmdbMovie.posterPath,
-                    tmdbVoteAverage = tmdbMovie.voteAverage,
+                    tmdbId = tmdbMovie.tmdbId.value,
+                    title = tmdbMovie.title.value,
+                    overview = tmdbMovie.overview?.value,
+                    year = tmdbMovie.releaseDate?.year,
+                    posterPath = tmdbMovie.posterPath?.value,
                     type = MediaType.movie.name,
                 )
             }
@@ -72,12 +70,11 @@ class SearchHandler(
 
             tvshows.map { tmdbShow ->
                 SearchResultItem(
-                    tmdbId = tmdbShow.id,
-                    title = tmdbShow.name,
-                    overview = tmdbShow.overview,
-                    year = tmdbShow.firstAirDate?.take(4)?.toIntOrNull(),
-                    posterPath = tmdbShow.posterPath,
-                    tmdbVoteAverage = tmdbShow.voteAverage,
+                    tmdbId = tmdbShow.tmdbId.value,
+                    title = tmdbShow.name.value,
+                    overview = tmdbShow.overview?.value,
+                    year = tmdbShow.firstAirDate?.year,
+                    posterPath = tmdbShow.posterPath?.value,
                     type = MediaType.tvshow.name,
                 )
         }

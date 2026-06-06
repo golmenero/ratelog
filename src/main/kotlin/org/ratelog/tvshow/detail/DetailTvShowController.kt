@@ -26,8 +26,6 @@ data class TvShowDetailResponse(
 
 data class SeasonResponse(
     val seasonNumber: Int,
-    val episodeCount: Int?,
-    val airDate: String?,
     val hasRating: Boolean,
     val directing: Double?,
     val cinematography: Double?,
@@ -35,7 +33,6 @@ data class SeasonResponse(
     val soundtrack: Double?,
     val screenplay: Double?,
     val score: Double?,
-    val overview: String?,
 )
 
 @Controller
@@ -78,8 +75,6 @@ class DetailTvShowController(
             seasons = result.seasons.map { s ->
                 SeasonResponse(
                     seasonNumber = s.seasonNumber,
-                    episodeCount = s.episodeCount,
-                    airDate = s.airDate,
                     hasRating = s.rating != null,
                     directing = s.rating?.directing,
                     cinematography = s.rating?.cinematography,
@@ -87,7 +82,6 @@ class DetailTvShowController(
                     soundtrack = s.rating?.soundtrack,
                     screenplay = s.rating?.screenplay,
                     score = s.rating?.score,
-                    overview = s.overview?.value,
                 )
             },
             overallScore = result.overallScore,

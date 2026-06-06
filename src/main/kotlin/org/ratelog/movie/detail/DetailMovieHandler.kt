@@ -41,25 +41,9 @@ class DetailMovieHandler(
 ) {
     fun handle(query: GetMovieDetail): Either<DetailMovieHandlerError, GetMovieDetailResult> = either {
         val tmdbMovie = query.tmdbId.value.let(tmdbClient::movieDetails).bind()
-        val genres = tmdbMovie.genres.mapNotNull { Genre.fromValue(it.name) }
 
         val movie = query.tmdbId.let(movieRepository::findByTmdbId)
-
-        if (movie == null) {
-            Movie(
-                id = null,
-                tmdbId = tmdbMovie.id.let(::TmdbId),
-                title = tmdbMovie.title.let(::Title),
-                originalTitle = tmdbMovie.originalTitle?.let(::Title),
-                overview = tmdbMovie.overview?.let(::Overview),
-                releaseDate = tmdbMovie.releaseDate?.let(LocalDate::parse),
-                releaseYear = tmdbMovie.releaseDate?.take(4)?.toIntOrNull(),
-                posterPath = tmdbMovie.posterPath?.let(::Url),
-                tmdbVoteAverage = tmdbMovie.voteAverage,
-                genres = genres,
-                status = tmdbMovie.status?.let { Status.fromValue(it) },
-            ).let(movieRepository::save)
-        }
+        if (movie == null) tmdbMovie.let(movieRepository::save)
 
         val updatedMovie = movieRepository.findByTmdbId(query.tmdbId)!!
 

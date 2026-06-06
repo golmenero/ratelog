@@ -29,7 +29,6 @@ data class TvShowPremieres(
 
 @Service
 class TvShowPremieresHandler(
-    private val tmdbClient: TmdbClient,
     private val tvShowRepository: TvShowRepository,
 ) {
     fun handle(query: TvShowPremieresQuery): Either<TvShowPremieresHandlerError, TvShowPremieres> = either {
@@ -41,23 +40,16 @@ class TvShowPremieresHandler(
         val today = LocalDate.now()
 
         for (show in followedTvShows) {
-            val tmdbShow = tmdbClient.tvShowDetails(show.tmdbId.value).bind()
-
-            val latestSeason = tmdbShow.seasons
-                .filter { it.seasonNumber > 0 }
-                .maxByOrNull { it.seasonNumber }
-
-            if (latestSeason != null) {
-                if (!latestSeason.airDate.isNullOrBlank()) {
-                    val date = LocalDate.parse(latestSeason.airDate)
+            if (show.lastSeasonNumber != null) {
+                if (show.lastSeasonAirDate != null) {
                     val item = TvShowPremiereItem(
                         id = show.id!!.value,
                         tmdbId = show.tmdbId.value,
-                        name = tmdbShow.name,
-                        seasonNumber = latestSeason.seasonNumber,
-                        releaseDate = date,
-                        posterPath = tmdbShow.posterPath,
-                        isReleased = date <= today
+                        name = show.name.value,
+                        seasonNumber = show.lastSeasonNumber,
+                        releaseDate = show.lastSeasonAirDate,
+                        posterPath = show.posterPath?.value,
+                        isReleased = show.lastSeasonAirDate <= today
                     )
                     if (item.isReleased) released.add(item) else upcoming.add(item)
                 } else {
@@ -65,10 +57,10 @@ class TvShowPremieresHandler(
                         TvShowPremiereItem(
                             id = show.id!!.value,
                             tmdbId = show.tmdbId.value,
-                            name = tmdbShow.name,
-                            seasonNumber = latestSeason.seasonNumber,
+                            name = show.name.value,
+                            seasonNumber = show.lastSeasonNumber,
                             releaseDate = today,
-                            posterPath = tmdbShow.posterPath,
+                            posterPath = show.posterPath?.value,
                             isReleased = false,
                             hasDate = false
                         )

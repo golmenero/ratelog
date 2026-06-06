@@ -64,12 +64,10 @@ class DetailTvShowHandler(
         val isFollowed = tvShowRepository.isFollowed(query.userId, updatedShow.id)
         val ratingMap = rating?.seasonRatings?.associateBy { it.seasonNumber.value } ?: emptyMap()
 
-        show!!.lastSeasonNumber
-
-        val seasons = tmdbShow.seasons
-            .filter { it.seasonNumber > 0 }
-            .map { tmdbSeason ->
-                val seasonRating = ratingMap[tmdbSeason.seasonNumber]
+        val lastSeason = updatedShow.lastSeasonNumber ?: 0
+        val seasons = (1..lastSeason)
+            .map { seasonNumber ->
+                val seasonRating = ratingMap[seasonNumber]
                 val ratingInfo = seasonRating?.let { sr ->
                     SeasonRatingInfo(
                         seasonNumber = sr.seasonNumber.value,
@@ -82,7 +80,7 @@ class DetailTvShowHandler(
                     )
                 }
                 SeasonInfo(
-                    seasonNumber = tmdbSeason.seasonNumber,
+                    seasonNumber = seasonNumber,
                     rating = ratingInfo,
                 )
             }
