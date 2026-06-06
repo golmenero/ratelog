@@ -1,15 +1,9 @@
 package org.ratelog.tmdb
 
-import org.ratelog.Genre
-import org.ratelog.Overview
-import org.ratelog.Status
-import org.ratelog.Title
-import org.ratelog.Url
 import org.ratelog.movie.MovieRepository
 import org.ratelog.tvshow.TvShowRepository
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 
 @Service
 class DailyJobToSyncMetadata(
@@ -17,7 +11,6 @@ class DailyJobToSyncMetadata(
     private val tvShowRepository: TvShowRepository,
     private val movieRepository: MovieRepository,
 ) {
-//    @Scheduled(cron = "0 * * * * *")
     @Scheduled(cron = "0 0 6 * * *")
     fun sync() {
         syncTvShows()
