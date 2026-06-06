@@ -102,8 +102,6 @@
                 <h3 th:text="#{movies.premieres.no.date}">No release date yet</h3>
                 <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="premiere-card">
                     <span class="title" th:text="${item.title}">Title</span>
-                    <br>
-                    <span class="date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                 </a>
             </div>
         </div>
