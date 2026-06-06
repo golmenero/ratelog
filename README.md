@@ -13,15 +13,9 @@
   <a href="https://github.com/golmenero/ratelog/actions/workflows/ci.yml">
   <img alt="CI Status" src="https://img.shields.io/github/actions/workflow/status/golmenero/ratelog/ci.yml.svg"/>
   </a>
-  <a href="https://hub.docker.com/r/golmenero/ratelog">
-  <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/golmenero/ratelog.svg"/>
-  </a>
   <a href="https://www.buymeacoffee.com/golmenero">
   <img alt="Buy Me a Coffee" src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=black"/>
   </a>
-
-
-  <br/>
 </p>
 
 ---
@@ -58,7 +52,6 @@ Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a>
 - **Multi-user** — Each user has their own ratings, follows, and tops
 - **One rating per title** — Delete and re-rate if you change your mind
 
-<!-- REPLACE: Add screenshots or demo images here -->
 <p align="center">
   <img alt="Search" src="assets/search.png" width="900"/>
   <br>
@@ -164,7 +157,6 @@ Minimal flow:
 This project is powered by:
 <br/>
 <br/>
-<!-- REPLACE: Add sponsor/partner logos here -->
 <a href="https://www.themoviedb.org/documentation/api">
 <img alt="TMDB API" src="assets/tmdb.svg" height="20px"/>
 </a>
@@ -172,7 +164,7 @@ This project is powered by:
 <a href="https://spring.io/projects/spring-boot">
 <img alt="Spring Boot" src="assets/spring.svg" height="20px"/>
 </a>
-&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp
 <a href="https://www.postgresql.org/">
 <img alt="PostgreSQL" src="assets/postgres.svg" height="20px"/>
 </a>
