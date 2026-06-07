@@ -83,9 +83,10 @@
                 <div class="separator"></div>
                 <h3 th:text="#{tvshows.premieres.released}">Released</h3>
                 <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
-                    <span class="title" th:text="${item.name}">Title</span>
-                    <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
-                    <br>
+                    <div class="flex separate">
+                        <span class="title" th:text="${item.name}">Title</span>
+                        <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
+                    </div>
                     <span class="date released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                 </a>
             </div>
@@ -94,9 +95,10 @@
                 <div class="separator"></div>
                 <div th:text="#{tvshows.premieres.upcoming}">Upcoming</div>
                 <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="premiere-card">
-                    <span class="title" th:text="${item.name}">Title</span>
-                    <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
-                    <br>
+                    <div class="flex separate">
+                        <span class="title" th:text="${item.name}">Title</span>
+                        <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
+                    </div>
                     <span class="date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
                 </a>
             </div>
@@ -105,8 +107,10 @@
                 <div class="separator"></div>
                 <div th:text="#{tvshows.premieres.no.date}">No release date yet</div>
                 <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="premiere-card">
-                    <span class="title" th:text="${item.name}">Title</span>
-                    <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
+                    <div class="flex separate">
+                        <span class="title" th:text="${item.name}">Title</span>
+                        <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
+                    </div>
                 </a>
             </div>
         </div>
