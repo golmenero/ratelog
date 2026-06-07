@@ -23,9 +23,8 @@ class TvShowRepositoryImpl(
     override fun findByTmdbId(tmdbId: TmdbId): TvShow? =
         tmdbId.value.let(tvShowDAO::findByTmdbId).getOrNull()?.toDomain()
 
-    override fun save(show: TvShow) {
-        show.toEntity().let(tvShowDAO::save)
-    }
+    override fun save(show: TvShow): TvShow =
+        show.toEntity().let(tvShowDAO::save).toDomain()
 
     override fun findFollowedTvShows(userId: User.Id): List<TvShow> =
         tvShowDAO.findFollowedTvShows(userId.value).map { it.toDomain() }

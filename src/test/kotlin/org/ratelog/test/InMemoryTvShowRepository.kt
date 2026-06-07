@@ -18,13 +18,14 @@ class InMemoryTvShowRepository : TvShowRepository {
     override fun findByTmdbId(tmdbId: TmdbId): TvShow? =
         store.values.find { it.tmdbId == tmdbId }
 
-    override fun save(show: TvShow) {
+    override fun save(show: TvShow): TvShow {
         val showToSave = if (show.id == null) {
             show.copy(id = TvShow.Id(idGenerator.getAndIncrement()))
         } else {
             show
         }
         store[showToSave.id!!] = showToSave
+        return showToSave
     }
 
     override fun findFollowedTvShows(userId: User.Id): List<TvShow> =

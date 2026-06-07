@@ -37,15 +37,13 @@ class DetailMovieHandler(
         val tmdbMovie = query.tmdbId.value.let(tmdbClient::movieDetails).bind()
 
         val movie = query.tmdbId.let(movieRepository::findByTmdbId)
-        if (movie == null) tmdbMovie.let(movieRepository::save)
+        val savedMovie = movie ?: tmdbMovie.let(movieRepository::save)
 
-        val updatedMovie = movieRepository.findByTmdbId(query.tmdbId)!!
-
-        val rating = ratingRepository.findByMovieIdAndUserId(updatedMovie.id!!, query.userId)
-        val isFollowed = movieRepository.isFollowed(query.userId, updatedMovie.id)
+        val rating = ratingRepository.findByMovieIdAndUserId(savedMovie.id!!, query.userId)
+        val isFollowed = movieRepository.isFollowed(query.userId, savedMovie.id)
 
         GetMovieDetailResult(
-            movie = updatedMovie,
+            movie = savedMovie,
             isRated = rating != null,
             directing = rating?.directing?.value,
             cinematography = rating?.cinematography?.value,

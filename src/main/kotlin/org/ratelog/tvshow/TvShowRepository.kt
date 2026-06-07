@@ -31,7 +31,7 @@ data class TvShow(
 interface TvShowRepository {
     fun findById(id: TvShow.Id): TvShow?
     fun findByTmdbId(tmdbId: TmdbId): TvShow?
-    fun save(show: TvShow)
+    fun save(show: TvShow): TvShow
     fun findFollowedTvShows(userId: User.Id): List<TvShow>
     fun findActiveTvShows(): List<TvShow>
     fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean
