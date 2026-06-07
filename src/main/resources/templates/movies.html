@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="#{movies.top.title}">Ratelog - Tops</title>
-    <link rel="stylesheet" href="/styles.css">
-    <script src="/lucide.min.js"></script>
-</head>
+<head th:replace="~{fragments/head :: head(#{movies.top.title})}"></head>
 <body>
 <div class="page">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='movies')}"></header>
@@ -107,9 +101,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    lucide.createIcons();
-</script>
 </body>
 </html>
