@@ -1,10 +1,16 @@
 package org.ratelog.tmdb
 
+import arrow.core.fold
+import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieRepository
+import org.ratelog.tvshow.TvShow
 import org.ratelog.tvshow.TvShowRepository
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 @Service
 class DailyJobToSyncMetadata(
@@ -14,51 +20,65 @@ class DailyJobToSyncMetadata(
 ) {
     private val logger = LoggerFactory.getLogger(DailyJobToSyncMetadata::class.java)
 
+    private val concurrencyLimit = 10
+
     @Scheduled(cron = "0 0 6 * * *")
     fun sync() {
         logger.info("DailyJobToSyncMetadata started")
         try {
-            syncTvShows()
-            syncMovies()
+            Executors.newFixedThreadPool(concurrencyLimit).use { executor ->
+                syncTvShows(executor)
+                syncMovies(executor)
+            }
             logger.info("DailyJobToSyncMetadata completed successfully")
         } catch (e: Exception) {
             logger.error("DailyJobToSyncMetadata failed", e)
         }
     }
 
-    private fun syncTvShows() {
-        logger.info("Syncing TV shows")
+    private fun syncTvShows(executor: ExecutorService) {
         val showsToSync = tvShowRepository.findActiveTvShows()
         logger.info("Found ${showsToSync.size} TV shows to sync")
 
-        showsToSync.forEach { show ->
-            try {
-                tmdbClient.tvShowDetails(show.tmdbId.value)
-                    .fold(
-                        { err -> logger.error("Failed to sync TV show ${show.tmdbId.value}: $err") },
-                        { it.copy(id = show.id).let(tvShowRepository::save) }
-                    )
-            } catch (e: Exception) {
-                logger.error("Error syncing TV show ${show.tmdbId.value}", e)
-            }
+        val futures = showsToSync.map { show ->
+            executor.submit { syncTvShow(show) }
         }
+
+        futures.forEach { it.get() }
     }
 
-    private fun syncMovies() {
-        logger.info("Syncing movies")
+    private fun syncMovies(executor: ExecutorService) {
         val moviesToSync = movieRepository.findActiveMovies()
         logger.info("Found ${moviesToSync.size} movies to sync")
 
-        moviesToSync.forEach { movie ->
-            try {
-                tmdbClient.movieDetails(movie.tmdbId.value)
-                    .fold(
-                        { err -> logger.error("Failed to sync movie ${movie.tmdbId.value}: $err") },
-                        { it.copy(id = movie.id).let(movieRepository::save) }
-                    )
-            } catch (e: Exception) {
-                logger.error("Error syncing movie ${movie.tmdbId.value}", e)
-            }
+        val futures = moviesToSync.map { movie ->
+            executor.submit { syncMovie(movie) }
+        }
+
+        futures.forEach { it.get() }
+    }
+
+    private fun syncTvShow(show: TvShow) {
+        try {
+            tmdbClient.tvShowDetails(show.tmdbId.value)
+                .fold(
+                    { err -> logger.error("Failed to sync TV show ${show.tmdbId.value}: $err") },
+                    { it.copy(id = show.id).let(tvShowRepository::save) }
+                )
+        } catch (e: Exception) {
+            logger.error("Error syncing TV show ${show.tmdbId.value}", e)
+        }
+    }
+
+    private fun syncMovie(movie: Movie) {
+        try {
+            tmdbClient.movieDetails(movie.tmdbId.value)
+                .fold(
+                    { err -> logger.error("Failed to sync movie ${movie.tmdbId.value}: $err") },
+                    { it.copy(id = movie.id).let(movieRepository::save) }
+                )
+        } catch (e: Exception) {
+            logger.error("Error syncing movie ${movie.tmdbId.value}", e)
         }
     }
 }
