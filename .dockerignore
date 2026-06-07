@@ -4,4 +4,14 @@ target
 *.iml
 *.db
 .DS_Store
-
+.env
+.env.example
+node_modules/
+*.log
+.mvn/
+.run/
+.github/
+README.md
+LICENSE
+AGENTS.md
+assets/
