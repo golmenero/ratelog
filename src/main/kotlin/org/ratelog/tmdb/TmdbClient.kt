@@ -6,8 +6,10 @@ import arrow.core.right
 import org.ratelog.movie.Movie
 import org.ratelog.tvshow.TvShow
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.client.JdkClientHttpRequestFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
+import java.time.Duration
 
 @Component
 class TmdbClient(
@@ -19,6 +21,15 @@ class TmdbClient(
 ) {
     private val restClient: RestClient = RestClient.builder()
         .baseUrl(baseUrl)
+        .requestFactory(
+            JdkClientHttpRequestFactory(
+                java.net.http.HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(5))
+                    .build()
+            ).apply {
+                setReadTimeout(Duration.ofSeconds(10))
+            }
+        )
         .build()
 
     fun searchMovies(query: String): Either<TmdbError, List<Movie>> {
