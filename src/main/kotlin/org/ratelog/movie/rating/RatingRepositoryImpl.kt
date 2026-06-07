@@ -6,7 +6,6 @@ import org.ratelog.movie.Movie
 import org.ratelog.user.User
 import org.springframework.stereotype.Repository
 import java.time.Instant
-import kotlin.jvm.optionals.getOrNull
 
 @Repository
 class RatingRepositoryImpl(
@@ -38,6 +37,12 @@ class RatingRepositoryImpl(
         val userIdValues = userIds.map(User.Id::value)
         return ratingDAO.findByUserIdsAndSince(userIdValues, sinceEpochMs)
             .map { it.toDomain() }
+    }
+
+    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedMovieRow> {
+        val sinceEpochMs = since.toEpochMilli()
+        val userIdValues = userIds.map(User.Id::value)
+        return ratingDAO.findFeedItemsByUserIdsAndSince(userIdValues, sinceEpochMs)
     }
 
     private fun RatingEntity.toDomain(): Rating {

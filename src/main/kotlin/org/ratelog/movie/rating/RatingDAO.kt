@@ -6,7 +6,6 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import java.util.Optional
 
 @Table("movie_ratings")
 data class RatingEntity(
@@ -20,6 +19,15 @@ data class RatingEntity(
     val screenplay: Double,
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
     val score: Double?,
+)
+
+data class FeedMovieRow(
+    val username: String,
+    val title: String,
+    val posterPath: String?,
+    val tmdbId: Int,
+    val score: Double?,
+    val createdAtEpochMs: Long,
 )
 
 @Repository
@@ -50,4 +58,16 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
         """
     )
     fun findByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<RatingEntity>
+
+    @Query(
+        """
+        SELECT u.username, m.title, m.poster_path, m.tmdb_id, r.score, r.created_at_epoch_ms
+        FROM movie_ratings r
+        INNER JOIN movies m ON r.movie_id = m.id
+        INNER JOIN users u ON r.user_id = u.id
+        WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
+        ORDER BY r.created_at_epoch_ms DESC
+        """
+    )
+    fun findFeedItemsByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<FeedMovieRow>
 }

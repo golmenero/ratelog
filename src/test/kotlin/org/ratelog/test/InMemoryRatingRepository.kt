@@ -2,6 +2,7 @@ package org.ratelog.test
 
 import org.ratelog.Rank
 import org.ratelog.movie.Movie
+import org.ratelog.movie.rating.FeedMovieRow
 import org.ratelog.movie.rating.Rating
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.user.User
@@ -30,6 +31,11 @@ class InMemoryRatingRepository : RatingRepository {
 
     override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating> =
         store.values.filter { it.userId in userIds && it.createdAt >= since }
+
+    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedMovieRow> =
+        store.values
+            .filter { it.userId in userIds && it.createdAt >= since }
+            .map { FeedMovieRow("user", "movie", null, 0, it.score?.value, it.createdAt.toEpochMilli()) }
 
     override fun save(rating: Rating) {
         val ratingToSave = if (rating.id == null) {

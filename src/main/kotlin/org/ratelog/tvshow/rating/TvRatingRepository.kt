@@ -80,6 +80,7 @@ interface TvRatingRepository {
     fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): TvRating?
     fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Pair<Rank, TvRating>>
     fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<TvRating>
+    fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedTvRow>
 
     fun save(rating: TvRating)
     fun deleteById(tvRatingId: TvRating.Id)

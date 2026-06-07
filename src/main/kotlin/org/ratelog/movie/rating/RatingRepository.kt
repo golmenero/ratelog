@@ -3,7 +3,6 @@ package org.ratelog.movie.rating
 import org.ratelog.Rank
 import org.ratelog.Score
 import org.ratelog.movie.Movie
-import org.ratelog.tvshow.rating.TvRating
 import org.ratelog.user.User
 import org.springframework.stereotype.Repository
 import java.time.Instant
@@ -30,6 +29,7 @@ interface RatingRepository {
     fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Rating?
     fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Pair<Rank, Rating>>
     fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating>
+    fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedMovieRow>
 
     fun save(rating: Rating)
     fun deleteById(ratingId: Rating.Id)

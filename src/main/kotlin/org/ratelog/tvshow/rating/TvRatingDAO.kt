@@ -1,6 +1,5 @@
 package org.ratelog.tvshow.rating
 
-import org.ratelog.movie.rating.RatingEntity
 import org.springframework.data.annotation.Id
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.relational.core.mapping.Column
@@ -60,7 +59,28 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
         """
     )
     fun findByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<TvRatingEntity>
+
+    @Query(
+        """
+        SELECT u.username, t.name, t.poster_path, t.tmdb_id, r.score, r.created_at_epoch_ms
+        FROM tv_ratings r
+        INNER JOIN tv t ON r.tv_show_id = t.id
+        INNER JOIN users u ON r.user_id = u.id
+        WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
+        ORDER BY r.created_at_epoch_ms DESC
+        """
+    )
+    fun findFeedItemsByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<FeedTvRow>
 }
+
+data class FeedTvRow(
+    val username: String,
+    val title: String,
+    val posterPath: String?,
+    val tmdbId: Int,
+    val score: Double?,
+    val createdAtEpochMs: Long,
+)
 
 @Repository
 interface SeasonRatingDAO : CrudRepository<SeasonRatingEntity, Long> {

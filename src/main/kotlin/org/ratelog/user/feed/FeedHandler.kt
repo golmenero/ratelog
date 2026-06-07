@@ -3,9 +3,7 @@ package org.ratelog.user.feed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.MediaType
-import org.ratelog.movie.MovieRepository
 import org.ratelog.movie.rating.RatingRepository
-import org.ratelog.tvshow.TvShowRepository
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 data class FeedQuery(
     val userId: User.Id
@@ -34,8 +33,6 @@ private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy HH:mm").wit
 @Service
 class FeedHandler(
     private val userRepository: UserRepository,
-    private val movieRepository: MovieRepository,
-    private val tvShowRepository: TvShowRepository,
     private val ratingRepository: RatingRepository,
     private val tvRatingRepository: TvRatingRepository,
 ) {
@@ -44,40 +41,35 @@ class FeedHandler(
         val followedIds = userRepository.findFollowedUserIds(query.userId)
         if (followedIds.isEmpty()) return@either emptyList()
 
-        val thirtyDaysAgo = Instant.now().minusSeconds(30L * 24 * 60 * 60)
+        val thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS)
 
-        val movieRatings = ratingRepository.findByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
-        val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
+        val movieItems = ratingRepository.findFeedItemsByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
+            .map { row ->
+                FeedItem(
+                    username = row.username,
+                    title = row.title,
+                    posterPath = row.posterPath,
+                    tmdbId = row.tmdbId,
+                    type = MediaType.movie.name,
+                    score = row.score ?: 0.0,
+                    ratedAt = dateFormatter.format(Instant.ofEpochMilli(row.createdAtEpochMs)),
+                    createdAtEpochMs = row.createdAtEpochMs
+                )
+            }
 
-        val movieItems = movieRatings.map { rating ->
-            val user = userRepository.findById(rating.userId)!!
-            val movie = movieRepository.findById(rating.movieId)!!
-            FeedItem(
-                username = user.username.value,
-                title = movie.title.value,
-                posterPath = movie.posterPath?.value,
-                tmdbId = movie.tmdbId.value,
-                type = MediaType.movie.name,
-                score = rating.score!!.value,
-                ratedAt = dateFormatter.format(rating.createdAt),
-                createdAtEpochMs = rating.createdAt.toEpochMilli()
-            )
-        }
-
-        val tvItems = tvRatings.map { rating ->
-            val user = userRepository.findById(rating.userId)!!
-            val tvShow = tvShowRepository.findById(rating.tvShowId)!!
-            FeedItem(
-                username = user.username.value,
-                title = tvShow.name.value,
-                posterPath = tvShow.posterPath?.value,
-                tmdbId = tvShow.tmdbId.value,
-                type = MediaType.tvshow.name,
-                score = rating.score!!.value,
-                ratedAt = dateFormatter.format(rating.createdAt),
-                createdAtEpochMs = rating.createdAt.toEpochMilli()
-            )
-        }
+        val tvItems = tvRatingRepository.findFeedItemsByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
+            .map { row ->
+                FeedItem(
+                    username = row.username,
+                    title = row.title,
+                    posterPath = row.posterPath,
+                    tmdbId = row.tmdbId,
+                    type = MediaType.tvshow.name,
+                    score = row.score ?: 0.0,
+                    ratedAt = dateFormatter.format(Instant.ofEpochMilli(row.createdAtEpochMs)),
+                    createdAtEpochMs = row.createdAtEpochMs
+                )
+            }
 
         (movieItems + tvItems).sortedByDescending { it.createdAtEpochMs }
     }
