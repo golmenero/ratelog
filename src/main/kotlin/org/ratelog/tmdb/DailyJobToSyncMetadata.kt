@@ -1,6 +1,5 @@
 package org.ratelog.tmdb
 
-import arrow.core.fold
 import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieRepository
 import org.ratelog.tvshow.TvShow
@@ -10,7 +9,6 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 @Service
 class DailyJobToSyncMetadata(
@@ -38,7 +36,6 @@ class DailyJobToSyncMetadata(
 
     private fun syncTvShows(executor: ExecutorService) {
         val showsToSync = tvShowRepository.findActiveTvShows()
-        logger.info("Found ${showsToSync.size} TV shows to sync")
 
         val futures = showsToSync.map { show ->
             executor.submit { syncTvShow(show) }
@@ -49,7 +46,6 @@ class DailyJobToSyncMetadata(
 
     private fun syncMovies(executor: ExecutorService) {
         val moviesToSync = movieRepository.findActiveMovies()
-        logger.info("Found ${moviesToSync.size} movies to sync")
 
         val futures = moviesToSync.map { movie ->
             executor.submit { syncMovie(movie) }

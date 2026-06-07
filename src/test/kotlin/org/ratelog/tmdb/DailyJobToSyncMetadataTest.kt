@@ -14,6 +14,7 @@ import org.ratelog.test.InMemoryMovieRepository
 import org.ratelog.test.InMemoryTvShowRepository
 import org.ratelog.test.MovieFactory
 import org.ratelog.test.TvShowFactory
+import org.ratelog.tvshow.TvShow
 
 class DailyJobToSyncMetadataTest {
 
