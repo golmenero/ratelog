@@ -5,7 +5,14 @@
     <title th:text="${title}">Ratelog</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/lucide.min.js"></script>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#141210">
+    <link rel="icon" type="image/svg+xml" href="/img/logo.svg">
+    <link rel="apple-touch-icon" href="/img/logo-192.png">
     <script>
         document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
     </script>
 </head>

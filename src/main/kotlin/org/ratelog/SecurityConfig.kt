@@ -32,7 +32,7 @@ class SecurityConfig {
             }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/login", "/register", "/styles.css", "/lucide.min.js", "/img/**").permitAll()
+                    .requestMatchers("/login", "/register", "/styles.css", "/lucide.min.js", "/img/**", "/manifest.webmanifest", "/sw.js").permitAll()
                     .requestMatchers("/*.css", "/*.js").permitAll()
                     .requestMatchers("/api/health").permitAll()
                     .anyRequest().authenticated()
