@@ -24,6 +24,7 @@ data class GetMovieDetailResult(
     val soundtrack: Double?,
     val screenplay: Double?,
     val score: Double?,
+    val review: String?,
     val isFollowed: Boolean,
 )
 
@@ -51,6 +52,7 @@ class DetailMovieHandler(
             soundtrack = rating?.soundtrack?.value,
             screenplay = rating?.screenplay?.value,
             score = rating?.score?.value,
+            review = rating?.review?.value,
             isFollowed = isFollowed,
         )
     }

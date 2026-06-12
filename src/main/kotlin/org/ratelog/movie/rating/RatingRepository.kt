@@ -1,5 +1,6 @@
 package org.ratelog.movie.rating
 
+import org.ratelog.Review
 import org.ratelog.Rank
 import org.ratelog.Score
 import org.ratelog.movie.Movie
@@ -18,6 +19,7 @@ data class Rating(
     val screenplay: Score,
     val createdAt: Instant,
     val score: Score? = null,
+    val review: Review?,
 ) {
     data class Id(val value: Long)
 

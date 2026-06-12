@@ -31,7 +31,8 @@ class AddSeasonRatingHandlerTest {
             cinematography = org.ratelog.Score(6.0),
             acting = org.ratelog.Score(7.0),
             soundtrack = org.ratelog.Score(8.0),
-            screenplay = org.ratelog.Score(9.0)
+            screenplay = org.ratelog.Score(9.0),
+            review = null
         )
 
         val result = handler.handle(command)
@@ -53,7 +54,8 @@ class AddSeasonRatingHandlerTest {
             cinematography = org.ratelog.Score(5.0),
             acting = org.ratelog.Score(5.0),
             soundtrack = org.ratelog.Score(5.0),
-            screenplay = org.ratelog.Score(5.0)
+            screenplay = org.ratelog.Score(5.0),
+            review = null
         )
         handler.handle(command1)
 
@@ -65,7 +67,8 @@ class AddSeasonRatingHandlerTest {
             cinematography = org.ratelog.Score(8.0),
             acting = org.ratelog.Score(8.0),
             soundtrack = org.ratelog.Score(8.0),
-            screenplay = org.ratelog.Score(8.0)
+            screenplay = org.ratelog.Score(8.0),
+            review = null
         )
 
         val result = handler.handle(command2)
@@ -74,5 +77,72 @@ class AddSeasonRatingHandlerTest {
         val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
         assertEquals(2, savedRating!!.seasonRatings.size)
         assertEquals(6.5, savedRating.score!!.value)
+    }
+
+    @Test
+    fun `should add season rating with review when review is provided`() {
+        val command = AddSeasonRating(
+            tvShowId = TvShow.Id(1),
+            seasonNumber = SeasonNumber(1),
+            userId = User.Id(1),
+            directing = org.ratelog.Score(5.0),
+            cinematography = org.ratelog.Score(6.0),
+            acting = org.ratelog.Score(7.0),
+            soundtrack = org.ratelog.Score(8.0),
+            screenplay = org.ratelog.Score(9.0),
+            review = "Great season!"
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isRight())
+        val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
+        assertNotNull(savedRating)
+        assertEquals(1, savedRating!!.seasonRatings.size)
+        assertEquals("Great season!", savedRating.seasonRatings[0].review!!.value)
+    }
+
+    @Test
+    fun `should sanitize season review by removing HTML tags`() {
+        val command = AddSeasonRating(
+            tvShowId = TvShow.Id(1),
+            seasonNumber = SeasonNumber(1),
+            userId = User.Id(1),
+            directing = org.ratelog.Score(5.0),
+            cinematography = org.ratelog.Score(5.0),
+            acting = org.ratelog.Score(5.0),
+            soundtrack = org.ratelog.Score(5.0),
+            screenplay = org.ratelog.Score(5.0),
+            review = "<script>alert('xss')</script>Good season"
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isRight())
+        val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
+        assertNotNull(savedRating)
+        assertEquals("alert('xss')Good season", savedRating!!.seasonRatings[0].review!!.value)
+    }
+
+    @Test
+    fun `should not save season review when review is blank`() {
+        val command = AddSeasonRating(
+            tvShowId = TvShow.Id(1),
+            seasonNumber = SeasonNumber(1),
+            userId = User.Id(1),
+            directing = org.ratelog.Score(5.0),
+            cinematography = org.ratelog.Score(5.0),
+            acting = org.ratelog.Score(5.0),
+            soundtrack = org.ratelog.Score(5.0),
+            screenplay = org.ratelog.Score(5.0),
+            review = "   "
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isRight())
+        val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
+        assertNotNull(savedRating)
+        assertNull(savedRating!!.seasonRatings[0].review)
     }
 }

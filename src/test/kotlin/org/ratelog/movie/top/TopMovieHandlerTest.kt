@@ -40,8 +40,8 @@ class TopMovieHandlerTest {
         movieRepository.save(movie1)
         movieRepository.save(movie2)
 
-        val rating1 = RatingFactory.aRating(id = 1, movieId = Movie.Id(1), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now())
-        val rating2 = RatingFactory.aRating(id = 2, movieId = Movie.Id(2), userId = User.Id(1), directing = 8.0, cinematography = 8.0, acting = 8.0, soundtrack = 8.0, screenplay = 8.0, createdAt = Instant.now())
+        val rating1 = RatingFactory.aRating(id = 1, movieId = Movie.Id(1), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = null)
+        val rating2 = RatingFactory.aRating(id = 2, movieId = Movie.Id(2), userId = User.Id(1), directing = 8.0, cinematography = 8.0, acting = 8.0, soundtrack = 8.0, screenplay = 8.0, createdAt = Instant.now(), review = null)
         ratingRepository.save(rating1)
         ratingRepository.save(rating2)
 
@@ -60,7 +60,7 @@ class TopMovieHandlerTest {
         val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Movie A")
         movieRepository.save(movie)
 
-        val rating = RatingFactory.aRating(id = 1, movieId = Movie.Id(1), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now())
+        val rating = RatingFactory.aRating(id = 1, movieId = Movie.Id(1), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = null)
         ratingRepository.save(rating)
 
         val query = TopMovie(User.Id(1), null, 0, null)

@@ -5,6 +5,29 @@ form.filter {
   margin-bottom: 16px;
 }
 
+textarea {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 80px;
+
+  &::placeholder {
+    color: rgba(245, 238, 229, 0.48);
+  }
+
+  &:focus {
+    border-color: rgba(230, 120, 60, 0.45);
+  }
+}
+
 input,
 select {
   height: 40px;

@@ -3,6 +3,7 @@ package org.ratelog.tvshow.rating.addseason
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import org.ratelog.Review
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
 import org.ratelog.tvshow.TvShow
@@ -21,6 +22,7 @@ data class AddSeasonRating(
     val acting: Score,
     val soundtrack: Score,
     val screenplay: Score,
+    val review: String?,
 )
 
 @Component
@@ -48,6 +50,7 @@ class AddSeasonRatingHandler(
             soundtrack = command.soundtrack,
             screenplay = command.screenplay,
             createdAt = Instant.now(),
+            review = command.review?.takeIf { it.isNotBlank() }?.let(Review::sanitize),
         ).let(tvRatingRepository::save)
     }
 }

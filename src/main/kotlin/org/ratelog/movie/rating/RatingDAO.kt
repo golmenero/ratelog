@@ -19,6 +19,7 @@ data class RatingEntity(
     val screenplay: Double,
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
     val score: Double?,
+    @Column("review_text") val reviewText: String?,
 )
 
 data class FeedMovieRow(

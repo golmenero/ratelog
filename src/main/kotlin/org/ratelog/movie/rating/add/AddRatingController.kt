@@ -26,6 +26,7 @@ class AddRatingController(
         @RequestParam("acting") acting: Double,
         @RequestParam("soundtrack") soundtrack: Double,
         @RequestParam("screenplay") screenplay: Double,
+        @RequestParam("review", required = false) review: String?,
         redirectAttributes: RedirectAttributes,
         locale: Locale
     ): String =
@@ -37,6 +38,7 @@ class AddRatingController(
             acting = acting,
             soundtrack = soundtrack,
             screenplay = screenplay,
+            review = review?.takeIf { it.isNotBlank() },
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(

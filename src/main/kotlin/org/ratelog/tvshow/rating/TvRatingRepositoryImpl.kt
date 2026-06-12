@@ -1,5 +1,6 @@
 package org.ratelog.tvshow.rating
 
+import org.ratelog.Review
 import org.ratelog.Rank
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
@@ -91,6 +92,7 @@ class TvRatingRepositoryImpl(
             soundtrack = Score(soundtrack),
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
+            review = reviewText?.takeIf { it.isNotBlank() }?.let(::Review),
         )
     }
 
@@ -106,6 +108,7 @@ class TvRatingRepositoryImpl(
             soundtrack = soundtrack.value,
             screenplay = screenplay.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
+            reviewText = review?.value,
         )
     }
 }

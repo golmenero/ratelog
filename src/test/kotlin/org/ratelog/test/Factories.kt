@@ -117,7 +117,8 @@ object RatingFactory {
         acting: Double = 5.0,
         soundtrack: Double = 5.0,
         screenplay: Double = 5.0,
-        createdAt: Instant = Instant.now()
+        createdAt: Instant = Instant.now(),
+        review: String?
     ) = Rating(
         id = id?.let { Rating.Id(it) },
         movieId = movieId,
@@ -128,7 +129,8 @@ object RatingFactory {
         soundtrack = Score(soundtrack),
         screenplay = Score(screenplay),
         createdAt = createdAt,
-        score = Score((directing + cinematography + acting + soundtrack + screenplay) / 5.0)
+        score = Score((directing + cinematography + acting + soundtrack + screenplay) / 5.0),
+        review = review?.let(::Review)
     )
 }
 
@@ -164,7 +166,8 @@ object TvRatingFactory {
         acting: Double = 5.0,
         soundtrack: Double = 5.0,
         screenplay: Double = 5.0,
-        createdAt: Instant = Instant.now()
+        createdAt: Instant = Instant.now(),
+        review: String?
     ) = SeasonRating(
         id = id?.let { SeasonRating.Id(it) },
         tvShowId = tvShowId,
@@ -175,6 +178,7 @@ object TvRatingFactory {
         acting = Score(acting),
         soundtrack = Score(soundtrack),
         screenplay = Score(screenplay),
-        createdAt = createdAt
+        createdAt = createdAt,
+        review = review?.let(::Review)
     )
 }

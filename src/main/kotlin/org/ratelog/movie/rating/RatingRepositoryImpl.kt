@@ -1,5 +1,6 @@
 package org.ratelog.movie.rating
 
+import org.ratelog.Review
 import org.ratelog.Rank
 import org.ratelog.Score
 import org.ratelog.movie.Movie
@@ -57,6 +58,7 @@ class RatingRepositoryImpl(
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
             score = score?.let(::Score),
+            review = reviewText?.takeIf { it.isNotBlank() }?.let(::Review),
         )
     }
 
@@ -72,6 +74,7 @@ class RatingRepositoryImpl(
             screenplay = screenplay.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
             score = score?.value,
+            reviewText = review?.value,
         )
     }
 }

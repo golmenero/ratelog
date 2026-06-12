@@ -36,6 +36,7 @@ data class SeasonRatingInfo(
     val soundtrack: Double,
     val screenplay: Double,
     val score: Double,
+    val review: String?,
 )
 
 @Component
@@ -69,6 +70,7 @@ class DetailTvShowHandler(
                         soundtrack = sr.soundtrack.value,
                         screenplay = sr.screenplay.value,
                         score = sr.score.value,
+                        review = sr.review?.value,
                     )
                 }
                 SeasonInfo(

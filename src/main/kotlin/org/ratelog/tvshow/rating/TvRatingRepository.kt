@@ -1,5 +1,6 @@
 package org.ratelog.tvshow.rating
 
+import org.ratelog.Review
 import org.ratelog.Rank
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
@@ -30,6 +31,7 @@ data class TvRating(
         soundtrack: Score,
         screenplay: Score,
         createdAt: Instant,
+        review: Review?,
     ) =
         copy(seasonRatings = seasonRatings + SeasonRating(
             id = null,
@@ -41,7 +43,8 @@ data class TvRating(
             acting = acting,
             soundtrack = soundtrack,
             screenplay = screenplay,
-            createdAt = createdAt
+            createdAt = createdAt,
+            review = review,
         )).updateScore()
 
     private fun updateScore() = if (seasonRatings.isEmpty()) copy(score = null)
@@ -69,6 +72,7 @@ data class SeasonRating(
     val soundtrack: Score,
     val screenplay: Score,
     val createdAt: Instant,
+    val review: Review? = null,
 ) {
     data class Id(val value: Long)
 

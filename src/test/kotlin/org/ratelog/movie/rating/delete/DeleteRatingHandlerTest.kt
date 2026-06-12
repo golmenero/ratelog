@@ -38,7 +38,8 @@ class DeleteRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = 5.0,
-            createdAt = Instant.now()
+            createdAt = Instant.now(),
+            review = null
         )
         ratingRepository.save(rating)
 

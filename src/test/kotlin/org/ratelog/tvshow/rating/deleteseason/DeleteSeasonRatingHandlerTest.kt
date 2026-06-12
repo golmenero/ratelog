@@ -39,7 +39,8 @@ class DeleteSeasonRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = 5.0,
-            createdAt = Instant.now()
+            createdAt = Instant.now(),
+            review = null
         )
         val seasonRating2 = TvRatingFactory.aSeasonRating(
             tvShowId = TvShow.Id(1),
@@ -50,7 +51,8 @@ class DeleteSeasonRatingHandlerTest {
             acting = 7.0,
             soundtrack = 7.0,
             screenplay = 7.0,
-            createdAt = Instant.now()
+            createdAt = Instant.now(),
+            review = null
         )
         val tvRating = TvRatingFactory.aTvRating(
             id = 1,
@@ -86,7 +88,8 @@ class DeleteSeasonRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = 5.0,
-            createdAt = Instant.now()
+            createdAt = Instant.now(),
+            review = null
         )
         val tvRating = TvRatingFactory.aTvRating(
             id = 1,

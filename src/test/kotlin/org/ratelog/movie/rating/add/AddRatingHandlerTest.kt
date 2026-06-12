@@ -30,7 +30,8 @@ class AddRatingHandlerTest {
             cinematography = 6.0,
             acting = 7.0,
             soundtrack = 8.0,
-            screenplay = 9.0
+            screenplay = 9.0,
+            review = null
         )
 
         val result = handler.handle(command)
@@ -50,7 +51,8 @@ class AddRatingHandlerTest {
             cinematography = 5.0,
             acting = 5.0,
             soundtrack = 5.0,
-            screenplay = 5.0
+            screenplay = 5.0,
+            review = null
         )
 
         val result = handler.handle(command)
@@ -68,7 +70,8 @@ class AddRatingHandlerTest {
             cinematography = 11.0,
             acting = 5.0,
             soundtrack = 5.0,
-            screenplay = 5.0
+            screenplay = 5.0,
+            review = null
         )
 
         val result = handler.handle(command)
@@ -85,7 +88,8 @@ class AddRatingHandlerTest {
             cinematography = 5.0,
             acting = 0.5,
             soundtrack = 5.0,
-            screenplay = 5.0
+            screenplay = 5.0,
+            review = null
         )
 
         val result = handler.handle(command)
@@ -102,7 +106,8 @@ class AddRatingHandlerTest {
             cinematography = 5.0,
             acting = 5.0,
             soundtrack = 15.0,
-            screenplay = 5.0
+            screenplay = 5.0,
+            review = null
         )
 
         val result = handler.handle(command)
@@ -119,7 +124,8 @@ class AddRatingHandlerTest {
             cinematography = 5.0,
             acting = 5.0,
             soundtrack = 5.0,
-            screenplay = -1.0
+            screenplay = -1.0,
+            review = null
         )
 
         val result = handler.handle(command)
@@ -138,7 +144,8 @@ class AddRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = 5.0,
-            createdAt = Instant.now()
+            createdAt = Instant.now(),
+            review = null
         )
         ratingRepository.save(existingRating)
 
@@ -149,12 +156,76 @@ class AddRatingHandlerTest {
             cinematography = 7.0,
             acting = 7.0,
             soundtrack = 7.0,
-            screenplay = 7.0
+            screenplay = 7.0,
+            review = null
         )
 
         val result = handler.handle(command)
 
         assertTrue(result.isLeft())
         assertEquals(AddRatingHandlerError.RatingAlreadyExists, result.fold({ it }, { fail("Should not return success") }))
+    }
+
+    @Test
+    fun `should add rating with review when review is provided`() {
+        val command = AddRating(
+            movieId = Movie.Id(1),
+            userId = User.Id(1),
+            directing = 5.0,
+            cinematography = 6.0,
+            acting = 7.0,
+            soundtrack = 8.0,
+            screenplay = 9.0,
+            review = "Great movie!"
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isRight())
+        val savedRating = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
+        assertNotNull(savedRating)
+        assertEquals("Great movie!", savedRating!!.review!!.value)
+    }
+
+    @Test
+    fun `should sanitize review by removing HTML tags`() {
+        val command = AddRating(
+            movieId = Movie.Id(1),
+            userId = User.Id(1),
+            directing = 5.0,
+            cinematography = 5.0,
+            acting = 5.0,
+            soundtrack = 5.0,
+            screenplay = 5.0,
+            review = "<script>alert('xss')</script>Good movie"
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isRight())
+        val savedRating = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
+        assertNotNull(savedRating)
+        assertEquals("alert('xss')Good movie", savedRating!!.review!!.value)
+    }
+
+    @Test
+    fun `should not save review when review is blank`() {
+        val command = AddRating(
+            movieId = Movie.Id(1),
+            userId = User.Id(1),
+            directing = 5.0,
+            cinematography = 5.0,
+            acting = 5.0,
+            soundtrack = 5.0,
+            screenplay = 5.0,
+            review = "   "
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isRight())
+        val savedRating = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
+        assertNotNull(savedRating)
+        assertNull(savedRating!!.review)
     }
 }

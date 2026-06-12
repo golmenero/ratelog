@@ -3,6 +3,7 @@ package org.ratelog.movie.rating.add
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import org.ratelog.Review
 import org.ratelog.Score
 import org.ratelog.movie.Movie
 import org.ratelog.movie.rating.Rating
@@ -19,6 +20,7 @@ data class AddRating(
     val acting: Double,
     val soundtrack: Double,
     val screenplay: Double,
+    val review: String?,
 )
 
 @Component
@@ -49,6 +51,7 @@ class AddRatingHandler(
             soundtrack = Score(command.soundtrack),
             screenplay = Score(command.screenplay),
             createdAt = Instant.now(),
+            review = command.review?.takeIf { it.isNotBlank() }?.let(Review::sanitize),
         ).updateScore().let(ratingRepository::save)
     }
 }

@@ -29,6 +29,7 @@ class AddSeasonRatingController(
         @RequestParam("acting") acting: Double,
         @RequestParam("soundtrack") soundtrack: Double,
         @RequestParam("screenplay") screenplay: Double,
+        @RequestParam("review", required = false) review: String?,
         redirectAttributes: RedirectAttributes,
         locale: Locale
     ): String =
@@ -41,6 +42,7 @@ class AddSeasonRatingController(
             acting = acting.let(::Score),
             soundtrack = soundtrack.let(::Score),
             screenplay = screenplay.let(::Score),
+            review = review?.takeIf { it.isNotBlank() },
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(

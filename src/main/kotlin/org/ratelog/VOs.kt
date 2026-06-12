@@ -79,3 +79,14 @@ data class Score(val value: Double) {
 }
 
 data class Lang(val value: String)
+
+data class Review(val value: String) {
+    companion object {
+        fun sanitize(raw: String): Review = Review(
+            raw.replace(Regex("<[^>]*>"), "")
+                .replace(Regex("&[^;]+;"), "")
+                .trim()
+                .take(1000)
+        )
+    }
+}
