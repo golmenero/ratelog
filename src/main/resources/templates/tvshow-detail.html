@@ -81,7 +81,7 @@
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.screenplay, 1, 2), ',', '.')}">0.00</span>
                     </div>
                 </div>
-                <p th:text="${season.review}"></p>
+                <p th:if="${season.review}" th:text="${season.review}"></p>
             </div>
             <div class="separator"></div>
         </div>

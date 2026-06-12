@@ -74,7 +74,7 @@
                 </button>
             </form>
         </div>
-        <p th:text="${movie.review}"></p>
+        <p th:if="${movie.review}" th:text="${movie.review}"></p>
     </div>
 
 
