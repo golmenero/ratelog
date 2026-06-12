@@ -68,16 +68,13 @@
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
                 </div>
             </div>
-            <div th:if="${movie.review != null}" class="movie-review">
-                <i data-lucide="message-square"></i>
-                <p th:text="${movie.review}"></p>
-            </div>
+            <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post">
+                <button type="submit" th:aria-label="#{movie.detail.delete.rating}">
+                    <i data-lucide="trash"></i>
+                </button>
+            </form>
         </div>
-        <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post">
-            <button type="submit" th:aria-label="#{movie.detail.delete.rating}">
-                <i data-lucide="trash"></i>
-            </button>
-        </form>
+        <p th:text="${movie.review}"></p>
     </div>
 
 

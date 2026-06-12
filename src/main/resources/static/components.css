@@ -140,7 +140,6 @@
     background: rgba(255, 255, 255, 0.03);
     font-size: 0.88rem;
     font-weight: 600;
-    color: var(--text-soft);
 
     i {
       width: 14px;
@@ -216,7 +215,6 @@
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
   display: grid;
-  gap: 12px;
 }
 
 .empty-card {
