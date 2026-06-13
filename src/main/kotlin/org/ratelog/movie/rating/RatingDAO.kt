@@ -53,15 +53,6 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
 
     @Query(
         """
-        SELECT r.* FROM movie_ratings r
-        WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
-        ORDER BY r.created_at_epoch_ms DESC
-        """
-    )
-    fun findByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<RatingEntity>
-
-    @Query(
-        """
         SELECT u.username, m.title, m.poster_path, m.tmdb_id, r.score, r.created_at_epoch_ms
         FROM movie_ratings r
         INNER JOIN movies m ON r.movie_id = m.id

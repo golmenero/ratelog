@@ -54,15 +54,6 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
 
     @Query(
         """
-        SELECT r.* FROM tv_ratings r
-        WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
-        ORDER BY r.created_at_epoch_ms DESC
-        """
-    )
-    fun findByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<TvRatingEntity>
-
-    @Query(
-        """
         SELECT u.username, t.name, t.poster_path, t.tmdb_id, r.score, r.created_at_epoch_ms
         FROM tv_ratings r
         INNER JOIN tv t ON r.tv_show_id = t.id
