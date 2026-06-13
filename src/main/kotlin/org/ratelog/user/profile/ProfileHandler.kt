@@ -15,7 +15,6 @@ import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
-import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 data class GetProfile(
@@ -61,7 +60,7 @@ class ProfileHandler(
             userId = user.id!!,
             username = user.username,
             email = user.email,
-            memberSince = LocalDate.ofEpochDay(user.createdAtEpochMs / 86400000).toString(),
+            memberSince = user.createdAtEpochMs.formatMs(),
             lang = user.lang,
             isFollowed = user.followed,
             ratings =  (ratings + tvRatings).sortedByDescending { it.ratedAt },

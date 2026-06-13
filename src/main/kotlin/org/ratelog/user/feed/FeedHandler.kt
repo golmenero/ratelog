@@ -3,14 +3,13 @@ package org.ratelog.user.feed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.MediaType
+import org.ratelog.formatMs
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 data class FeedQuery(
@@ -27,8 +26,6 @@ data class FeedItem(
     val ratedAt: String,
     val createdAtEpochMs: Long,
 )
-
-private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy HH:mm").withZone(ZoneId.systemDefault())
 
 @Service
 class FeedHandler(
@@ -52,7 +49,7 @@ class FeedHandler(
                     tmdbId = row.tmdbId,
                     type = MediaType.movie.name,
                     score = row.score ?: 0.0,
-                    ratedAt = dateFormatter.format(Instant.ofEpochMilli(row.createdAtEpochMs)),
+                    ratedAt = row.createdAtEpochMs.formatMs(),
                     createdAtEpochMs = row.createdAtEpochMs,
                 )
             }
@@ -66,7 +63,7 @@ class FeedHandler(
                     tmdbId = row.tmdbId,
                     type = MediaType.tvshow.name,
                     score = row.score ?: 0.0,
-                    ratedAt = dateFormatter.format(Instant.ofEpochMilli(row.createdAtEpochMs)),
+                    ratedAt = row.createdAtEpochMs.formatMs(),
                     createdAtEpochMs = row.createdAtEpochMs,
                 )
             }
