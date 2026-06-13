@@ -32,7 +32,7 @@ class InMemoryTvRatingRepository : TvRatingRepository {
     override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedTvRow> =
         store.values
             .filter { it.userId in userIds && it.createdAt >= since }
-            .map { FeedTvRow("user", "tvshow", null, 0, it.score?.value, it.createdAt.toEpochMilli(), 0) }
+            .map { FeedTvRow("user", "tvshow", null, 0, it.score?.value, it.createdAt.toEpochMilli()) }
 
     override fun save(rating: TvRating) {
         val ratingToSave = if (rating.id == null) {

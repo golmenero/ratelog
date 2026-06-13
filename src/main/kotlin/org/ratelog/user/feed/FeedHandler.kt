@@ -26,7 +26,6 @@ data class FeedItem(
     val score: Double,
     val ratedAt: String,
     val createdAtEpochMs: Long,
-    val seasonNumber: Int?,
 )
 
 private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy HH:mm").withZone(ZoneId.systemDefault())
@@ -55,7 +54,6 @@ class FeedHandler(
                     score = row.score ?: 0.0,
                     ratedAt = dateFormatter.format(Instant.ofEpochMilli(row.createdAtEpochMs)),
                     createdAtEpochMs = row.createdAtEpochMs,
-                    seasonNumber = null,
                 )
             }
 
@@ -70,7 +68,6 @@ class FeedHandler(
                     score = row.score ?: 0.0,
                     ratedAt = dateFormatter.format(Instant.ofEpochMilli(row.createdAtEpochMs)),
                     createdAtEpochMs = row.createdAtEpochMs,
-                    seasonNumber = row.seasonNumber,
                 )
             }
 

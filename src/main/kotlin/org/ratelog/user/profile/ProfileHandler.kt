@@ -34,7 +34,6 @@ data class ProfileRating(
     val title: String,
     val score: Double,
     val ratedAt: Long,
-    val seasonNumber: Int?,
 )
 
 @Service
@@ -66,13 +65,11 @@ class ProfileHandler(
         title = rating.title,
         score = rating.score!!,
         ratedAt = rating.createdAtEpochMs,
-        seasonNumber = null,
     )
 
     private fun toResponse(rating: FeedTvRow) = ProfileRating(
         title = rating.title,
         score = rating.score!!,
         ratedAt = rating.createdAtEpochMs,
-        seasonNumber = rating.seasonNumber,
     )
 }
