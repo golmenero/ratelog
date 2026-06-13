@@ -35,12 +35,9 @@
 
             <div>
                 <h2 th:text="#{community.search.users}">Search Users</h2>
-                <form th:action="@{/community}" method="get" class="filter">
-                    <input type="text" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" />
-                    <button type="submit" class="primary" th:title="#{community.search.users}">
-                        <i data-lucide="search" aria-hidden="true"></i>
-                    </button>
-                </form>
+
+                <input type="text" id="user-search-input" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" class="w-100"/>
+                <div id="user-search-dropdown" class="search-dropdown"></div>
 
                 <div th:if="${users != null and !#lists.isEmpty(users)}">
                     <div th:each="user : ${users}" class="feed-card">
@@ -73,5 +70,6 @@
             </div>
         </div>
     </div>
+    <script src="/usersearch.js" defer></script>
 </body>
 </html>

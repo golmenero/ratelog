@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 
 data class UserSearchResponse(
     val id: Long,
@@ -27,6 +28,25 @@ class FeedController(
     private val userSearchHandler: UserSearchHandler,
     private val followedUsersHandler: FollowedUsersHandler,
 ) {
+
+    @GetMapping("/api/users/search")
+    @ResponseBody
+    fun searchUsersApi(
+        @CurrentUser user: User,
+        @RequestParam("q") query: String?
+    ): List<UserSearchResponse> {
+        if (query.isNullOrBlank()) return emptyList()
+
+        return UserSearchQuery(
+            username = Username(query),
+            followerId = user.id
+        )
+            .let(userSearchHandler::handle)
+            .fold(
+                { emptyList() },
+                { it.map(::toResponse) }
+            )
+    }
 
     @GetMapping("/community")
     fun communityPage(

@@ -32,7 +32,7 @@ class UserSearchHandler(
             userRepository.findByUsernameContaining(query.username, followerId)
         } ?: userRepository.findByUsernameContaining(query.username)
 
-        val results = users.map { user ->
+        val results = users.filter { it.id != query.followerId }.map { user ->
             UserSearchResult(user.id!!.value, user.username, user.followed, user.followedAtEpochMs)
         }
 

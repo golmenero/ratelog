@@ -133,3 +133,49 @@ a.link {
   gap: 8px;
   margin-bottom: 16px;
 }
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-soft, #1a1a1a);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.search-dropdown.visible {
+  display: block;
+}
+
+.search-dropdown-item {
+  display: block;
+  padding: 10px 18px;
+  color: var(--text);
+  text-decoration: none;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+.search-dropdown-item:hover {
+  background: rgba(230, 120, 60, 0.15);
+}
+
+.search-dropdown-item:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+
+.search-dropdown-empty {
+  padding: 10px 18px;
+  color: var(--text-soft);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+}
