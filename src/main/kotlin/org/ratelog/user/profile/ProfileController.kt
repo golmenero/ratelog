@@ -38,6 +38,8 @@ class ProfileController(
                     model.addAttribute("currentLang", it.lang.value)
                     model.addAttribute("isFollowed", it.isFollowed)
                     model.addAttribute("isLoggedUser", it.userId == user.id)
+                    model.addAttribute("ratings", it.ratings)
+                    model.addAttribute("tvRatings", it.tvRatings)
                     "profile"
                 }
             )

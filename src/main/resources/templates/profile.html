@@ -30,19 +30,19 @@
 
     <div class="separator"></div>
 
-    <form th:if="${isLoggedUser}" th:action="@{/lang}" method="post">
-        <label for="lang" th:text="#{profile.language}">Language</label>
-        <select id="lang" name="lang" onchange="this.form.submit()">
-            <option value="en" th:text="#{profile.lang.en}" th:selected="${currentLang == 'en'}">English</option>
-            <option value="es" th:text="#{profile.lang.es}" th:selected="${currentLang == 'es'}">Español</option>
-        </select>
-    </form>
 
-    <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
 
     <footer th:if="${isLoggedUser}" class="bmc-footer">
+        <form th:if="${isLoggedUser}" th:action="@{/lang}" method="post">
+            <select id="lang" name="lang" onchange="this.form.submit()">
+                <option value="en" th:text="#{profile.lang.en}" th:selected="${currentLang == 'en'}">English</option>
+                <option value="es" th:text="#{profile.lang.es}" th:selected="${currentLang == 'es'}">Español</option>
+            </select>
+        </form>
         <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="golmenero" data-color="#d97757" data-emoji="" data-font="Bree" data-text="Buy me a coffee" data-outline-color="#FFFFFF" data-font-color="#FFFFFF" data-coffee-color="#FFDD00"></script>
     </footer>
+
+    <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
 </div>
 </body>
 <script>
