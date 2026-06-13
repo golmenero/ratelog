@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.Email
 import org.ratelog.Lang
+import org.ratelog.MediaType
 import org.ratelog.Username
 import org.ratelog.formatMs
 import org.ratelog.movie.rating.FeedMovieRow
@@ -34,8 +35,12 @@ data class Profile(
 
 data class ProfileRating(
     val title: String,
+    val posterPath: String?,
+    val tmdbId: Int,
+    val type: String,
     val score: Double,
     val ratedAt: String,
+    val createdAtEpochMs: Long,
 )
 
 @Service
@@ -65,13 +70,21 @@ class ProfileHandler(
 
     private fun toResponse(rating: FeedMovieRow) = ProfileRating(
         title = rating.title,
-        score = rating.score!!,
+        posterPath = rating.posterPath,
+        tmdbId = rating.tmdbId,
+        type = MediaType.movie.name,
+        score = rating.score ?: 0.0,
         ratedAt = rating.createdAtEpochMs.formatMs(),
+        createdAtEpochMs = rating.createdAtEpochMs,
     )
 
     private fun toResponse(rating: FeedTvRow) = ProfileRating(
         title = rating.title,
-        score = rating.score!!,
+        posterPath = rating.posterPath,
+        tmdbId = rating.tmdbId,
+        type = MediaType.tvshow.name,
+        score = rating.score ?: 0.0,
         ratedAt = rating.createdAtEpochMs.formatMs(),
+        createdAtEpochMs = rating.createdAtEpochMs,
     )
 }

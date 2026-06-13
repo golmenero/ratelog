@@ -32,14 +32,23 @@
 
     <h2 class="w-100" th:text="#{community.activity.feed}">Recent activity</h2>
     <div>
-        <div th:each="item : ${ratings}" class="card">
-            <h3 class="title" th:text="${item.title}">Title</h3>
+        <a th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}" th:each="item : ${ratings}" class="card mb-2">
+            <div>
+                <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}" />
+                <div>
+                    <h3 class="title" th:text="${item.title}">Title</h3>
+                    <div class="tags">
+                        <span th:if="${item.type == 'movie'}" class="tag" th:text="#{community.type.movie}">Movie</span>
+                        <span th:if="${item.type == 'tvshow'}" class="tag" th:text="#{community.type.tv}">TV</span>
+                    </div>
+                </div>
+            </div>
             <div>
                 <span class="rating-sm" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
                 <br>
                 <span class="date" th:text="${item.ratedAt}">Rated at</span>
             </div>
-        </div>
+        </a>
     </div>
 
     <footer th:if="${isLoggedUser}" class="bmc-footer">
