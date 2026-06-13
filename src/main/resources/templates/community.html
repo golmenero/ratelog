@@ -18,7 +18,7 @@
                         <div>
                             <span class="username" th:text="${item.username}">Username</span>
                             <br>
-                            <span class="title" th:text="${item.title}">Title</span>
+                            <h3 class="title" th:text="${item.title}">Title</h3>
                             <div class="tags">
                                 <span th:if="${item.type == 'movie'}" class="tag" th:text="#{community.type.movie}">Movie</span>
                                 <span th:if="${item.type == 'tvshow'}" class="tag" th:text="#{community.type.tv}">TV</span>
@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div>
-                        <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                        <span class="rating-sm" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
                         <br>
                         <span class="date" th:text="${item.ratedAt}">Rated at</span>
                     </div>
@@ -35,9 +35,10 @@
 
             <div>
                 <h2 th:text="#{community.search.users}">Search Users</h2>
-
-                <input type="text" id="user-search-input" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" class="w-100"/>
-                <div id="user-search-dropdown" class="search-dropdown"></div>
+                <div class="search-wrapper">
+                    <input type="text" id="user-search-input" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" class="w-100" />
+                    <div id="user-search-dropdown" class="search-dropdown"></div>
+                </div>
 
                 <div th:if="${users != null and !#lists.isEmpty(users)}">
                     <div th:each="user : ${users}" class="feed-card">

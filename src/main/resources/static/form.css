@@ -134,6 +134,10 @@ a.link {
   margin-bottom: 16px;
 }
 
+.search-wrapper {
+  position: relative;
+}
+
 .search-dropdown {
   position: absolute;
   top: 100%;
