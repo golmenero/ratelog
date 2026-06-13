@@ -29,9 +29,6 @@ class InMemoryRatingRepository : RatingRepository {
             .take(limit)
             .mapIndexed { index, rating -> Pair(Rank(index + 1), rating) }
 
-    override fun findByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<Rating> =
-        store.values.filter { it.userId in userIds && it.createdAt >= since }
-
     override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedMovieRow> =
         store.values
             .filter { it.userId in userIds && it.createdAt >= since }
