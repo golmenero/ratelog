@@ -103,11 +103,6 @@
   }
 }
 
-.profile {
-  display: flex;
-  gap: 16px;
-}
-
 .tags {
   display: flex;
   gap: 8px;

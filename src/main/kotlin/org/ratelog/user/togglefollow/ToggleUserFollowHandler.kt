@@ -14,7 +14,7 @@ sealed interface ToggleUserFollowHandlerError {
 
 data class ToggleUserFollow(
     val followerId: User.Id,
-    val followedUsername: Username,
+    val followedId: User.Id,
 )
 
 @Service
@@ -24,7 +24,7 @@ class ToggleUserFollowHandler(
 
     fun handle(command: ToggleUserFollow): Either<ToggleUserFollowHandlerError, Unit> = either {
         val followerId = command.followerId
-        val followedUser = userRepository.findByUsername(command.followedUsername)
+        val followedUser = userRepository.findById(command.followedId)
             ?: raise(ToggleUserFollowHandlerError.UserNotFound)
 
         if (followerId == followedUser.id) {

@@ -6,24 +6,31 @@
 <div class="page">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='profile')}"></header>
 
-    <div class="profile">
-        <div class="avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
-        <div>
-            <div class="flex centered">
+    <div class="flex centered separate">
+        <div class="flex gap-lg centered">
+            <div class="avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
+            <div>
                 <h1 class="w-100" th:text="${username}">Username</h1>
-                <button id="btnOpenEditModal" type="button">
-                    <i data-lucide="pencil"></i>
-                </button>
+                <p th:if="${isLoggedUser}" th:text="${email}">email@example.com</p>
+                <span class="date"><span th:text="#{profile.member.since}">Member since</span> <span th:text="${memberSince}">2024-01-01</span></span>
             </div>
-            <span th:text="${email}">email@example.com</span>
-            <br>
-            <span class="date"><span th:text="#{profile.member.since}">Member since</span> <span th:text="${memberSince}">2024-01-01</span></span>
+        </div>
+        <div>
+            <button th:if="${isLoggedUser}" id="btnOpenEditModal" type="button">
+                <i data-lucide="pencil"></i>
+            </button>
+            <form th:unless="${isLoggedUser}" th:action="@{/user/follow}" method="post">
+                <input type="hidden" name="id" th:value="${followId}" />
+                <button th:class="${isFollowed} ? '' : 'primary'" type="submit" th:title="${isFollowed} ? #{community.unfollow} : #{community.follow}">
+                    <i th:data-lucide="${isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
+                </button>
+            </form>
         </div>
     </div>
 
     <div class="separator"></div>
 
-    <form th:action="@{/lang}" method="post">
+    <form th:if="${isLoggedUser}" th:action="@{/lang}" method="post">
         <label for="lang" th:text="#{profile.language}">Language</label>
         <select id="lang" name="lang" onchange="this.form.submit()">
             <option value="en" th:text="#{profile.lang.en}" th:selected="${currentLang == 'en'}">English</option>
@@ -33,7 +40,7 @@
 
     <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
 
-    <footer class="bmc-footer">
+    <footer th:if="${isLoggedUser}" class="bmc-footer">
         <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="golmenero" data-color="#d97757" data-emoji="" data-font="Bree" data-text="Buy me a coffee" data-outline-color="#FFFFFF" data-font-color="#FFFFFF" data-coffee-color="#FFDD00"></script>
     </footer>
 </div>

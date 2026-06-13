@@ -5,19 +5,25 @@ import org.ratelog.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 
 @Controller
 class ProfileController(
     private val handler: ProfileHandler
 ) {
-
     @GetMapping("/profile")
+    fun profilePage(@CurrentUser user: User): String = "redirect:/profile/${user.id!!.value}"
+
+    @GetMapping("/profile/{id}")
     fun profilePage(
         @CurrentUser user: User,
+        @PathVariable("id") userId: Long,
         model: Model
     ): String {
-        return user.id!!
-            .let(::GetProfile)
+        return GetProfile(
+            loggedUserId = user.id!!,
+            userId = userId.let(User::Id),
+        )
             .let(handler::handle)
             .fold(
                 {
@@ -25,10 +31,13 @@ class ProfileController(
                     "search"
                 },
                 {
+                    model.addAttribute("followId", it.userId.value)
                     model.addAttribute("username", it.username.value)
                     model.addAttribute("email", it.email.value)
                     model.addAttribute("memberSince", it.memberSince)
                     model.addAttribute("currentLang", it.lang.value)
+                    model.addAttribute("isFollowed", it.isFollowed)
+                    model.addAttribute("isLoggedUser", it.userId == user.id)
                     "profile"
                 }
             )

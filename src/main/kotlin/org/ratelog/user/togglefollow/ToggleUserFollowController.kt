@@ -19,31 +19,22 @@ class ToggleUserFollowController(
     @PostMapping("/user/follow")
     fun toggleUserFollow(
         @CurrentUser user: User,
-        @RequestParam("username") username: String,
-        @RequestParam(value = "from", required = false) from: String?,
+        @RequestParam("id") userId: Long,
         redirectAttributes: RedirectAttributes,
         locale: Locale
     ): String {
-        val redirectUrl = if (from == "community") "redirect:/community?username=$username" else "redirect:/community"
-        return user.id?.let { userId ->
-            ToggleUserFollow(
-                followerId = userId,
-                followedUsername = username.let(::Username),
-            )
-                .let(handler::handle)
-                .fold(
-                    { error ->
-                        val message = when (error) {
-                            is ToggleUserFollowHandlerError.UserNotFound -> messageSource.getMessage("error.user.not.found", null, locale)
-                            is ToggleUserFollowHandlerError.CannotFollowYourself -> messageSource.getMessage("error.cannot.follow.yourself", null, locale)
-                        }
-                        redirectAttributes.addFlashAttribute("followError", message)
-                        redirectUrl
-                    },
-                    {
-                        redirectUrl
-                    }
-                )
-        } ?: redirectUrl
+        ToggleUserFollow(
+            followerId = user.id!!,
+            followedId = userId.let(User::Id)
+        ).let(handler::handle)
+            .mapLeft {
+                    error ->
+                val message = when (error) {
+                    is ToggleUserFollowHandlerError.UserNotFound -> messageSource.getMessage("error.user.not.found", null, locale)
+                    is ToggleUserFollowHandlerError.CannotFollowYourself -> messageSource.getMessage("error.cannot.follow.yourself", null, locale)
+                }
+                redirectAttributes.addFlashAttribute("followError", message)
+            }
+        return "redirect:/profile/$userId"
     }
 }

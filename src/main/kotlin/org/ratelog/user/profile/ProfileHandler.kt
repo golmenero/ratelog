@@ -11,13 +11,18 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
-data class GetProfile(val userId: User.Id)
+data class GetProfile(
+    val loggedUserId: User.Id,
+    val userId: User.Id,
+)
 
 data class Profile(
+    val userId: User.Id,
     val username: Username,
     val email: Email,
     val memberSince: String,
     val lang: Lang,
+    val isFollowed: Boolean,
 )
 
 @Service
@@ -29,10 +34,12 @@ class ProfileHandler(
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
 
         Profile(
+            userId = user.id!!,
             username = user.username,
             email = user.email,
             memberSince = LocalDate.ofEpochDay(user.createdAtEpochMs / 86400000).toString(),
             lang = user.lang,
+            isFollowed = user.followed,
         )
     }
 }
