@@ -124,7 +124,8 @@ a.link {
   text-decoration: none;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: var(--accent-strong);
   }
 }
 

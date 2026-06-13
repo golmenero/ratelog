@@ -57,15 +57,8 @@
 
                 <h2 th:text="#{community.followed.users}">Followed Users</h2>
                 <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}">
-                    <div th:each="followedUser : ${followedUsers}" class="feed-card">
-                        <form th:action="@{/user/follow}" method="post">
-                            <span class="username" th:text="${followedUser.username}">Username</span>
-                            <input type="hidden" name="username" th:value="${followedUser.username}" />
-                            <input type="hidden" name="from" value="followed" />
-                            <button type="submit" th:title="#{community.unfollow}">
-                                <i data-lucide="user-round-x" aria-hidden="true"></i>
-                            </button>
-                        </form>
+                    <div th:each="followedUser : ${followedUsers}">
+                        <a th:href="@{'/profile/' + ${followedUser.id}}" class="link" th:text="${followedUser.username}">Username</a>
                     </div>
                 </div>
             </div>
