@@ -24,7 +24,7 @@ class ToggleUserFollowHandlerTest {
         val userToFollow = UserFactory.aUser(id = 2, username = "targetuser", email = "target@example.com")
         userRepository.save(userToFollow)
 
-        val command = ToggleUserFollow(User.Id(1), Username("targetuser"))
+        val command = ToggleUserFollow(User.Id(1), User.Id(2))
 
         val result = handler.handle(command)
 
@@ -35,7 +35,7 @@ class ToggleUserFollowHandlerTest {
 
     @Test
     fun `should return UserNotFound when target user does not exist`() {
-        val command = ToggleUserFollow(User.Id(1), Username("nonexistent"))
+        val command = ToggleUserFollow(User.Id(1), User.Id(2))
 
         val result = handler.handle(command)
 
@@ -48,7 +48,7 @@ class ToggleUserFollowHandlerTest {
         val user = UserFactory.aUser(id = 1, username = "myself", email = "myself@example.com")
         userRepository.save(user)
 
-        val command = ToggleUserFollow(User.Id(1), Username("myself"))
+        val command = ToggleUserFollow(User.Id(1), User.Id(1))
 
         val result = handler.handle(command)
 
@@ -61,7 +61,7 @@ class ToggleUserFollowHandlerTest {
         val userToFollow = UserFactory.aUser(id = 2, username = "targetuser", email = "target@example.com", followed = true, followedAtEpochMs = System.currentTimeMillis())
         userRepository.save(userToFollow)
 
-        val command = ToggleUserFollow(User.Id(1), Username("targetuser"))
+        val command = ToggleUserFollow(User.Id(1), User.Id(2))
 
         val result = handler.handle(command)
 

@@ -5,6 +5,7 @@ import arrow.core.raise.either
 import org.ratelog.Email
 import org.ratelog.Lang
 import org.ratelog.Username
+import org.ratelog.formatMs
 import org.ratelog.movie.rating.FeedMovieRow
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.tvshow.rating.FeedTvRow
@@ -12,6 +13,7 @@ import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
+import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -33,7 +35,7 @@ data class Profile(
 data class ProfileRating(
     val title: String,
     val score: Double,
-    val ratedAt: Long,
+    val ratedAt: String,
 )
 
 @Service
@@ -44,7 +46,7 @@ class ProfileHandler(
 ) {
 
     fun handle(query: GetProfile): Either<ProfileHandlerError, Profile> = either {
-        val thirtyDaysAgo = java.time.Instant.now().minus(30, ChronoUnit.DAYS)
+        val thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS)
 
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
         val ratings = ratingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo).map { toResponse(it) }
@@ -64,12 +66,12 @@ class ProfileHandler(
     private fun toResponse(rating: FeedMovieRow) = ProfileRating(
         title = rating.title,
         score = rating.score!!,
-        ratedAt = rating.createdAtEpochMs,
+        ratedAt = rating.createdAtEpochMs.formatMs(),
     )
 
     private fun toResponse(rating: FeedTvRow) = ProfileRating(
         title = rating.title,
         score = rating.score!!,
-        ratedAt = rating.createdAtEpochMs,
+        ratedAt = rating.createdAtEpochMs.formatMs(),
     )
 }
