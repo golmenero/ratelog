@@ -45,6 +45,12 @@ class SecurityConfig {
                     .failureUrl("/login?error=true")
                     .permitAll()
             }
+            .rememberMe { remember ->
+                remember
+                    .key("ratelog-remember-key")
+                    .tokenValiditySeconds(86400 * 30)
+                    .rememberMeParameter("remember-me")
+            }
             .logout { logout ->
                 logout
                     .logoutUrl("/logout")

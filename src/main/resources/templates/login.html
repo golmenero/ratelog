@@ -26,6 +26,11 @@
                 <input type="password" id="password" name="password" required>
             </div>
 
+            <div class="checkbox-group">
+                <input type="checkbox" id="remember-me" name="remember-me">
+                <label for="remember-me" th:text="#{auth.remember.me}">Remember me</label>
+            </div>
+
             <button type="submit" class="primary w-100" th:text="#{auth.signin.btn}">Sign In</button>
         </form>
 

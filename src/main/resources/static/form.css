@@ -28,7 +28,7 @@ textarea {
   }
 }
 
-input,
+input:not([type="checkbox"]),
 select {
   height: 40px;
   padding: 0 18px;
@@ -49,6 +49,27 @@ select {
 
   &:focus {
     border-color: rgba(230, 120, 60, 0.45);
+  }
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  label {
+    margin: 0;
+    font-size: 0.95rem;
+    cursor: pointer;
   }
 }
 
