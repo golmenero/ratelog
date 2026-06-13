@@ -6,10 +6,10 @@ import org.ratelog.Status
 import org.ratelog.TmdbId
 import org.ratelog.Title
 import org.ratelog.Url
+import org.ratelog.toLocalDate
 import org.ratelog.user.User
 import org.ratelog.user.UserDetailsService
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -58,7 +58,7 @@ class MovieRepositoryImpl(
             title = Title(title),
             originalTitle = originalTitle?.let { Title(it) },
             overview = overview?.let { Overview(it) },
-            releaseDate = releaseDate?.let { LocalDate.parse(it) },
+            releaseDate = releaseDate?.toLocalDate(),
             releaseYear = releaseYear,
             posterPath = posterPath?.let { Url(it) },
             tmdbVoteAverage = tmdbVoteAverage,

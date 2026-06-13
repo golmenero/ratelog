@@ -6,7 +6,7 @@ import org.ratelog.Email
 import org.ratelog.Lang
 import org.ratelog.MediaType
 import org.ratelog.Username
-import org.ratelog.formatMs
+import org.ratelog.toDateString
 import org.ratelog.movie.rating.FeedMovieRow
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.tvshow.rating.FeedTvRow
@@ -60,7 +60,7 @@ class ProfileHandler(
             userId = user.id!!,
             username = user.username,
             email = user.email,
-            memberSince = user.createdAtEpochMs.formatMs(),
+            memberSince = user.createdAtEpochMs.toDateString(),
             lang = user.lang,
             isFollowed = user.followed,
             ratings =  (ratings + tvRatings).sortedByDescending { it.ratedAt },
@@ -73,7 +73,7 @@ class ProfileHandler(
         tmdbId = rating.tmdbId,
         type = MediaType.movie.name,
         score = rating.score ?: 0.0,
-        ratedAt = rating.createdAtEpochMs.formatMs(),
+        ratedAt = rating.createdAtEpochMs.toDateString(),
         createdAtEpochMs = rating.createdAtEpochMs,
     )
 
@@ -83,7 +83,7 @@ class ProfileHandler(
         tmdbId = rating.tmdbId,
         type = MediaType.tvshow.name,
         score = rating.score ?: 0.0,
-        ratedAt = rating.createdAtEpochMs.formatMs(),
+        ratedAt = rating.createdAtEpochMs.toDateString(),
         createdAtEpochMs = rating.createdAtEpochMs,
     )
 }

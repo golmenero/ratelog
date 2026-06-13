@@ -6,10 +6,10 @@ import org.ratelog.Status
 import org.ratelog.TmdbId
 import org.ratelog.Title
 import org.ratelog.Url
+import org.ratelog.toLocalDate
 import org.ratelog.user.User
 import org.ratelog.user.UserDetailsService
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
 @Repository
@@ -57,15 +57,15 @@ class TvShowRepositoryImpl(
             name = Title(name),
             originalName = originalName?.let { Title(it) },
             overview = overview?.let { Overview(it) },
-            firstAirDate = firstAirDate?.let { LocalDate.parse(it) },
+            firstAirDate = firstAirDate?.toLocalDate(),
             firstAirYear = firstAirYear,
             posterPath = posterPath?.let { Url(it) },
             tmdbVoteAverage = tmdbVoteAverage,
             genres = genres,
             status = status?.let { Status.fromValue(it) },
             lastSeasonNumber = lastSeasonNumber,
-            lastSeasonAirDate = lastSeasonAirDate?.let { LocalDate.parse(it) },
-            nextSeasonAirDate = nextSeasonAirDate?.let { LocalDate.parse(it) },
+            lastSeasonAirDate = lastSeasonAirDate?.toLocalDate(),
+            nextSeasonAirDate = nextSeasonAirDate?.toLocalDate(),
         )
     }
 

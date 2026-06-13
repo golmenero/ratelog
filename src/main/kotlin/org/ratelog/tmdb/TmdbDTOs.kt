@@ -8,6 +8,7 @@ import org.ratelog.Status
 import org.ratelog.Title
 import org.ratelog.TmdbId
 import org.ratelog.Url
+import org.ratelog.toLocalDate
 import org.ratelog.movie.Movie
 import org.ratelog.tvshow.TvShow
 import java.time.LocalDate
@@ -46,7 +47,7 @@ data class TmdbMovieResponse(
         title = Title(title),
         originalTitle = originalTitle?.let { Title(it) },
         overview = overview?.let { Overview(it) },
-        releaseDate = releaseDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) },
+        releaseDate = releaseDate?.toLocalDate(),
         releaseYear = releaseDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = voteAverage,
@@ -90,7 +91,7 @@ data class TmdbTvShowResponse(
         name = Title(name),
         originalName = originalName?.let { Title(it) },
         overview = overview?.let { Overview(it) },
-        firstAirDate = firstAirDate?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) },
+        firstAirDate = firstAirDate?.toLocalDate(),
         firstAirYear = firstAirDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = voteAverage,
@@ -100,10 +101,9 @@ data class TmdbTvShowResponse(
         lastSeasonAirDate = seasons.filter { it.seasonNumber > 0 }
             .maxByOrNull { it.seasonNumber }
             ?.airDate
-            ?.takeIf { it.isNotBlank() }
-            ?.let { LocalDate.parse(it) },
+            ?.toLocalDate(),
         nextSeasonAirDate = seasons.filter { it.seasonNumber > 0 }
-            .mapNotNull { s -> s.airDate?.takeIf { it.isNotBlank() }?.let { d -> s to LocalDate.parse(d) } }
+            .mapNotNull { s -> s.airDate?.toLocalDate()?.let { d -> s to d } }
             .filter { (_, date) -> date > LocalDate.now() }
             .minByOrNull { (_, date) -> date }
             ?.second,

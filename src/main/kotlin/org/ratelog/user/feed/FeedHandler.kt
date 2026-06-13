@@ -3,7 +3,7 @@ package org.ratelog.user.feed
 import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.MediaType
-import org.ratelog.formatMs
+import org.ratelog.toDateString
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
@@ -49,7 +49,7 @@ class FeedHandler(
                     tmdbId = row.tmdbId,
                     type = MediaType.movie.name,
                     score = row.score ?: 0.0,
-                    ratedAt = row.createdAtEpochMs.formatMs(),
+                    ratedAt = row.createdAtEpochMs.toDateString(),
                     createdAtEpochMs = row.createdAtEpochMs,
                 )
             }
@@ -63,7 +63,7 @@ class FeedHandler(
                     tmdbId = row.tmdbId,
                     type = MediaType.tvshow.name,
                     score = row.score ?: 0.0,
-                    ratedAt = row.createdAtEpochMs.formatMs(),
+                    ratedAt = row.createdAtEpochMs.toDateString(),
                     createdAtEpochMs = row.createdAtEpochMs,
                 )
             }
