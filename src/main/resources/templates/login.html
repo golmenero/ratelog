@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head th:replace="~{fragments/head :: head(#{auth.login.title})}"></head>
 <body>
+<div th:replace="~{fragments/loader}"></div>
 <div class="page">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='login')}"></header>
 
