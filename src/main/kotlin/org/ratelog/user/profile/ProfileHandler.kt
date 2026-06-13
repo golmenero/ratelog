@@ -4,19 +4,16 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.Email
 import org.ratelog.Lang
-import org.ratelog.Review
 import org.ratelog.Username
-import org.ratelog.movie.rating.Rating
+import org.ratelog.movie.rating.FeedMovieRow
 import org.ratelog.movie.rating.RatingRepository
-import org.ratelog.tvshow.rating.TvRating
+import org.ratelog.tvshow.rating.FeedTvRow
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import kotlin.jvm.optionals.getOrNull
-import kotlin.time.Instant
 
 data class GetProfile(
     val loggedUserId: User.Id,
@@ -30,10 +27,15 @@ data class Profile(
     val memberSince: String,
     val lang: Lang,
     val isFollowed: Boolean,
-    val ratings: List<Rating>,
-    val tvRatings: List<TvRating>,
+    val ratings: List<ProfileRating>,
+)
 
-    )
+data class ProfileRating(
+    val title: String,
+    val score: Double,
+    val ratedAt: Long,
+    val seasonNumber: Int?,
+)
 
 @Service
 class ProfileHandler(
@@ -46,8 +48,8 @@ class ProfileHandler(
         val thirtyDaysAgo = java.time.Instant.now().minus(30, ChronoUnit.DAYS)
 
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
-        val ratings = ratingRepository.findByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo)
-        val tvRatings = tvRatingRepository.findByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo)
+        val ratings = ratingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo).map { toResponse(it) }
+        val tvRatings = tvRatingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo).map { toResponse(it) }
 
         Profile(
             userId = user.id!!,
@@ -56,8 +58,21 @@ class ProfileHandler(
             memberSince = LocalDate.ofEpochDay(user.createdAtEpochMs / 86400000).toString(),
             lang = user.lang,
             isFollowed = user.followed,
-            ratings = ratings,
-            tvRatings = tvRatings,
+            ratings =  (ratings + tvRatings).sortedByDescending { it.ratedAt },
         )
     }
+
+    private fun toResponse(rating: FeedMovieRow) = ProfileRating(
+        title = rating.title,
+        score = rating.score!!,
+        ratedAt = rating.createdAtEpochMs,
+        seasonNumber = null,
+    )
+
+    private fun toResponse(rating: FeedTvRow) = ProfileRating(
+        title = rating.title,
+        score = rating.score!!,
+        ratedAt = rating.createdAtEpochMs,
+        seasonNumber = rating.seasonNumber,
+    )
 }

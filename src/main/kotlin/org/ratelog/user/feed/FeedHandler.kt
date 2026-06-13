@@ -25,7 +25,8 @@ data class FeedItem(
     val type: String,
     val score: Double,
     val ratedAt: String,
-    val createdAtEpochMs: Long
+    val createdAtEpochMs: Long,
+    val seasonNumber: Int?,
 )
 
 private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy HH:mm").withZone(ZoneId.systemDefault())
@@ -53,7 +54,8 @@ class FeedHandler(
                     type = MediaType.movie.name,
                     score = row.score ?: 0.0,
                     ratedAt = dateFormatter.format(Instant.ofEpochMilli(row.createdAtEpochMs)),
-                    createdAtEpochMs = row.createdAtEpochMs
+                    createdAtEpochMs = row.createdAtEpochMs,
+                    seasonNumber = null,
                 )
             }
 
@@ -67,7 +69,8 @@ class FeedHandler(
                     type = MediaType.tvshow.name,
                     score = row.score ?: 0.0,
                     ratedAt = dateFormatter.format(Instant.ofEpochMilli(row.createdAtEpochMs)),
-                    createdAtEpochMs = row.createdAtEpochMs
+                    createdAtEpochMs = row.createdAtEpochMs,
+                    seasonNumber = row.seasonNumber,
                 )
             }
 
