@@ -22,7 +22,7 @@
 
             <label class="flex separate" for="directing">
                 <span class="flex centered gap"><i data-lucide="clapperboard"></i><span th:text="#{modal.direction}">Direction</span></span>
-                <span class="rating-sm" id="directingValue">5.00</span>
+                <span class="rating" id="directingValue">5.00</span>
             </label>
             <input id="directing" class="w-100" name="directing" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('directingValue').textContent = parseFloat(this.value).toFixed(2)">
 
@@ -30,7 +30,7 @@
 
             <label class="flex separate" for="cinematography">
                 <span class="flex centered gap"><i data-lucide="camera"></i><span th:text="#{modal.photography}">Photography</span></span>
-                <span class="rating-sm" id="cinematographyValue">5.00</span>
+                <span class="rating" id="cinematographyValue">5.00</span>
             </label>
             <input id="cinematography" class="w-100" name="cinematography" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('cinematographyValue').textContent = parseFloat(this.value).toFixed(2)">
 
@@ -38,7 +38,7 @@
 
             <label class="flex separate" for="acting">
                 <span class="flex centered gap"><i data-lucide="hat-glasses"></i><span th:text="#{modal.acting}">Acting</span></span>
-                <span class="rating-sm" id="actingValue">5.00</span>
+                <span class="rating" id="actingValue">5.00</span>
             </label>
             <input id="acting" class="w-100" name="acting" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('actingValue').textContent = parseFloat(this.value).toFixed(2)">
 
@@ -46,7 +46,7 @@
 
             <label class="flex separate" for="soundtrack">
                 <span class="flex centered gap"><i data-lucide="music"></i><span th:text="#{modal.soundtrack}">Soundtrack</span></span>
-                <span class="rating-sm" id="soundtrackValue">5.00</span>
+                <span class="rating" id="soundtrackValue">5.00</span>
             </label>
             <input id="soundtrack" class="w-100" name="soundtrack" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('soundtrackValue').textContent = parseFloat(this.value).toFixed(2)">
 
@@ -54,7 +54,7 @@
 
             <label class="flex separate" for="screenplay">
                 <span class="flex centered gap"><i data-lucide="file-text"></i><span th:text="#{modal.script}">Script</span></span>
-                <span class="rating-sm" id="screenplayValue">5.00</span>
+                <span class="rating" id="screenplayValue">5.00</span>
             </label>
             <input id="screenplay" class="w-100" name="screenplay" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('screenplayValue').textContent = parseFloat(this.value).toFixed(2)">
 

@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div th:if="${season.hasRating}" class="categories">
-                    <span class="rating-sm" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
+                    <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
                     <div class="category">
                         <i data-lucide="clapperboard"></i>
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.00</span>
