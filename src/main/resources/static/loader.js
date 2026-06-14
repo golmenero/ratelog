@@ -16,12 +16,6 @@ const Loader = {
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    Loader.init();
-
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', () => Loader.show());
-    });
-
-    window.addEventListener('load', () => Loader.hide());
-});
+window.addEventListener('beforeunload', () => Loader.show());
+window.addEventListener('pageshow', () => Loader.hide());
+window.addEventListener('load', () => Loader.hide());
