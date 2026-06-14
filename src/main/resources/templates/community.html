@@ -10,8 +10,6 @@
 
         <div class="grid">
             <div>
-                <h2 th:text="#{community.activity.feed}">Activity Feed</h2>
-
                 <a th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}" th:each="item : ${feed}" class="card">
                     <div>
                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}" />
