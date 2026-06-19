@@ -42,8 +42,8 @@ class TvShowPremieresHandlerTest {
         val show2 = TvShowFactory.aTvShow(id = 2, tmdbId = 456, name = "Upcoming Show", lastSeasonAirDate = LocalDate.now().plusDays(30))
         tvShowRepository.save(show1)
         tvShowRepository.save(show2)
-        tvShowRepository.toggleFollow(TvShow.Id(1))
-        tvShowRepository.toggleFollow(TvShow.Id(2))
+        tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
+        tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(2))
 
         val query = TvShowPremieresQuery(User.Id(1))
         val result = handler.handle(query)
@@ -64,7 +64,7 @@ class TvShowPremieresHandlerTest {
     fun `should categorize shows with no date into noDate list`() {
         val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "No Date Show", lastSeasonAirDate = null)
         tvShowRepository.save(show)
-        tvShowRepository.toggleFollow(TvShow.Id(1))
+        tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
 
         val query = TvShowPremieresQuery(User.Id(1))
         val result = handler.handle(query)
@@ -84,7 +84,7 @@ class TvShowPremieresHandlerTest {
     fun `should use latest season for premiere date`() {
         val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Multi Season Show", lastSeasonNumber = 3, lastSeasonAirDate = LocalDate.now().minusDays(1))
         tvShowRepository.save(show)
-        tvShowRepository.toggleFollow(TvShow.Id(1))
+        tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
 
         val query = TvShowPremieresQuery(User.Id(1))
         val result = handler.handle(query)

@@ -42,8 +42,8 @@ class MoviePremieresHandlerTest {
         val movie2 = MovieFactory.aMovie(id = 2, tmdbId = 456, title = "Upcoming Movie", releaseDate = LocalDate.now().plusDays(30))
         movieRepository.save(movie1)
         movieRepository.save(movie2)
-        movieRepository.toggleFollow(Movie.Id(1))
-        movieRepository.toggleFollow(Movie.Id(2))
+        movieRepository.toggleFollow(User.Id(1), Movie.Id(1))
+        movieRepository.toggleFollow(User.Id(1), Movie.Id(2))
 
         val query = MoviePremieresQuery(User.Id(1))
         val result = handler.handle(query)
@@ -64,7 +64,7 @@ class MoviePremieresHandlerTest {
     fun `should categorize movies with no date into noDate list`() {
         val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "No Date Movie", releaseDate = null)
         movieRepository.save(movie)
-        movieRepository.toggleFollow(Movie.Id(1))
+        movieRepository.toggleFollow(User.Id(1), Movie.Id(1))
 
         val query = MoviePremieresQuery(User.Id(1))
         val result = handler.handle(query)
