@@ -2,7 +2,6 @@ package org.ratelog.user.togglefollow
 
 import arrow.core.Either
 import arrow.core.raise.either
-import org.ratelog.Username
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
@@ -33,6 +32,6 @@ class ToggleUserFollowHandler(
             raise(ToggleUserFollowHandlerError.CannotFollowYourself)
         }
 
-        followedUser.toggleFollow(System.currentTimeMillis()).let(userRepository::save)
+        userRepository.toggleFollow(command.followerId, command.followedId)
     }
 }

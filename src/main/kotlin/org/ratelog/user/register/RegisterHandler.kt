@@ -45,8 +45,6 @@ class RegisterHandler(
             email = command.email,
             passwordHash = hashedPassword,
             lang = command.lang,
-            followed = false,
-            followedAtEpochMs = System.currentTimeMillis(),
         ).let(userRepository::save)
     }
 }

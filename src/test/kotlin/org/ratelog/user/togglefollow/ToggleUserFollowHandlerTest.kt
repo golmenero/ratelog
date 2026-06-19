@@ -29,8 +29,7 @@ class ToggleUserFollowHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val followedUser = userRepository.findByUsername(Username("targetuser"))
-        assertTrue(followedUser!!.followed)
+        assertTrue(userRepository.isFollowing(User.Id(1), User.Id(2)))
     }
 
     @Test
@@ -58,15 +57,15 @@ class ToggleUserFollowHandlerTest {
 
     @Test
     fun `should unfollow user when already followed`() {
-        val userToFollow = UserFactory.aUser(id = 2, username = "targetuser", email = "target@example.com", followed = true, followedAtEpochMs = System.currentTimeMillis())
+        val userToFollow = UserFactory.aUser(id = 2, username = "targetuser", email = "target@example.com")
         userRepository.save(userToFollow)
+        userRepository.toggleFollow(User.Id(1), User.Id(2))
 
         val command = ToggleUserFollow(User.Id(1), User.Id(2))
 
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val followedUser = userRepository.findByUsername(Username("targetuser"))
-        assertFalse(followedUser!!.followed)
+        assertFalse(userRepository.isFollowing(User.Id(1), User.Id(2)))
     }
 }

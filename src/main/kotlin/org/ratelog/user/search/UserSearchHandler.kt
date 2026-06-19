@@ -16,8 +16,6 @@ data class UserSearchQuery(
 data class UserSearchResult(
     val id: Long,
     val username: Username,
-    val isFollowed: Boolean,
-    val followedAtEpochMs: Long?
 )
 
 @Service
@@ -35,7 +33,7 @@ class UserSearchHandler(
         } ?: userRepository.findByUsernameContaining(query.username)
 
         val results = users.filter { it.id != query.followerId }.map { user ->
-            UserSearchResult(user.id!!.value, user.username, user.followed, user.followedAtEpochMs)
+            UserSearchResult(user.id!!.value, user.username)
         }
 
         if (results.isEmpty()) {

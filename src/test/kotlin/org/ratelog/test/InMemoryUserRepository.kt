@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 class InMemoryUserRepository : UserRepository {
     private val store = ConcurrentHashMap<User.Id, User>()
+    private val follows = ConcurrentHashMap.newKeySet<Pair<Long, Long>>()
     private val idGenerator = AtomicLong(1)
 
     override fun findById(id: User.Id): User? = store[id]
@@ -36,16 +37,27 @@ class InMemoryUserRepository : UserRepository {
         return store.values.filter { it.username.value.contains(username.value, ignoreCase = true) }
     }
 
-    override fun findFollowingByUserId(userId: User.Id): List<User> {
-        val user = store[userId] ?: return emptyList()
-        return store.values.filter { it.followed && it.id != userId }
-    }
+    override fun findFollowingByUserId(userId: User.Id): List<User> =
+        follows
+            .filter { it.first == userId.value }
+            .mapNotNull { (_, followedId) -> findById(User.Id(followedId)) }
 
     override fun findFollowedUserIds(userId: User.Id): List<User.Id> =
-        store.values.filter { it.followed && it.id != userId }.mapNotNull { it.id }
+        follows
+            .filter { it.first == userId.value }
+            .map { User.Id(it.second) }
+
+    override fun isFollowing(followerId: User.Id, followedId: User.Id): Boolean =
+        (followerId.value to followedId.value) in follows
+
+    override fun toggleFollow(followerId: User.Id, followedId: User.Id) {
+        val pair = followerId.value to followedId.value
+        if (pair in follows) follows.remove(pair) else follows.add(pair)
+    }
 
     fun clear() {
         store.clear()
+        follows.clear()
         idGenerator.set(1)
     }
 }

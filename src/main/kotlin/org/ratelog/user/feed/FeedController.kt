@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody
 data class UserSearchResponse(
     val id: Long,
     val username: String,
-    val isFollowed: Boolean,
-    val followedAtEpochMs: Long?
 )
 
 @Controller
@@ -95,7 +93,5 @@ class FeedController(
     private fun toResponse(result: UserSearchResult) = UserSearchResponse(
         id = result.id,
         username = result.username.value,
-        isFollowed = result.isFollowed,
-        followedAtEpochMs = result.followedAtEpochMs,
     )
 }

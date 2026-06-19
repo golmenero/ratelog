@@ -38,19 +38,6 @@
                     <div id="user-search-dropdown" class="search-dropdown"></div>
                 </div>
 
-                <div th:if="${users != null and !#lists.isEmpty(users)}">
-                    <div th:each="user : ${users}" class="feed-card">
-                        <form th:action="@{/user/follow}" method="post">
-                            <span class="username" th:text="${user.username}">Username</span>
-                            <input type="hidden" name="username" th:value="${user.username}" />
-                            <input type="hidden" name="from" value="community" />
-                            <button type="submit" th:title="${user.isFollowed} ? #{community.unfollow} : #{community.follow}">
-                                <i th:data-lucide="${user.isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
                 <div class="separator"></div>
 
                 <h2 th:text="#{community.followed.users}">Followed Users</h2>

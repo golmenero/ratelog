@@ -54,9 +54,7 @@ class UserDetailsService(
                 username = Username(p.username),
                 email = Email(p.email),
                 passwordHash = p.password,
-                followed = false,
                 lang = p.lang,
-                followedAtEpochMs = null,
             )
         }
     }

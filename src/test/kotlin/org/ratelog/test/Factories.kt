@@ -25,8 +25,6 @@ object UserFactory {
         passwordHash: String = "encoded_password",
         createdAtEpochMs: Long = System.currentTimeMillis(),
         lang: Lang = Lang("es"),
-        followed: Boolean = false,
-        followedAtEpochMs: Long? = null
     ) = User(
         id = id?.let { User.Id(it) },
         username = Username(username),
@@ -34,8 +32,6 @@ object UserFactory {
         passwordHash = passwordHash,
         createdAtEpochMs = createdAtEpochMs,
         lang = lang,
-        followed = followed,
-        followedAtEpochMs = followedAtEpochMs
     )
 }
 

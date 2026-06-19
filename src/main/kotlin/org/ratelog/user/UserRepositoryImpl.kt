@@ -21,21 +21,6 @@ class UserRepositoryImpl(
         userDAO.findByEmail(email.value).getOrNull()?.toDomain()
 
     override fun save(user: User) {
-        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
-        val follow = currentUserId?.let { userFollowDAO.findByFollowerIdAndFollowedId(it, user.id!!.value) }?.getOrNull()
-
-        when {
-            user.followed && follow == null -> {
-                UserFollowEntity(
-                    followerId = currentUserId!!,
-                    followedId = user.id!!.value,
-                ).let(userFollowDAO::save)
-            }
-            !user.followed && follow != null -> {
-                follow.let(userFollowDAO::delete)
-            }
-        }
-
         user.toEntity().let(userDAO::save)
     }
 
@@ -51,21 +36,27 @@ class UserRepositoryImpl(
     override fun findFollowedUserIds(userId: User.Id): List<User.Id> =
         userFollowDAO.findFollowedUserIds(userId.value).map { User.Id(it) }
 
-    private fun UserEntity.toDomain(): User {
-        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value
-        val follow = currentUserId?.let { userFollowDAO.findByFollowerIdAndFollowedId(it, id!!) }?.getOrNull()
+    override fun isFollowing(followerId: User.Id, followedId: User.Id): Boolean =
+        userFollowDAO.findByFollowerIdAndFollowedId(followerId.value, followedId.value).isPresent
 
-        return User(
+    override fun toggleFollow(followerId: User.Id, followedId: User.Id) {
+        val existing = userFollowDAO.findByFollowerIdAndFollowedId(followerId.value, followedId.value).getOrNull()
+        if (existing == null) {
+            UserFollowEntity(followerId = followerId.value, followedId = followedId.value).let(userFollowDAO::save)
+        } else {
+            userFollowDAO.delete(existing)
+        }
+    }
+
+    private fun UserEntity.toDomain(): User =
+        User(
             id = id!!.let { User.Id(it) },
             username = username.let(::Username),
             email = email.let(::Email),
             passwordHash = passwordHash,
             createdAtEpochMs = createdAtEpochMs,
-            followed = follow != null,
-            followedAtEpochMs = follow?.createdAtEpochMs,
             lang = Lang(lang)
         )
-    }
 
     private fun User.toEntity(): UserEntity =
         UserEntity(

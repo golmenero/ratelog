@@ -64,7 +64,7 @@ class ProfileHandler(
             email = user.email,
             memberSince = user.createdAtEpochMs.toDateString(),
             lang = user.lang,
-            isFollowed = user.followed,
+            isFollowed = userRepository.isFollowing(query.loggedUserId, query.userId),
             ratings =  (ratings + tvRatings).sortedByDescending { it.ratedAt },
         )
     }

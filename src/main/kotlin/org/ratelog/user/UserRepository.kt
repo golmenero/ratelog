@@ -10,15 +10,9 @@ data class User(
     val email: Email,
     val passwordHash: String,
     val createdAtEpochMs: Long = System.currentTimeMillis(),
-    val followed: Boolean,
-    val followedAtEpochMs: Long?,
     val lang: Lang,
 ) {
     data class Id(val value: Long)
-
-    fun toggleFollow(now: Long) =
-        if (followed) copy(followed = false, followedAtEpochMs = null)
-        else copy(followed = true, followedAtEpochMs = now)
 }
 
 interface UserRepository {
@@ -31,4 +25,6 @@ interface UserRepository {
 
     fun findFollowingByUserId(userId: User.Id): List<User>
     fun findFollowedUserIds(userId: User.Id): List<User.Id>
+    fun isFollowing(followerId: User.Id, followedId: User.Id): Boolean
+    fun toggleFollow(followerId: User.Id, followedId: User.Id)
 }
