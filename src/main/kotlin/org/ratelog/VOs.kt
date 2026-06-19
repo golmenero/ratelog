@@ -1,5 +1,7 @@
 package org.ratelog
 
+import java.util.Locale
+
 data class TmdbId(val value: Int) {
     init {
         require(value > 0) { "TmdbId must be greater than 0" }
@@ -100,7 +102,9 @@ data class Score(val value: Double) {
 
 enum class Lang(val tmdbLang: String) {
     es("es-ES"),
-    en("en-US")
+    en("en-US");
+
+    val locale: Locale = Locale.of(name)
 }
 
 data class Review(val value: String) {

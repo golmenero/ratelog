@@ -34,7 +34,7 @@ class RegisterController(
             username = username.let(::Username),
             email = email.let(::Email),
             password = password.let(::Password),
-            lang = Lang.valueOf(browserLang.language),
+            lang = browserLang,
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(

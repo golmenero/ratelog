@@ -10,15 +10,12 @@ import java.util.Locale
 
 class UserAwareLocaleResolver : LocaleResolver {
 
-    override fun resolveLocale(request: HttpServletRequest): Locale {
-        val user = UserDetailsService.getCurrentUser()
-        return if (user != null) {
-            when (user.lang) {
-                Lang.es -> Locale.of("es")
-                else -> Locale.of("en")
-            }
-        } else BrowserLangResolver.resolve(request)
-    }
+    override fun resolveLocale(request: HttpServletRequest): Locale =
+        UserDetailsService
+            .getCurrentUser()
+            ?.lang
+            ?.locale
+            ?: BrowserLangResolver.resolve(request).locale
 
     override fun setLocale(request: HttpServletRequest, response: HttpServletResponse, locale: Locale?) {
     }
