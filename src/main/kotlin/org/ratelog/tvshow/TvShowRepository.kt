@@ -35,5 +35,5 @@ interface TvShowRepository {
     fun findFollowedTvShows(userId: User.Id): List<TvShow>
     fun findActiveTvShows(): List<TvShow>
     fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean
-    fun toggleFollow(showId: TvShow.Id)
+    fun toggleFollow(userId: User.Id, showId: TvShow.Id)
 }

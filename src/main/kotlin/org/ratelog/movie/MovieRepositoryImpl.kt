@@ -8,7 +8,6 @@ import org.ratelog.Title
 import org.ratelog.Url
 import org.ratelog.toLocalDate
 import org.ratelog.user.User
-import org.ratelog.user.UserDetailsService
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
 
@@ -36,14 +35,12 @@ class MovieRepositoryImpl(
     override fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean =
         movieFollowDAO.findByUserIdAndMovieId(userId.value, movieId.value).getOrNull() != null
 
-    override fun toggleFollow(movieId: Movie.Id) {
-        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value ?: return
-
-        val follow = movieFollowDAO.findByUserIdAndMovieId(currentUserId, movieId.value).getOrNull()
+    override fun toggleFollow(userId: User.Id, movieId: Movie.Id) {
+        val follow = movieFollowDAO.findByUserIdAndMovieId(userId.value, movieId.value).getOrNull()
 
         if (follow == null) {
             MovieFollowEntity(
-                userId = currentUserId,
+                userId = userId.value,
                 movieId = movieId.value,
             ).let(movieFollowDAO::save)
         } else follow.let(movieFollowDAO::delete)

@@ -8,7 +8,6 @@ import org.ratelog.Title
 import org.ratelog.Url
 import org.ratelog.toLocalDate
 import org.ratelog.user.User
-import org.ratelog.user.UserDetailsService
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
 
@@ -35,14 +34,12 @@ class TvShowRepositoryImpl(
     override fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean =
         tvFollowDAO.findByUserIdAndTvShowId(userId.value, showId.value).getOrNull() != null
 
-    override fun toggleFollow(showId: TvShow.Id) {
-        val currentUserId = UserDetailsService.getCurrentUser()?.id?.value ?: return
-
-        val follow = tvFollowDAO.findByUserIdAndTvShowId(currentUserId, showId.value).getOrNull()
+    override fun toggleFollow(userId: User.Id, showId: TvShow.Id) {
+        val follow = tvFollowDAO.findByUserIdAndTvShowId(userId.value, showId.value).getOrNull()
 
         if (follow == null) {
             TvFollowEntity(
-                userId = currentUserId,
+                userId = userId.value,
                 tvShowId = showId.value,
             ).let(tvFollowDAO::save)
         } else follow.let(tvFollowDAO::delete)

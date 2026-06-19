@@ -32,5 +32,5 @@ interface MovieRepository {
     fun findFollowedMovies(userId: User.Id): List<Movie>
     fun findActiveMovies(): List<Movie>
     fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean
-    fun toggleFollow(movieId: Movie.Id)
+    fun toggleFollow(userId: User.Id, movieId: Movie.Id)
 }
