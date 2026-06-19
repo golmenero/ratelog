@@ -41,13 +41,13 @@ class TmdbClient(
         val results = restClient.get()
             .uri { builder ->
                 builder.path("/search/movie")
+                    .queryParam("api_key", apiKey)
                     .queryParam("language", Lang.en)
                     .queryParam("include_adult", false)
                     .queryParam("page", 1)
                     .queryParam("query", query)
                     .build()
             }
-            .header("Authorization", "Bearer $apiKey")
             .retrieve()
             .body(TmdbSearchResponse::class.java)
             ?.results
@@ -64,10 +64,10 @@ class TmdbClient(
         return restClient.get()
             .uri { builder ->
                 builder.path("/movie/{id}")
+                    .queryParam("api_key", apiKey)
                     .queryParam("language", Lang.en)
                     .build(tmdbId.value)
             }
-            .header("Authorization", "Bearer $apiKey")
             .retrieve()
             .body(TmdbMovieResponse::class.java)
             ?.toDomain()
@@ -83,13 +83,13 @@ class TmdbClient(
         val results = restClient.get()
             .uri { builder ->
                 builder.path("/search/tv")
+                    .queryParam("api_key", apiKey)
                     .queryParam("language", Lang.en)
                     .queryParam("include_adult", false)
                     .queryParam("page", 1)
                     .queryParam("query", query)
                     .build()
             }
-            .header("Authorization", "Bearer $apiKey")
             .retrieve()
             .body(TmdbTvShowSearchResponse::class.java)
             ?.results
@@ -106,10 +106,10 @@ class TmdbClient(
         return restClient.get()
             .uri { builder ->
                 builder.path("/tv/{id}")
+                    .queryParam("api_key", apiKey)
                     .queryParam("language", Lang.en)
                     .build(tmdbId.value)
             }
-            .header("Authorization", "Bearer $apiKey")
             .retrieve()
             .body(TmdbTvShowResponse::class.java)
             ?.toDomain()
