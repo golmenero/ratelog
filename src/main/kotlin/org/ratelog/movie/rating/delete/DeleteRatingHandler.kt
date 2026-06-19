@@ -8,6 +8,7 @@ import org.ratelog.movie.MovieRepository
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 data class DeleteRating(
     val movieId: Movie.Id,
@@ -19,6 +20,7 @@ class DeleteRatingHandler(
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
 ) {
+    @Transactional
     fun handle(command: DeleteRating): Either<DeleteRatingHandlerError, Unit> = either {
         val movie = movieRepository.findById(command.movieId)
 

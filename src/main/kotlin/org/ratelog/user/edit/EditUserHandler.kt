@@ -10,6 +10,7 @@ import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 data class EditUserCommand(
     val userId: User.Id,
@@ -24,6 +25,7 @@ class EditUserHandler(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
+    @Transactional
     fun handle(command: EditUserCommand): Either<EditUserHandlerError, Unit> = either {
         val user = userRepository.findById(command.userId) ?: raise(EditUserHandlerError.UserNotFound)
 

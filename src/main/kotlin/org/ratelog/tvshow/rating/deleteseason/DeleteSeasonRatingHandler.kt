@@ -9,6 +9,7 @@ import org.ratelog.tvshow.TvShowRepository
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 data class DeleteSeasonRating(
     val tvShowId: TvShow.Id,
@@ -21,6 +22,7 @@ class DeleteSeasonRatingHandler(
     private val tvShowRepository: TvShowRepository,
     private val tvRatingRepository: TvRatingRepository,
 ) {
+    @Transactional
     fun handle(command: DeleteSeasonRating): Either<DeleteSeasonRatingHandlerError, Unit> = either {
         val show = command.tvShowId.let(tvShowRepository::findById)
 

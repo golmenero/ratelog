@@ -6,6 +6,7 @@ import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 sealed interface ToggleMovieFollowHandlerError {
     data object MovieNotFound : ToggleMovieFollowHandlerError
@@ -20,6 +21,7 @@ data class ToggleMovieFollow(
 class ToggleMovieFollowHandler(
     private val movieRepository: MovieRepository,
 ) {
+    @Transactional
     fun handle(command: ToggleMovieFollow): Either<ToggleMovieFollowHandlerError, Unit> = either {
         val movie = movieRepository.findById(command.movieId) ?: raise(ToggleMovieFollowHandlerError.MovieNotFound)
 

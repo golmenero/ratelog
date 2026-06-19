@@ -11,6 +11,7 @@ import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Component
 import java.time.Instant
+import org.springframework.transaction.annotation.Transactional
 
 data class AddRating(
     val movieId: Movie.Id,
@@ -27,6 +28,7 @@ data class AddRating(
 class AddRatingHandler(
     private val ratingRepository: RatingRepository,
 ) {
+    @Transactional
     fun handle(command: AddRating): Either<AddRatingHandlerError, Unit> = either {
         listOf(
             command.directing,

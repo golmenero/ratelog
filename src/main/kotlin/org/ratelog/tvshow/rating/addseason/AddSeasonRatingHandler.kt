@@ -12,6 +12,7 @@ import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Component
 import java.time.Instant
+import org.springframework.transaction.annotation.Transactional
 
 data class AddSeasonRating(
     val tvShowId: TvShow.Id,
@@ -29,6 +30,7 @@ data class AddSeasonRating(
 class AddSeasonRatingHandler(
     private val tvRatingRepository: TvRatingRepository,
 ) {
+    @Transactional
     fun handle(command: AddSeasonRating): Either<AddSeasonRatingHandlerError, Unit> = either {
         listOf(
             command.directing,

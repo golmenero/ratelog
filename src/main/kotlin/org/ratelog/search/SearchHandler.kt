@@ -11,6 +11,7 @@ import org.ratelog.tvshow.TvShowRepository
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import java.time.LocalDate
+import org.springframework.transaction.annotation.Transactional
 
 data class SearchQuery(
     val query: String,
@@ -30,6 +31,7 @@ data class SearchResultItem(
 class SearchHandler(
     private val tmdbClient: TmdbClient,
 ) {
+    @Transactional
     fun handle(query: SearchQuery): Either<SearchHandlerError, List<SearchResultItem>> = either {
         if (query.query.isBlank()) return@either emptyList()
         val movies = searchMovies(query.query).bind().take(6)

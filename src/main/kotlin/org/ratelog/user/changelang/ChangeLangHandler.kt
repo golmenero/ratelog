@@ -6,6 +6,7 @@ import org.ratelog.Lang
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 data class ChangeLangCommand(
     val userId: User.Id,
@@ -16,6 +17,7 @@ data class ChangeLangCommand(
 class ChangeLangHandler(
     private val userRepository: UserRepository,
 ) {
+    @Transactional
     fun handle(command: ChangeLangCommand): Either<ChangeLangHandlerError, Unit> = either {
         val user = userRepository.findById(command.userId) ?: raise(ChangeLangHandlerError.UserNotFound)
 

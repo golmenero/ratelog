@@ -6,6 +6,7 @@ import org.ratelog.Username
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 sealed interface ToggleUserFollowHandlerError {
     data object CannotFollowYourself : ToggleUserFollowHandlerError
@@ -22,6 +23,7 @@ class ToggleUserFollowHandler(
     private val userRepository: UserRepository,
 ) {
 
+    @Transactional
     fun handle(command: ToggleUserFollow): Either<ToggleUserFollowHandlerError, Unit> = either {
         val followerId = command.followerId
         val followedUser = userRepository.findById(command.followedId)

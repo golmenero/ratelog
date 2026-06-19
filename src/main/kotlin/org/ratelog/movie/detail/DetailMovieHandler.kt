@@ -9,6 +9,7 @@ import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.tmdb.TmdbClient
 import org.ratelog.user.User
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 data class GetMovieDetail(
     val userId: User.Id,
@@ -34,6 +35,7 @@ class DetailMovieHandler(
     private val movieRepository: MovieRepository,
     private val ratingRepository: RatingRepository,
 ) {
+    @Transactional
     fun handle(query: GetMovieDetail): Either<DetailMovieHandlerError, GetMovieDetailResult> = either {
         val tmdbMovie = query.tmdbId.value.let(tmdbClient::movieDetails).bind()
 

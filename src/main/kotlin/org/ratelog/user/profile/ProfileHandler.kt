@@ -16,6 +16,7 @@ import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import org.springframework.transaction.annotation.Transactional
 
 data class GetProfile(
     val loggedUserId: User.Id,
@@ -49,6 +50,7 @@ class ProfileHandler(
     private val tvRatingRepository: TvRatingRepository,
 ) {
 
+    @Transactional
     fun handle(query: GetProfile): Either<ProfileHandlerError, Profile> = either {
         val thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS)
 

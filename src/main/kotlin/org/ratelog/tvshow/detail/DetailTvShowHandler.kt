@@ -9,6 +9,7 @@ import org.ratelog.tmdb.TmdbClient
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 data class GetTvShowDetail(
     val userId: User.Id,
@@ -45,6 +46,7 @@ class DetailTvShowHandler(
     private val tvShowRepository: TvShowRepository,
     private val tvRatingRepository: TvRatingRepository,
 ) {
+    @Transactional
     fun handle(query: GetTvShowDetail): Either<DetailTvShowHandlerError, GetTvShowDetailResult> = either {
         val tmdbShow = query.tmdbId.value.let(tmdbClient::tvShowDetails)
             .mapLeft { DetailTvShowHandlerError.TvShowNotFound }

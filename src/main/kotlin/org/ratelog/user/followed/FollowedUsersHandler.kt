@@ -5,6 +5,7 @@ import arrow.core.raise.either
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 data class FollowedUsersQuery(
     val userId: User.Id
@@ -19,6 +20,7 @@ data class FollowedUserResult(
 class FollowedUsersHandler(
     private val userRepository: UserRepository
 ) {
+    @Transactional
     fun handle(query: FollowedUsersQuery): Either<FollowedUsersHandlerError, List<FollowedUserResult>> = either {
         val following = userRepository.findFollowingByUserId(query.userId)
         following.map {

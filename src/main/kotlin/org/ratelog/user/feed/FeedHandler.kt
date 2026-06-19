@@ -11,6 +11,7 @@ import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import org.springframework.transaction.annotation.Transactional
 
 data class FeedQuery(
     val userId: User.Id
@@ -34,6 +35,7 @@ class FeedHandler(
     private val tvRatingRepository: TvRatingRepository,
 ) {
 
+    @Transactional
     fun handle(query: FeedQuery): Either<FeedHandlerError, List<FeedItem>> = either {
         val followedIds = userRepository.findFollowedUserIds(query.userId)
         if (followedIds.isEmpty()) return@either emptyList()

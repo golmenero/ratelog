@@ -6,6 +6,7 @@ import org.ratelog.tvshow.TvShowRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import org.springframework.transaction.annotation.Transactional
 
 data class TvShowPremieresQuery(val userId: User.Id)
 
@@ -30,6 +31,7 @@ data class TvShowPremieres(
 class TvShowPremieresHandler(
     private val tvShowRepository: TvShowRepository,
 ) {
+    @Transactional
     fun handle(query: TvShowPremieresQuery): Either<TvShowPremieresHandlerError, TvShowPremieres> = either {
         val followedTvShows = query.userId.let(tvShowRepository::findFollowedTvShows)
 

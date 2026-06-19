@@ -6,6 +6,7 @@ import org.ratelog.movie.MovieRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import org.springframework.transaction.annotation.Transactional
 
 data class MoviePremieresQuery(val userId: User.Id)
 
@@ -29,6 +30,7 @@ data class MoviePremieres(
 class MoviePremieresHandler(
     private val movieRepository: MovieRepository,
 ) {
+    @Transactional
     fun handle(query: MoviePremieresQuery): Either<MoviePremieresHandlerError, MoviePremieres> = either {
         val followedMovies = query.userId.let(movieRepository::findFollowedMovies)
 

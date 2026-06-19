@@ -6,6 +6,7 @@ import org.ratelog.Username
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 data class UserSearchQuery(
     val username: Username,
@@ -23,6 +24,7 @@ data class UserSearchResult(
 class UserSearchHandler(
     private val userRepository: UserRepository
 ) {
+    @Transactional
     fun handle(query: UserSearchQuery): Either<UserSearchHandlerError, List<UserSearchResult>> = either {
         if (query.username.value.isBlank()) {
             raise(UserSearchHandlerError.EmptyQuery)

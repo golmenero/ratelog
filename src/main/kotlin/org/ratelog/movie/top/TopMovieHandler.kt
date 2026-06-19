@@ -7,6 +7,7 @@ import org.ratelog.movie.rating.Rating
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 data class TopMovie(
     val userId: User.Id,
@@ -26,6 +27,7 @@ class TopMovieHandler(
     private val ratingRepository: RatingRepository,
     private val movieRepository: MovieRepository,
 ) {
+    @Transactional
     fun handle(query: TopMovie): List<TopMovieItem> =
         ratingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
             .mapNotNull(::toItem)
