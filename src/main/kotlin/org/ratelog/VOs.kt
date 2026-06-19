@@ -1,6 +1,10 @@
 package org.ratelog
 
-data class TmdbId(val value: Int)
+data class TmdbId(val value: Int) {
+    init {
+        require(value > 0) { "TmdbId must be greater than 0" }
+    }
+}
 
 data class Title(val value: String)
 
@@ -62,9 +66,17 @@ enum class Status(val value: String) {
     }
 }
 
-data class Rank(val value: Int)
+data class Rank(val value: Int) {
+    init {
+        require(value > 0) { "Rank must be greater than 0" }
+    }
+}
 
-data class SeasonNumber(val value: Int)
+data class SeasonNumber(val value: Int) {
+    init {
+        require(value > 0) { "SeasonNumber must be greater than 0" }
+    }
+}
 
 data class Username(val value: String)
 
@@ -78,7 +90,11 @@ data class Score(val value: Double) {
     }
 }
 
-data class Lang(val value: String)
+data class Lang(val value: String) {
+    init {
+        require(value in setOf("en", "es")) { "Lang must be 'en' or 'es'" }
+    }
+}
 
 data class Review(val value: String) {
     companion object {
