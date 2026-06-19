@@ -9,10 +9,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import java.util.UUID
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
+    private val rememberMeKey = UUID.randomUUID().toString()
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -44,7 +46,7 @@ class SecurityConfig {
             }
             .rememberMe { remember ->
                 remember
-                    .key("ratelog-remember-key")
+                    .key(rememberMeKey)
                     .tokenValiditySeconds(86400 * 30)
                     .rememberMeParameter("remember-me")
             }
