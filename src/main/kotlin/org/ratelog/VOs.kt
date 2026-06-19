@@ -1,5 +1,7 @@
 package org.ratelog
 
+import arrow.core.Either
+import arrow.core.raise.either
 import java.util.Locale
 
 data class TmdbId(val value: Int) {
@@ -81,14 +83,24 @@ data class SeasonNumber(val value: Int) {
 }
 
 data class Username(val value: String) {
-    init {
-        require(value.matches(Regex("^[a-zA-Z0-9_-]{3,50}$"))) { "Username must be between 3 and 50 characters and contain only letters, numbers, underscores, or hyphens" }
+    companion object {
+        fun parse(value: String): Either<ParseError, Username> = either {
+            if (!value.matches(Regex("^[a-zA-Z0-9_-]{3,50}$"))) {
+                raise(ParseError.InvalidUsername)
+            }
+            Username(value)
+        }
     }
 }
 
 data class Email(val value: String) {
-    init {
-        require(value.matches(Regex("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$"))) { "Invalid email format" }
+    companion object {
+        fun parse(value: String): Either<ParseError, Email> = either {
+            if (!value.matches(Regex("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$"))) {
+                raise(ParseError.InvalidEmail)
+            }
+            Email(value)
+        }
     }
 }
 
@@ -100,9 +112,8 @@ data class Score(val value: Double) {
     }
 }
 
-enum class Lang(val tmdbLang: String) {
-    es("es-ES"),
-    en("en-US");
+enum class Lang {
+    es, en;
 
     val locale: Locale = Locale.of(name)
 }
@@ -116,4 +127,9 @@ data class Review(val value: String) {
                 .take(1000)
         )
     }
+}
+
+sealed interface ParseError {
+    data object InvalidUsername : ParseError
+    data object InvalidEmail : ParseError
 }
