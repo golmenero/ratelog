@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable
 
 @Controller
 class ProfileController(
-    private val handler: ProfileHandler
+    private val handler: ProfileHandler,
 ) {
     @GetMapping("/profile")
     fun profilePage(@CurrentUser user: User): String = "redirect:/profile/${user.id!!.value}"
@@ -27,7 +27,7 @@ class ProfileController(
             .let(handler::handle)
             .fold(
                 {
-                    model.addAttribute("error", "Could not load profile.")
+                    model.addAttribute("error", "error.load.profile")
                     "search"
                 },
                 {

@@ -3,19 +3,16 @@ package org.ratelog.movie.rating.delete
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.movie.Movie
 import org.ratelog.user.User
-import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import jakarta.servlet.http.HttpServletRequest
-import java.util.Locale
 
 @Controller
 class DeleteRatingController(
     private val handler: DeleteRatingHandler,
-    private val messageSource: MessageSource,
 ) {
 
     @PostMapping("/movies/delete/{id}")
@@ -24,8 +21,7 @@ class DeleteRatingController(
         @CurrentUser user: User,
         @PathVariable("id") movieId: Long,
         redirectAttributes: RedirectAttributes,
-        request: HttpServletRequest,
-        locale: Locale
+        request: HttpServletRequest
     ): String {
         val result = DeleteRating(
             movieId = Movie.Id(movieId),
@@ -46,7 +42,7 @@ class DeleteRatingController(
                     redirectTarget
                 },
                 {
-                    redirectAttributes.addFlashAttribute("success", messageSource.getMessage("success.rating.deleted", null, locale))
+                    redirectAttributes.addFlashAttribute("success", "success.rating.deleted")
                     redirectTarget
                 }
             )
@@ -54,6 +50,6 @@ class DeleteRatingController(
 
     private fun mapError(error: DeleteRatingHandlerError): String = when (error) {
         DeleteRatingHandlerError.MovieNotFound,
-        DeleteRatingHandlerError.RatingNotFound -> "Could not delete the rating."
+        DeleteRatingHandlerError.RatingNotFound -> "error.rating.delete.failed"
     }
 }

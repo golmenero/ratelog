@@ -6,7 +6,6 @@ import org.ratelog.Username
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.user.AppUserDetails
 import org.ratelog.user.User
-import org.springframework.context.MessageSource
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
@@ -14,12 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import java.util.Locale
 
 @Controller
 class EditUserController(
     private val handler: EditUserHandler,
-    private val messageSource: MessageSource,
 ) {
 
     @GetMapping("/edit-profile")
@@ -32,8 +29,7 @@ class EditUserController(
         @RequestParam("email") email: String,
         @RequestParam("currentPassword") currentPassword: String,
         @RequestParam("newPassword", required = false) newPassword: String?,
-        redirectAttributes: RedirectAttributes,
-        locale: Locale
+        redirectAttributes: RedirectAttributes
     ): String =
         EditUserCommand(
             userId = user.id!!,
@@ -42,7 +38,7 @@ class EditUserController(
             currentPassword = Password(currentPassword),
             newPassword = newPassword?.ifEmpty { null }?.let { Password(it) },
         ).let(handler::handle)
-            .mapLeft { mapError(it, locale) }
+            .mapLeft(::mapError)
             .fold(
                 {
                     redirectAttributes.addFlashAttribute("error", it)
@@ -74,13 +70,13 @@ class EditUserController(
         SecurityContextHolder.getContext().authentication = newAuth
     }
 
-    private fun mapError(error: EditUserHandlerError, locale: Locale): String = when (error) {
-        EditUserHandlerError.UserNotFound -> messageSource.getMessage("edit.error.user.not.found", null, locale)
-        EditUserHandlerError.EmptyFields -> messageSource.getMessage("edit.error.empty.fields", null, locale)
-        EditUserHandlerError.InvalidUsernameLength -> messageSource.getMessage("edit.error.invalid.username.length", null, locale)
-        EditUserHandlerError.InvalidPasswordLength -> messageSource.getMessage("edit.error.invalid.password.length", null, locale)
-        EditUserHandlerError.UsernameAlreadyExists -> messageSource.getMessage("edit.error.username.already.exists", null, locale)
-        EditUserHandlerError.EmailAlreadyExists -> messageSource.getMessage("edit.error.email.already.exists", null, locale)
-        EditUserHandlerError.InvalidCurrentPassword -> messageSource.getMessage("edit.error.invalid.current.password", null, locale)
+    private fun mapError(error: EditUserHandlerError): String = when (error) {
+        EditUserHandlerError.UserNotFound -> "edit.error.user.not.found"
+        EditUserHandlerError.EmptyFields -> "edit.error.empty.fields"
+        EditUserHandlerError.InvalidUsernameLength -> "edit.error.invalid.username.length"
+        EditUserHandlerError.InvalidPasswordLength -> "edit.error.invalid.password.length"
+        EditUserHandlerError.UsernameAlreadyExists -> "edit.error.username.already.exists"
+        EditUserHandlerError.EmailAlreadyExists -> "edit.error.email.already.exists"
+        EditUserHandlerError.InvalidCurrentPassword -> "edit.error.invalid.current.password"
     }
 }

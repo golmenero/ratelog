@@ -55,7 +55,7 @@ class DetailTvShowController(
             .let(handler::handle)
             .fold(
                 {
-                    model.addAttribute("error", "Could not load the TV show.")
+                    model.addAttribute("error", "error.load.tvshow")
                     "tvshow-detail"
                 },
                 {

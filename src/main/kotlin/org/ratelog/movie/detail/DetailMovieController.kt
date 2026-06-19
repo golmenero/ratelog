@@ -47,7 +47,7 @@ class DetailMovieController(
             .let(handler::handle)
             .fold(
                 {
-                    model.addAttribute("error", "Could not load the movie.")
+                    model.addAttribute("error", "error.load.movie")
                     "movie-detail"
                 },
                 {
