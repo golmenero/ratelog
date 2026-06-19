@@ -91,8 +91,8 @@ data class Score(val value: Double) {
 }
 
 enum class Lang(val tmdbLang: String) {
-    es(""),
-    en("")
+    es("es-ES"),
+    en("en-US")
 }
 
 data class Review(val value: String) {

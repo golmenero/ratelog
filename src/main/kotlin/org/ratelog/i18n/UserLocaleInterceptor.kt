@@ -14,8 +14,8 @@ class UserAwareLocaleResolver : LocaleResolver {
         val user = UserDetailsService.getCurrentUser()
         return if (user != null) {
             when (user.lang) {
-                Lang.es -> Locale.of("es-ES")
-                else -> Locale.of("en-US")
+                Lang.es -> Locale.of("es")
+                else -> Locale.of("en")
             }
         } else BrowserLangResolver.resolve(request)
     }
