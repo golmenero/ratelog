@@ -41,8 +41,8 @@ class SearchHandlerTest {
             TvShowFactory.aTvShow(4, 4, "Show 2", overview = "Overview 4", firstAirDate = LocalDate.parse("2023-04-01"), posterPath = "/poster4.jpg", tmdbVoteAverage = 9.0)
         )
 
-        whenever(tmdbClient.searchMovies("test", Lang.en)).thenReturn(movies.right())
-        whenever(tmdbClient.searchTvShows("test", Lang.en)).thenReturn(shows.right())
+        whenever(tmdbClient.searchMovies("test")).thenReturn(movies.right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(shows.right())
 
         val query = SearchQuery("test", User.Id(1), Lang.en)
         val result = handler.handle(query)
@@ -62,8 +62,8 @@ class SearchHandlerTest {
             MovieFactory.aMovie(1, 1, "Movie 1", overview = "Overview 1", releaseDate = LocalDate.parse("2023-01-01"), posterPath = "/poster1.jpg", tmdbVoteAverage = 7.5)
         )
 
-        whenever(tmdbClient.searchMovies("test", Lang.en)).thenReturn(movies.right())
-        whenever(tmdbClient.searchTvShows("test", Lang.en)).thenReturn(emptyList<TvShow>().right())
+        whenever(tmdbClient.searchMovies("test")).thenReturn(movies.right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(emptyList<TvShow>().right())
 
         val query = SearchQuery("test", User.Id(1), Lang.en)
         val result = handler.handle(query)
@@ -80,8 +80,8 @@ class SearchHandlerTest {
             TvShowFactory.aTvShow(1, 1, "Show 1", overview = "Overview 1", firstAirDate = LocalDate.parse("2023-01-01"), posterPath = "/poster1.jpg", tmdbVoteAverage = 8.0)
         )
 
-        whenever(tmdbClient.searchMovies("test", Lang.en)).thenReturn(emptyList<Movie>().right())
-        whenever(tmdbClient.searchTvShows("test", Lang.en)).thenReturn(shows.right())
+        whenever(tmdbClient.searchMovies("test")).thenReturn(emptyList<Movie>().right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(shows.right())
 
         val query = SearchQuery("test", User.Id(1), Lang.en)
         val result = handler.handle(query)
@@ -97,8 +97,8 @@ class SearchHandlerTest {
         val movies = (1..10).map { MovieFactory.aMovie(it.toLong(), it, "Movie $it", overview = "Overview", releaseDate = LocalDate.parse("2023-01-01"), posterPath = "/poster.jpg", tmdbVoteAverage = 7.5) }
         val shows = (1..10).map { TvShowFactory.aTvShow(it.toLong(), it, "Show $it", overview = "Overview", firstAirDate = LocalDate.parse("2023-01-01"), posterPath = "/poster.jpg", tmdbVoteAverage = 8.0) }
 
-        whenever(tmdbClient.searchMovies("test", Lang.en)).thenReturn(movies.right())
-        whenever(tmdbClient.searchTvShows("test", Lang.en)).thenReturn(shows.right())
+        whenever(tmdbClient.searchMovies("test")).thenReturn(movies.right())
+        whenever(tmdbClient.searchTvShows("test")).thenReturn(shows.right())
 
         val query = SearchQuery("test", User.Id(1), Lang.en)
         val result = handler.handle(query)

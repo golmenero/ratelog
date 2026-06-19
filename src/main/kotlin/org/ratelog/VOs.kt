@@ -78,9 +78,17 @@ data class SeasonNumber(val value: Int) {
     }
 }
 
-data class Username(val value: String)
+data class Username(val value: String) {
+    init {
+        require(value.matches(Regex("^[a-zA-Z0-9_-]{3,50}$"))) { "Username must be between 3 and 50 characters and contain only letters, numbers, underscores, or hyphens" }
+    }
+}
 
-data class Email(val value: String)
+data class Email(val value: String) {
+    init {
+        require(value.matches(Regex("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$"))) { "Invalid email format" }
+    }
+}
 
 data class Password(val value: String)
 

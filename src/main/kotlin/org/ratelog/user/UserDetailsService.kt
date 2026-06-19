@@ -35,7 +35,7 @@ class UserDetailsService(
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String): AppUserDetails {
         val user = userRepository.findByUsername(username.let(::Username))
-            ?: throw UsernameNotFoundException("User not found: $username")
+            ?: throw UsernameNotFoundException("Invalid credentials")
 
         return AppUserDetails(
             id = user.id!!,

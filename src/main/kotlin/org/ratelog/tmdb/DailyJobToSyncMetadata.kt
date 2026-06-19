@@ -57,25 +57,25 @@ class DailyJobToSyncMetadata(
 
     private fun syncTvShow(show: TvShow) {
         try {
-            tmdbClient.tvShowDetails(show.tmdbId, Lang.en)
+            tmdbClient.tvShowDetails(show.tmdbId)
                 .fold(
-                    { err -> logger.error("Failed to sync TV show ${show.tmdbId.value}: $err") },
+                    { err -> logger.error("Failed to sync TV show: $err") },
                     { it.copy(id = show.id).let(tvShowRepository::save) }
                 )
         } catch (e: Exception) {
-            logger.error("Error syncing TV show ${show.tmdbId.value}", e)
+            logger.error("Error syncing TV show", e)
         }
     }
 
     private fun syncMovie(movie: Movie) {
         try {
-            tmdbClient.movieDetails(movie.tmdbId, Lang.en)
+            tmdbClient.movieDetails(movie.tmdbId)
                 .fold(
-                    { err -> logger.error("Failed to sync movie ${movie.tmdbId.value}: $err") },
+                    { err -> logger.error("Failed to sync movie: $err") },
                     { it.copy(id = movie.id).let(movieRepository::save) }
                 )
         } catch (e: Exception) {
-            logger.error("Error syncing movie ${movie.tmdbId.value}", e)
+            logger.error("Error syncing movie", e)
         }
     }
 }

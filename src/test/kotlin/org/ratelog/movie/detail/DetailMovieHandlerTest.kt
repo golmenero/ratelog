@@ -44,7 +44,7 @@ class DetailMovieHandlerTest {
             tmdbVoteAverage = 7.5,
             genres = listOf(Genre.ACTION)
         )
-        whenever(tmdbClient.movieDetails(TmdbId(123), Lang.en)).thenReturn(tmdbMovie.right())
+        whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         val result = handler.handle(query)
@@ -70,7 +70,7 @@ class DetailMovieHandlerTest {
             posterPath = "/poster.jpg",
             tmdbVoteAverage = 7.5
         )
-        whenever(tmdbClient.movieDetails(TmdbId(123), Lang.en)).thenReturn(tmdbMovie.right())
+        whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
@@ -88,7 +88,7 @@ class DetailMovieHandlerTest {
             title = "Test Movie",
             releaseDate = LocalDate.parse("2023-01-15")
         )
-        whenever(tmdbClient.movieDetails(TmdbId(123), Lang.en)).thenReturn(tmdbMovie.right())
+        whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         val result = handler.handle(query)

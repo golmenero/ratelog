@@ -39,7 +39,7 @@ class DetailMovieHandler(
 ) {
     @Transactional
     fun handle(query: GetMovieDetail): Either<DetailMovieHandlerError, GetMovieDetailResult> = either {
-        val tmdbMovie = tmdbClient.movieDetails(query.tmdbId, query.lang).bind()
+        val tmdbMovie = tmdbClient.movieDetails(query.tmdbId).bind()
 
         val movie = query.tmdbId.let(movieRepository::findByTmdbId)
         val savedMovie = movie ?: tmdbMovie.let(movieRepository::save)

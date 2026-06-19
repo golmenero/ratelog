@@ -36,7 +36,7 @@ class DailyJobToSyncMetadataTest {
         tvShowRepository.save(show)
 
         val updatedShow = show.copy(overview = Overview("Updated overview"))
-        whenever(tmdbClient.tvShowDetails(TmdbId(100), Lang.en)).thenReturn(updatedShow.right())
+        whenever(tmdbClient.tvShowDetails(TmdbId(100))).thenReturn(updatedShow.right())
 
         job.sync()
 
@@ -51,7 +51,7 @@ class DailyJobToSyncMetadataTest {
         movieRepository.save(movie)
 
         val updatedMovie = movie.copy(overview = Overview("Updated movie overview"))
-        whenever(tmdbClient.movieDetails(TmdbId(200), Lang.en)).thenReturn(updatedMovie.right())
+        whenever(tmdbClient.movieDetails(TmdbId(200))).thenReturn(updatedMovie.right())
 
         job.sync()
 
@@ -70,11 +70,11 @@ class DailyJobToSyncMetadataTest {
         tvShowRepository.save(activeShow)
 
         val updatedActiveShow = activeShow.copy(overview = Overview("Updated"))
-        whenever(tmdbClient.tvShowDetails(TmdbId(102), Lang.en)).thenReturn(updatedActiveShow.right())
+        whenever(tmdbClient.tvShowDetails(TmdbId(102))).thenReturn(updatedActiveShow.right())
 
         job.sync()
 
-        verify(tmdbClient).tvShowDetails(TmdbId(102), Lang.en)
+        verify(tmdbClient).tvShowDetails(TmdbId(102))
     }
 
     @Test
@@ -87,11 +87,11 @@ class DailyJobToSyncMetadataTest {
         movieRepository.save(activeMovie)
 
         val updatedActiveMovie = activeMovie.copy(overview = Overview("Updated"))
-        whenever(tmdbClient.movieDetails(TmdbId(202), Lang.en)).thenReturn(updatedActiveMovie.right())
+        whenever(tmdbClient.movieDetails(TmdbId(202))).thenReturn(updatedActiveMovie.right())
 
         job.sync()
 
-        verify(tmdbClient).movieDetails(TmdbId(202), Lang.en)
+        verify(tmdbClient).movieDetails(TmdbId(202))
     }
 
     @Test
@@ -101,9 +101,9 @@ class DailyJobToSyncMetadataTest {
         tvShowRepository.save(show1)
         tvShowRepository.save(show2)
 
-        whenever(tmdbClient.tvShowDetails(TmdbId(100), Lang.en)).thenReturn(TmdbError.MovieNotFound.left())
+        whenever(tmdbClient.tvShowDetails(TmdbId(100))).thenReturn(TmdbError.MovieNotFound.left())
         val updatedShow2 = show2.copy(overview = Overview("Updated"))
-        whenever(tmdbClient.tvShowDetails(TmdbId(101), Lang.en)).thenReturn(updatedShow2.right())
+        whenever(tmdbClient.tvShowDetails(TmdbId(101))).thenReturn(updatedShow2.right())
 
         job.sync()
 
@@ -119,9 +119,9 @@ class DailyJobToSyncMetadataTest {
         movieRepository.save(movie1)
         movieRepository.save(movie2)
 
-        whenever(tmdbClient.movieDetails(TmdbId(200), Lang.en)).thenReturn(TmdbError.MovieNotFound.left())
+        whenever(tmdbClient.movieDetails(TmdbId(200))).thenReturn(TmdbError.MovieNotFound.left())
         val updatedMovie2 = movie2.copy(overview = Overview("Updated"))
-        whenever(tmdbClient.movieDetails(TmdbId(201), Lang.en)).thenReturn(updatedMovie2.right())
+        whenever(tmdbClient.movieDetails(TmdbId(201))).thenReturn(updatedMovie2.right())
 
         job.sync()
 

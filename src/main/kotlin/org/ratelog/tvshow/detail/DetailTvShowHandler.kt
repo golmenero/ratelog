@@ -50,7 +50,7 @@ class DetailTvShowHandler(
 ) {
     @Transactional
     fun handle(query: GetTvShowDetail): Either<DetailTvShowHandlerError, GetTvShowDetailResult> = either {
-        val tmdbShow = tmdbClient.tvShowDetails(query.tmdbId, query.lang)
+        val tmdbShow = tmdbClient.tvShowDetails(query.tmdbId)
             .mapLeft { DetailTvShowHandlerError.TvShowNotFound }
             .bind()
 

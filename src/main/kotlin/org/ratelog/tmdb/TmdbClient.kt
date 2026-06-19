@@ -33,7 +33,7 @@ class TmdbClient(
         )
         .build()
 
-    fun searchMovies(query: String, lang: Lang): Either<TmdbError, List<Movie>> {
+    fun searchMovies(query: String): Either<TmdbError, List<Movie>> {
         if (query.isBlank()) return emptyList<Movie>().right()
         requireApiKey()
         rateLimiter.acquire()
@@ -41,13 +41,13 @@ class TmdbClient(
         val results = restClient.get()
             .uri { builder ->
                 builder.path("/search/movie")
-                    .queryParam("api_key", apiKey)
-                    .queryParam("language", lang.tmdbLang)
+                    .queryParam("language", Lang.en)
                     .queryParam("include_adult", false)
                     .queryParam("page", 1)
                     .queryParam("query", query)
                     .build()
             }
+            .header("Authorization", "Bearer $apiKey")
             .retrieve()
             .body(TmdbSearchResponse::class.java)
             ?.results
@@ -57,17 +57,17 @@ class TmdbClient(
         return results.right()
     }
 
-    fun movieDetails(tmdbId: TmdbId, lang: Lang): Either<TmdbError, Movie> {
+    fun movieDetails(tmdbId: TmdbId): Either<TmdbError, Movie> {
         requireApiKey()
         rateLimiter.acquire()
 
         return restClient.get()
             .uri { builder ->
                 builder.path("/movie/{id}")
-                    .queryParam("api_key", apiKey)
-                    .queryParam("language", lang.tmdbLang)
+                    .queryParam("language", Lang.en)
                     .build(tmdbId.value)
             }
+            .header("Authorization", "Bearer $apiKey")
             .retrieve()
             .body(TmdbMovieResponse::class.java)
             ?.toDomain()
@@ -75,7 +75,7 @@ class TmdbClient(
             ?: TmdbError.MovieNotFound.left()
     }
 
-    fun searchTvShows(query: String, lang: Lang): Either<TmdbError, List<TvShow>> {
+    fun searchTvShows(query: String): Either<TmdbError, List<TvShow>> {
         if (query.isBlank()) return emptyList<TvShow>().right()
         requireApiKey()
         rateLimiter.acquire()
@@ -83,13 +83,13 @@ class TmdbClient(
         val results = restClient.get()
             .uri { builder ->
                 builder.path("/search/tv")
-                    .queryParam("api_key", apiKey)
-                    .queryParam("language", lang.tmdbLang)
+                    .queryParam("language", Lang.en)
                     .queryParam("include_adult", false)
                     .queryParam("page", 1)
                     .queryParam("query", query)
                     .build()
             }
+            .header("Authorization", "Bearer $apiKey")
             .retrieve()
             .body(TmdbTvShowSearchResponse::class.java)
             ?.results
@@ -99,17 +99,17 @@ class TmdbClient(
         return results.right()
     }
 
-    fun tvShowDetails(tmdbId: TmdbId, lang: Lang): Either<TmdbError, TvShow> {
+    fun tvShowDetails(tmdbId: TmdbId): Either<TmdbError, TvShow> {
         requireApiKey()
         rateLimiter.acquire()
 
         return restClient.get()
             .uri { builder ->
                 builder.path("/tv/{id}")
-                    .queryParam("api_key", apiKey)
-                    .queryParam("language", lang.tmdbLang)
+                    .queryParam("language", Lang.en)
                     .build(tmdbId.value)
             }
+            .header("Authorization", "Bearer $apiKey")
             .retrieve()
             .body(TmdbTvShowResponse::class.java)
             ?.toDomain()
