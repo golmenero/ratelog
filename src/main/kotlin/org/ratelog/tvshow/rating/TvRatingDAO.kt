@@ -36,21 +36,24 @@ data class SeasonRatingEntity(
 interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
     fun findFirstByTvShowIdAndUserId(tvShowId: Long, userId: Long): Optional<TvRatingEntity>
 
-    @Query("SELECT r.id FROM tv_ratings r WHERE r.user_id = :userId ORDER BY r.score DESC")
-    fun findRanking(userId: Long): List<Long>
-
     @Query(
         """
-        SELECT r.* FROM tv_ratings r
-            INNER JOIN tv t ON r.tv_show_id = t.id
-        WHERE r.user_id = :userId
-            AND (:category IS NULL OR t.genres LIKE CONCAT('%', :category, '%'))
-            AND (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))
-        ORDER BY r.score DESC
+        WITH ranked AS (
+            SELECT r.id, r.tv_show_id, r.user_id, r.created_at_epoch_ms, r.score,
+                   ROW_NUMBER() OVER (ORDER BY r.score DESC) AS rank
+            FROM tv_ratings r
+            WHERE r.user_id = :userId
+        )
+        SELECT ranked.*
+        FROM ranked
+        INNER JOIN tv t ON ranked.tv_show_id = t.id
+        WHERE (:category IS NULL OR t.genres LIKE CONCAT('%', :category, '%'))
+          AND (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))
+        ORDER BY ranked.score DESC
         LIMIT :limit
         """
     )
-    fun findRankedByUserIdWithFilters(userId: Long, category: String?, name: String?, limit: Int): List<TvRatingEntity>
+    fun findRankedRows(userId: Long, category: String?, name: String?, limit: Int): List<RatedTvRow>
 
     @Query(
         """
@@ -73,6 +76,15 @@ data class FeedTvRow(
     val tmdbId: Int,
     val score: Double?,
     val createdAtEpochMs: Long,
+)
+
+data class RatedTvRow(
+    val id: Long?,
+    val tvShowId: Long,
+    val userId: Long,
+    val createdAtEpochMs: Long,
+    val score: Double?,
+    val rank: Long,
 )
 
 @Repository

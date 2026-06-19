@@ -25,13 +25,9 @@ class RatingRepositoryImpl(
 
     override fun findRankedByUserIdWithFilters(
         userId: User.Id, category: String?, limit: Int, name: String?
-    ): List<Pair<Rank, Rating>> {
-        val ranking = ratingDAO.findRanking(userId.value)
-            .mapIndexed { index, id -> id to Rank(index + 1) }.toMap()
-
-        return ratingDAO.findRankedByUserIdWithFilters(userId.value, category, name, limit)
-            .map { ranking[it.id]!! to it.toDomain() }
-    }
+    ): List<Pair<Rank, Rating>> =
+        ratingDAO.findRankedRows(userId.value, category, name, limit)
+            .map { Rank(it.rank.toInt()) to it.toDomain() }
 
     override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedMovieRow> {
         val sinceEpochMs = since.toEpochMilli()
@@ -40,6 +36,22 @@ class RatingRepositoryImpl(
     }
 
     private fun RatingEntity.toDomain(): Rating {
+        return Rating(
+            id = id?.let { Rating.Id(it) },
+            movieId = movieId.let(Movie::Id),
+            userId = userId.let(User::Id),
+            directing = Score(directing),
+            cinematography = Score(cinematography),
+            acting = Score(acting),
+            soundtrack = Score(soundtrack),
+            screenplay = Score(screenplay),
+            createdAt = Instant.ofEpochMilli(createdAtEpochMs),
+            score = score?.let(::Score),
+            review = reviewText?.takeIf { it.isNotBlank() }?.let(::Review),
+        )
+    }
+
+    private fun RatedMovieRow.toDomain(): Rating {
         return Rating(
             id = id?.let { Rating.Id(it) },
             movieId = movieId.let(Movie::Id),

@@ -31,25 +31,44 @@ data class FeedMovieRow(
     val createdAtEpochMs: Long,
 )
 
+data class RatedMovieRow(
+    val id: Long?,
+    val movieId: Long,
+    val userId: Long,
+    val directing: Double,
+    val cinematography: Double,
+    val acting: Double,
+    val soundtrack: Double,
+    val screenplay: Double,
+    val createdAtEpochMs: Long,
+    val score: Double?,
+    val reviewText: String?,
+    val rank: Long,
+)
+
 @Repository
 interface RatingDAO : CrudRepository<RatingEntity, Long> {
     fun findFirstByMovieIdAndUserId(movieId: Long, userId: Long): RatingEntity?
 
-    @Query("SELECT r.id FROM movie_ratings r WHERE r.user_id = :userId ORDER BY r.score DESC")
-    fun findRanking(userId: Long): List<Long>
-
     @Query(
         """
-        SELECT r.* FROM movie_ratings r
-            INNER JOIN movies m ON r.movie_id = m.id
-        WHERE r.user_id = :userId
-            AND (:category IS NULL OR m.genres LIKE CONCAT('%', :category, '%'))
-            AND (:name IS NULL OR LOWER(m.title) LIKE LOWER(CONCAT('%', :name, '%')))
-        ORDER BY r.score DESC
+        WITH ranked AS (
+            SELECT r.id, r.movie_id, r.user_id, r.directing, r.cinematography, r.acting,
+                   r.soundtrack, r.screenplay, r.created_at_epoch_ms, r.score, r.review_text,
+                   ROW_NUMBER() OVER (ORDER BY r.score DESC) AS rank
+            FROM movie_ratings r
+            WHERE r.user_id = :userId
+        )
+        SELECT ranked.*
+        FROM ranked
+        INNER JOIN movies m ON ranked.movie_id = m.id
+        WHERE (:category IS NULL OR m.genres LIKE CONCAT('%', :category, '%'))
+          AND (:name IS NULL OR LOWER(m.title) LIKE LOWER(CONCAT('%', :name, '%')))
+        ORDER BY ranked.score DESC
         LIMIT :limit
         """
     )
-    fun findRankedByUserIdWithFilters(userId: Long, category: String?, name: String?, limit: Int): List<RatingEntity>
+    fun findRankedRows(userId: Long, category: String?, name: String?, limit: Int): List<RatedMovieRow>
 
     @Query(
         """

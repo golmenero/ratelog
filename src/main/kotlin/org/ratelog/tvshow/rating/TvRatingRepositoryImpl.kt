@@ -37,13 +37,9 @@ class TvRatingRepositoryImpl(
         category: String?,
         limit: Int,
         name: String?
-    ): List<Pair<Rank, TvRating>> {
-        val ranking = tvRatingDAO.findRanking(userId.value)
-            .mapIndexed { index, id -> id to Rank(index + 1) }.toMap()
-
-        return tvRatingDAO.findRankedByUserIdWithFilters(userId.value, category, name, limit)
-            .map { ranking[it.id]!! to it.toDomain() }
-    }
+    ): List<Pair<Rank, TvRating>> =
+        tvRatingDAO.findRankedRows(userId.value, category, name, limit)
+            .map { Rank(it.rank.toInt()) to it.toDomain() }
 
     override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedTvRow> {
         val sinceEpochMs = since.toEpochMilli()
@@ -52,6 +48,18 @@ class TvRatingRepositoryImpl(
     }
 
     private fun TvRatingEntity.toDomain(): TvRating {
+        val seasonRatings = seasonRatingDAO.findByTvShowIdAndUserId(tvShowId, userId).map { it.toDomain() }
+        return TvRating(
+            id = id?.let { TvRating.Id(it) },
+            tvShowId = tvShowId.let(TvShow::Id),
+            userId = userId.let(User::Id),
+            createdAt = Instant.ofEpochMilli(createdAtEpochMs),
+            seasonRatings = seasonRatings,
+            score = score?.let(::Score),
+        )
+    }
+
+    private fun RatedTvRow.toDomain(): TvRating {
         val seasonRatings = seasonRatingDAO.findByTvShowIdAndUserId(tvShowId, userId).map { it.toDomain() }
         return TvRating(
             id = id?.let { TvRating.Id(it) },
