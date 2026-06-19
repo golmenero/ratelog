@@ -30,7 +30,7 @@
                 <input type="password" id="newPassword" name="newPassword" minlength="8">
             </div>
 
-            <div th:if="${error}"  class="feedback error" th:text="${error}"></div>
+            <div th:if="${error}"  class="feedback error" th:text="#{${error}}"></div>
 
             <button class="primary w-100" type="submit" th:text="#{profile.save}">Save</button>
         </form>

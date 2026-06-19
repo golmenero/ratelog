@@ -11,8 +11,8 @@
         <span th:if="${show != null && show.firstAirYear != null}" class="year" th:text="${show.firstAirYear}">Year</span>
     </h1>
 
-    <div th:if="${error}" class="feedback error" th:text="${error}"></div>
-    <div th:if="${success}" class="feedback success" th:text="${success}"></div>
+    <div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
+    <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
 
     <div class="detail-card">
         <div class="flex gap-lg w-100">

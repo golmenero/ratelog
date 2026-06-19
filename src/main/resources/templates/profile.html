@@ -46,7 +46,7 @@
             <div>
                 <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
                 <br>
-                <span class="date" th:text="${item.ratedAt}">Rated at</span>
+                <span class="date"><span th:text="#{community.activity.rated.at}">Rated on</span> <span th:text="${item.ratedAt}">date</span></span>
             </div>
         </a>
     </div>

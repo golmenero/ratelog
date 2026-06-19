@@ -8,8 +8,8 @@
 
     <h1 th:text="#{tvshows.title}">TV Shows.</h1>
 
-    <div th:if="${error}" class="feedback error" th:text="${error}"></div>
-    <div th:if="${success}" class="feedback success" th:text="${success}"></div>
+    <div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
+    <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
 
     <div class="grid">
         <div>
