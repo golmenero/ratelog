@@ -2,6 +2,7 @@ package org.ratelog.i18n
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.ratelog.Lang
 import org.ratelog.user.BrowserLangResolver
 import org.ratelog.user.UserDetailsService
 import org.springframework.web.servlet.LocaleResolver
@@ -12,9 +13,9 @@ class UserAwareLocaleResolver : LocaleResolver {
     override fun resolveLocale(request: HttpServletRequest): Locale {
         val user = UserDetailsService.getCurrentUser()
         return if (user != null) {
-            when (user.lang.value) {
-                "es" -> Locale("es")
-                else -> Locale("en")
+            when (user.lang) {
+                Lang.es -> Locale.of("es-ES")
+                else -> Locale.of("en-US")
             }
         } else BrowserLangResolver.resolve(request)
     }

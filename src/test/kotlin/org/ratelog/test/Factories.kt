@@ -24,7 +24,7 @@ object UserFactory {
         email: String = "user${idGenerator.get()}@example.com",
         passwordHash: String = "encoded_password",
         createdAtEpochMs: Long = System.currentTimeMillis(),
-        lang: Lang = Lang("es"),
+        lang: Lang = Lang.en,
     ) = User(
         id = id?.let { User.Id(it) },
         username = Username(username),

@@ -55,7 +55,7 @@ class UserRepositoryImpl(
             email = email.let(::Email),
             passwordHash = passwordHash,
             createdAtEpochMs = createdAtEpochMs,
-            lang = Lang(lang)
+            lang = Lang.valueOf(lang),
         )
 
     private fun User.toEntity(): UserEntity =
@@ -65,6 +65,6 @@ class UserRepositoryImpl(
             email = email.value,
             passwordHash = passwordHash,
             createdAtEpochMs = createdAtEpochMs,
-            lang = lang.value
+            lang = lang.name
         )
 }

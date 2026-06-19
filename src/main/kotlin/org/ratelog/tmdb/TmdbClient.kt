@@ -3,6 +3,8 @@ package org.ratelog.tmdb
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import org.ratelog.Lang
+import org.ratelog.TmdbId
 import org.ratelog.movie.Movie
 import org.ratelog.tvshow.TvShow
 import org.springframework.beans.factory.annotation.Value
@@ -32,7 +34,7 @@ class TmdbClient(
         )
         .build()
 
-    fun searchMovies(query: String): Either<TmdbError, List<Movie>> {
+    fun searchMovies(query: String, lang: Lang): Either<TmdbError, List<Movie>> {
         if (query.isBlank()) return emptyList<Movie>().right()
         requireApiKey()
 
@@ -40,7 +42,7 @@ class TmdbClient(
             .uri { builder ->
                 builder.path("/search/movie")
                     .queryParam("api_key", apiKey)
-                    .queryParam("language", "en-US")
+                    .queryParam("language", lang.tmdbLang)
                     .queryParam("include_adult", false)
                     .queryParam("page", 1)
                     .queryParam("query", query)
@@ -55,15 +57,15 @@ class TmdbClient(
         return results.right()
     }
 
-    fun movieDetails(tmdbId: Int): Either<TmdbError, Movie> {
+    fun movieDetails(tmdbId: TmdbId, lang: Lang): Either<TmdbError, Movie> {
         requireApiKey()
 
         return restClient.get()
             .uri { builder ->
                 builder.path("/movie/{id}")
                     .queryParam("api_key", apiKey)
-                    .queryParam("language", "en-US")
-                    .build(tmdbId)
+                    .queryParam("language", lang.tmdbLang)
+                    .build(tmdbId.value)
             }
             .retrieve()
             .body(TmdbMovieResponse::class.java)
@@ -72,7 +74,7 @@ class TmdbClient(
             ?: TmdbError.MovieNotFound.left()
     }
 
-    fun searchTvShows(query: String): Either<TmdbError, List<TvShow>> {
+    fun searchTvShows(query: String, lang: Lang): Either<TmdbError, List<TvShow>> {
         if (query.isBlank()) return emptyList<TvShow>().right()
         requireApiKey()
 
@@ -80,7 +82,7 @@ class TmdbClient(
             .uri { builder ->
                 builder.path("/search/tv")
                     .queryParam("api_key", apiKey)
-                    .queryParam("language", "en-US")
+                    .queryParam("language", lang.tmdbLang)
                     .queryParam("include_adult", false)
                     .queryParam("page", 1)
                     .queryParam("query", query)
@@ -95,15 +97,15 @@ class TmdbClient(
         return results.right()
     }
 
-    fun tvShowDetails(tmdbId: Int): Either<TmdbError, TvShow> {
+    fun tvShowDetails(tmdbId: TmdbId, lang: Lang): Either<TmdbError, TvShow> {
         requireApiKey()
 
         return restClient.get()
             .uri { builder ->
                 builder.path("/tv/{id}")
                     .queryParam("api_key", apiKey)
-                    .queryParam("language", "en-US")
-                    .build(tmdbId)
+                    .queryParam("language", lang.tmdbLang)
+                    .build(tmdbId.value)
             }
             .retrieve()
             .body(TmdbTvShowResponse::class.java)

@@ -45,9 +45,9 @@ class DetailTvShowHandlerTest {
             genres = listOf(Genre.DRAMA),
             lastSeasonNumber = 2,
         )
-        whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
+        whenever(tmdbClient.tvShowDetails(TmdbId(123), Lang.en)).thenReturn(tmdbShow.right())
 
-        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -70,9 +70,9 @@ class DetailTvShowHandlerTest {
             name = "Test Show",
             firstAirDate = LocalDate.parse("2023-01-15"),
         )
-        whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
+        whenever(tmdbClient.tvShowDetails(TmdbId(123), Lang.en)).thenReturn(tmdbShow.right())
 
-        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
 
         val savedShow = tvShowRepository.findByTmdbId(TmdbId(123))
@@ -88,9 +88,9 @@ class DetailTvShowHandlerTest {
             name = "Test Show",
             firstAirDate = LocalDate.parse("2023-01-15"),
         )
-        whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
+        whenever(tmdbClient.tvShowDetails(TmdbId(123), Lang.en)).thenReturn(tmdbShow.right())
 
-        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -111,9 +111,9 @@ class DetailTvShowHandlerTest {
             firstAirDate = LocalDate.parse("2023-01-15"),
             lastSeasonNumber = 2,
         )
-        whenever(tmdbClient.tvShowDetails(123)).thenReturn(tmdbShow.right())
+        whenever(tmdbClient.tvShowDetails(TmdbId(123), Lang.en)).thenReturn(tmdbShow.right())
 
-        val query = GetTvShowDetail(User.Id(1), TmdbId(123))
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())

@@ -59,9 +59,6 @@
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
-                    <args>
-                        <arg>-Xannotation-default-target=param-property</arg>
-                    </args>
                 </configuration>
                 <dependencies>
                     <dependency>

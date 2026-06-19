@@ -32,7 +32,7 @@ class EditUserHandlerTest {
             username = "olduser",
             email = "old@example.com",
             passwordHash = "encoded_oldpassword",
-            lang = Lang("es"),
+            lang = Lang.es,
         )
         userRepository.save(user)
 
@@ -50,7 +50,7 @@ class EditUserHandlerTest {
         val updatedUser = userRepository.findById(User.Id(1))
         assertEquals("newuser", updatedUser!!.username.value)
         assertEquals("new@example.com", updatedUser.email.value)
-        assertEquals("es", updatedUser.lang.value)
+        assertEquals("es", updatedUser.lang.name)
     }
 
     @Test

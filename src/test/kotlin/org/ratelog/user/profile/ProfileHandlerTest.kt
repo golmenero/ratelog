@@ -34,7 +34,7 @@ class ProfileHandlerTest {
             id = 1,
             username = "testuser",
             email = "test@example.com",
-            lang = Lang("es"),
+            lang = Lang.es,
             createdAtEpochMs = 1609459200000
         )
         userRepository.save(user)
@@ -48,7 +48,7 @@ class ProfileHandlerTest {
             { profile ->
                 assertEquals("testuser", profile.username.value)
                 assertEquals("test@example.com", profile.email.value)
-                assertEquals("es", profile.lang.value)
+                assertEquals("es", profile.lang.name)
             }
         )
     }

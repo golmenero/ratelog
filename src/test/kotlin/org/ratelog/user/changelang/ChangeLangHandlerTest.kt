@@ -25,27 +25,27 @@ class ChangeLangHandlerTest {
             id = 1,
             username = "testuser",
             email = "test@example.com",
-            lang = Lang("es"),
+            lang = Lang.es,
         )
         userRepository.save(user)
 
         val command = ChangeLangCommand(
             userId = User.Id(1),
-            lang = Lang("en"),
+            lang = Lang.en,
         )
 
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
         val updatedUser = userRepository.findById(User.Id(1))
-        assertEquals("en", updatedUser!!.lang.value)
+        assertEquals("en", updatedUser!!.lang.name)
     }
 
     @Test
     fun `should return UserNotFound when user does not exist`() {
         val command = ChangeLangCommand(
             userId = User.Id(999),
-            lang = Lang("en"),
+            lang = Lang.en,
         )
 
         val result = handler.handle(command)

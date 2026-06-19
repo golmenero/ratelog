@@ -8,8 +8,8 @@ class BrowserLangResolver {
         fun resolve(request: HttpServletRequest): Locale {
             val browserLocales = request.locales.toList().map { it.language }
             return when(browserLocales.first()) {
-                "es" -> Locale("es")
-                else -> Locale("en")
+                "es" -> Locale.of("es")
+                else -> Locale.of("en")
             }
         }
     }

@@ -22,7 +22,7 @@ class ChangeLangController(
         @RequestParam("lang") lang: String,
         redirectAttributes: RedirectAttributes
     ): String {
-        val newLang = Lang(lang)
+        val newLang = Lang.valueOf(lang)
         return ChangeLangCommand(
             userId = user.id!!,
             lang = newLang,

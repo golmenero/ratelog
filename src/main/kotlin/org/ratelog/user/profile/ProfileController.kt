@@ -35,7 +35,7 @@ class ProfileController(
                     model.addAttribute("username", it.username.value)
                     model.addAttribute("email", it.email.value)
                     model.addAttribute("memberSince", it.memberSince)
-                    model.addAttribute("currentLang", it.lang.value)
+                    model.addAttribute("currentLang", it.lang.name)
                     model.addAttribute("isFollowed", it.isFollowed)
                     model.addAttribute("isLoggedUser", it.userId == user.id)
                     model.addAttribute("ratings", it.ratings)

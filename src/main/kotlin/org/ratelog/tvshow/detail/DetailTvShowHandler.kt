@@ -2,6 +2,7 @@ package org.ratelog.tvshow.detail
 
 import arrow.core.Either
 import arrow.core.raise.either
+import org.ratelog.Lang
 import org.ratelog.TmdbId
 import org.ratelog.tvshow.TvShow
 import org.ratelog.tvshow.TvShowRepository
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 data class GetTvShowDetail(
     val userId: User.Id,
     val tmdbId: TmdbId,
+    val lang: Lang,
     )
 
 data class GetTvShowDetailResult(
@@ -48,7 +50,7 @@ class DetailTvShowHandler(
 ) {
     @Transactional
     fun handle(query: GetTvShowDetail): Either<DetailTvShowHandlerError, GetTvShowDetailResult> = either {
-        val tmdbShow = query.tmdbId.value.let(tmdbClient::tvShowDetails)
+        val tmdbShow = tmdbClient.tvShowDetails(query.tmdbId, query.lang)
             .mapLeft { DetailTvShowHandlerError.TvShowNotFound }
             .bind()
 

@@ -1,5 +1,6 @@
 package org.ratelog.tmdb
 
+import org.ratelog.Lang
 import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieRepository
 import org.ratelog.tvshow.TvShow
@@ -56,7 +57,7 @@ class DailyJobToSyncMetadata(
 
     private fun syncTvShow(show: TvShow) {
         try {
-            tmdbClient.tvShowDetails(show.tmdbId.value)
+            tmdbClient.tvShowDetails(show.tmdbId, Lang.en)
                 .fold(
                     { err -> logger.error("Failed to sync TV show ${show.tmdbId.value}: $err") },
                     { it.copy(id = show.id).let(tvShowRepository::save) }
@@ -68,7 +69,7 @@ class DailyJobToSyncMetadata(
 
     private fun syncMovie(movie: Movie) {
         try {
-            tmdbClient.movieDetails(movie.tmdbId.value)
+            tmdbClient.movieDetails(movie.tmdbId, Lang.en)
                 .fold(
                     { err -> logger.error("Failed to sync movie ${movie.tmdbId.value}: $err") },
                     { it.copy(id = movie.id).let(movieRepository::save) }

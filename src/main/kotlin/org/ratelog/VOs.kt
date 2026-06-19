@@ -90,10 +90,9 @@ data class Score(val value: Double) {
     }
 }
 
-data class Lang(val value: String) {
-    init {
-        require(value in setOf("en", "es")) { "Lang must be 'en' or 'es'" }
-    }
+enum class Lang(val tmdbLang: String) {
+    es(""),
+    en("")
 }
 
 data class Review(val value: String) {

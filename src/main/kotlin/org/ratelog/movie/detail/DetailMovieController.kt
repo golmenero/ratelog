@@ -42,6 +42,7 @@ class DetailMovieController(
         GetMovieDetail(
             userId = user.id!!,
             tmdbId = TmdbId(tmdbId),
+            lang = user.lang,
         )
             .let(handler::handle)
             .fold(

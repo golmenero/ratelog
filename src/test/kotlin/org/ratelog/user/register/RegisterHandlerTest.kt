@@ -29,7 +29,7 @@ class RegisterHandlerTest {
             username = Username("testuser"),
             email = Email("test@example.com"),
             password = Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(command)
@@ -46,7 +46,7 @@ class RegisterHandlerTest {
             username = Username(""),
             email = Email("test@example.com"),
             Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(command)
@@ -61,7 +61,7 @@ class RegisterHandlerTest {
             username = Username("testuser"),
             Email(""),
             Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(command)
@@ -75,7 +75,7 @@ class RegisterHandlerTest {
             username = Username("testuser"),
             email = Email("test@example.com"),
             Password(""),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(command)
@@ -89,7 +89,7 @@ class RegisterHandlerTest {
             username = Username("ab"),
             email = Email("test@example.com"),
             Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(command)
@@ -104,7 +104,7 @@ class RegisterHandlerTest {
             username = Username("a".repeat(51)),
             email = Email("test@example.com"),
             Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(command)
@@ -118,7 +118,7 @@ class RegisterHandlerTest {
             username = Username("testuser"),
             email = Email("test@example.com"),
             Password("short"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(command)
@@ -133,7 +133,7 @@ class RegisterHandlerTest {
             username = Username("testuser"),
             email = Email("existing@example.com"),
             Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
         handler.handle(existingCommand)
 
@@ -141,7 +141,7 @@ class RegisterHandlerTest {
             username = Username("testuser"),
             email = Email("new@example.com"),
             Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(newCommand)
@@ -156,7 +156,7 @@ class RegisterHandlerTest {
             username = Username("existinguser"),
             email = Email("test@example.com"),
             Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
         handler.handle(existingCommand)
 
@@ -164,7 +164,7 @@ class RegisterHandlerTest {
             username = Username("newuser"),
             Email("test@example.com"),
             Password("password123"),
-            lang = Lang("es"),
+            lang = Lang.es,
         )
 
         val result = handler.handle(newCommand)

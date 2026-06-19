@@ -2,6 +2,7 @@ package org.ratelog.movie.detail
 
 import arrow.core.Either
 import arrow.core.raise.either
+import org.ratelog.Lang
 import org.ratelog.TmdbId
 import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieRepository
@@ -13,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional
 
 data class GetMovieDetail(
     val userId: User.Id,
-    val tmdbId: TmdbId
+    val tmdbId: TmdbId,
+    val lang: Lang,
 )
 
 data class GetMovieDetailResult(
@@ -37,7 +39,7 @@ class DetailMovieHandler(
 ) {
     @Transactional
     fun handle(query: GetMovieDetail): Either<DetailMovieHandlerError, GetMovieDetailResult> = either {
-        val tmdbMovie = query.tmdbId.value.let(tmdbClient::movieDetails).bind()
+        val tmdbMovie = tmdbClient.movieDetails(query.tmdbId, query.lang).bind()
 
         val movie = query.tmdbId.let(movieRepository::findByTmdbId)
         val savedMovie = movie ?: tmdbMovie.let(movieRepository::save)
