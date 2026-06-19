@@ -32,6 +32,7 @@
                             <i data-lucide="star"></i>
                         </button>
                         <form th:action="@{/movie/follow}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <input type="hidden" name="movieId" th:value="${movie.id}" />
                             <button type="submit" th:class="${movie.isFollowed} ? 'green' : ''">
                                 <i data-lucide="heart"></i>
@@ -70,6 +71,7 @@
                 </div>
             </div>
             <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <button type="submit" th:aria-label="#{movie.detail.delete.rating}">
                     <i data-lucide="trash"></i>
                 </button>

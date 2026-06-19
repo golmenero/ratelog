@@ -8,6 +8,7 @@
         </div>
 
         <form th:action="@{/movie/rate}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="hidden" name="movieId" th:value="${movie.id}">
             <input type="hidden" name="tmdbId" th:value="${movie.tmdbId}">
 

@@ -20,6 +20,7 @@
                 <i data-lucide="pencil"></i>
             </button>
             <form th:unless="${isLoggedUser}" th:action="@{/user/follow}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="hidden" name="id" th:value="${followId}" />
                 <button th:class="${isFollowed} ? '' : 'primary'" type="submit" th:title="${isFollowed} ? #{community.unfollow} : #{community.follow}">
                     <i th:data-lucide="${isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
@@ -53,6 +54,7 @@
 
     <footer th:if="${isLoggedUser}" class="bmc-footer">
         <form th:if="${isLoggedUser}" th:action="@{/lang}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <select id="lang" name="lang" onchange="this.form.submit()">
                 <option value="en" th:text="#{profile.lang.en}" th:selected="${currentLang == 'en'}">English</option>
                 <option value="es" th:text="#{profile.lang.es}" th:selected="${currentLang == 'es'}">Español</option>
