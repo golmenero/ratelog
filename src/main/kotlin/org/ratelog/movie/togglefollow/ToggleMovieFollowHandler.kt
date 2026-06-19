@@ -25,6 +25,6 @@ class ToggleMovieFollowHandler(
     fun handle(command: ToggleMovieFollow): Either<ToggleMovieFollowHandlerError, Unit> = either {
         val movie = movieRepository.findById(command.movieId) ?: raise(ToggleMovieFollowHandlerError.MovieNotFound)
 
-        movieRepository.toggleFollow(movie.id!!)
+        movieRepository.toggleFollow(command.userId, movie.id!!)
     }
 }
