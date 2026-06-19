@@ -68,7 +68,7 @@ Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a>
 
 | Layer | Technology |
 |---|---|
-| **Backend** | Kotlin 2.3.10 + Spring Boot 3.4.5 |
+| **Backend** | Kotlin 2.4.0 + Spring Boot 3.5.14 |
 | **Database** | PostgreSQL 17 (Flyway migrations) |
 | **Frontend** | Thymeleaf server-rendered HTML + CSS (dark theme, responsive) |
 | **Auth** | Spring Security (BCrypt, form login) |
