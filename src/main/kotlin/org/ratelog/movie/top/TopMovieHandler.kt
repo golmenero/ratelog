@@ -28,11 +28,10 @@ class TopMovieHandler(
 ) {
     fun handle(query: TopMovie): List<TopMovieItem> =
         ratingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
-            .map(::toItem)
+            .mapNotNull(::toItem)
 
-    private fun toItem(item: Pair<Rank, Rating>) = TopMovieItem(
-        rank = item.first,
-        rating = item.second,
-        movie = movieRepository.findById(item.second.movieId)!!
-    )
+    private fun toItem(item: Pair<Rank, Rating>) =
+        movieRepository
+            .findById(item.second.movieId)
+            ?.let { TopMovieItem(rank = item.first, rating = item.second, movie = it) }
 }

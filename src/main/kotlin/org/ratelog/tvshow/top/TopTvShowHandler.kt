@@ -28,11 +28,10 @@ class TopTvShowHandler(
 ) {
     fun handle(query: TopTvShow): List<TopTvShowItem> =
         tvRatingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
-            .map(::toItem)
+            .mapNotNull(::toItem)
 
-    private fun toItem(item: Pair<Rank, TvRating>) = TopTvShowItem(
-        rank = item.first,
-        rating = item.second,
-        tvShow = tvShowRepository.findById(item.second.tvShowId)!!
-    )
+    private fun toItem(item: Pair<Rank, TvRating>) =
+        tvShowRepository
+            .findById(item.second.tvShowId)
+            ?.let { TopTvShowItem(rank = item.first, rating = item.second, tvShow = it) }
 }
