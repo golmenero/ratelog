@@ -37,8 +37,8 @@ class InMemoryTvShowRepository : TvShowRepository {
     override fun isFollowed(userId: User.Id, showId: TvShow.Id): Boolean =
         follows[Pair(userId.value, showId.value)] == true
 
-    override fun toggleFollow(showId: TvShow.Id) {
-        val key = Pair(1L, showId.value)
+    override fun toggleFollow(userId: User.Id, showId: TvShow.Id) {
+        val key = Pair(userId.value, showId.value)
         follows[key] = follows[key] != true
     }
 

@@ -37,8 +37,8 @@ class InMemoryMovieRepository : MovieRepository {
     override fun isFollowed(userId: User.Id, movieId: Movie.Id): Boolean =
         follows[Pair(userId.value, movieId.value)] == true
 
-    override fun toggleFollow(movieId: Movie.Id) {
-        val key = Pair(1L, movieId.value)
+    override fun toggleFollow(userId: User.Id, movieId: Movie.Id) {
+        val key = Pair(userId.value, movieId.value)
         follows[key] = follows[key] != true
     }
 
