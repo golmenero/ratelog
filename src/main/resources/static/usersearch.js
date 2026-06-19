@@ -38,7 +38,7 @@ const UserSearch = {
 
     async search(query) {
         try {
-            const response = await fetch(`/api/users/search?q=${encodeURIComponent(query)}`);
+            const response = await fetch(`/users/search?q=${encodeURIComponent(query)}`);
             const users = await response.json();
             this.renderDropdown(users);
         } catch (error) {

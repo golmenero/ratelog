@@ -27,7 +27,7 @@ class FeedController(
     private val followedUsersHandler: FollowedUsersHandler,
 ) {
 
-    @GetMapping("/api/users/search")
+    @GetMapping("/users/search")
     @ResponseBody
     fun searchUsersApi(
         @CurrentUser user: User,
