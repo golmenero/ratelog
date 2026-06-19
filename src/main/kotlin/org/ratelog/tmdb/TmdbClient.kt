@@ -15,11 +15,8 @@ import java.time.Duration
 
 @Component
 class TmdbClient(
-    @Value("\${ratelog.tmdb.api-key}")
-    private val apiKey: String,
-
-    @Value("\${ratelog.tmdb.base-url}")
-    private val baseUrl: String = "https://api.themoviedb.org/3"
+    @Value("\${ratelog.tmdb.api-key}") private val apiKey: String,
+    @Value("\${ratelog.tmdb.base-url}") private val baseUrl: String = "https://api.themoviedb.org/3"
 ) {
     private val rateLimiter = TmdbRateLimiter(maxRequestsPerSecond = 40)
 

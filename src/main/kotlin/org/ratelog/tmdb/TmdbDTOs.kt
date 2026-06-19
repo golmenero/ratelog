@@ -16,30 +16,20 @@ import java.time.LocalDate
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TmdbSearchResponse(
-    @JsonProperty("results")
-    val results: List<TmdbMovieResponse> = emptyList()
+    @JsonProperty("results") val results: List<TmdbMovieResponse> = emptyList()
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TmdbMovieResponse(
-    @JsonProperty("id")
-    val id: Int,
-    @JsonProperty("title")
-    val title: String,
-    @JsonProperty("original_title")
-    val originalTitle: String? = null,
-    @JsonProperty("overview")
-    val overview: String? = null,
-    @JsonProperty("release_date")
-    val releaseDate: String? = null,
-    @JsonProperty("poster_path")
-    val posterPath: String? = null,
-    @JsonProperty("vote_average")
-    val voteAverage: Double? = null,
-    @JsonProperty("genres")
-    val genres: List<TmdbGenreResponse> = emptyList(),
-    @JsonProperty("status")
-    val status: String? = null,
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("title") val title: String,
+    @JsonProperty("original_title") val originalTitle: String? = null,
+    @JsonProperty("overview") val overview: String? = null,
+    @JsonProperty("release_date") val releaseDate: String? = null,
+    @JsonProperty("poster_path") val posterPath: String? = null,
+    @JsonProperty("vote_average") val voteAverage: Double? = null,
+    @JsonProperty("genres") val genres: List<TmdbGenreResponse> = emptyList(),
+    @JsonProperty("status") val status: String? = null,
 ) {
     fun toDomain() = Movie(
         id = null,
@@ -58,32 +48,21 @@ data class TmdbMovieResponse(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TmdbTvShowSearchResponse(
-    @JsonProperty("results")
-    val results: List<TmdbTvShowResponse> = emptyList()
+    @JsonProperty("results") val results: List<TmdbTvShowResponse> = emptyList()
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TmdbTvShowResponse(
-    @JsonProperty("id")
-    val id: Int,
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("original_name")
-    val originalName: String? = null,
-    @JsonProperty("overview")
-    val overview: String? = null,
-    @JsonProperty("first_air_date")
-    val firstAirDate: String? = null,
-    @JsonProperty("poster_path")
-    val posterPath: String? = null,
-    @JsonProperty("vote_average")
-    val voteAverage: Double? = null,
-    @JsonProperty("genres")
-    val genres: List<TmdbGenreResponse> = emptyList(),
-    @JsonProperty("status")
-    val status: String? = null,
-    @JsonProperty("seasons")
-    val seasons: List<TmdbTvSeasonResponse> = emptyList()
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("name") val name: String,
+    @JsonProperty("original_name") val originalName: String? = null,
+    @JsonProperty("overview") val overview: String? = null,
+    @JsonProperty("first_air_date") val firstAirDate: String? = null,
+    @JsonProperty("poster_path") val posterPath: String? = null,
+    @JsonProperty("vote_average") val voteAverage: Double? = null,
+    @JsonProperty("genres") val genres: List<TmdbGenreResponse> = emptyList(),
+    @JsonProperty("status") val status: String? = null,
+    @JsonProperty("seasons") val seasons: List<TmdbTvSeasonResponse> = emptyList()
 ) {
     fun toDomain() = TvShow(
         id = null,
@@ -112,20 +91,14 @@ data class TmdbTvShowResponse(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TmdbTvSeasonResponse(
-    @JsonProperty("season_number")
-    val seasonNumber: Int,
-    @JsonProperty("episode_count")
-    val episodeCount: Int? = null,
-    @JsonProperty("air_date")
-    val airDate: String? = null,
-    @JsonProperty("overview")
-    val overview: String? = null
+    @JsonProperty("season_number") val seasonNumber: Int,
+    @JsonProperty("episode_count") val episodeCount: Int? = null,
+    @JsonProperty("air_date") val airDate: String? = null,
+    @JsonProperty("overview") val overview: String? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TmdbGenreResponse(
-    @JsonProperty("id")
-    val id: Int,
-    @JsonProperty("name")
-    val name: String
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("name") val name: String
 )
