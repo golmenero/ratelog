@@ -21,6 +21,8 @@ class TmdbClient(
     @Value("\${ratelog.tmdb.base-url}")
     private val baseUrl: String = "https://api.themoviedb.org/3"
 ) {
+    private val rateLimiter = TmdbRateLimiter(maxRequestsPerSecond = 40)
+
     private val restClient: RestClient = RestClient.builder()
         .baseUrl(baseUrl)
         .requestFactory(
@@ -37,6 +39,7 @@ class TmdbClient(
     fun searchMovies(query: String, lang: Lang): Either<TmdbError, List<Movie>> {
         if (query.isBlank()) return emptyList<Movie>().right()
         requireApiKey()
+        rateLimiter.acquire()
 
         val results = restClient.get()
             .uri { builder ->
@@ -59,6 +62,7 @@ class TmdbClient(
 
     fun movieDetails(tmdbId: TmdbId, lang: Lang): Either<TmdbError, Movie> {
         requireApiKey()
+        rateLimiter.acquire()
 
         return restClient.get()
             .uri { builder ->
@@ -77,6 +81,7 @@ class TmdbClient(
     fun searchTvShows(query: String, lang: Lang): Either<TmdbError, List<TvShow>> {
         if (query.isBlank()) return emptyList<TvShow>().right()
         requireApiKey()
+        rateLimiter.acquire()
 
         val results = restClient.get()
             .uri { builder ->
@@ -99,6 +104,7 @@ class TmdbClient(
 
     fun tvShowDetails(tmdbId: TmdbId, lang: Lang): Either<TmdbError, TvShow> {
         requireApiKey()
+        rateLimiter.acquire()
 
         return restClient.get()
             .uri { builder ->
