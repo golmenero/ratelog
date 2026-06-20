@@ -88,6 +88,7 @@ Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a>
 ```powershell
 # 1. Set environment variables
 $env:TMDB_API_KEY="YOUR_API_KEY"
+$env:REMEMBER_ME_KEY="YOUR_SECRET_KEY"
 
 # 2. Run
 mvn clean compile exec:java
@@ -112,6 +113,7 @@ Includes PostgreSQL service:
 ```powershell
 # Option A: variables in session
 $env:TMDB_API_KEY="YOUR_API_KEY"
+$env:REMEMBER_ME_KEY="YOUR_SECRET_KEY"
 docker compose up --build
 
 # Option B: .env file in project root (copy from .env.example)
@@ -132,6 +134,7 @@ Compose services:
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `TMDB_API_KEY` | Yes | — | TMDB API key |
+| `REMEMBER_ME_KEY` | Yes | — | Secret key for remember-me cookie |
 | `PORT` | No | `8080` | HTTP port |
 | `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
 | `POSTGRES_PORT` | No | `5432` | PostgreSQL port |
@@ -146,7 +149,7 @@ Compose services:
 Minimal flow:
 
 1. Copy `.env.example` to `.env` in your Truenas Custom App stack
-2. Set `TMDB_API_KEY` and `POSTGRES_DATA_DIR` (path `/mnt/<pool>/...`)
+2. Set `TMDB_API_KEY`, `REMEMBER_ME_KEY` and `POSTGRES_DATA_DIR` (path `/mnt/<pool>/...`)
 3. Set `RATLOG_IMAGE=ghcr.io/<owner>/ratelog:latest` (or specific version)
 4. Deploy with compose
 5. Verify at `http://IP_TRUENAS:8080/api/health`

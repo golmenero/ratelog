@@ -22,7 +22,7 @@ server:
 
 ratelog:
   remember-me:
-    key: ${REMEMBER_ME_KEY:change-me-in-production}
+    key: ${REMEMBER_ME_KEY}
   tmdb:
     api-key: ${TMDB_API_KEY:}
     base-url: https://api.themoviedb.org/3
