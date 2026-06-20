@@ -25,9 +25,9 @@ data class RatingEntity(
 data class FeedMovieRow(
     val username: String,
     val title: String,
-    val posterPath: String?,
     val tmdbId: Int,
     val score: Double?,
+    val reviewText: String?,
     val createdAtEpochMs: Long,
 )
 
@@ -72,7 +72,7 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
 
     @Query(
         """
-        SELECT u.username, m.title, m.poster_path, m.tmdb_id, r.score, r.created_at_epoch_ms
+        SELECT u.username, m.title, m.tmdb_id, r.score, r.review_text, r.created_at_epoch_ms
         FROM movie_ratings r
         INNER JOIN movies m ON r.movie_id = m.id
         INNER JOIN users u ON r.user_id = u.id

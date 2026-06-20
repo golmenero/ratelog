@@ -57,7 +57,7 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
 
     @Query(
         """
-        SELECT u.username, t.name AS title, t.poster_path, t.tmdb_id, tv.score, r.created_at_epoch_ms
+        SELECT u.username, t.name AS title, t.tmdb_id, tv.score, r.review_text, r.created_at_epoch_ms
         FROM season_ratings r
         INNER JOIN tv_ratings tv ON r.tv_show_id = tv.tv_show_id AND r.user_id = tv.user_id
         INNER JOIN tv t ON r.tv_show_id = t.id
@@ -72,9 +72,9 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
 data class FeedTvRow(
     val username: String,
     val title: String,
-    val posterPath: String?,
     val tmdbId: Int,
     val score: Double?,
+    val reviewText: String?,
     val createdAtEpochMs: Long,
 )
 

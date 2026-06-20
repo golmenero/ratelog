@@ -35,10 +35,10 @@ data class Profile(
 
 data class ProfileRating(
     val title: String,
-    val posterPath: String?,
     val tmdbId: Int,
     val type: String,
     val score: Double,
+    val reviewText: String?,
     val ratedAt: String,
     val createdAtEpochMs: Long,
 )
@@ -71,20 +71,20 @@ class ProfileHandler(
 
     private fun toResponse(rating: FeedMovieRow) = ProfileRating(
         title = rating.title,
-        posterPath = rating.posterPath,
         tmdbId = rating.tmdbId,
         type = MediaType.movie.name,
         score = rating.score ?: 0.0,
+        reviewText = rating.reviewText,
         ratedAt = rating.createdAtEpochMs.toDateString(),
         createdAtEpochMs = rating.createdAtEpochMs,
     )
 
     private fun toResponse(rating: FeedTvRow) = ProfileRating(
         title = rating.title,
-        posterPath = rating.posterPath,
         tmdbId = rating.tmdbId,
         type = MediaType.tvshow.name,
         score = rating.score ?: 0.0,
+        reviewText = rating.reviewText,
         ratedAt = rating.createdAtEpochMs.toDateString(),
         createdAtEpochMs = rating.createdAtEpochMs,
     )
