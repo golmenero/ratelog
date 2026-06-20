@@ -11,7 +11,7 @@
         <div class="grid">
             <div>
                 <div>
-                    <div th:each="item : ${feed}" class="generic-card">
+                    <div th:each="item : ${feed}" class="card">
                         <span class="username" th:text="${item.username}">Username</span>
                         <div class="flex separate">
                             <a class="link secondary" th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">

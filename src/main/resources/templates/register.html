@@ -6,7 +6,7 @@
 <div class="page">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='register')}"></header>
 
-    <section class="generic-card centered">
+    <section class="card centered">
         <h2 th:text="#{auth.create.account}">Create your account</h2>
 
         <div th:if="${error}"  class="feedback error" th:text="#{${error}}"></div>

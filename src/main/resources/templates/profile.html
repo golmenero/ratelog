@@ -33,7 +33,7 @@
 
     <h2 class="w-100" th:text="#{community.activity.feed}">Recent activity</h2>
     <div>
-        <div th:each="item : ${ratings}" class="generic-card">
+        <div th:each="item : ${ratings}" class="card">
             <div class="flex separate">
                 <a class="link secondary" th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
                     <span class="title" th:text="${item.title}">Title</span>

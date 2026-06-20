@@ -9,7 +9,7 @@
     <div th:if="${param.error}"  class="feedback error" th:text="#{auth.login.error}"></div>
     <div th:if="${param.logout}" class="feedback success" th:text="#{auth.logout.success}"></div>
 
-    <section class="generic-card centered">
+    <section class="card centered">
         <h2 th:text="#{auth.signin}">Sign in</h2>
 
         <form th:action="@{/login/process}" class="w-100" method="post">

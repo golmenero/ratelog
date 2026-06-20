@@ -52,8 +52,8 @@
             </form>
 
             <div th:if="${tops != null}">
-                <div th:if="${#lists.isEmpty(tops)}" class="generic-card" th:text="#{tvshows.empty.filter}">No rated TV shows yet for this filter.</div>
-                <a th:href="@{'/tv/' + ${s.tmdbId}}" th:each="s, iterStat : ${tops}" class="generic-card flex separate">
+                <div th:if="${#lists.isEmpty(tops)}" class="card" th:text="#{tvshows.empty.filter}">No rated TV shows yet for this filter.</div>
+                <a th:href="@{'/tv/' + ${s.tmdbId}}" th:each="s, iterStat : ${tops}" class="card flex separate">
                     <div class="flex gap-lg">
                         <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${s.posterPath}}" th:alt="'Poster of ' + ${s.name}">
                         <div>
@@ -78,7 +78,7 @@
             <div th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
                 <div class="separator"></div>
                 <h3 th:text="#{tvshows.premieres.released}">Released</h3>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="generic-card">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="card">
                     <div class="flex separate">
                         <span class="title" th:text="${item.name}">Title</span>
                         <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
@@ -90,7 +90,7 @@
             <div th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
                 <div class="separator"></div>
                 <div th:text="#{tvshows.premieres.upcoming}">Upcoming</div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="generic-card">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="card">
                     <div class="flex separate">
                         <span class="title" th:text="${item.name}">Title</span>
                         <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
@@ -102,7 +102,7 @@
             <div th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
                 <div class="separator"></div>
                 <div th:text="#{tvshows.premieres.no.date}">No release date yet</div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="generic-card">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="card">
                     <div class="flex separate">
                         <span class="title" th:text="${item.name}">Title</span>
                         <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
