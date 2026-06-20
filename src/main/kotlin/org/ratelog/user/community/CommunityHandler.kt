@@ -42,9 +42,7 @@ class CommunityHandler(
         val followedIds = userRepository.findFollowedUserIds(query.userId)
         if (followedIds.isEmpty()) return@either emptyList()
 
-        val thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS)
-
-        val movieItems = ratingRepository.findFeedItemsByUserIdsAndLastDays(followedIds, thirtyDaysAgo, query.limit)
+        val movieItems = ratingRepository.findFeedItemsByUserIds(followedIds, query.limit)
             .map { row ->
                 FeedItem(
                     username = row.username,
@@ -59,7 +57,7 @@ class CommunityHandler(
                 )
             }
 
-        val tvItems = tvRatingRepository.findFeedItemsByUserIdsAndLastDays(followedIds, thirtyDaysAgo, query.limit)
+        val tvItems = tvRatingRepository.findFeedItemsByUserIds(followedIds, query.limit)
             .map { row ->
                 FeedItem(
                     username = row.username,

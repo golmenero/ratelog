@@ -14,8 +14,6 @@ import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 import org.springframework.transaction.annotation.Transactional
 
 data class GetProfile(
@@ -54,11 +52,9 @@ class ProfileHandler(
 
     @Transactional
     fun handle(query: GetProfile): Either<ProfileHandlerError, Profile> = either {
-        val thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS)
-
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
-        val ratings = ratingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo, query.limit).map { toResponse(it) }
-        val tvRatings = tvRatingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo, query.limit).map { toResponse(it) }
+        val ratings = ratingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
+        val tvRatings = tvRatingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
 
         Profile(
             userId = user.id!!,
