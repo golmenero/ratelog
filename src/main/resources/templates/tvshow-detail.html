@@ -60,7 +60,7 @@
                     </button>
                 </div>
             </div>
-            <div th:if="${season.hasRating}" class="flex gap">
+            <div th:if="${season.hasRating}" class="flex gap centered">
                 <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
                 <div class="category">
                     <i data-lucide="clapperboard"></i>

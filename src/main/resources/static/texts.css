@@ -95,7 +95,6 @@ span {
       font-weight: 800;
       font-family: var(--font-serif);
       color: hsl(20 83% 84%);
-      line-height: 1;
   }
 
   &.username {
