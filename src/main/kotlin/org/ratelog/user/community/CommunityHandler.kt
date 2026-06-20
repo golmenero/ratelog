@@ -20,10 +20,10 @@ data class FeedQuery(
 data class FeedItem(
     val username: String,
     val title: String,
-    val posterPath: String?,
     val tmdbId: Int,
     val type: String,
     val score: Double,
+    val reviewText: String?,
     val ratedAt: String,
     val createdAtEpochMs: Long,
 )
@@ -47,10 +47,10 @@ class CommunityHandler(
                 FeedItem(
                     username = row.username,
                     title = row.title,
-                    posterPath = row.posterPath,
                     tmdbId = row.tmdbId,
                     type = MediaType.movie.name,
                     score = row.score ?: 0.0,
+                    reviewText = row.reviewText,
                     ratedAt = row.createdAtEpochMs.toDateString(),
                     createdAtEpochMs = row.createdAtEpochMs,
                 )
@@ -61,10 +61,10 @@ class CommunityHandler(
                 FeedItem(
                     username = row.username,
                     title = row.title,
-                    posterPath = row.posterPath,
                     tmdbId = row.tmdbId,
                     type = MediaType.tvshow.name,
                     score = row.score ?: 0.0,
+                    reviewText = row.reviewText,
                     ratedAt = row.createdAtEpochMs.toDateString(),
                     createdAtEpochMs = row.createdAtEpochMs,
                 )

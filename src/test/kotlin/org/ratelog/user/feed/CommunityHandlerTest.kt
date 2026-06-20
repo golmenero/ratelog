@@ -52,6 +52,9 @@ class CommunityHandlerTest {
         assertTrue(result.isRight())
         val feedItems = result.getOrElse { emptyList() }
         assertEquals(1, feedItems.size)
+        assertEquals("followeduser", feedItems[0].username)
+        assertEquals("movie", feedItems[0].title)
+        assertNull(feedItems[0].reviewText)
     }
 
     @Test
@@ -86,5 +89,26 @@ class CommunityHandlerTest {
         assertTrue(result.isRight())
         val feedItems = result.getOrElse { emptyList() }
         assertEquals(1, feedItems.size)
+        assertEquals("followeduser", feedItems[0].username)
+        assertEquals("tvshow", feedItems[0].type)
+    }
+
+    @Test
+    fun `should return feed items with review text when rating has review`() {
+        val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
+        userRepository.save(followedUser)
+        userRepository.toggleFollow(User.Id(1), User.Id(2))
+
+        val review = org.ratelog.Review("Great movie!")
+        val rating = RatingFactory.aRating(movieId = Movie.Id(1), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = review.value)
+        ratingRepository.save(rating)
+
+        val query = FeedQuery(User.Id(1))
+        val result = handler.handle(query)
+
+        assertTrue(result.isRight())
+        val feedItems = result.getOrElse { emptyList() }
+        assertEquals(1, feedItems.size)
+        assertEquals("Great movie!", feedItems[0].reviewText)
     }
 }
