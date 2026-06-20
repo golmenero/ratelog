@@ -150,6 +150,17 @@ a.link {
   }
 }
 
+a.link.secondary {
+  color: var(--text-soft);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+    color: var(--text);
+  }
+}
+
 .form-group {
   display: grid;
   gap: 8px;

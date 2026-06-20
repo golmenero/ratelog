@@ -10,25 +10,26 @@
 
         <div class="grid">
             <div>
-                <a th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}" th:each="item : ${feed}" class="card">
-                    <div>
-                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w92' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}" />
-                        <div>
-                            <span class="username" th:text="${item.username}">Username</span>
-                            <br>
-                            <h3 class="title" th:text="${item.title}">Title</h3>
-                            <div class="tags">
-                                <span th:if="${item.type == 'movie'}" class="tag" th:text="#{community.type.movie}">Movie</span>
-                                <span th:if="${item.type == 'tvshow'}" class="tag" th:text="#{community.type.tv}">TV</span>
+                <div>
+                    <div th:each="item : ${feed}" class="generic-card">
+                        <span class="username" th:text="${item.username}">Username</span>
+                        <div class="flex separate">
+                            <a class="link secondary" th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
+                                <span class="title" th:text="${item.title}">Title</span>
+                                <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
+                            </a>
+                            <div>
+                                <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                        <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
                         <br>
-                        <span class="date"><span th:text="#{community.activity.rated.at}">Rated on</span> <span th:text="${item.ratedAt}">date</span></span>
+                        <span class="date">
+                            <span th:text="#{community.activity.rated.at}">Rated on</span>
+                            <span th:text="${item.ratedAt}">date</span>
+                        </span>
                     </div>
-                </a>
+                </div>
             </div>
 
             <div>
