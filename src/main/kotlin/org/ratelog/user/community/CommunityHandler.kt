@@ -9,13 +9,16 @@ import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 import org.springframework.transaction.annotation.Transactional
 
 data class FeedQuery(
     val userId: User.Id,
     val limit: Int,
+)
+
+data class FeedResult(
+    val items: List<FeedItem>,
+    val hasMore: Boolean,
 )
 
 data class FeedItem(
@@ -38,9 +41,9 @@ class CommunityHandler(
 ) {
 
     @Transactional
-    fun handle(query: FeedQuery): Either<CommunityHandlerError, List<FeedItem>> = either {
+    fun handle(query: FeedQuery): Either<CommunityHandlerError, FeedResult> = either {
         val followedIds = userRepository.findFollowedUserIds(query.userId)
-        if (followedIds.isEmpty()) return@either emptyList()
+        if (followedIds.isEmpty()) return@either FeedResult(emptyList(), false)
 
         val movieItems = ratingRepository.findFeedItemsByUserIds(followedIds, query.limit)
             .map { row ->
@@ -72,6 +75,9 @@ class CommunityHandler(
                 )
             }
 
-        (movieItems + tvItems).sortedByDescending { it.createdAtEpochMs }
+        val totalCount = ratingRepository.countFeedItemsByUserIds(followedIds) + tvRatingRepository.countFeedItemsByUserIds(followedIds)
+        val items = (movieItems + tvItems).sortedByDescending { it.createdAtEpochMs }
+
+        FeedResult(items, totalCount > query.limit)
     }
 }

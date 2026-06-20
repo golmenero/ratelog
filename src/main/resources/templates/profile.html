@@ -50,6 +50,9 @@
                 <span th:text="${item.ratedAt}">date</span>
             </span>
         </div>
+        <div th:if="${hasMore}" class="load-more-container">
+            <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="load-more-btn" th:text="#{community.load.more}">Load More</a>
+        </div>
     </div>
 
     <footer th:if="${isLoggedUser}" class="bmc-footer">

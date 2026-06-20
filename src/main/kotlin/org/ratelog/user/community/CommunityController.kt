@@ -21,7 +21,10 @@ class CommunityController(
         FeedQuery(user.id!!, limit).let(communityHandler::handle)
             .fold(
                 { },
-                { model.addAttribute("feed", it) }
+                {
+                    model.addAttribute("feed", it.items)
+                    model.addAttribute("hasMore", it.hasMore)
+                }
             )
 
         FollowedUsersQuery(user.id).let(followedUsersHandler::handle)

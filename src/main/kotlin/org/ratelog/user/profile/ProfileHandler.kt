@@ -30,6 +30,7 @@ data class Profile(
     val lang: Lang,
     val isFollowed: Boolean,
     val ratings: List<ProfileRating>,
+    val hasMore: Boolean,
 )
 
 data class ProfileRating(
@@ -56,6 +57,8 @@ class ProfileHandler(
         val ratings = ratingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
         val tvRatings = tvRatingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
 
+        val totalCount = ratingRepository.countFeedItemsByUserIds(listOf(query.userId)) + tvRatingRepository.countFeedItemsByUserIds(listOf(query.userId))
+
         Profile(
             userId = user.id!!,
             username = user.username,
@@ -64,6 +67,7 @@ class ProfileHandler(
             lang = user.lang,
             isFollowed = userRepository.isFollowing(query.loggedUserId, query.userId),
             ratings =  (ratings + tvRatings).sortedByDescending { it.createdAtEpochMs },
+            hasMore = totalCount > query.limit,
         )
     }
 

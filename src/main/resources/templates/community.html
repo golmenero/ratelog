@@ -29,6 +29,9 @@
                             <span th:text="${item.ratedAt}">date</span>
                         </span>
                     </div>
+                    <div th:if="${hasMore}" class="load-more-container">
+                        <a th:href="@{/community(limit=${limit + 10})}" class="load-more-btn" th:text="#{community.load.more}">Load More</a>
+                    </div>
                 </div>
             </div>
 

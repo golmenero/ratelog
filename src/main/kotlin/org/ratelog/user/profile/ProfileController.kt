@@ -42,6 +42,7 @@ class ProfileController(
                     model.addAttribute("isFollowed", it.isFollowed)
                     model.addAttribute("isLoggedUser", it.userId == user.id)
                     model.addAttribute("ratings", it.ratings)
+                    model.addAttribute("hasMore", it.hasMore)
                     model.addAttribute("limit", limit)
                     "profile"
                 }
