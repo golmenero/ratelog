@@ -9,6 +9,15 @@ _2026-06-20_
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.3
+_2026-06-20_
+### ➕ Added
+- Persist season ratings on DB for feed inference
+### ⚡ Changed
+- Now the env var REMEMBER_ME_KEY is not mandatory anymore. If the key is not set, remember me will be disabled.
+### 🔧 Fixed
+- Fixed some styling of titles on premiere cards and titles
+
 ## Release v1.1.2
 _2026-06-20_
 ### 🔧 Fixed

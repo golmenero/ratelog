@@ -66,7 +66,7 @@ class ProfileHandler(
             memberSince = user.createdAtEpochMs.toDateString(),
             lang = user.lang,
             isFollowed = userRepository.isFollowing(query.loggedUserId, query.userId),
-            ratings =  (ratings + tvRatings).sortedByDescending { it.ratedAt },
+            ratings =  (ratings + tvRatings).sortedByDescending { it.createdAtEpochMs },
         )
     }
 
