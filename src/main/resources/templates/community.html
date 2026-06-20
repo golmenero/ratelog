@@ -34,7 +34,7 @@
             <div>
                 <h2 th:text="#{community.search.users}">Search Users</h2>
                 <div class="search-wrapper">
-                    <input type="text" id="user-search-input" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" class="w-100" data-no-users-msg="#{community.search.no.users.found}" />
+                    <input type="text" id="user-search-input" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" class="w-100" th:data-no-users-msg="#{community.search.no.users.found}" />
                     <div id="user-search-dropdown" class="search-dropdown"></div>
                 </div>
 
