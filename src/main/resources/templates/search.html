@@ -27,9 +27,9 @@
                     <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                 </div>
                 <div class="result-content">
-                    <div class="tags">
-                        <span th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
-                        <span th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
+                    <div class="flex gap">
+                        <span class="tag" th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
+                        <span class="tag" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
                     </div>
                     <h3 th:text="${item.title}">Title</h3>
                     <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : #{search.no.synopsis}">Overview</p>

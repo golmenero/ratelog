@@ -24,8 +24,8 @@
                 </div>
                 <br>
                 <div class="flex gap-lg separate">
-                    <div th:if="${!#lists.isEmpty(show.genres)}" class="tags">
-                        <span th:each="genre : ${show.genres}" th:text="${genre}">Genre</span>
+                    <div th:if="${!#lists.isEmpty(show.genres)}" class="flex gap">
+                        <span class="tag" th:each="genre : ${show.genres}" th:text="${genre}">Genre</span>
                     </div>
                     <div class="flex gap-lg">
                         <form th:action="@{/tvshow/follow}" method="post">
@@ -60,7 +60,7 @@
                     </button>
                 </div>
             </div>
-            <div th:if="${season.hasRating}" class="categories">
+            <div th:if="${season.hasRating}" class="flex gap">
                 <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
                 <div class="category">
                     <i data-lucide="clapperboard"></i>

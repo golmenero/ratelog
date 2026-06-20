@@ -24,8 +24,8 @@
                 </div>
                 <br>
                 <div class="flex gap-lg separate">
-                    <div th:if="${!#lists.isEmpty(movie.genres)}" class="tags">
-                        <span th:each="genre : ${movie.genres}" th:text="${genre}">Genre</span>
+                    <div th:if="${!#lists.isEmpty(movie.genres)}" class="flex-gap">
+                        <span class="tag" th:each="genre : ${movie.genres}" th:text="${genre}">Genre</span>
                     </div>
                     <div class="flex gap-lg">
                         <button th:if="${!movie.hasRating}" id="btnOpenRateModal">
@@ -48,7 +48,7 @@
 
     <div th:if="${movie != null && movie.directing != null}" class="card">
         <div class="flex separate">
-            <div th:if="${movie.hasRating}" class="categories">
+            <div th:if="${movie.hasRating}" class="flex gap">
                 <div class="category">
                     <i data-lucide="clapperboard"></i>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
