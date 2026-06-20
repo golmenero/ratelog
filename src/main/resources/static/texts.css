@@ -73,8 +73,9 @@ span {
     line-height: 1.15;
     letter-spacing: -0.04em;
     font-family: var(--font-serif);
-    white-space: nowrap;
     overflow: hidden;
+    word-break: break-word;
+    white-space: normal;
     text-overflow: ellipsis;
     text-decoration: none;
     display: inline;
