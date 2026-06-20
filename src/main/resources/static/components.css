@@ -8,6 +8,8 @@
   margin-bottom: 8px;
   text-decoration: none;
   color: inherit;
+  width: 100%;
+  display: block;
 }
 
 .results-grid {
@@ -45,25 +47,6 @@
       }
     }
   }
-}
-
-.premiere-card {
-  margin-top: 16px;
-  padding: 16px 20px;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow-soft);
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-  z-index: 1;
-  gap: 16px;
-  display: block;
 }
 
 .tags {

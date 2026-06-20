@@ -78,7 +78,7 @@
             <div th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
                 <div class="separator"></div>
                 <h3 th:text="#{tvshows.premieres.released}">Released</h3>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="premiere-card">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="generic-card">
                     <div class="flex separate">
                         <span class="title" th:text="${item.name}">Title</span>
                         <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
@@ -90,7 +90,7 @@
             <div th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
                 <div class="separator"></div>
                 <div th:text="#{tvshows.premieres.upcoming}">Upcoming</div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="premiere-card">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="generic-card">
                     <div class="flex separate">
                         <span class="title" th:text="${item.name}">Title</span>
                         <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
@@ -102,7 +102,7 @@
             <div th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
                 <div class="separator"></div>
                 <div th:text="#{tvshows.premieres.no.date}">No release date yet</div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="premiere-card">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="generic-card">
                     <div class="flex separate">
                         <span class="title" th:text="${item.name}">Title</span>
                         <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
