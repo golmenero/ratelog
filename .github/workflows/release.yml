@@ -20,7 +20,7 @@ jobs:
       - name: Extract changelog body
         id: changelog
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${GITHUB_REF_NAME}"
           BODY=$(awk "/## Release ${VERSION}/{flag=1; next} /^## Release /{flag=0} flag" CHANGELOG.md)
           echo "body<<EOF" >> "$GITHUB_OUTPUT"
           echo "$BODY" >> "$GITHUB_OUTPUT"
