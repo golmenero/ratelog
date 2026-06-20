@@ -75,29 +75,6 @@ Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a>
 
 ---
 
-## Run Locally
-
-### Prerequisites
-
-- JDK 21
-- PostgreSQL running locally (or adjust connection variables)
-- TMDB API key ([get one here](https://www.themoviedb.org/settings/api))
-
-### Steps
-
-```powershell
-# 1. Set environment variables
-$env:TMDB_API_KEY="YOUR_API_KEY"
-$env:REMEMBER_ME_KEY="YOUR_SECRET_KEY"
-
-# 2. Run
-mvn clean compile exec:java
-```
-
-Open in browser: `http://localhost:8080/`
-
----
-
 ## Docker
 
 ### Build Image
@@ -108,19 +85,7 @@ docker build -t ratelog .
 
 ### Run with Docker Compose
 
-Includes PostgreSQL service:
-
-```powershell
-# Option A: variables in session
-$env:TMDB_API_KEY="YOUR_API_KEY"
-$env:REMEMBER_ME_KEY="YOUR_SECRET_KEY"
-docker compose up --build
-
-# Option B: .env file in project root (copy from .env.example)
-docker compose up --build
-```
-
-Compose services:
+Container services:
 
 | Service | Description |
 |---|---|
