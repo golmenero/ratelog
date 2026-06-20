@@ -55,6 +55,7 @@ class CommunityHandlerTest {
         assertEquals("followeduser", feedItems[0].username)
         assertEquals("movie", feedItems[0].title)
         assertNull(feedItems[0].reviewText)
+        assertNull(feedItems[0].seasonNumber)
     }
 
     @Test
@@ -91,6 +92,7 @@ class CommunityHandlerTest {
         assertEquals(1, feedItems.size)
         assertEquals("followeduser", feedItems[0].username)
         assertEquals("tvshow", feedItems[0].type)
+        assertEquals(1, feedItems[0].seasonNumber)
     }
 
     @Test
