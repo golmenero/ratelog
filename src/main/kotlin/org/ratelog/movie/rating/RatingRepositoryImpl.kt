@@ -29,10 +29,10 @@ class RatingRepositoryImpl(
         ratingDAO.findRankedRows(userId.value, category, name, limit)
             .map { Rank(it.rank.toInt()) to it.toDomain() }
 
-    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedMovieRow> {
+    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant, limit: Int, offset: Int): List<FeedMovieRow> {
         val sinceEpochMs = since.toEpochMilli()
         val userIdValues = userIds.map(User.Id::value)
-        return ratingDAO.findFeedItemsByUserIdsAndSince(userIdValues, sinceEpochMs)
+        return ratingDAO.findFeedItemsByUserIdsAndSince(userIdValues, sinceEpochMs, limit, offset)
     }
 
     private fun RatingEntity.toDomain(): Rating {

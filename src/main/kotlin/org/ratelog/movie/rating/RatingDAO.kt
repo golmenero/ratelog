@@ -78,7 +78,8 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
         INNER JOIN users u ON r.user_id = u.id
         WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
         ORDER BY r.created_at_epoch_ms DESC
+        LIMIT :limit OFFSET :offset
         """
     )
-    fun findFeedItemsByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long): List<FeedMovieRow>
+    fun findFeedItemsByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long, limit: Int, offset: Int): List<FeedMovieRow>
 }

@@ -41,10 +41,10 @@ class TvRatingRepositoryImpl(
         tvRatingDAO.findRankedRows(userId.value, category, name, limit)
             .map { Rank(it.rank.toInt()) to it.toDomain() }
 
-    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedTvRow> {
+    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant, limit: Int, offset: Int): List<FeedTvRow> {
         val sinceEpochMs = since.toEpochMilli()
         val userIdValues = userIds.map(User.Id::value)
-        return tvRatingDAO.findFeedItemsByUserIdsAndSince(userIdValues, sinceEpochMs)
+        return tvRatingDAO.findFeedItemsByUserIdsAndSince(userIdValues, sinceEpochMs, limit, offset)
     }
 
     private fun TvRatingEntity.toDomain(): TvRating {
