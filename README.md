@@ -99,7 +99,7 @@ Container services:
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `TMDB_API_KEY` | Yes | — | TMDB API key |
-| `REMEMBER_ME_KEY` | Yes | — | Secret key for remember-me cookie |
+| `REMEMBER_ME_KEY` | No | — | Secret key for remember-me cookie |
 | `PORT` | No | `8080` | HTTP port |
 | `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
 | `POSTGRES_PORT` | No | `5432` | PostgreSQL port |

@@ -14,8 +14,8 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
-    @Value("\${ratelog.remember-me.key}")
-    private lateinit var rememberMeKey: String
+    @Value("\${ratelog.remember-me.key:}")
+    private var rememberMeKey: String? = null
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -45,12 +45,17 @@ class SecurityConfig {
                     .failureUrl("/login?error=true")
                     .permitAll()
             }
-            .rememberMe { remember ->
+
+        if (!rememberMeKey.isNullOrBlank()) {
+            http.rememberMe { remember ->
                 remember
-                    .key(rememberMeKey)
+                    .key(rememberMeKey!!)
                     .tokenValiditySeconds(86400 * 30)
                     .rememberMeParameter("remember-me")
             }
+        }
+
+        http
             .logout { logout ->
                 logout
                     .logoutUrl("/logout")
