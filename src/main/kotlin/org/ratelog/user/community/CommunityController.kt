@@ -11,7 +11,6 @@ class CommunityController(
     private val communityHandler: CommunityHandler,
     private val followedUsersHandler: FollowedUsersHandler,
 ) {
-
     @GetMapping("/community")
     fun communityPage(
         @CurrentUser user: User,
