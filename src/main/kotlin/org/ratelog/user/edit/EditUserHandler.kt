@@ -33,14 +33,6 @@ class EditUserHandler(
             EditUserHandlerError.InvalidCurrentPassword
         }
 
-        ensure(command.username.value.isNotBlank() && command.email.value.isNotBlank()) {
-            EditUserHandlerError.EmptyFields
-        }
-
-        ensure(command.username.value.length in 3..50) { EditUserHandlerError.InvalidUsernameLength }
-
-        command.newPassword?.let { ensure(it.value.length >= 8) { EditUserHandlerError.InvalidPasswordLength } }
-
         val existingByUsername = userRepository.findByUsername(command.username)
         ensure(existingByUsername == null || existingByUsername.id == command.userId) {
             EditUserHandlerError.UsernameAlreadyExists
