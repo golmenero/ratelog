@@ -9,6 +9,11 @@ _2026-06-20_
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.2
+_2026-06-20_
+### 🔧 Fixed
+- Fixed tests on CommunityHandler
+
 
 ## Release v1.1.1
 _2026-06-20_

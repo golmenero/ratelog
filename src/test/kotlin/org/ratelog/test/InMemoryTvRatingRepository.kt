@@ -6,11 +6,14 @@ import org.ratelog.tvshow.rating.FeedTvRow
 import org.ratelog.tvshow.rating.TvRating
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
+import org.ratelog.user.UserRepository
 import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-class InMemoryTvRatingRepository : TvRatingRepository {
+class InMemoryTvRatingRepository(
+    val userRepository: UserRepository = InMemoryUserRepository()
+) : TvRatingRepository {
     private val store = ConcurrentHashMap<TvRating.Id, TvRating>()
     private val idGenerator = AtomicLong(1)
 
@@ -32,7 +35,10 @@ class InMemoryTvRatingRepository : TvRatingRepository {
     override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedTvRow> =
         store.values
             .filter { it.userId in userIds && it.createdAt >= since }
-            .map { FeedTvRow("user", "tvshow", 0, 1, it.score?.value, null, it.createdAt.toEpochMilli()) }
+            .map {
+                val user = userRepository.findById(it.userId)!!
+                FeedTvRow(user.username.value, "tvshow", 0, 1, it.score?.value, null, it.createdAt.toEpochMilli())
+            }
 
     override fun save(rating: TvRating) {
         val ratingToSave = if (rating.id == null) {

@@ -6,11 +6,14 @@ import org.ratelog.movie.rating.FeedMovieRow
 import org.ratelog.movie.rating.Rating
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.user.User
+import org.ratelog.user.UserRepository
 import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-class InMemoryRatingRepository : RatingRepository {
+class InMemoryRatingRepository(
+    val userRepository: UserRepository = InMemoryUserRepository()
+) : RatingRepository {
     private val store = ConcurrentHashMap<Rating.Id, Rating>()
     private val idGenerator = AtomicLong(1)
 
@@ -32,7 +35,10 @@ class InMemoryRatingRepository : RatingRepository {
     override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedMovieRow> =
         store.values
             .filter { it.userId in userIds && it.createdAt >= since }
-            .map { FeedMovieRow("user", "movie", 0, it.score?.value, it.review?.value, it.createdAt.toEpochMilli()) }
+            .map {
+                val user = userRepository.findById(it.userId)!!
+                FeedMovieRow(user.username.value, "movie", 0, it.score?.value, it.review?.value, it.createdAt.toEpochMilli())
+            }
 
     override fun save(rating: Rating) {
         val ratingToSave = if (rating.id == null) {

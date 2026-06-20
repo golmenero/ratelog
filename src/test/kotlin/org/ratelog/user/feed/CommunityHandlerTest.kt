@@ -22,8 +22,8 @@ class CommunityHandlerTest {
     @BeforeEach
     fun setUp() {
         userRepository = InMemoryUserRepository()
-        ratingRepository = InMemoryRatingRepository()
-        tvRatingRepository = InMemoryTvRatingRepository()
+        ratingRepository = InMemoryRatingRepository(userRepository)
+        tvRatingRepository = InMemoryTvRatingRepository(userRepository)
         handler = CommunityHandler(userRepository, ratingRepository, tvRatingRepository)
     }
 
