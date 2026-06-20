@@ -27,13 +27,6 @@ class RegisterHandler(
 ) {
     @Transactional
     fun handle(command: RegisterUser): Either<RegisterHandlerError, Unit> = either {
-        ensure(command.username.value.isNotBlank() && command.email.value.isNotBlank() && command.password.value.isNotBlank()) {
-            RegisterHandlerError.EmptyFields
-        }
-
-        ensure(command.username.value.length in 3..50) { RegisterHandlerError.InvalidUsernameLength }
-        ensure(command.password.value.length >= 8) { RegisterHandlerError.InvalidPasswordLength }
-
         ensure(userRepository.findByUsername(command.username) == null) { RegisterHandlerError.UsernameAlreadyExists }
         ensure(userRepository.findByEmail(command.email) == null) { RegisterHandlerError.EmailAlreadyExists }
 

@@ -1,7 +1,7 @@
 package org.ratelog.user.register
 
+import arrow.core.getOrElse
 import org.ratelog.Email
-import org.ratelog.Lang
 import org.ratelog.Password
 import org.ratelog.Username
 import org.springframework.stereotype.Controller
@@ -30,10 +30,25 @@ class RegisterController(
     ): String {
         val browserLang = BrowserLangResolver.resolve(request)
 
+        val parsedUsername = Username.parse(username).getOrElse {
+            redirectAttributes.addFlashAttribute("error", "register.error.invalid.username.format")
+            return "redirect:/register"
+        }
+
+        val parsedEmail = Email.parse(email).getOrElse {
+            redirectAttributes.addFlashAttribute("error", "register.error.invalid.email.format")
+            return "redirect:/register"
+        }
+
+        val parsedPassword = Password.parse(password).getOrElse {
+            redirectAttributes.addFlashAttribute("error", "register.error.invalid.password.format")
+            return "redirect:/register"
+        }
+
         return RegisterUser(
-            username = username.let(::Username),
-            email = email.let(::Email),
-            password = password.let(::Password),
+            username = parsedUsername,
+            email = parsedEmail,
+            password = parsedPassword,
             lang = browserLang,
         ).let(handler::handle)
             .mapLeft(::mapError)
@@ -47,9 +62,6 @@ class RegisterController(
     }
 
     private fun mapError(error: RegisterHandlerError): String = when (error) {
-        RegisterHandlerError.EmptyFields -> "register.error.empty.fields"
-        RegisterHandlerError.InvalidUsernameLength -> "register.error.invalid.username.length"
-        RegisterHandlerError.InvalidPasswordLength -> "register.error.invalid.password.length"
         RegisterHandlerError.UsernameAlreadyExists -> "register.error.username.already.exists"
         RegisterHandlerError.EmailAlreadyExists -> "register.error.email.already.exists"
     }

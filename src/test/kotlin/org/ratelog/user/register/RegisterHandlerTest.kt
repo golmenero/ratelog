@@ -41,21 +41,6 @@ class RegisterHandlerTest {
     }
 
     @Test
-    fun `should return EmptyFields error when username is blank`() {
-        val command = RegisterUser(
-            username = Username(""),
-            email = Email("test@example.com"),
-            Password("password123"),
-            lang = Lang.es,
-        )
-
-        val result = handler.handle(command)
-
-        assertTrue(result.isLeft())
-        assertEquals(RegisterHandlerError.EmptyFields, result.fold({ it }, { Unit }))
-    }
-
-    @Test
     fun `should return EmptyFields error when email is blank`() {
         val command = RegisterUser(
             username = Username("testuser"),
@@ -84,21 +69,6 @@ class RegisterHandlerTest {
     }
 
     @Test
-    fun `should return InvalidUsernameLength when username is too short`() {
-        val command = RegisterUser(
-            username = Username("ab"),
-            email = Email("test@example.com"),
-            Password("password123"),
-            lang = Lang.es,
-        )
-
-        val result = handler.handle(command)
-
-        assertTrue(result.isLeft())
-        assertEquals(RegisterHandlerError.InvalidUsernameLength, result.fold({ it }, { Unit }))
-    }
-
-    @Test
     fun `should return InvalidUsernameLength when username is too long`() {
         val command = RegisterUser(
             username = Username("a".repeat(51)),
@@ -110,21 +80,6 @@ class RegisterHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isLeft())
-    }
-
-    @Test
-    fun `should return InvalidPasswordLength when password is too short`() {
-        val command = RegisterUser(
-            username = Username("testuser"),
-            email = Email("test@example.com"),
-            Password("short"),
-            lang = Lang.es,
-        )
-
-        val result = handler.handle(command)
-
-        assertTrue(result.isLeft())
-        assertEquals(RegisterHandlerError.InvalidPasswordLength, result.fold({ it }, { Unit }))
     }
 
     @Test
