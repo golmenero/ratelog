@@ -21,16 +21,6 @@ class UserSearchHandlerTest {
     }
 
     @Test
-    fun `should return EmptyQuery error when username is blank`() {
-        val query = UserSearchQuery(Username(""), null)
-
-        val result = handler.handle(query)
-
-        assertTrue(result.isLeft())
-        assertEquals(UserSearchHandlerError.EmptyQuery, result.fold({ it }, { fail("Should not return success") }))
-    }
-
-    @Test
     fun `should return NoUsersFound when no users match`() {
         val query = UserSearchQuery(Username("nonexistent"), null)
 

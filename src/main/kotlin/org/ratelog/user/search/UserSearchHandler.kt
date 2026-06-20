@@ -24,10 +24,6 @@ class UserSearchHandler(
 ) {
     @Transactional
     fun handle(query: UserSearchQuery): Either<UserSearchHandlerError, List<UserSearchResult>> = either {
-        if (query.username.value.isBlank()) {
-            raise(UserSearchHandlerError.EmptyQuery)
-        }
-
         val users = query.followerId?.let { followerId ->
             userRepository.findByUsernameContaining(query.username, followerId)
         } ?: userRepository.findByUsernameContaining(query.username)
