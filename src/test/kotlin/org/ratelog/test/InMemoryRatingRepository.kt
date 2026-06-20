@@ -32,9 +32,12 @@ class InMemoryRatingRepository(
             .take(limit)
             .mapIndexed { index, rating -> Pair(Rank(index + 1), rating) }
 
-    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant): List<FeedMovieRow> =
+    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant, limit: Int, offset: Int): List<FeedMovieRow> =
         store.values
             .filter { it.userId in userIds && it.createdAt >= since }
+            .sortedByDescending { it.createdAt.toEpochMilli() }
+            .drop(offset)
+            .take(limit)
             .map {
                 val user = userRepository.findById(it.userId)!!
                 FeedMovieRow(user.username.value, "movie", 0, it.score?.value, it.review?.value, it.createdAt.toEpochMilli())

@@ -5,6 +5,7 @@ import org.ratelog.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class CommunityController(
@@ -14,9 +15,10 @@ class CommunityController(
     @GetMapping("/community")
     fun communityPage(
         @CurrentUser user: User,
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
         model: Model
     ): String {
-        FeedQuery(user.id!!).let(communityHandler::handle)
+        FeedQuery(user.id!!, page).let(communityHandler::handle)
             .fold(
                 { },
                 { model.addAttribute("feed", it) }
@@ -27,6 +29,7 @@ class CommunityController(
                 { },
                 { model.addAttribute("followedUsers", it) }
             )
+        model.addAttribute("page", page)
         return "community"
     }
 }

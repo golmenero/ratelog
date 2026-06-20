@@ -23,8 +23,8 @@ class ProfileHandlerTest {
     @BeforeEach
     fun setUp() {
         userRepository = InMemoryUserRepository()
-        ratingRepository = InMemoryRatingRepository()
-        tvRatingRepository = InMemoryTvRatingRepository()
+        ratingRepository = InMemoryRatingRepository(userRepository)
+        tvRatingRepository = InMemoryTvRatingRepository(userRepository)
         handler = ProfileHandler(userRepository, ratingRepository, tvRatingRepository)
     }
 
@@ -61,5 +61,57 @@ class ProfileHandlerTest {
 
         assertTrue(result.isLeft())
         assertEquals(ProfileHandlerError.UserNotFound, result.fold({ it }, { fail("Should not return success") }))
+    }
+
+    @Test
+    fun `should return first page of ratings when page is 0`() {
+        val user = UserFactory.aUser(
+            id = 1,
+            username = "testuser",
+            email = "test@example.com",
+            lang = Lang.es,
+            createdAtEpochMs = 1609459200000
+        )
+        userRepository.save(user)
+
+        repeat(15) { i ->
+            val rating = RatingFactory.aRating(movieId = org.ratelog.movie.Movie.Id(i.toLong()), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
+            ratingRepository.save(rating)
+        }
+
+        val query = GetProfile(User.Id(1), User.Id(1), page = 0)
+        val result = handler.handle(query)
+
+        assertTrue(result.isRight())
+        result.fold(
+            { fail("Should not return error") },
+            { profile -> assertEquals(10, profile.ratings.size) }
+        )
+    }
+
+    @Test
+    fun `should return second page of ratings when page is 1`() {
+        val user = UserFactory.aUser(
+            id = 1,
+            username = "testuser",
+            email = "test@example.com",
+            lang = Lang.es,
+            createdAtEpochMs = 1609459200000
+        )
+        userRepository.save(user)
+
+        repeat(15) { i ->
+            val rating = RatingFactory.aRating(movieId = org.ratelog.movie.Movie.Id(i.toLong()), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
+            ratingRepository.save(rating)
+        }
+
+        val query = GetProfile(User.Id(1), User.Id(1), page = 1)
+        val result = handler.handle(query)
+
+        assertTrue(result.isRight())
+        result.fold(
+            { fail("Should not return error") },
+            { profile -> assertEquals(5, profile.ratings.size) }
+        )
     }
 }
