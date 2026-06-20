@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 import org.ratelog.test.InMemoryUserRepository
 import org.ratelog.test.UserFactory
 import org.ratelog.user.User
+import org.ratelog.user.community.FollowedUsersHandler
+import org.ratelog.user.community.FollowedUsersQuery
 
 class FollowedUsersHandlerTest {
 

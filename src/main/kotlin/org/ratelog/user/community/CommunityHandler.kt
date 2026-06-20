@@ -1,4 +1,4 @@
-package org.ratelog.user.feed
+package org.ratelog.user.community
 
 import arrow.core.Either
 import arrow.core.raise.either
@@ -29,14 +29,14 @@ data class FeedItem(
 )
 
 @Service
-class FeedHandler(
+class CommunityHandler(
     private val userRepository: UserRepository,
     private val ratingRepository: RatingRepository,
     private val tvRatingRepository: TvRatingRepository,
 ) {
 
     @Transactional
-    fun handle(query: FeedQuery): Either<FeedHandlerError, List<FeedItem>> = either {
+    fun handle(query: FeedQuery): Either<CommunityHandlerError, List<FeedItem>> = either {
         val followedIds = userRepository.findFollowedUserIds(query.userId)
         if (followedIds.isEmpty()) return@either emptyList()
 

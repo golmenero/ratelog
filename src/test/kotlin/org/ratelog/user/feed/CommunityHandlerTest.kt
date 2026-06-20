@@ -8,21 +8,23 @@ import org.ratelog.movie.Movie
 import org.ratelog.test.*
 import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
+import org.ratelog.user.community.CommunityHandler
+import org.ratelog.user.community.FeedQuery
 import java.time.Instant
 
-class FeedHandlerTest {
+class CommunityHandlerTest {
 
     private lateinit var userRepository: InMemoryUserRepository
     private lateinit var ratingRepository: InMemoryRatingRepository
     private lateinit var tvRatingRepository: InMemoryTvRatingRepository
-    private lateinit var handler: FeedHandler
+    private lateinit var handler: CommunityHandler
 
     @BeforeEach
     fun setUp() {
         userRepository = InMemoryUserRepository()
         ratingRepository = InMemoryRatingRepository()
         tvRatingRepository = InMemoryTvRatingRepository()
-        handler = FeedHandler(userRepository, ratingRepository, tvRatingRepository)
+        handler = CommunityHandler(userRepository, ratingRepository, tvRatingRepository)
     }
 
     @Test

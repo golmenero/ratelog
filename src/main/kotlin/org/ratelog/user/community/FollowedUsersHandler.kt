@@ -1,4 +1,4 @@
-package org.ratelog.user.followed
+package org.ratelog.user.community
 
 import arrow.core.Either
 import arrow.core.raise.either
