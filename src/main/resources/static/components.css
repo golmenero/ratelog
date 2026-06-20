@@ -1,6 +1,6 @@
 .card {
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   background: var(--surface);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
@@ -27,7 +27,7 @@
 
   .result-card {
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     background: var(--surface);
     backdrop-filter: blur(14px);
     box-shadow: var(--shadow);
@@ -125,7 +125,7 @@
   & > div:first-child {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     padding: 24px;
     max-width: 400px;
     width: 90%;

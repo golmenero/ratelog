@@ -149,7 +149,7 @@
     align-items: center;
     gap: 12px;
     padding: 20px;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     background: var(--surface);
     backdrop-filter: blur(14px);
     box-shadow: var(--shadow);

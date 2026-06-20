@@ -22,10 +22,7 @@
   --error-text: #ffd9d3;
   --info-bg: rgba(135, 110, 177, 0.22);
   --info-text: #ece2ff;
-  --radius-xl: 28px;
-  --radius-lg: 20px;
-  --radius-md: 16px;
-  --radius-sm: 8px;
+  --radius: 8px;
   --max-width: 1180px;
   --font-serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -119,8 +116,4 @@ a {
 
 .w-75 {
   width: 75%;
-}
-
-.mb-2 {
-  margin-bottom: 16px;
 }

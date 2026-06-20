@@ -1,6 +1,6 @@
 .feedback {
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   padding: 8px 10px;
   line-height: 1.6;
   margin-bottom: 16px;
