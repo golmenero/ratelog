@@ -31,6 +31,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       TMDB_API_KEY: ${TMDB_API_KEY}
+      REMEMBER_ME_KEY: ${REMEMBER_ME_KEY}
     depends_on:
       postgres:
         condition: service_healthy
