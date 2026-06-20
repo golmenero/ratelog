@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 data class GetProfile(
     val loggedUserId: User.Id,
     val userId: User.Id,
+    val limit: Int,
 )
 
 data class Profile(
@@ -56,8 +57,8 @@ class ProfileHandler(
         val thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS)
 
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
-        val ratings = ratingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo).map { toResponse(it) }
-        val tvRatings = tvRatingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo).map { toResponse(it) }
+        val ratings = ratingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo, query.limit).map { toResponse(it) }
+        val tvRatings = tvRatingRepository.findFeedItemsByUserIdsAndLastDays(listOf(query.userId), thirtyDaysAgo, query.limit).map { toResponse(it) }
 
         Profile(
             userId = user.id!!,

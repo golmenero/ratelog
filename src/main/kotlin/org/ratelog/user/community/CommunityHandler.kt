@@ -14,7 +14,8 @@ import java.time.temporal.ChronoUnit
 import org.springframework.transaction.annotation.Transactional
 
 data class FeedQuery(
-    val userId: User.Id
+    val userId: User.Id,
+    val limit: Int,
 )
 
 data class FeedItem(
@@ -43,7 +44,7 @@ class CommunityHandler(
 
         val thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS)
 
-        val movieItems = ratingRepository.findFeedItemsByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
+        val movieItems = ratingRepository.findFeedItemsByUserIdsAndLastDays(followedIds, thirtyDaysAgo, query.limit)
             .map { row ->
                 FeedItem(
                     username = row.username,
@@ -58,7 +59,7 @@ class CommunityHandler(
                 )
             }
 
-        val tvItems = tvRatingRepository.findFeedItemsByUserIdsAndLastDays(followedIds, thirtyDaysAgo)
+        val tvItems = tvRatingRepository.findFeedItemsByUserIdsAndLastDays(followedIds, thirtyDaysAgo, query.limit)
             .map { row ->
                 FeedItem(
                     username = row.username,

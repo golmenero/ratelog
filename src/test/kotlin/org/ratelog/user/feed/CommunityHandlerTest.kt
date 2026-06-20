@@ -29,7 +29,7 @@ class CommunityHandlerTest {
 
     @Test
     fun `should return empty list when user follows no one`() {
-        val query = FeedQuery(User.Id(1))
+        val query = FeedQuery(User.Id(1), 10)
 
         val result = handler.handle(query)
 
@@ -46,7 +46,7 @@ class CommunityHandlerTest {
         val rating = RatingFactory.aRating(movieId = Movie.Id(1), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = null)
         ratingRepository.save(rating)
 
-        val query = FeedQuery(User.Id(1))
+        val query = FeedQuery(User.Id(1), 10)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -84,7 +84,7 @@ class CommunityHandlerTest {
         )
         tvRatingRepository.save(tvRating)
 
-        val query = FeedQuery(User.Id(1))
+        val query = FeedQuery(User.Id(1), 10)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -105,7 +105,7 @@ class CommunityHandlerTest {
         val rating = RatingFactory.aRating(movieId = Movie.Id(1), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = review.value)
         ratingRepository.save(rating)
 
-        val query = FeedQuery(User.Id(1))
+        val query = FeedQuery(User.Id(1), 10)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
