@@ -53,7 +53,7 @@ const UserSearch = {
         if (!users || users.length === 0) {
             const emptyItem = document.createElement('div');
             emptyItem.className = 'search-dropdown-empty';
-            emptyItem.textContent = 'No users found';
+            emptyItem.textContent = this.input.dataset.noUsersMsg || 'No users found';
             this.dropdown.appendChild(emptyItem);
             this.showDropdown();
             return;
