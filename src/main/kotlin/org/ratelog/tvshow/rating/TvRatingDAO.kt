@@ -58,9 +58,8 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
 
     @Query(
         """
-        SELECT u.username, t.name AS title, t.tmdb_id, r.season_number, tv.score, r.review_text, r.created_at_epoch_ms
+        SELECT u.username, t.name AS title, t.tmdb_id, r.season_number, r.score, r.review_text, r.created_at_epoch_ms
         FROM season_ratings r
-        INNER JOIN tv_ratings tv ON r.tv_show_id = tv.tv_show_id AND r.user_id = tv.user_id
         INNER JOIN tv t ON r.tv_show_id = t.id
         INNER JOIN users u ON r.user_id = u.id
         WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
