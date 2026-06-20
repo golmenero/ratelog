@@ -109,15 +109,15 @@ Container services:
 
 ---
 
-## Deploy to TrueNAS SCALE
+## Deploy to your Server
 
 Minimal flow:
 
-1. Copy `.env.example` to `.env` in your Truenas Custom App stack
-2. Set `TMDB_API_KEY`, `REMEMBER_ME_KEY` and `POSTGRES_DATA_DIR` (path `/mnt/<pool>/...`)
-3. Set `RATLOG_IMAGE=ghcr.io/<owner>/ratelog:latest` (or specific version)
+1. Copy `.env.example` to `.env`
+2. Set all the env variables (see aboce)
+3. Set `RATELOG_IMAGE=ghcr.io/<owner>/ratelog:latest` (or specific version)
 4. Deploy with compose
-5. Verify at `http://IP_TRUENAS:8080/api/health`
+5. Verify at `http://LOCAL_IP:8080/api/health`
 
 ---
 
