@@ -12,10 +12,9 @@ _2026-06-20_
 
 ## Release v1.1.1
 _2026-06-20_
-### ➕ Added
 ### ⚡ Changed
 - New UX design of Community and Profile sections
-### 🔧 Fixed
+- Unified styling for cards and other minor components
 
 
 ## Release v1.1.0 
