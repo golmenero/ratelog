@@ -10,6 +10,14 @@
   color: inherit;
   width: 100%;
   display: block;
+
+  &.centered {
+    max-width: 420px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .results-grid {
@@ -109,27 +117,6 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-}
-
-.auth-card {
-  max-width: 420px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 40px;
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  img {
-    width: 140px;
-    height: auto;
-    margin-bottom: 20px;
-  }
 }
 
 .detail-card {
