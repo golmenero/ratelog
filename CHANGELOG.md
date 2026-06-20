@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v1.1.3
 _2026-06-20_
 ### ➕ Added
 - Persist season ratings on DB for feed inference
