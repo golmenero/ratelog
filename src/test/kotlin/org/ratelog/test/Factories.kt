@@ -174,6 +174,7 @@ object TvRatingFactory {
         acting = Score(acting),
         soundtrack = Score(soundtrack),
         screenplay = Score(screenplay),
+        score = Score((directing + cinematography + acting + soundtrack + screenplay) / 5.0),
         createdAt = createdAt,
         review = review?.let(::Review)
     )

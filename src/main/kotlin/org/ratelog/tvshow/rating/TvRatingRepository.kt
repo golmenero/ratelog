@@ -43,12 +43,13 @@ data class TvRating(
             acting = acting,
             soundtrack = soundtrack,
             screenplay = screenplay,
+            score = Score((directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0),
             createdAt = createdAt,
             review = review,
         )).updateScore()
 
     private fun updateScore() = if (seasonRatings.isEmpty()) copy(score = null)
-        else  copy(score = seasonRatings.map { it.score.value }.average().let(::Score))
+        else copy(score = seasonRatings.map { it.score.value }.average().let(::Score))
 
     companion object {
         fun create(tvShowId: TvShow.Id, userId: User.Id, now: Instant) = TvRating(
@@ -71,12 +72,11 @@ data class SeasonRating(
     val acting: Score,
     val soundtrack: Score,
     val screenplay: Score,
+    val score: Score,
     val createdAt: Instant,
     val review: Review? = null,
 ) {
     data class Id(val value: Long)
-
-    val score = ((directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0).let(::Score)
 }
 
 @Repository

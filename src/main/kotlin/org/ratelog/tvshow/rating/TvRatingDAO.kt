@@ -28,6 +28,7 @@ data class SeasonRatingEntity(
     val acting: Double,
     val soundtrack: Double,
     val screenplay: Double,
+    val score: Double,
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
     @Column("review_text") val reviewText: String? = null,
 )

@@ -92,6 +92,7 @@ class TvRatingRepositoryImpl(
             acting = Score(acting),
             soundtrack = Score(soundtrack),
             screenplay = Score(screenplay),
+            score = Score(score),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
             review = reviewText?.takeIf { it.isNotBlank() }?.let(::Review),
         )
@@ -108,6 +109,7 @@ class TvRatingRepositoryImpl(
             acting = acting.value,
             soundtrack = soundtrack.value,
             screenplay = screenplay.value,
+            score = score.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
             reviewText = review?.value,
         )
