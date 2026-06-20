@@ -42,6 +42,11 @@ class InMemoryRatingRepository(
                 FeedMovieRow(user.username.value, "movie", 0, it.score?.value, it.review?.value, it.createdAt.toEpochMilli())
             }
 
+    override fun countFeedItemsByUserIds(userIds: List<User.Id>): Long =
+        store.values
+            .count { it.userId in userIds }
+            .toLong()
+
     override fun save(rating: Rating) {
         val ratingToSave = if (rating.id == null) {
             rating.copy(id = Rating.Id(idGenerator.getAndIncrement()))

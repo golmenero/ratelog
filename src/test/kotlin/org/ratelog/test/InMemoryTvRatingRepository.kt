@@ -53,6 +53,12 @@ class InMemoryTvRatingRepository(
             .sortedByDescending { it.createdAtEpochMs }
             .take(limit)
 
+    override fun countFeedItemsByUserIds(userIds: List<User.Id>): Long =
+        store.values
+            .flatMap { it.seasonRatings }
+            .count { it.userId in userIds }
+            .toLong()
+
     override fun save(rating: TvRating) {
         val ratingToSave = if (rating.id == null) {
             rating.copy(id = TvRating.Id(idGenerator.getAndIncrement()))
