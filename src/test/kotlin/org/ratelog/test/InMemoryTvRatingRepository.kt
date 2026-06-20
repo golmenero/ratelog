@@ -32,7 +32,7 @@ class InMemoryTvRatingRepository(
             .take(limit)
             .mapIndexed { index, rating -> Pair(Rank(index + 1), rating) }
 
-    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant, limit: Int, offset: Int): List<FeedTvRow> =
+    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant, limit: Int): List<FeedTvRow> =
         store.values
             .filter { it.userId in userIds }
             .flatMap { rating ->
@@ -52,7 +52,6 @@ class InMemoryTvRatingRepository(
                     }
             }
             .sortedByDescending { it.createdAtEpochMs }
-            .drop(offset)
             .take(limit)
 
     override fun save(rating: TvRating) {
