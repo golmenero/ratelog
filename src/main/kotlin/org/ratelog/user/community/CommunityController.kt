@@ -15,10 +15,10 @@ class CommunityController(
     @GetMapping("/community")
     fun communityPage(
         @CurrentUser user: User,
-        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "limit", defaultValue = "10") limit: Int,
         model: Model
     ): String {
-        FeedQuery(user.id!!, page).let(communityHandler::handle)
+        FeedQuery(user.id!!, limit).let(communityHandler::handle)
             .fold(
                 { },
                 { model.addAttribute("feed", it) }
@@ -29,7 +29,7 @@ class CommunityController(
                 { },
                 { model.addAttribute("followedUsers", it) }
             )
-        model.addAttribute("page", page)
+        model.addAttribute("limit", limit)
         return "community"
     }
 }

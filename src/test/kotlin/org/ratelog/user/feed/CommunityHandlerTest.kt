@@ -115,7 +115,7 @@ class CommunityHandlerTest {
     }
 
     @Test
-    fun `should return first page of feed items when page is 0`() {
+    fun `should return 10 items when limit is 10`() {
         val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
         userRepository.save(followedUser)
         userRepository.toggleFollow(User.Id(1), User.Id(2))
@@ -125,7 +125,7 @@ class CommunityHandlerTest {
             ratingRepository.save(rating)
         }
 
-        val query = FeedQuery(User.Id(1), page = 0)
+        val query = FeedQuery(User.Id(1), limit = 10)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -134,21 +134,21 @@ class CommunityHandlerTest {
     }
 
     @Test
-    fun `should return second page of feed items when page is 1`() {
+    fun `should return 20 items when limit is 20`() {
         val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
         userRepository.save(followedUser)
         userRepository.toggleFollow(User.Id(1), User.Id(2))
 
-        repeat(15) { i ->
+        repeat(25) { i ->
             val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
             ratingRepository.save(rating)
         }
 
-        val query = FeedQuery(User.Id(1), page = 1)
+        val query = FeedQuery(User.Id(1), limit = 20)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
         val feedItems = result.getOrElse { emptyList() }
-        assertEquals(5, feedItems.size)
+        assertEquals(20, feedItems.size)
     }
 }

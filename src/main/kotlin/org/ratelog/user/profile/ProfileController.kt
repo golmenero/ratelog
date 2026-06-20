@@ -19,13 +19,13 @@ class ProfileController(
     fun profilePage(
         @CurrentUser user: User,
         @PathVariable("id") userId: Long,
-        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "limit", defaultValue = "10") limit: Int,
         model: Model
     ): String {
         return GetProfile(
             loggedUserId = user.id!!,
             userId = userId.let(User::Id),
-            page = page,
+            limit = limit,
         )
             .let(handler::handle)
             .fold(
@@ -42,7 +42,7 @@ class ProfileController(
                     model.addAttribute("isFollowed", it.isFollowed)
                     model.addAttribute("isLoggedUser", it.userId == user.id)
                     model.addAttribute("ratings", it.ratings)
-                    model.addAttribute("page", page)
+                    model.addAttribute("limit", limit)
                     "profile"
                 }
             )
