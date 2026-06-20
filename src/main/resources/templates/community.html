@@ -29,8 +29,11 @@
                             <span th:text="${item.ratedAt}">date</span>
                         </span>
                     </div>
-                    <div th:if="${hasMore}" class="load-more-container">
-                        <a th:href="@{/community(limit=${limit + 10})}" class="load-more-btn" th:text="#{community.load.more}">Load More</a>
+                    <div th:if="${hasMore}">
+                        <a th:href="@{/community(limit=${limit + 10})}" class="link flex gap">
+                            <i data-lucide="chevrons-down"></i>
+                            <span th:text="#{community.load.more}">Load More</span>
+                        </a>
                     </div>
                 </div>
             </div>
