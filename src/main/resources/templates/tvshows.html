@@ -52,14 +52,15 @@
             </form>
 
             <div th:if="${tops != null}">
-                <div th:if="${#lists.isEmpty(tops)}" class="empty-card" th:text="#{tvshows.empty.filter}">No rated TV shows yet for this filter.</div>
-                <a th:href="@{'/tv/' + ${s.tmdbId}}" th:each="s, iterStat : ${tops}" class="card mb-2">
-                    <div>
+                <div th:if="${#lists.isEmpty(tops)}" class="generic-card" th:text="#{tvshows.empty.filter}">No rated TV shows yet for this filter.</div>
+                <a th:href="@{'/tv/' + ${s.tmdbId}}" th:each="s, iterStat : ${tops}" class="generic-card flex separate">
+                    <div class="flex gap-lg">
                         <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${s.posterPath}}" th:alt="'Poster of ' + ${s.name}">
                         <div>
                             <span class="rank" th:text="${s.rank}">#1</span>
                             <span class="title" th:text="${s.name}">Title</span>
                             <span class="year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : #{tvshows.year.unknown}">Year</span>
+                            <br>
                             <br>
                             <div th:if="${!#lists.isEmpty(s.genres)}" class="tags">
                                 <span th:each="genre : ${s.genres}" th:text="${genre}">Genre</span>

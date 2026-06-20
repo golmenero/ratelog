@@ -6,39 +6,8 @@
   box-shadow: var(--shadow);
   padding: 12px 16px;
   margin-bottom: 8px;
-}
-
-.card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-wrap: wrap;
-  overflow: hidden;
-  grid-template-rows: 220px 1fr;
-  position: relative;
-  inset: 0;
   text-decoration: none;
   color: inherit;
-  z-index: 1;
-  padding: 16px 20px;
-  gap: 16px;
-  justify-content: space-between;
-
-  img {
-      width: 48px;
-      height: 72px;
-      border-radius: 8px;
-      overflow: hidden;
-      flex-shrink: 0;
-  }
-
-  & > div:first-child {
-    display: flex;
-    gap: 12px;
-  }
 }
 
 .results-grid {
@@ -206,16 +175,6 @@
   display: grid;
 }
 
-.empty-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
-  padding: 28px;
-  color: var(--text-soft);
-}
-
 .modal {
   position: fixed;
   inset: 0;
@@ -328,4 +287,12 @@
     height: 40px;
     font-size: 1.2rem;
   }
+}
+
+img {
+  width: 48px;
+  height: auto;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
