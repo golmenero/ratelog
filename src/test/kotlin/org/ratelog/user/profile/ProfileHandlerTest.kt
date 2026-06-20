@@ -23,8 +23,8 @@ class ProfileHandlerTest {
     @BeforeEach
     fun setUp() {
         userRepository = InMemoryUserRepository()
-        ratingRepository = InMemoryRatingRepository()
-        tvRatingRepository = InMemoryTvRatingRepository()
+        ratingRepository = InMemoryRatingRepository(userRepository)
+        tvRatingRepository = InMemoryTvRatingRepository(userRepository)
         handler = ProfileHandler(userRepository, ratingRepository, tvRatingRepository)
     }
 
@@ -64,7 +64,7 @@ class ProfileHandlerTest {
     }
 
     @Test
-    fun `should return 10 ratings when limit is 10`() {
+    fun `should return 10 ratings and hasMore when limit is 10 and there are more`() {
         val user = UserFactory.aUser(
             id = 1,
             username = "testuser",
@@ -85,12 +85,15 @@ class ProfileHandlerTest {
         assertTrue(result.isRight())
         result.fold(
             { fail("Should not return error") },
-            { profile -> assertEquals(10, profile.ratings.size) }
+            { profile ->
+                assertEquals(10, profile.ratings.size)
+                assertTrue(profile.hasMore)
+            }
         )
     }
 
     @Test
-    fun `should return 20 ratings when limit is 20`() {
+    fun `should return 20 ratings and hasMore when limit is 20 and there are more`() {
         val user = UserFactory.aUser(
             id = 1,
             username = "testuser",
@@ -111,7 +114,39 @@ class ProfileHandlerTest {
         assertTrue(result.isRight())
         result.fold(
             { fail("Should not return error") },
-            { profile -> assertEquals(20, profile.ratings.size) }
+            { profile ->
+                assertEquals(20, profile.ratings.size)
+                assertTrue(profile.hasMore)
+            }
+        )
+    }
+
+    @Test
+    fun `should return all ratings and hasMore false when limit exceeds total`() {
+        val user = UserFactory.aUser(
+            id = 1,
+            username = "testuser",
+            email = "test@example.com",
+            lang = Lang.es,
+            createdAtEpochMs = 1609459200000
+        )
+        userRepository.save(user)
+
+        repeat(5) { i ->
+            val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
+            ratingRepository.save(rating)
+        }
+
+        val query = GetProfile(User.Id(1), User.Id(1), limit = 10)
+        val result = handler.handle(query)
+
+        assertTrue(result.isRight())
+        result.fold(
+            { fail("Should not return error") },
+            { profile ->
+                assertEquals(5, profile.ratings.size)
+                assertFalse(profile.hasMore)
+            }
         )
     }
 }

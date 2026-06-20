@@ -10,6 +10,7 @@ import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
 import org.ratelog.user.community.CommunityHandler
 import org.ratelog.user.community.FeedQuery
+import org.ratelog.user.community.FeedResult
 import java.time.Instant
 
 class CommunityHandlerTest {
@@ -34,7 +35,9 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        assertEquals(0, result.getOrElse { emptyList() }.size)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
+        assertEquals(0, feedResult.items.size)
+        assertFalse(feedResult.hasMore)
     }
 
     @Test
@@ -50,12 +53,13 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedItems = result.getOrElse { emptyList() }
-        assertEquals(1, feedItems.size)
-        assertEquals("followeduser", feedItems[0].username)
-        assertEquals("movie", feedItems[0].title)
-        assertNull(feedItems[0].reviewText)
-        assertNull(feedItems[0].seasonNumber)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
+        assertEquals(1, feedResult.items.size)
+        assertEquals("followeduser", feedResult.items[0].username)
+        assertEquals("movie", feedResult.items[0].title)
+        assertNull(feedResult.items[0].reviewText)
+        assertNull(feedResult.items[0].seasonNumber)
+        assertFalse(feedResult.hasMore)
     }
 
     @Test
@@ -88,11 +92,12 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedItems = result.getOrElse { emptyList() }
-        assertEquals(1, feedItems.size)
-        assertEquals("followeduser", feedItems[0].username)
-        assertEquals("tvshow", feedItems[0].type)
-        assertEquals(1, feedItems[0].seasonNumber)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
+        assertEquals(1, feedResult.items.size)
+        assertEquals("followeduser", feedResult.items[0].username)
+        assertEquals("tvshow", feedResult.items[0].type)
+        assertEquals(1, feedResult.items[0].seasonNumber)
+        assertFalse(feedResult.hasMore)
     }
 
     @Test
@@ -109,13 +114,14 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedItems = result.getOrElse { emptyList() }
-        assertEquals(1, feedItems.size)
-        assertEquals("Great movie!", feedItems[0].reviewText)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
+        assertEquals(1, feedResult.items.size)
+        assertEquals("Great movie!", feedResult.items[0].reviewText)
+        assertFalse(feedResult.hasMore)
     }
 
     @Test
-    fun `should return 10 items when limit is 10`() {
+    fun `should return 10 items and hasMore when there are more than 10 items`() {
         val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
         userRepository.save(followedUser)
         userRepository.toggleFollow(User.Id(1), User.Id(2))
@@ -129,12 +135,13 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedItems = result.getOrElse { emptyList() }
-        assertEquals(10, feedItems.size)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
+        assertEquals(10, feedResult.items.size)
+        assertTrue(feedResult.hasMore)
     }
 
     @Test
-    fun `should return 20 items when limit is 20`() {
+    fun `should return 20 items and hasMore when there are more than 20 items`() {
         val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
         userRepository.save(followedUser)
         userRepository.toggleFollow(User.Id(1), User.Id(2))
@@ -148,7 +155,28 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedItems = result.getOrElse { emptyList() }
-        assertEquals(20, feedItems.size)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
+        assertEquals(20, feedResult.items.size)
+        assertTrue(feedResult.hasMore)
+    }
+
+    @Test
+    fun `should return all items and hasMore false when limit exceeds total`() {
+        val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
+        userRepository.save(followedUser)
+        userRepository.toggleFollow(User.Id(1), User.Id(2))
+
+        repeat(5) { i ->
+            val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
+            ratingRepository.save(rating)
+        }
+
+        val query = FeedQuery(User.Id(1), limit = 10)
+        val result = handler.handle(query)
+
+        assertTrue(result.isRight())
+        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
+        assertEquals(5, feedResult.items.size)
+        assertFalse(feedResult.hasMore)
     }
 }
