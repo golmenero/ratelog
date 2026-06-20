@@ -72,6 +72,15 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
 
     @Query(
         """
+        SELECT COUNT(*)
+        FROM movie_ratings r
+        WHERE r.user_id IN (:userIds)
+        """
+    )
+    fun countFeedItemsByUserIds(userIds: List<Long>): Long
+
+    @Query(
+        """
         SELECT u.username, m.title, m.tmdb_id, r.score, r.review_text, r.created_at_epoch_ms
         FROM movie_ratings r
         INNER JOIN movies m ON r.movie_id = m.id

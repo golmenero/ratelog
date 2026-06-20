@@ -34,6 +34,11 @@ class RatingRepositoryImpl(
         return ratingDAO.findFeedItemsByUserIds(userIdValues, limit)
     }
 
+    override fun countFeedItemsByUserIds(userIds: List<User.Id>): Long {
+        val userIdValues = userIds.map(User.Id::value)
+        return ratingDAO.countFeedItemsByUserIds(userIdValues)
+    }
+
     private fun RatingEntity.toDomain(): Rating {
         return Rating(
             id = id?.let { Rating.Id(it) },

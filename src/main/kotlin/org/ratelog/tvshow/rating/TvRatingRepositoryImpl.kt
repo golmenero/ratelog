@@ -46,6 +46,11 @@ class TvRatingRepositoryImpl(
         return tvRatingDAO.findFeedItemsByUserIds(userIdValues, limit)
     }
 
+    override fun countFeedItemsByUserIds(userIds: List<User.Id>): Long {
+        val userIdValues = userIds.map(User.Id::value)
+        return tvRatingDAO.countFeedItemsByUserIds(userIdValues)
+    }
+
     private fun TvRatingEntity.toDomain(): TvRating {
         val seasonRatings = seasonRatingDAO.findByTvShowIdAndUserId(tvShowId, userId).map { it.toDomain() }
         return TvRating(

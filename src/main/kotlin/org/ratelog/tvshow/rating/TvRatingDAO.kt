@@ -58,6 +58,15 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
 
     @Query(
         """
+        SELECT COUNT(*)
+        FROM season_ratings r
+        WHERE r.user_id IN (:userIds)
+        """
+    )
+    fun countFeedItemsByUserIds(userIds: List<Long>): Long
+
+    @Query(
+        """
         SELECT u.username, t.name AS title, t.tmdb_id, r.season_number, r.score, r.review_text, r.created_at_epoch_ms
         FROM season_ratings r
         INNER JOIN tv t ON r.tv_show_id = t.id
