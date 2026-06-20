@@ -104,7 +104,16 @@ data class Email(val value: String) {
     }
 }
 
-data class Password(val value: String)
+data class Password(val value: String) {
+    companion object {
+        fun parse(value: String): Either<ParseError, Password> = either {
+            if (!value.matches(Regex("^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$"))) {
+                raise(ParseError.InvalidPassword)
+            }
+            Password(value)
+        }
+    }
+}
 
 data class Score(val value: Double) {
     init {
@@ -132,4 +141,5 @@ data class Review(val value: String) {
 sealed interface ParseError {
     data object InvalidUsername : ParseError
     data object InvalidEmail : ParseError
+    data object InvalidPassword : ParseError
 }
