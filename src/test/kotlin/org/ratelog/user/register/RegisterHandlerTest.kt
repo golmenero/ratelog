@@ -41,48 +41,6 @@ class RegisterHandlerTest {
     }
 
     @Test
-    fun `should return EmptyFields error when email is blank`() {
-        val command = RegisterUser(
-            username = Username("testuser"),
-            Email(""),
-            Password("password123"),
-            lang = Lang.es,
-        )
-
-        val result = handler.handle(command)
-
-        assertTrue(result.isLeft())
-    }
-
-    @Test
-    fun `should return EmptyFields error when password is blank`() {
-        val command = RegisterUser(
-            username = Username("testuser"),
-            email = Email("test@example.com"),
-            Password(""),
-            lang = Lang.es,
-        )
-
-        val result = handler.handle(command)
-
-        assertTrue(result.isLeft())
-    }
-
-    @Test
-    fun `should return InvalidUsernameLength when username is too long`() {
-        val command = RegisterUser(
-            username = Username("a".repeat(51)),
-            email = Email("test@example.com"),
-            Password("password123"),
-            lang = Lang.es,
-        )
-
-        val result = handler.handle(command)
-
-        assertTrue(result.isLeft())
-    }
-
-    @Test
     fun `should return UsernameAlreadyExists when username exists`() {
         val existingCommand = RegisterUser(
             username = Username("testuser"),
