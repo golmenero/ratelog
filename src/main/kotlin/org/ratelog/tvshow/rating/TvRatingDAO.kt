@@ -62,12 +62,12 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
         FROM season_ratings r
         INNER JOIN tv t ON r.tv_show_id = t.id
         INNER JOIN users u ON r.user_id = u.id
-        WHERE r.user_id IN (:userIds) AND r.created_at_epoch_ms >= :sinceEpochMs
+        WHERE r.user_id IN (:userIds)
         ORDER BY r.created_at_epoch_ms DESC
         LIMIT :limit
         """
     )
-    fun findFeedItemsByUserIdsAndSince(userIds: List<Long>, sinceEpochMs: Long, limit: Int): List<FeedTvRow>
+    fun findFeedItemsByUserIds(userIds: List<Long>, limit: Int): List<FeedTvRow>
 }
 
 data class FeedTvRow(

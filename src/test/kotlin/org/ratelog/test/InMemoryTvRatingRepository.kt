@@ -32,12 +32,11 @@ class InMemoryTvRatingRepository(
             .take(limit)
             .mapIndexed { index, rating -> Pair(Rank(index + 1), rating) }
 
-    override fun findFeedItemsByUserIdsAndLastDays(userIds: List<User.Id>, since: Instant, limit: Int): List<FeedTvRow> =
+    override fun findFeedItemsByUserIds(userIds: List<User.Id>, limit: Int): List<FeedTvRow> =
         store.values
             .filter { it.userId in userIds }
             .flatMap { rating ->
                 rating.seasonRatings
-                    .filter { it.createdAt >= since }
                     .map { season ->
                         val user = userRepository.findById(rating.userId)!!
                         FeedTvRow(

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 _2026-06-20_
 ### ➕ Added
 - Persist season ratings on DB for feed inference
+- Load more pagination on feed and profile sections
 ### ⚡ Changed
 - Now the env var REMEMBER_ME_KEY is not mandatory anymore. If the key is not set, remember me will be disabled.
 ### 🔧 Fixed
