@@ -23,7 +23,7 @@
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 18px;
+  gap: 12px;
 
   .result-card {
     border: 1px solid var(--border);
@@ -43,7 +43,7 @@
     .result-content {
       padding: 22px;
       display: grid;
-      gap: 14px;
+      gap: 8px;
 
       .result-overview {
         color: var(--text-soft);
@@ -61,8 +61,8 @@
   font-size: 0.78rem;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-soft);
+  background: #242424;
+  color: var(--text);
   font-weight: 500;
   letter-spacing: 0.02em;
 }
@@ -138,6 +138,13 @@
   background: linear-gradient(135deg, #312924, #1e1916);
   position: relative;
   overflow: hidden;
+
+  .type-tag {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
+  }
 
   img {
     width: 100%;

@@ -23,13 +23,11 @@
                th:href="${item.type == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
                class="result-card">
                 <div class="poster-frame">
+                    <span class="tag type-tag" th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
                     <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                     <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                 </div>
                 <div class="result-content">
-                    <div class="flex gap">
-                        <span class="tag" th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
-                    </div>
                     <h3>
                         <span th:text="${item.title}">Title</span>
                         <span class="year" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
