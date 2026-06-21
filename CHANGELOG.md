@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.4
+_2026-06-21_
+### ➕ Added
+- Added translations for de, fr, it, ja, pt, ru and zh;
+
 ## Release v1.1.3
 _2026-06-20_
 ### ➕ Added
