@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 class CommunityController(
     private val communityHandler: CommunityHandler,
-    private val followedUsersHandler: FollowedUsersHandler,
 ) {
     @GetMapping("/community")
     fun communityPage(
@@ -27,11 +26,6 @@ class CommunityController(
                 }
             )
 
-        FollowedUsersQuery(user.id).let(followedUsersHandler::handle)
-            .fold(
-                { },
-                { model.addAttribute("followedUsers", it) }
-            )
         model.addAttribute("limit", limit)
         return "community"
     }
