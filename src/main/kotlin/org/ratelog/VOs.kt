@@ -122,7 +122,7 @@ data class Score(val value: Double) {
 }
 
 enum class Lang {
-    es, en;
+    en, de, es, fr, it, ja, pt, ru, zh;
 
     val locale: Locale = Locale.of(name)
 }
