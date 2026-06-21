@@ -35,9 +35,11 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
-        assertEquals(0, feedResult.items.size)
-        assertFalse(feedResult.hasMore)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
+        assertEquals(0, feedResult.movieItems.size)
+        assertEquals(0, feedResult.tvItems.size)
+        assertFalse(feedResult.hasMoreMovies)
+        assertFalse(feedResult.hasMoreTvshows)
     }
 
     @Test
@@ -53,13 +55,13 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
-        assertEquals(1, feedResult.items.size)
-        assertEquals("followeduser", feedResult.items[0].username)
-        assertEquals("movie", feedResult.items[0].title)
-        assertNull(feedResult.items[0].reviewText)
-        assertNull(feedResult.items[0].seasonNumber)
-        assertFalse(feedResult.hasMore)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
+        assertEquals(1, feedResult.movieItems.size)
+        assertEquals("followeduser", feedResult.movieItems[0].username)
+        assertEquals("movie", feedResult.movieItems[0].type)
+        assertNull(feedResult.movieItems[0].reviewText)
+        assertNull(feedResult.movieItems[0].seasonNumber)
+        assertFalse(feedResult.hasMoreMovies)
     }
 
     @Test
@@ -92,12 +94,12 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
-        assertEquals(1, feedResult.items.size)
-        assertEquals("followeduser", feedResult.items[0].username)
-        assertEquals("tvshow", feedResult.items[0].type)
-        assertEquals(1, feedResult.items[0].seasonNumber)
-        assertFalse(feedResult.hasMore)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
+        assertEquals(1, feedResult.tvItems.size)
+        assertEquals("followeduser", feedResult.tvItems[0].username)
+        assertEquals("tvshow", feedResult.tvItems[0].type)
+        assertEquals(1, feedResult.tvItems[0].seasonNumber)
+        assertFalse(feedResult.hasMoreTvshows)
     }
 
     @Test
@@ -114,10 +116,10 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
-        assertEquals(1, feedResult.items.size)
-        assertEquals("Great movie!", feedResult.items[0].reviewText)
-        assertFalse(feedResult.hasMore)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
+        assertEquals(1, feedResult.movieItems.size)
+        assertEquals("Great movie!", feedResult.movieItems[0].reviewText)
+        assertFalse(feedResult.hasMoreMovies)
     }
 
     @Test
@@ -135,9 +137,9 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
-        assertEquals(10, feedResult.items.size)
-        assertTrue(feedResult.hasMore)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
+        assertEquals(10, feedResult.movieItems.size)
+        assertTrue(feedResult.hasMoreMovies)
     }
 
     @Test
@@ -155,9 +157,9 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
-        assertEquals(20, feedResult.items.size)
-        assertTrue(feedResult.hasMore)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
+        assertEquals(20, feedResult.movieItems.size)
+        assertTrue(feedResult.hasMoreMovies)
     }
 
     @Test
@@ -175,8 +177,8 @@ class CommunityHandlerTest {
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), false) }
-        assertEquals(5, feedResult.items.size)
-        assertFalse(feedResult.hasMore)
+        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
+        assertEquals(5, feedResult.movieItems.size)
+        assertFalse(feedResult.hasMoreMovies)
     }
 }
