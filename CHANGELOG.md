@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.5
+_2026-06-21_
+### ⚡ Changed
+- Major rework on community and profile sections
+
 ## Release v1.1.4
 _2026-06-21_
 ### ➕ Added
