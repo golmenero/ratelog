@@ -67,7 +67,8 @@ body {
 }
 
 @media (max-width: 900px) {
-  .grid {
+  .grid,
+  .grid.equal {
     grid-template-columns: 1fr;
   }
 }
