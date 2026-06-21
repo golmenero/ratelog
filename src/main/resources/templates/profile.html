@@ -31,30 +31,51 @@
 
     <div class="separator"></div>
 
-    <h2 class="w-100" th:text="#{community.activity.feed}">Recent activity</h2>
-    <div>
-        <div th:each="item : ${ratings}" class="card">
-            <div class="flex separate">
-                <a class="link secondary" th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
-                    <span class="title" th:text="${item.title}">Title</span>
-                    <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
-                </a>
-                <div>
-                    <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+    <div class="grid">
+        <div>
+            <h2 class="w-100" th:text="#{community.activity.feed}">Recent activity</h2>
+            <div>
+                <div th:each="item : ${ratings}" class="card">
+                    <div class="flex separate">
+                        <a class="link secondary" th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
+                            <span class="title" th:text="${item.title}">Title</span>
+                            <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
+                        </a>
+                        <div>
+                            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                        </div>
+                    </div>
+                    <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
+                    <br>
+                    <span class="date">
+                        <span th:text="#{community.activity.rated.at}">Rated on</span>
+                        <span th:text="${item.ratedAt}">date</span>
+                    </span>
+                </div>
+                <div th:if="${hasMore}">
+                    <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
+                        <i data-lucide="chevrons-down"></i>
+                        <span th:text="#{community.load.more}">Load More</span>
+                    </a>
                 </div>
             </div>
-            <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
-            <br>
-            <span class="date">
-                <span th:text="#{community.activity.rated.at}">Rated on</span>
-                <span th:text="${item.ratedAt}">date</span>
-            </span>
         </div>
-        <div th:if="${hasMore}">
-            <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
-                <i data-lucide="chevrons-down"></i>
-                <span th:text="#{community.load.more}">Load More</span>
-            </a>
+
+        <div th:if="${isLoggedUser}">
+            <h2 th:text="#{community.search.users}">Search Users</h2>
+            <div class="search-wrapper">
+                <input type="text" id="user-search-input" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" class="w-100" th:data-no-users-msg="#{community.search.no.users.found}" />
+                <div id="user-search-dropdown" class="search-dropdown"></div>
+            </div>
+
+            <div class="separator"></div>
+
+            <h2 th:text="#{community.followed.users}">Followed Users</h2>
+            <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}">
+                <div th:each="followedUser : ${followedUsers}">
+                    <a th:href="@{'/profile/' + ${followedUser.id}}" class="link" th:text="${followedUser.username}">Username</a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -79,6 +100,7 @@
     <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
 </div>
 </body>
+<script src="/usersearch.js" defer></script>
 <script>
     const btnOpenEditModal = document.getElementById('btnOpenEditModal');
     const btnCloseEditModal = document.getElementById('btnCloseEditModal');

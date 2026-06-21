@@ -11,6 +11,7 @@ import org.ratelog.test.InMemoryUserRepository
 import org.ratelog.test.RatingFactory
 import org.ratelog.test.UserFactory
 import org.ratelog.user.User
+import org.ratelog.user.community.FollowedUsersHandler
 import java.time.Instant
 
 class ProfileHandlerTest {
@@ -18,6 +19,7 @@ class ProfileHandlerTest {
     private lateinit var userRepository: InMemoryUserRepository
     private lateinit var ratingRepository: InMemoryRatingRepository
     private lateinit var tvRatingRepository: InMemoryTvRatingRepository
+    private lateinit var followedUsersHandler: FollowedUsersHandler
     private lateinit var handler: ProfileHandler
 
     @BeforeEach
@@ -25,7 +27,8 @@ class ProfileHandlerTest {
         userRepository = InMemoryUserRepository()
         ratingRepository = InMemoryRatingRepository(userRepository)
         tvRatingRepository = InMemoryTvRatingRepository(userRepository)
-        handler = ProfileHandler(userRepository, ratingRepository, tvRatingRepository)
+        followedUsersHandler = FollowedUsersHandler(userRepository)
+        handler = ProfileHandler(userRepository, ratingRepository, tvRatingRepository, followedUsersHandler)
     }
 
     @Test
