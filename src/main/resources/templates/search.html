@@ -29,9 +29,11 @@
                 <div class="result-content">
                     <div class="flex gap">
                         <span class="tag" th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
-                        <span class="tag" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
                     </div>
-                    <h3 th:text="${item.title}">Title</h3>
+                    <h3>
+                        <span th:text="${item.title}">Title</span>
+                        <span class="year" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
+                    </h3>
                     <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : #{search.no.synopsis}">Overview</p>
                 </div>
             </a>
