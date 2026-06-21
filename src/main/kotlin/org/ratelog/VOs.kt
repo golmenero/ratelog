@@ -125,6 +125,10 @@ enum class Lang {
     en, de, es, fr, it, ja, pt, ru, zh;
 
     val locale: Locale = Locale.of(name)
+
+    companion object {
+        fun parse(value: String): Lang = entries.find { it.name == value } ?: en
+    }
 }
 
 data class Review(val value: String) {
