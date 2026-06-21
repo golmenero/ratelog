@@ -89,8 +89,8 @@ class ProfileHandlerTest {
         result.fold(
             { fail("Should not return error") },
             { profile ->
-                assertEquals(10, profile.ratings.size)
-                assertTrue(profile.hasMore)
+                assertEquals(10, profile.movieRatings.size)
+                assertTrue(profile.movieHasMore)
             }
         )
     }
@@ -118,8 +118,8 @@ class ProfileHandlerTest {
         result.fold(
             { fail("Should not return error") },
             { profile ->
-                assertEquals(20, profile.ratings.size)
-                assertTrue(profile.hasMore)
+                assertEquals(20, profile.movieRatings.size)
+                assertTrue(profile.movieHasMore)
             }
         )
     }
@@ -147,8 +147,8 @@ class ProfileHandlerTest {
         result.fold(
             { fail("Should not return error") },
             { profile ->
-                assertEquals(5, profile.ratings.size)
-                assertFalse(profile.hasMore)
+                assertEquals(5, profile.movieRatings.size)
+                assertFalse(profile.movieHasMore)
             }
         )
     }

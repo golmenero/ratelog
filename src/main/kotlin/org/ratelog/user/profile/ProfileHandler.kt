@@ -33,8 +33,10 @@ data class Profile(
     val memberSince: String,
     val lang: Lang,
     val isFollowed: Boolean,
-    val ratings: List<ProfileRating>,
-    val hasMore: Boolean,
+    val movieRatings: List<ProfileRating>,
+    val tvRatings: List<ProfileRating>,
+    val movieHasMore: Boolean,
+    val tvHasMore: Boolean,
     val followedUsers: List<FollowedUserResult>,
 )
 
@@ -60,10 +62,11 @@ class ProfileHandler(
     @Transactional
     fun handle(query: GetProfile): Either<ProfileHandlerError, Profile> = either {
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
-        val ratings = ratingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
+        val movieRatings = ratingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
         val tvRatings = tvRatingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
 
-        val totalCount = ratingRepository.countFeedItemsByUserIds(listOf(query.userId)) + tvRatingRepository.countFeedItemsByUserIds(listOf(query.userId))
+        val movieTotalCount = ratingRepository.countFeedItemsByUserIds(listOf(query.userId))
+        val tvTotalCount = tvRatingRepository.countFeedItemsByUserIds(listOf(query.userId))
 
         val followedUsers = if (query.loggedUserId == query.userId) {
             followedUsersHandler.handle(FollowedUsersQuery(query.loggedUserId)).getOrElse { emptyList() }
@@ -76,8 +79,10 @@ class ProfileHandler(
             memberSince = user.createdAtEpochMs.toDateString(),
             lang = user.lang,
             isFollowed = userRepository.isFollowing(query.loggedUserId, query.userId),
-            ratings =  (ratings + tvRatings).sortedByDescending { it.createdAtEpochMs },
-            hasMore = totalCount > query.limit,
+            movieRatings = movieRatings.sortedByDescending { it.createdAtEpochMs },
+            tvRatings = tvRatings.sortedByDescending { it.createdAtEpochMs },
+            movieHasMore = movieTotalCount > query.limit,
+            tvHasMore = tvTotalCount > query.limit,
             followedUsers = followedUsers,
         )
     }

@@ -41,8 +41,10 @@ class ProfileController(
                     model.addAttribute("currentLang", it.lang.name)
                     model.addAttribute("isFollowed", it.isFollowed)
                     model.addAttribute("isLoggedUser", it.userId == user.id)
-                    model.addAttribute("ratings", it.ratings)
-                    model.addAttribute("hasMore", it.hasMore)
+                    model.addAttribute("movieRatings", it.movieRatings)
+                    model.addAttribute("tvRatings", it.tvRatings)
+                    model.addAttribute("movieHasMore", it.movieHasMore)
+                    model.addAttribute("tvHasMore", it.tvHasMore)
                     model.addAttribute("limit", limit)
                     model.addAttribute("followedUsers", it.followedUsers)
                     "profile"
