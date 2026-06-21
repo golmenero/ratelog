@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 _2026-06-21_
 ### ⚡ Changed
 - Major rework on community and profile sections
+- Minor rework on search cards
 
 ## Release v1.1.4
 _2026-06-21_
