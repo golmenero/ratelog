@@ -8,30 +8,60 @@
 
         <h1 th:text="#{community.title}">Community.</h1>
 
-        <div>
-            <div th:each="item : ${feed}" class="card">
-                <span class="username" th:text="${item.username}">Username</span>
-                <div class="flex separate">
-                    <a class="link secondary" th:href="${item.type == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
-                        <span class="title" th:text="${item.title}">Title</span>
-                        <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
-                    </a>
-                    <div>
-                        <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+        <div class="grid equal">
+            <div>
+                <h2 th:text="#{community.movies.title}">Movies</h2>
+                <div th:each="item : ${feedMovies}" class="card">
+                    <span class="username" th:text="${item.username}">Username</span>
+                    <div class="flex separate">
+                        <a class="link secondary" th:href="@{'/movie/' + ${item.tmdbId}}">
+                            <span class="title" th:text="${item.title}">Title</span>
+                        </a>
+                        <div>
+                            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                        </div>
                     </div>
+                    <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
+                    <br>
+                    <span class="date">
+                        <span th:text="#{community.activity.rated.at}">Rated on</span>
+                        <span th:text="${item.ratedAt}">date</span>
+                    </span>
                 </div>
-                <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
-                <br>
-                <span class="date">
-                    <span th:text="#{community.activity.rated.at}">Rated on</span>
-                    <span th:text="${item.ratedAt}">date</span>
-                </span>
+                <div th:if="${hasMoreMovies}">
+                    <a th:href="@{/community(limit=${limit + 5})}" class="link flex gap">
+                        <i data-lucide="chevrons-down"></i>
+                        <span th:text="#{community.load.more}">Load More</span>
+                    </a>
+                </div>
             </div>
-            <div th:if="${hasMore}">
-                <a th:href="@{/community(limit=${limit + 10})}" class="link flex gap">
-                    <i data-lucide="chevrons-down"></i>
-                    <span th:text="#{community.load.more}">Load More</span>
-                </a>
+
+            <div>
+                <h2 th:text="#{community.tvshows.title}">TV Shows</h2>
+                <div th:each="item : ${feedTvshows}" class="card">
+                    <span class="username" th:text="${item.username}">Username</span>
+                    <div class="flex separate">
+                        <a class="link secondary" th:href="@{'/tv/' + ${item.tmdbId}}">
+                            <span class="title" th:text="${item.title}">Title</span>
+                            <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
+                        </a>
+                        <div>
+                            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                        </div>
+                    </div>
+                    <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
+                    <br>
+                    <span class="date">
+                        <span th:text="#{community.activity.rated.at}">Rated on</span>
+                        <span th:text="${item.ratedAt}">date</span>
+                    </span>
+                </div>
+                <div th:if="${hasMoreTvshows}">
+                    <a th:href="@{/community(limit=${limit + 5})}" class="link flex gap">
+                        <i data-lucide="chevrons-down"></i>
+                        <span th:text="#{community.load.more}">Load More</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

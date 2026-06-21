@@ -17,8 +17,10 @@ data class FeedQuery(
 )
 
 data class FeedResult(
-    val items: List<FeedItem>,
-    val hasMore: Boolean,
+    val movieItems: List<FeedItem>,
+    val tvItems: List<FeedItem>,
+    val hasMoreMovies: Boolean,
+    val hasMoreTvshows: Boolean,
 )
 
 data class FeedItem(
@@ -43,7 +45,7 @@ class CommunityHandler(
     @Transactional
     fun handle(query: FeedQuery): Either<CommunityHandlerError, FeedResult> = either {
         val followedIds = userRepository.findFollowedUserIds(query.userId)
-        if (followedIds.isEmpty()) return@either FeedResult(emptyList(), false)
+        if (followedIds.isEmpty()) return@either FeedResult(emptyList(), emptyList(), false, false)
 
         val movieItems = ratingRepository.findFeedItemsByUserIds(followedIds, query.limit)
             .map { row ->
@@ -75,9 +77,9 @@ class CommunityHandler(
                 )
             }
 
-        val totalCount = ratingRepository.countFeedItemsByUserIds(followedIds) + tvRatingRepository.countFeedItemsByUserIds(followedIds)
-        val items = (movieItems + tvItems).sortedByDescending { it.createdAtEpochMs }
+        val totalCountMovies = ratingRepository.countFeedItemsByUserIds(followedIds)
+        val totalCountTv = tvRatingRepository.countFeedItemsByUserIds(followedIds)
 
-        FeedResult(items, totalCount > query.limit)
+        FeedResult(movieItems, tvItems, totalCountMovies > query.limit, totalCountTv > query.limit)
     }
 }
