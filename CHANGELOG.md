@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.6
+_2026-06-29_
+### ⚡ Changed
+- Increment responsivity on top view
+
 ## Release v1.1.5
 _2026-06-21_
 ### ⚡ Changed

@@ -62,7 +62,7 @@
                             <span class="year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : #{tvshows.year.unknown}">Year</span>
                             <br>
                             <br>
-                            <div th:if="${!#lists.isEmpty(s.genres)}" class="flex gap">
+                            <div th:if="${!#lists.isEmpty(s.genres)}" class="flex gap wrap">
                                 <span class="tag" th:each="genre : ${s.genres}" th:text="${genre}">Genre</span>
                             </div>
                         </div>

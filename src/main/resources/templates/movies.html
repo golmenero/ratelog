@@ -60,7 +60,7 @@
                             <span class="year" th:text="${m.releaseYear != null} ? ${m.releaseYear} : #{movies.year.unknown}">Year</span>
                             <br>
                             <br>
-                            <div th:if="${!#lists.isEmpty(m.genres)}" class="flex gap">
+                            <div th:if="${!#lists.isEmpty(m.genres)}" class="flex gap wrap">
                                 <span class="tag" th:each="genre : ${m.genres}" th:text="${genre}">Genre</span>
                             </div>
                         </div>

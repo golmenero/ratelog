@@ -92,6 +92,10 @@ body {
     gap: 16px;
   }
 
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
   &.separate {
     justify-content: space-between;
   }
