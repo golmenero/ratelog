@@ -7,6 +7,8 @@ import org.ratelog.Email
 import org.ratelog.Lang
 import org.ratelog.MediaType
 import org.ratelog.Username
+import org.ratelog.feed.FeedItem
+import org.ratelog.feed.FeedRepository
 import org.ratelog.toDateString
 import org.ratelog.movie.rating.FeedMovieRow
 import org.ratelog.movie.rating.RatingRepository
@@ -33,16 +35,14 @@ data class Profile(
     val memberSince: String,
     val lang: Lang,
     val isFollowed: Boolean,
-    val movieRatings: List<ProfileRating>,
-    val tvRatings: List<ProfileRating>,
-    val movieHasMore: Boolean,
-    val tvHasMore: Boolean,
+    val feed: List<ProfileRating>,
+    val hasMore: Boolean,
 )
 
 data class ProfileRating(
     val title: String,
     val tmdbId: Int,
-    val type: String,
+    val mediaType: String,
     val seasonNumber: Int?,
     val score: Double,
     val reviewText: String?,
@@ -53,18 +53,14 @@ data class ProfileRating(
 @Service
 class ProfileHandler(
     private val userRepository: UserRepository,
-    private val ratingRepository: RatingRepository,
-    private val tvRatingRepository: TvRatingRepository,
+    private val feedRepository: FeedRepository,
 ) {
 
     @Transactional
     fun handle(query: GetProfile): Either<ProfileHandlerError, Profile> = either {
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
-        val movieRatings = ratingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
-        val tvRatings = tvRatingRepository.findFeedItemsByUserIds(listOf(query.userId), query.limit).map { toResponse(it) }
-
-        val movieTotalCount = ratingRepository.countFeedItemsByUserIds(listOf(query.userId))
-        val tvTotalCount = tvRatingRepository.countFeedItemsByUserIds(listOf(query.userId))
+        val feed = feedRepository.findAll(listOf(query.userId), query.limit).map { toResponse(it) }
+        val totalCount = feedRepository.count(listOf(query.userId))
 
         Profile(
             userId = user.id!!,
@@ -73,31 +69,18 @@ class ProfileHandler(
             memberSince = user.createdAtEpochMs.toDateString(),
             lang = user.lang,
             isFollowed = userRepository.isFollowing(query.loggedUserId, query.userId),
-            movieRatings = movieRatings.sortedByDescending { it.createdAtEpochMs },
-            tvRatings = tvRatings.sortedByDescending { it.createdAtEpochMs },
-            movieHasMore = movieTotalCount > query.limit,
-            tvHasMore = tvTotalCount > query.limit,
+            feed = feed,
+            hasMore = totalCount > query.limit,
         )
     }
 
-    private fun toResponse(rating: FeedMovieRow) = ProfileRating(
-        title = rating.title,
-        tmdbId = rating.tmdbId,
-        type = MediaType.movie.name,
-        seasonNumber = null,
-        score = rating.score ?: 0.0,
-        reviewText = rating.reviewText,
-        ratedAt = rating.createdAtEpochMs.toDateString(),
-        createdAtEpochMs = rating.createdAtEpochMs,
-    )
-
-    private fun toResponse(rating: FeedTvRow) = ProfileRating(
-        title = rating.title,
-        tmdbId = rating.tmdbId,
-        type = MediaType.tvshow.name,
-        seasonNumber = rating.seasonNumber,
-        score = rating.score ?: 0.0,
-        reviewText = rating.reviewText,
+    private fun toResponse(rating: FeedItem) = ProfileRating(
+        title = rating.title.value,
+        tmdbId = rating.tmdbId.value,
+        mediaType = MediaType.tvshow.name,
+        seasonNumber = rating.seasonNumber?.value,
+        score = rating.score?.value ?: 0.0,
+        reviewText = rating.text,
         ratedAt = rating.createdAtEpochMs.toDateString(),
         createdAtEpochMs = rating.createdAtEpochMs,
     )

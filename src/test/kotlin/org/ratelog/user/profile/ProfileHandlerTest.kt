@@ -3,42 +3,58 @@ package org.ratelog.user.profile
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.ratelog.Lang
-import org.ratelog.movie.Movie
-import org.ratelog.test.InMemoryRatingRepository
-import org.ratelog.test.InMemoryTvRatingRepository
+import org.ratelog.MediaType
+import org.ratelog.Score
+import org.ratelog.Title
+import org.ratelog.TmdbId
+import org.ratelog.Username
+import org.ratelog.feed.FeedItem as FeedRow
+import org.ratelog.feed.FeedRepository
 import org.ratelog.test.InMemoryUserRepository
-import org.ratelog.test.RatingFactory
 import org.ratelog.test.UserFactory
 import org.ratelog.user.User
-import org.ratelog.feed.community.FollowedUsersHandler
 import java.time.Instant
 
 class ProfileHandlerTest {
 
     private lateinit var userRepository: InMemoryUserRepository
-    private lateinit var ratingRepository: InMemoryRatingRepository
-    private lateinit var tvRatingRepository: InMemoryTvRatingRepository
+    private val feedRepository: FeedRepository = mock()
     private lateinit var handler: ProfileHandler
 
     @BeforeEach
     fun setUp() {
         userRepository = InMemoryUserRepository()
-        ratingRepository = InMemoryRatingRepository(userRepository)
-        tvRatingRepository = InMemoryTvRatingRepository(userRepository)
-        handler = ProfileHandler(userRepository, ratingRepository, tvRatingRepository)
+        handler = ProfileHandler(userRepository, feedRepository)
     }
+
+    private fun aUser() = UserFactory.aUser(
+        id = 1,
+        username = "testuser",
+        email = "test@example.com",
+        lang = Lang.es,
+        createdAtEpochMs = 1609459200000
+    )
+
+    private fun aFeedRow(
+        tmdbId: Int,
+        createdAtEpochMs: Long = Instant.now().toEpochMilli(),
+    ) = FeedRow(
+        tmdbId = TmdbId(tmdbId),
+        title = Title("Some title"),
+        score = Score(5.0),
+        text = null,
+        username = Username("testuser"),
+        createdAtEpochMs = createdAtEpochMs,
+        mediaType = MediaType.movie,
+        seasonNumber = null,
+    )
 
     @Test
     fun `should return profile when user exists`() {
-        val user = UserFactory.aUser(
-            id = 1,
-            username = "testuser",
-            email = "test@example.com",
-            lang = Lang.es,
-            createdAtEpochMs = 1609459200000
-        )
-        userRepository.save(user)
+        userRepository.save(aUser())
 
         val query = GetProfile(User.Id(1), User.Id(1), 10)
         val result = handler.handle(query)
@@ -65,20 +81,11 @@ class ProfileHandlerTest {
     }
 
     @Test
-    fun `should return 10 ratings and hasMore when limit is 10 and there are more`() {
-        val user = UserFactory.aUser(
-            id = 1,
-            username = "testuser",
-            email = "test@example.com",
-            lang = Lang.es,
-            createdAtEpochMs = 1609459200000
-        )
-        userRepository.save(user)
-
-        repeat(15) { i ->
-            val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
-            ratingRepository.save(rating)
-        }
+    fun `should return 10 items and hasMore when limit is 10 and there are more`() {
+        userRepository.save(aUser())
+        val rows = (1 until 16).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
+        whenever(feedRepository.findAll(listOf(User.Id(1)), 10)).thenReturn(rows.take(10))
+        whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(15L)
 
         val query = GetProfile(User.Id(1), User.Id(1), limit = 10)
         val result = handler.handle(query)
@@ -87,27 +94,18 @@ class ProfileHandlerTest {
         result.fold(
             { fail("Should not return error") },
             { profile ->
-                assertEquals(10, profile.movieRatings.size)
-                assertTrue(profile.movieHasMore)
+                assertEquals(10, profile.feed.size)
+                assertTrue(profile.hasMore)
             }
         )
     }
 
     @Test
-    fun `should return 20 ratings and hasMore when limit is 20 and there are more`() {
-        val user = UserFactory.aUser(
-            id = 1,
-            username = "testuser",
-            email = "test@example.com",
-            lang = Lang.es,
-            createdAtEpochMs = 1609459200000
-        )
-        userRepository.save(user)
-
-        repeat(25) { i ->
-            val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
-            ratingRepository.save(rating)
-        }
+    fun `should return 20 items and hasMore when limit is 20 and there are more`() {
+        userRepository.save(aUser())
+        val rows = (1 until 21).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
+        whenever(feedRepository.findAll(listOf(User.Id(1)), 20)).thenReturn(rows)
+        whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(25L)
 
         val query = GetProfile(User.Id(1), User.Id(1), limit = 20)
         val result = handler.handle(query)
@@ -116,27 +114,18 @@ class ProfileHandlerTest {
         result.fold(
             { fail("Should not return error") },
             { profile ->
-                assertEquals(20, profile.movieRatings.size)
-                assertTrue(profile.movieHasMore)
+                assertEquals(20, profile.feed.size)
+                assertTrue(profile.hasMore)
             }
         )
     }
 
     @Test
-    fun `should return all ratings and hasMore false when limit exceeds total`() {
-        val user = UserFactory.aUser(
-            id = 1,
-            username = "testuser",
-            email = "test@example.com",
-            lang = Lang.es,
-            createdAtEpochMs = 1609459200000
-        )
-        userRepository.save(user)
-
-        repeat(5) { i ->
-            val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
-            ratingRepository.save(rating)
-        }
+    fun `should return all items and hasMore false when limit exceeds total`() {
+        userRepository.save(aUser())
+        val rows = (1 until 6).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
+        whenever(feedRepository.findAll(listOf(User.Id(1)), 10)).thenReturn(rows)
+        whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(5L)
 
         val query = GetProfile(User.Id(1), User.Id(1), limit = 10)
         val result = handler.handle(query)
@@ -145,8 +134,8 @@ class ProfileHandlerTest {
         result.fold(
             { fail("Should not return error") },
             { profile ->
-                assertEquals(5, profile.movieRatings.size)
-                assertFalse(profile.movieHasMore)
+                assertEquals(5, profile.feed.size)
+                assertFalse(profile.hasMore)
             }
         )
     }

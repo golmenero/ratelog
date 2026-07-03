@@ -31,65 +31,28 @@
 
     <div class="separator"></div>
 
-    <div class="grid" th:classappend="${!isLoggedUser} ? 'equal'">
-        <div th:if="${isLoggedUser}"></div>
-
-        <div th:unless="${isLoggedUser}">
-            <h2 class="w-100" th:text="#{community.activity.movies}">Movies</h2>
+    <div th:each="item : ${feed}">
+        <div class="flex separate">
+            <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
+                <span class="title" th:text="${item.title}">Title</span>
+                <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
+            </a>
             <div>
-                <div th:each="item : ${movieRatings}" class="card">
-                    <div class="flex separate">
-                        <a class="link secondary" th:href="@{'/movie/' + ${item.tmdbId}}">
-                            <span class="title" th:text="${item.title}">Title</span>
-                        </a>
-                        <div>
-                            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
-                        </div>
-                    </div>
-                    <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
-                    <br>
-                    <span class="date">
-                        <span th:text="#{community.activity.rated.at}">Rated on</span>
-                        <span th:text="${item.ratedAt}">date</span>
-                    </span>
-                </div>
-                <div th:if="${movieHasMore}">
-                    <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
-                        <i data-lucide="chevrons-down"></i>
-                        <span th:text="#{community.load.more}">Load More</span>
-                    </a>
-                </div>
+                <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
             </div>
         </div>
-
-        <div th:unless="${isLoggedUser}">
-            <h2 class="w-100" th:text="#{community.activity.tvshows}">TV Shows</h2>
-            <div>
-                <div th:each="item : ${tvRatings}" class="card">
-                    <div class="flex separate">
-                        <a class="link secondary" th:href="@{'/tv/' + ${item.tmdbId}}">
-                            <span class="title" th:text="${item.title}">Title</span>
-                            <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
-                        </a>
-                        <div>
-                            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
-                        </div>
-                    </div>
-                    <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
-                    <br>
-                    <span class="date">
-                        <span th:text="#{community.activity.rated.at}">Rated on</span>
-                        <span th:text="${item.ratedAt}">date</span>
-                    </span>
-                </div>
-                <div th:if="${tvHasMore}">
-                    <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
-                        <i data-lucide="chevrons-down"></i>
-                        <span th:text="#{community.load.more}">Load More</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+        <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
+        <span class="date">
+            <span th:text="#{community.activity.rated.at}">Rated on</span>
+            <span th:text="${item.ratedAt}">date</span>
+        </span>
+        <div class="separator"></div>
+    </div>
+    <div th:if="${hasMore}">
+        <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
+            <i data-lucide="chevrons-down"></i>
+            <span th:text="#{community.load.more}">Load More</span>
+        </a>
     </div>
 
     <footer th:if="${isLoggedUser}" class="bmc-footer">

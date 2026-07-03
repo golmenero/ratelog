@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ## Release v1.1.7
 ### ➕ Added
 - Optimizations on Community tabs. Rework of front
+- Optimizations on Profile tabs. Rework of front
 ### ⚡ Changed
 - Infere season on rating modal
 ### 🔧 Fixed
