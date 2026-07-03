@@ -9,7 +9,7 @@
         <h1 th:text="#{community.title}">Community.</h1>
 
         <div class="grid">
-            <div>
+            <div class="card">
                 <div th:each="item : ${feed}">
                     <span class="username" th:text="${item.username}">Username</span>
                     <div class="flex separate">

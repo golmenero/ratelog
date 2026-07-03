@@ -6,11 +6,11 @@
 <div class="page">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='profile')}"></header>
 
-    <div class="flex centered separate">
+    <div class="card flex separate">
         <div class="flex gap-lg centered">
             <div class="avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
             <div>
-                <h1 class="w-100" th:text="${username}">Username</h1>
+                <h1 class="w-100 m-0" th:text="${username}">Username</h1>
                 <p th:if="${isLoggedUser}" th:text="${email}">email@example.com</p>
                 <span class="date"><span th:text="#{profile.member.since}">Member since</span> <span th:text="${memberSince}">2024-01-01</span></span>
             </div>
@@ -29,30 +29,30 @@
         </div>
     </div>
 
-    <div class="separator"></div>
-
-    <div th:each="item : ${feed}">
-        <div class="flex separate">
-            <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
-                <span class="title" th:text="${item.title}">Title</span>
-                <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
-            </a>
-            <div>
-                <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+    <div class="card">
+        <div th:each="item : ${feed}">
+            <div class="flex separate">
+                <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
+                    <span class="title" th:text="${item.title}">Title</span>
+                    <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
+                </a>
+                <div>
+                    <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                </div>
             </div>
+            <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
+            <span class="date">
+                <span th:text="#{community.activity.rated.at}">Rated on</span>
+                <span th:text="${item.ratedAt}">date</span>
+            </span>
+            <div class="separator"></div>
         </div>
-        <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
-        <span class="date">
-            <span th:text="#{community.activity.rated.at}">Rated on</span>
-            <span th:text="${item.ratedAt}">date</span>
-        </span>
-        <div class="separator"></div>
-    </div>
-    <div th:if="${hasMore}">
-        <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
-            <i data-lucide="chevrons-down"></i>
-            <span th:text="#{community.load.more}">Load More</span>
-        </a>
+        <div th:if="${hasMore}">
+            <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
+                <i data-lucide="chevrons-down"></i>
+                <span th:text="#{community.load.more}">Load More</span>
+            </a>
+        </div>
     </div>
 
     <footer th:if="${isLoggedUser}" class="bmc-footer">
