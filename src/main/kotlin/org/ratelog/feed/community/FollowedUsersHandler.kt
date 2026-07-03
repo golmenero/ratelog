@@ -1,4 +1,4 @@
-package org.ratelog.user.community
+package org.ratelog.feed.community
 
 import arrow.core.Either
 import arrow.core.raise.either

@@ -1,3 +1,3 @@
-package org.ratelog.user.community
+package org.ratelog.feed.community
 
 sealed interface CommunityHandlerError

@@ -14,9 +14,9 @@ import org.ratelog.tvshow.rating.FeedTvRow
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
-import org.ratelog.user.community.FollowedUserResult
-import org.ratelog.user.community.FollowedUsersHandler
-import org.ratelog.user.community.FollowedUsersQuery
+import org.ratelog.feed.community.FollowedUserResult
+import org.ratelog.feed.community.FollowedUsersHandler
+import org.ratelog.feed.community.FollowedUsersQuery
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

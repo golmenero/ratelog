@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.7
+### ➕ Added
+- Optimizations on Community tabs. Rework of front
+### ⚡ Changed
+- Infere season on rating modal
+### 🔧 Fixed
+- Fixed tag styling
+
 ## Release v1.1.6
 _2026-06-29_
 ### ⚡ Changed

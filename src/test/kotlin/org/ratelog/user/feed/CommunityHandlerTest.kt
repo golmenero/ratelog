@@ -8,9 +8,9 @@ import org.ratelog.movie.Movie
 import org.ratelog.test.*
 import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
-import org.ratelog.user.community.CommunityHandler
-import org.ratelog.user.community.FeedQuery
-import org.ratelog.user.community.FeedResult
+import org.ratelog.feed.community.CommunityHandler
+import org.ratelog.feed.community.FeedQuery
+import org.ratelog.feed.community.FeedResult
 import java.time.Instant
 
 class CommunityHandlerTest {

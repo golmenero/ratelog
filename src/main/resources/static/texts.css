@@ -108,5 +108,6 @@ span {
     text-overflow: ellipsis;
     text-decoration: none;
     display: inline;
+    font-style: italic;
   }
 }

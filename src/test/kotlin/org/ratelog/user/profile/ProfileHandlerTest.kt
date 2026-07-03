@@ -11,7 +11,7 @@ import org.ratelog.test.InMemoryUserRepository
 import org.ratelog.test.RatingFactory
 import org.ratelog.test.UserFactory
 import org.ratelog.user.User
-import org.ratelog.user.community.FollowedUsersHandler
+import org.ratelog.feed.community.FollowedUsersHandler
 import java.time.Instant
 
 class ProfileHandlerTest {

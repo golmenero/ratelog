@@ -1,4 +1,4 @@
-package org.ratelog.user.community
+package org.ratelog.feed.community
 
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.user.User
@@ -14,17 +14,15 @@ class CommunityController(
     @GetMapping("/community")
     fun communityPage(
         @CurrentUser user: User,
-        @RequestParam(value = "limit", defaultValue = "5") limit: Int,
+        @RequestParam(value = "limit", defaultValue = "10") limit: Int,
         model: Model
     ): String {
         FeedQuery(user.id!!, limit).let(communityHandler::handle)
             .fold(
                 { },
                 {
-                    model.addAttribute("feedMovies", it.movieItems)
-                    model.addAttribute("feedTvshows", it.tvItems)
-                    model.addAttribute("hasMoreMovies", it.hasMoreMovies)
-                    model.addAttribute("hasMoreTvshows", it.hasMoreTvshows)
+                    model.addAttribute("feed", it.feed)
+                    model.addAttribute("hasMore", it.hasMore)
                 }
             )
 
