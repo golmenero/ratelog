@@ -13,7 +13,7 @@
                 <div th:each="item : ${feed}">
                     <span class="username" th:text="${item.username}">Username</span>
                     <div class="flex separate">
-                        <a class="link secondary" th:href="@{'/movie/' + ${item.tmdbId}}">
+                        <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
                             <span class="title" th:text="${item.title}">Title</span>
                             <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
                         </a>
