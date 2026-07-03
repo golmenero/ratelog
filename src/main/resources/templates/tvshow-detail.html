@@ -94,7 +94,7 @@
     const btnOpenRateModal = document.getElementById('btnOpenRateModal');
     const btnCloseModal = document.getElementById('btnCloseModal');
     const rateModal = document.getElementById('rateModal');
-    const seasonSelect = document.getElementById('seasonNumber');
+    const seasonNumberSelect = document.getElementById('seasonNumber');
 
     if (btnOpenRateModal) {
         btnOpenRateModal.addEventListener('click', () => {
@@ -105,8 +105,8 @@
     document.querySelectorAll('.season-rate-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const season = btn.getAttribute('data-season');
-            if (seasonSelect) {
-                seasonSelect.value = season;
+            if (seasonNumberSelect) {
+                seasonNumberSelect.value = season;
             }
             rateModal.classList.add('visible');
         });

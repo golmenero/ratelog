@@ -11,15 +11,7 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="hidden" name="tvShowId" th:value="${show.id}">
             <input type="hidden" name="tmdbId" th:value="${show.tmdbId}">
-
-            <label class="flex separate" for="seasonNumber">
-                <span><i data-lucide="layers"></i><span th:text="#{modal.season}">Season</span></span>
-            </label>
-            <select id="seasonNumber" class="w-100" name="seasonNumber">
-                <option th:each="season : ${show.seasons}" th:value="${season.seasonNumber}" th:text="${#messages.msg('modal.season.prefix')} + ${season.seasonNumber}" th:selected="${season.seasonNumber == 1}">Season 1</option>
-            </select>
-
-            <div class="separator"></div>
+            <input type="hidden" id="seasonNumber" name="seasonNumber">
 
             <label class="flex separate" for="directing">
                 <span class="flex centered gap"><i data-lucide="clapperboard"></i><span th:text="#{modal.direction}">Direction</span></span>
