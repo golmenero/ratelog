@@ -21,6 +21,7 @@ class CommunityController(
             .fold(
                 { },
                 {
+                    model.addAttribute("followedUsers", it.followedUsers)
                     model.addAttribute("feed", it.feed)
                     model.addAttribute("hasMore", it.hasMore)
                 }

@@ -37,7 +37,6 @@ data class Profile(
     val tvRatings: List<ProfileRating>,
     val movieHasMore: Boolean,
     val tvHasMore: Boolean,
-    val followedUsers: List<FollowedUserResult>,
 )
 
 data class ProfileRating(
@@ -56,7 +55,6 @@ class ProfileHandler(
     private val userRepository: UserRepository,
     private val ratingRepository: RatingRepository,
     private val tvRatingRepository: TvRatingRepository,
-    private val followedUsersHandler: FollowedUsersHandler,
 ) {
 
     @Transactional
@@ -67,10 +65,6 @@ class ProfileHandler(
 
         val movieTotalCount = ratingRepository.countFeedItemsByUserIds(listOf(query.userId))
         val tvTotalCount = tvRatingRepository.countFeedItemsByUserIds(listOf(query.userId))
-
-        val followedUsers = if (query.loggedUserId == query.userId) {
-            followedUsersHandler.handle(FollowedUsersQuery(query.loggedUserId)).getOrElse { emptyList() }
-        } else emptyList()
 
         Profile(
             userId = user.id!!,
@@ -83,7 +77,6 @@ class ProfileHandler(
             tvRatings = tvRatings.sortedByDescending { it.createdAtEpochMs },
             movieHasMore = movieTotalCount > query.limit,
             tvHasMore = tvTotalCount > query.limit,
-            followedUsers = followedUsers,
         )
     }
 

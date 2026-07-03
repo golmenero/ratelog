@@ -90,23 +90,6 @@
                 </div>
             </div>
         </div>
-
-        <div th:if="${isLoggedUser}">
-            <h2 th:text="#{community.search.users}">Search Users</h2>
-            <div class="search-wrapper">
-                <input type="text" id="user-search-input" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" class="w-100" th:data-no-users-msg="#{community.search.no.users.found}" />
-                <div id="user-search-dropdown" class="search-dropdown"></div>
-            </div>
-
-            <div class="separator"></div>
-
-            <h2 th:text="#{community.followed.users}">Followed Users</h2>
-            <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}">
-                <div th:each="followedUser : ${followedUsers}">
-                    <a th:href="@{'/profile/' + ${followedUser.id}}" class="link" th:text="${followedUser.username}">Username</a>
-                </div>
-            </div>
-        </div>
     </div>
 
     <footer th:if="${isLoggedUser}" class="bmc-footer">
@@ -130,7 +113,6 @@
     <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
 </div>
 </body>
-<script src="/usersearch.js" defer></script>
 <script>
     const btnOpenEditModal = document.getElementById('btnOpenEditModal');
     const btnCloseEditModal = document.getElementById('btnCloseEditModal');

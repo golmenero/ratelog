@@ -8,30 +8,51 @@
 
         <h1 th:text="#{community.title}">Community.</h1>
 
-        <div th:each="item : ${feed}">
-            <span class="username" th:text="${item.username}">Username</span>
-            <div class="flex separate">
-                <a class="link secondary" th:href="@{'/movie/' + ${item.tmdbId}}">
-                    <span class="title" th:text="${item.title}">Title</span>
-                    <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
-                </a>
-                <div>
-                    <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+        <div class="grid">
+            <div>
+                <div th:each="item : ${feed}">
+                    <span class="username" th:text="${item.username}">Username</span>
+                    <div class="flex separate">
+                        <a class="link secondary" th:href="@{'/movie/' + ${item.tmdbId}}">
+                            <span class="title" th:text="${item.title}">Title</span>
+                            <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
+                        </a>
+                        <div>
+                            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                        </div>
+                    </div>
+                    <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
+                    <span class="date">
+                        <span th:text="#{community.activity.rated.at}">Rated on</span>
+                        <span th:text="${item.ratedAt}">date</span>
+                    </span>
+                    <div class="separator"></div>
+                </div>
+                <div th:if="${hasMore}">
+                    <a th:href="@{/community(limit=${limit + 10})}" class="link flex gap">
+                        <i data-lucide="chevrons-down"></i>
+                        <span th:text="#{community.load.more}">Load More</span>
+                    </a>
                 </div>
             </div>
-            <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
-            <span class="date">
-                <span th:text="#{community.activity.rated.at}">Rated on</span>
-                <span th:text="${item.ratedAt}">date</span>
-            </span>
-            <div class="separator"></div>
-        </div>
-        <div th:if="${hasMore}">
-            <a th:href="@{/community(limit=${limit + 10})}" class="link flex gap">
-                <i data-lucide="chevrons-down"></i>
-                <span th:text="#{community.load.more}">Load More</span>
-            </a>
+            <div>
+                <h2 th:text="#{community.search.users}">Search Users</h2>
+                <div class="search-wrapper">
+                    <input type="text" id="user-search-input" name="username" th:placeholder="#{community.search.placeholder}" autocomplete="off" th:value="${searchedUsername}" class="w-100" th:data-no-users-msg="#{community.search.no.users.found}" />
+                    <div id="user-search-dropdown" class="search-dropdown"></div>
+                </div>
+
+                <div class="separator"></div>
+
+                <h2 th:text="#{community.followed.users}">Followed Users</h2>
+                <div th:if="${followedUsers != null and !#lists.isEmpty(followedUsers)}">
+                    <div th:each="followedUser : ${followedUsers}">
+                        <a th:href="@{'/profile/' + ${followedUser.id}}" class="link" th:text="${followedUser.username}">Username</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script src="/usersearch.js" defer></script>
 </body>
 </html>

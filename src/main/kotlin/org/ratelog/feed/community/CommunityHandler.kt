@@ -1,6 +1,7 @@
 package org.ratelog.feed.community
 
 import arrow.core.Either
+import arrow.core.getOrElse
 import arrow.core.raise.either
 import org.ratelog.MediaType
 import org.ratelog.feed.FeedRepository
@@ -16,6 +17,7 @@ data class FeedQuery(
 )
 
 data class FeedResult(
+    val followedUsers: List<FollowedUserResult>,
     val feed: List<FeedItem>,
     val hasMore: Boolean,
 )
@@ -34,15 +36,16 @@ data class FeedItem(
 
 @Service
 class CommunityHandler(
-    private val userRepository: UserRepository,
     private val feedRepository: FeedRepository,
+    private val followedUsersHandler: FollowedUsersHandler,
 ) {
 
     @Transactional
     fun handle(query: FeedQuery): Either<CommunityHandlerError, FeedResult> = either {
-        val followedIds = userRepository.findFollowedUserIds(query.userId)
-        if (followedIds.isEmpty()) return@either FeedResult(emptyList(), false)
+        val followedUsers = followedUsersHandler.handle(FollowedUsersQuery(query.userId)).getOrElse { emptyList() }
+        if (followedUsers.isEmpty()) return@either FeedResult(emptyList(), emptyList(),false)
 
+        val followedIds = followedUsers.map { it.id.let(User::Id) }
         val items = feedRepository.findAll(followedIds, query.limit)
             .map { row ->
                 FeedItem(
@@ -59,7 +62,6 @@ class CommunityHandler(
             }
 
         val totalCount = feedRepository.count(followedIds)
-
-        FeedResult(items, totalCount > query.limit)
+        FeedResult(followedUsers, items, totalCount > query.limit)
     }
 }

@@ -1,184 +1,169 @@
-package org.ratelog.user.feed
+package org.ratelog.feed.community
 
 import arrow.core.getOrElse
+import arrow.core.right
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.ratelog.movie.Movie
-import org.ratelog.test.*
-import org.ratelog.tvshow.TvShow
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import org.ratelog.MediaType
+import org.ratelog.Score
+import org.ratelog.SeasonNumber
+import org.ratelog.Title
+import org.ratelog.TmdbId
+import org.ratelog.Username
+import org.ratelog.feed.FeedRepository
+import org.ratelog.feed.FeedItem as FeedRow
 import org.ratelog.user.User
-import org.ratelog.feed.community.CommunityHandler
-import org.ratelog.feed.community.FeedQuery
-import org.ratelog.feed.community.FeedResult
 import java.time.Instant
 
 class CommunityHandlerTest {
 
-    private lateinit var userRepository: InMemoryUserRepository
-    private lateinit var ratingRepository: InMemoryRatingRepository
-    private lateinit var tvRatingRepository: InMemoryTvRatingRepository
+    private var feedRepository: FeedRepository = mock()
+    private var followedUsersHandler: FollowedUsersHandler = mock()
     private lateinit var handler: CommunityHandler
+
+    private val userId = User.Id(1)
+    private val followedId = User.Id(2)
+    private val followedUser = FollowedUserResult(id = 2, username = "followeduser")
 
     @BeforeEach
     fun setUp() {
-        userRepository = InMemoryUserRepository()
-        ratingRepository = InMemoryRatingRepository(userRepository)
-        tvRatingRepository = InMemoryTvRatingRepository(userRepository)
-        handler = CommunityHandler(userRepository, ratingRepository, tvRatingRepository)
+        handler = CommunityHandler(feedRepository, followedUsersHandler)
     }
+
+    private fun stubFollowing(users: List<FollowedUserResult>) {
+        whenever(followedUsersHandler.handle(FollowedUsersQuery(userId))).thenReturn(users.right())
+    }
+
+    private fun aFeedRow(
+        tmdbId: Int = 1,
+        title: String = "Some title",
+        score: Double? = 3.0,
+        text: String? = null,
+        username: String = "followeduser",
+        createdAtEpochMs: Long = Instant.now().toEpochMilli(),
+        mediaType: MediaType = MediaType.movie,
+        seasonNumber: Int? = null,
+    ) = FeedRow(
+        tmdbId = TmdbId(tmdbId),
+        title = Title(title),
+        score = score?.let(::Score),
+        text = text,
+        username = Username(username),
+        createdAtEpochMs = createdAtEpochMs,
+        mediaType = mediaType,
+        seasonNumber = seasonNumber?.let(::SeasonNumber),
+    )
 
     @Test
     fun `should return empty list when user follows no one`() {
-        val query = FeedQuery(User.Id(1), 10)
+        stubFollowing(emptyList())
 
-        val result = handler.handle(query)
+        val result = handler.handle(FeedQuery(userId, 10))
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
-        assertEquals(0, feedResult.movieItems.size)
-        assertEquals(0, feedResult.tvItems.size)
-        assertFalse(feedResult.hasMoreMovies)
-        assertFalse(feedResult.hasMoreTvshows)
+        val feedResult = result.getOrElse { fail("expected Right") }
+        assertEquals(0, feedResult.feed.size)
+        assertFalse(feedResult.hasMore)
     }
 
     @Test
     fun `should return feed items from followed users movie ratings`() {
-        val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
-        userRepository.save(followedUser)
-        userRepository.toggleFollow(User.Id(1), User.Id(2))
+        stubFollowing(listOf(followedUser))
+        val row = aFeedRow(mediaType = MediaType.movie, seasonNumber = null)
+        whenever(feedRepository.findAll(listOf(followedId), 10)).thenReturn(listOf(row))
+        whenever(feedRepository.count(listOf(followedId))).thenReturn(1L)
 
-        val rating = RatingFactory.aRating(movieId = Movie.Id(1), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = null)
-        ratingRepository.save(rating)
-
-        val query = FeedQuery(User.Id(1), 10)
-        val result = handler.handle(query)
+        val result = handler.handle(FeedQuery(userId, 10))
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
-        assertEquals(1, feedResult.movieItems.size)
-        assertEquals("followeduser", feedResult.movieItems[0].username)
-        assertEquals("movie", feedResult.movieItems[0].type)
-        assertNull(feedResult.movieItems[0].reviewText)
-        assertNull(feedResult.movieItems[0].seasonNumber)
-        assertFalse(feedResult.hasMoreMovies)
+        val feedResult = result.getOrElse { fail("expected Right") }
+        assertEquals(1, feedResult.feed.size)
+        assertEquals("followeduser", feedResult.feed[0].username)
+        assertEquals("movie", feedResult.feed[0].type)
+        assertNull(feedResult.feed[0].reviewText)
+        assertNull(feedResult.feed[0].seasonNumber)
+        assertFalse(feedResult.hasMore)
     }
 
     @Test
     fun `should return feed items from followed users tv ratings`() {
-        val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
-        userRepository.save(followedUser)
-        userRepository.toggleFollow(User.Id(1), User.Id(2))
+        stubFollowing(listOf(followedUser))
+        val row = aFeedRow(mediaType = MediaType.tvshow, seasonNumber = 1)
+        whenever(feedRepository.findAll(listOf(followedId), 10)).thenReturn(listOf(row))
+        whenever(feedRepository.count(listOf(followedId))).thenReturn(1L)
 
-        val seasonRating = TvRatingFactory.aSeasonRating(
-            tvShowId = TvShow.Id(1),
-            seasonNumber = 1,
-            userId = User.Id(2),
-            directing = 5.0,
-            cinematography = 5.0,
-            acting = 5.0,
-            soundtrack = 5.0,
-            screenplay = 5.0,
-            createdAt = Instant.now(),
-            review = null
-        )
-        val tvRating = TvRatingFactory.aTvRating(
-            tvShowId = TvShow.Id(1),
-            userId = User.Id(2),
-            seasonRatings = listOf(seasonRating),
-            createdAt = Instant.now()
-        )
-        tvRatingRepository.save(tvRating)
-
-        val query = FeedQuery(User.Id(1), 10)
-        val result = handler.handle(query)
+        val result = handler.handle(FeedQuery(userId, 10))
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
-        assertEquals(1, feedResult.tvItems.size)
-        assertEquals("followeduser", feedResult.tvItems[0].username)
-        assertEquals("tvshow", feedResult.tvItems[0].type)
-        assertEquals(1, feedResult.tvItems[0].seasonNumber)
-        assertFalse(feedResult.hasMoreTvshows)
+        val feedResult = result.getOrElse { fail("expected Right") }
+        assertEquals(1, feedResult.feed.size)
+        assertEquals("followeduser", feedResult.feed[0].username)
+        assertEquals("tvshow", feedResult.feed[0].type)
+        assertEquals(1, feedResult.feed[0].seasonNumber)
+        assertFalse(feedResult.hasMore)
     }
 
     @Test
     fun `should return feed items with review text when rating has review`() {
-        val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
-        userRepository.save(followedUser)
-        userRepository.toggleFollow(User.Id(1), User.Id(2))
+        stubFollowing(listOf(followedUser))
+        val row = aFeedRow(text = "Great movie!")
+        whenever(feedRepository.findAll(listOf(followedId), 10)).thenReturn(listOf(row))
+        whenever(feedRepository.count(listOf(followedId))).thenReturn(1L)
 
-        val review = org.ratelog.Review("Great movie!")
-        val rating = RatingFactory.aRating(movieId = Movie.Id(1), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = review.value)
-        ratingRepository.save(rating)
-
-        val query = FeedQuery(User.Id(1), 10)
-        val result = handler.handle(query)
+        val result = handler.handle(FeedQuery(userId, 10))
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
-        assertEquals(1, feedResult.movieItems.size)
-        assertEquals("Great movie!", feedResult.movieItems[0].reviewText)
-        assertFalse(feedResult.hasMoreMovies)
+        val feedResult = result.getOrElse { fail("expected Right") }
+        assertEquals(1, feedResult.feed.size)
+        assertEquals("Great movie!", feedResult.feed[0].reviewText)
+        assertFalse(feedResult.hasMore)
     }
 
     @Test
     fun `should return 10 items and hasMore when there are more than 10 items`() {
-        val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
-        userRepository.save(followedUser)
-        userRepository.toggleFollow(User.Id(1), User.Id(2))
+        stubFollowing(listOf(followedUser))
+        val rows = (1 until 11).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
+        whenever(feedRepository.findAll(listOf(followedId), 10)).thenReturn(rows)
+        whenever(feedRepository.count(listOf(followedId))).thenReturn(15L)
 
-        repeat(15) { i ->
-            val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
-            ratingRepository.save(rating)
-        }
-
-        val query = FeedQuery(User.Id(1), limit = 10)
-        val result = handler.handle(query)
+        val result = handler.handle(FeedQuery(userId, limit = 10))
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
-        assertEquals(10, feedResult.movieItems.size)
-        assertTrue(feedResult.hasMoreMovies)
+        val feedResult = result.getOrElse { fail("expected Right") }
+        assertEquals(10, feedResult.feed.size)
+        assertTrue(feedResult.hasMore)
     }
 
     @Test
     fun `should return 20 items and hasMore when there are more than 20 items`() {
-        val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
-        userRepository.save(followedUser)
-        userRepository.toggleFollow(User.Id(1), User.Id(2))
+        stubFollowing(listOf(followedUser))
+        val rows = (1 until 21).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
+        whenever(feedRepository.findAll(listOf(followedId), 20)).thenReturn(rows)
+        whenever(feedRepository.count(listOf(followedId))).thenReturn(25L)
 
-        repeat(25) { i ->
-            val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
-            ratingRepository.save(rating)
-        }
-
-        val query = FeedQuery(User.Id(1), limit = 20)
-        val result = handler.handle(query)
+        val result = handler.handle(FeedQuery(userId, limit = 20))
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
-        assertEquals(20, feedResult.movieItems.size)
-        assertTrue(feedResult.hasMoreMovies)
+        val feedResult = result.getOrElse { fail("expected Right") }
+        assertEquals(20, feedResult.feed.size)
+        assertTrue(feedResult.hasMore)
     }
 
     @Test
     fun `should return all items and hasMore false when limit exceeds total`() {
-        val followedUser = UserFactory.aUser(id = 2, username = "followeduser", email = "followed@example.com")
-        userRepository.save(followedUser)
-        userRepository.toggleFollow(User.Id(1), User.Id(2))
+        stubFollowing(listOf(followedUser))
+        val rows = (1 until 6).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
+        whenever(feedRepository.findAll(listOf(followedId), 10)).thenReturn(rows)
+        whenever(feedRepository.count(listOf(followedId))).thenReturn(5L)
 
-        repeat(5) { i ->
-            val rating = RatingFactory.aRating(movieId = Movie.Id(i.toLong()), userId = User.Id(2), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now().minusSeconds(i.toLong() * 60), review = null)
-            ratingRepository.save(rating)
-        }
-
-        val query = FeedQuery(User.Id(1), limit = 10)
-        val result = handler.handle(query)
+        val result = handler.handle(FeedQuery(userId, limit = 10))
 
         assertTrue(result.isRight())
-        val feedResult = result.getOrElse { FeedResult(emptyList(), emptyList(), false, false) }
-        assertEquals(5, feedResult.movieItems.size)
-        assertFalse(feedResult.hasMoreMovies)
+        val feedResult = result.getOrElse { fail("expected Right") }
+        assertEquals(5, feedResult.feed.size)
+        assertFalse(feedResult.hasMore)
     }
 }

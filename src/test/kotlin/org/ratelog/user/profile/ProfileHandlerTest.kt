@@ -19,7 +19,6 @@ class ProfileHandlerTest {
     private lateinit var userRepository: InMemoryUserRepository
     private lateinit var ratingRepository: InMemoryRatingRepository
     private lateinit var tvRatingRepository: InMemoryTvRatingRepository
-    private lateinit var followedUsersHandler: FollowedUsersHandler
     private lateinit var handler: ProfileHandler
 
     @BeforeEach
@@ -27,8 +26,7 @@ class ProfileHandlerTest {
         userRepository = InMemoryUserRepository()
         ratingRepository = InMemoryRatingRepository(userRepository)
         tvRatingRepository = InMemoryTvRatingRepository(userRepository)
-        followedUsersHandler = FollowedUsersHandler(userRepository)
-        handler = ProfileHandler(userRepository, ratingRepository, tvRatingRepository, followedUsersHandler)
+        handler = ProfileHandler(userRepository, ratingRepository, tvRatingRepository)
     }
 
     @Test

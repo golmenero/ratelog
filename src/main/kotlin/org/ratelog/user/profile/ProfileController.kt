@@ -46,7 +46,6 @@ class ProfileController(
                     model.addAttribute("movieHasMore", it.movieHasMore)
                     model.addAttribute("tvHasMore", it.tvHasMore)
                     model.addAttribute("limit", limit)
-                    model.addAttribute("followedUsers", it.followedUsers)
                     "profile"
                 }
             )
