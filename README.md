@@ -51,6 +51,17 @@ Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a>
 - **Top lists** — Separate pages for movies and TV shows, filterable by year and category with configurable limits
 - **Multi-user** — Each user has their own ratings, follows, and tops
 - **One rating per title** — Delete and re-rate if you change your mind
+- **Multi language support** 
+  - ![EN](https://flagcdn.com/24x18/gb.png)
+    ![DE](https://flagcdn.com/24x18/de.png)
+    ![ES](https://flagcdn.com/24x18/es.png)
+    ![FR](https://flagcdn.com/24x18/fr.png)
+    ![IT](https://flagcdn.com/24x18/it.png)
+    ![JA](https://flagcdn.com/24x18/jp.png)
+    ![PT](https://flagcdn.com/24x18/pt.png)
+    ![RU](https://flagcdn.com/24x18/ru.png)
+    ![ZH](https://flagcdn.com/24x18/cn.png)
+
 
 <p align="center">
   <img alt="Search" src="assets/search.png" width="900"/>
