@@ -1,7 +1,6 @@
 package org.ratelog.feed.community
 
 import arrow.core.getOrElse
-import arrow.core.right
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,27 +13,29 @@ import org.ratelog.Title
 import org.ratelog.TmdbId
 import org.ratelog.Username
 import org.ratelog.feed.FeedRepository
+import org.ratelog.test.UserFactory
 import org.ratelog.feed.FeedItem as FeedRow
 import org.ratelog.user.User
+import org.ratelog.user.UserRepository
 import java.time.Instant
 
 class CommunityHandlerTest {
 
     private var feedRepository: FeedRepository = mock()
-    private var followedUsersHandler: FollowedUsersHandler = mock()
+    private var userRepository: UserRepository = mock()
     private lateinit var handler: CommunityHandler
 
     private val userId = User.Id(1)
     private val followedId = User.Id(2)
-    private val followedUser = FollowedUserResult(id = 2, username = "followeduser")
+    private val followedUser = UserFactory.aUser(id = 2, username = "followeduser")
 
     @BeforeEach
     fun setUp() {
-        handler = CommunityHandler(feedRepository, followedUsersHandler)
+        handler = CommunityHandler(feedRepository, userRepository)
     }
 
-    private fun stubFollowing(users: List<FollowedUserResult>) {
-        whenever(followedUsersHandler.handle(FollowedUsersQuery(userId))).thenReturn(users.right())
+    private fun stubFollowing(users: List<User>) {
+        whenever(userRepository.findFollowingByUserId(userId)).thenReturn(users)
     }
 
     private fun aFeedRow(

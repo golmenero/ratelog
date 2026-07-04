@@ -17,7 +17,7 @@ data class FeedQuery(
 )
 
 data class FeedResult(
-    val followedUsers: List<FollowedUserResult>,
+    val followedUsers: List<User>,
     val feed: List<FeedItem>,
     val hasMore: Boolean,
 )
@@ -38,15 +38,15 @@ data class FeedItem(
 @Service
 class CommunityHandler(
     private val feedRepository: FeedRepository,
-    private val followedUsersHandler: FollowedUsersHandler,
+    private val userRepository: UserRepository,
 ) {
 
     @Transactional
     fun handle(query: FeedQuery): Either<CommunityHandlerError, FeedResult> = either {
-        val followedUsers = followedUsersHandler.handle(FollowedUsersQuery(query.userId)).getOrElse { emptyList() }
+        val followedUsers = userRepository.findFollowingByUserId(query.userId)
         if (followedUsers.isEmpty()) return@either FeedResult(emptyList(), emptyList(),false)
 
-        val followedIds = followedUsers.map { it.id.let(User::Id) }
+        val followedIds = followedUsers.mapNotNull { it.id }
         val items = feedRepository.findAll(followedIds, query.limit)
             .map { row ->
                 FeedItem(

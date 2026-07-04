@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.8 (pending)
+### ➕ Added
+### ⚡ Changed
+- Unify followed users use case with community use case
+### 🔧 Fixed
+
 ## Release v1.1.7
 ### ➕ Added
 - Optimizations on Community tabs. Rework of front

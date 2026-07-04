@@ -1,7 +1,6 @@
 package org.ratelog.user.profile
 
 import arrow.core.Either
-import arrow.core.getOrElse
 import arrow.core.raise.either
 import org.ratelog.Email
 import org.ratelog.Lang
@@ -10,15 +9,8 @@ import org.ratelog.Username
 import org.ratelog.feed.FeedItem
 import org.ratelog.feed.FeedRepository
 import org.ratelog.toDateString
-import org.ratelog.movie.rating.FeedMovieRow
-import org.ratelog.movie.rating.RatingRepository
-import org.ratelog.tvshow.rating.FeedTvRow
-import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
-import org.ratelog.feed.community.FollowedUserResult
-import org.ratelog.feed.community.FollowedUsersHandler
-import org.ratelog.feed.community.FollowedUsersQuery
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
