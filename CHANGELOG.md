@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 - Unify followed users use case with community use case
 ### 🔧 Fixed
+- Fix contracts in community handler and controller
 
 ## Release v1.1.7
 ### ➕ Added

@@ -82,9 +82,9 @@ class CommunityHandlerTest {
         assertTrue(result.isRight())
         val feedResult = result.getOrElse { fail("expected Right") }
         assertEquals(1, feedResult.feed.size)
-        assertEquals("followeduser", feedResult.feed[0].username)
-        assertEquals("movie", feedResult.feed[0].type)
-        assertNull(feedResult.feed[0].reviewText)
+        assertEquals(Username("followeduser"), feedResult.feed[0].username)
+        assertEquals(MediaType.movie, feedResult.feed[0].mediaType)
+        assertNull(feedResult.feed[0].text)
         assertNull(feedResult.feed[0].seasonNumber)
         assertFalse(feedResult.hasMore)
     }
@@ -101,9 +101,9 @@ class CommunityHandlerTest {
         assertTrue(result.isRight())
         val feedResult = result.getOrElse { fail("expected Right") }
         assertEquals(1, feedResult.feed.size)
-        assertEquals("followeduser", feedResult.feed[0].username)
-        assertEquals("tvshow", feedResult.feed[0].type)
-        assertEquals(1, feedResult.feed[0].seasonNumber)
+        assertEquals(Username("followeduser"), feedResult.feed[0].username)
+        assertEquals(MediaType.tvshow, feedResult.feed[0].mediaType)
+        assertEquals(SeasonNumber(1), feedResult.feed[0].seasonNumber)
         assertFalse(feedResult.hasMore)
     }
 
@@ -119,7 +119,7 @@ class CommunityHandlerTest {
         assertTrue(result.isRight())
         val feedResult = result.getOrElse { fail("expected Right") }
         assertEquals(1, feedResult.feed.size)
-        assertEquals("Great movie!", feedResult.feed[0].reviewText)
+        assertEquals("Great movie!", feedResult.feed[0].text)
         assertFalse(feedResult.hasMore)
     }
 

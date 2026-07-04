@@ -1,11 +1,9 @@
 package org.ratelog.feed.community
 
 import arrow.core.Either
-import arrow.core.getOrElse
 import arrow.core.raise.either
-import org.ratelog.MediaType
+import org.ratelog.feed.FeedItem
 import org.ratelog.feed.FeedRepository
-import org.ratelog.toDateString
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import org.springframework.stereotype.Service
@@ -22,19 +20,6 @@ data class FeedResult(
     val hasMore: Boolean,
 )
 
-data class FeedItem(
-    val username: String,
-    val title: String,
-    val tmdbId: Int,
-    val mediaType: String,
-    val type: String,
-    val seasonNumber: Int?,
-    val score: Double,
-    val reviewText: String?,
-    val ratedAt: String,
-    val createdAtEpochMs: Long,
-)
-
 @Service
 class CommunityHandler(
     private val feedRepository: FeedRepository,
@@ -48,20 +33,6 @@ class CommunityHandler(
 
         val followedIds = followedUsers.mapNotNull { it.id }
         val items = feedRepository.findAll(followedIds, query.limit)
-            .map { row ->
-                FeedItem(
-                    username = row.username.value,
-                    title = row.title.value,
-                    tmdbId = row.tmdbId.value,
-                    mediaType = row.mediaType.name,
-                    type = row.mediaType.name,
-                    seasonNumber = row.seasonNumber?.value,
-                    score = row.score?.value ?: 0.0,
-                    reviewText = row.text,
-                    ratedAt = row.createdAtEpochMs.toDateString(),
-                    createdAtEpochMs = row.createdAtEpochMs,
-                )
-            }
 
         val totalCount = feedRepository.count(followedIds)
         FeedResult(followedUsers, items, totalCount > query.limit)
