@@ -30,8 +30,6 @@ data class Rating(
 interface RatingRepository {
     fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Rating?
     fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Pair<Rank, Rating>>
-    fun findFeedItemsByUserIds(userIds: List<User.Id>, limit: Int): List<FeedMovieRow>
-    fun countFeedItemsByUserIds(userIds: List<User.Id>): Long
 
     fun save(rating: Rating)
     fun deleteById(ratingId: Rating.Id)

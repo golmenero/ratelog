@@ -11,9 +11,7 @@ import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-class InMemoryRatingRepository(
-    val userRepository: UserRepository = InMemoryUserRepository()
-) : RatingRepository {
+class InMemoryRatingRepository : RatingRepository {
     private val store = ConcurrentHashMap<Rating.Id, Rating>()
     private val idGenerator = AtomicLong(1)
 
@@ -32,21 +30,6 @@ class InMemoryRatingRepository(
             .take(limit)
             .mapIndexed { index, rating -> Pair(Rank(index + 1), rating) }
 
-    override fun findFeedItemsByUserIds(userIds: List<User.Id>, limit: Int): List<FeedMovieRow> =
-        store.values
-            .filter { it.userId in userIds }
-            .sortedByDescending { it.createdAt.toEpochMilli() }
-            .take(limit)
-            .map {
-                val user = userRepository.findById(it.userId)!!
-                FeedMovieRow(user.username.value, "movie", 0, it.score?.value, it.review?.value, it.createdAt.toEpochMilli())
-            }
-
-    override fun countFeedItemsByUserIds(userIds: List<User.Id>): Long =
-        store.values
-            .count { it.userId in userIds }
-            .toLong()
-
     override fun save(rating: Rating) {
         val ratingToSave = if (rating.id == null) {
             rating.copy(id = Rating.Id(idGenerator.getAndIncrement()))
@@ -58,10 +41,5 @@ class InMemoryRatingRepository(
 
     override fun deleteById(ratingId: Rating.Id) {
         store.remove(ratingId)
-    }
-
-    fun clear() {
-        store.clear()
-        idGenerator.set(1)
     }
 }

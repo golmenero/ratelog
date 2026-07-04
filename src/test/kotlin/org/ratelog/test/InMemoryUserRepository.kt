@@ -33,7 +33,6 @@ class InMemoryUserRepository : UserRepository {
         store.values.filter { it.username.value.contains(username.value, ignoreCase = true) }
 
     override fun findByUsernameContaining(username: Username, followerId: User.Id): List<User> {
-        val follower = store[followerId] ?: return emptyList()
         return store.values.filter { it.username.value.contains(username.value, ignoreCase = true) }
     }
 
@@ -42,22 +41,11 @@ class InMemoryUserRepository : UserRepository {
             .filter { it.first == userId.value }
             .mapNotNull { (_, followedId) -> findById(User.Id(followedId)) }
 
-    override fun findFollowedUserIds(userId: User.Id): List<User.Id> =
-        follows
-            .filter { it.first == userId.value }
-            .map { User.Id(it.second) }
-
     override fun isFollowing(followerId: User.Id, followedId: User.Id): Boolean =
         (followerId.value to followedId.value) in follows
 
     override fun toggleFollow(followerId: User.Id, followedId: User.Id) {
         val pair = followerId.value to followedId.value
         if (pair in follows) follows.remove(pair) else follows.add(pair)
-    }
-
-    fun clear() {
-        store.clear()
-        follows.clear()
-        idGenerator.set(1)
     }
 }

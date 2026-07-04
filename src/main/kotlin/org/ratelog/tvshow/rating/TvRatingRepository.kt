@@ -83,8 +83,6 @@ data class SeasonRating(
 interface TvRatingRepository {
     fun findByTvShowIdAndUserId(tvShowId: TvShow.Id, userId: User.Id): TvRating?
     fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Pair<Rank, TvRating>>
-    fun findFeedItemsByUserIds(userIds: List<User.Id>, limit: Int): List<FeedTvRow>
-    fun countFeedItemsByUserIds(userIds: List<User.Id>): Long
 
     fun save(rating: TvRating)
     fun deleteById(tvRatingId: TvRating.Id)

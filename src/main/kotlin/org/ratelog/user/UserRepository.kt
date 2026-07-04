@@ -24,7 +24,6 @@ interface UserRepository {
     fun findByUsernameContaining(username: Username, followerId: User.Id): List<User>
 
     fun findFollowingByUserId(userId: User.Id): List<User>
-    fun findFollowedUserIds(userId: User.Id): List<User.Id>
     fun isFollowing(followerId: User.Id, followedId: User.Id): Boolean
     fun toggleFollow(followerId: User.Id, followedId: User.Id)
 }

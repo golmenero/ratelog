@@ -33,9 +33,6 @@ class UserRepositoryImpl(
     override fun findFollowingByUserId(userId: User.Id): List<User> =
         userFollowDAO.findFollowingUsers(userId.value).map { it.toDomain() }
 
-    override fun findFollowedUserIds(userId: User.Id): List<User.Id> =
-        userFollowDAO.findFollowedUserIds(userId.value).map { User.Id(it) }
-
     override fun isFollowing(followerId: User.Id, followedId: User.Id): Boolean =
         userFollowDAO.findByFollowerIdAndFollowedId(followerId.value, followedId.value).isPresent
 

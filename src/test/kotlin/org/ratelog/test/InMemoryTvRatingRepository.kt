@@ -11,9 +11,7 @@ import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-class InMemoryTvRatingRepository(
-    val userRepository: UserRepository = InMemoryUserRepository()
-) : TvRatingRepository {
+class InMemoryTvRatingRepository: TvRatingRepository {
     private val store = ConcurrentHashMap<TvRating.Id, TvRating>()
     private val idGenerator = AtomicLong(1)
 
@@ -32,33 +30,6 @@ class InMemoryTvRatingRepository(
             .take(limit)
             .mapIndexed { index, rating -> Pair(Rank(index + 1), rating) }
 
-    override fun findFeedItemsByUserIds(userIds: List<User.Id>, limit: Int): List<FeedTvRow> =
-        store.values
-            .filter { it.userId in userIds }
-            .flatMap { rating ->
-                rating.seasonRatings
-                    .map { season ->
-                        val user = userRepository.findById(rating.userId)!!
-                        FeedTvRow(
-                            user.username.value,
-                            "tvshow",
-                            0,
-                            season.seasonNumber.value,
-                            season.score.value,
-                            season.review?.value,
-                            season.createdAt.toEpochMilli()
-                        )
-                    }
-            }
-            .sortedByDescending { it.createdAtEpochMs }
-            .take(limit)
-
-    override fun countFeedItemsByUserIds(userIds: List<User.Id>): Long =
-        store.values
-            .flatMap { it.seasonRatings }
-            .count { it.userId in userIds }
-            .toLong()
-
     override fun save(rating: TvRating) {
         val ratingToSave = if (rating.id == null) {
             rating.copy(id = TvRating.Id(idGenerator.getAndIncrement()))
@@ -70,10 +41,5 @@ class InMemoryTvRatingRepository(
 
     override fun deleteById(tvRatingId: TvRating.Id) {
         store.remove(tvRatingId)
-    }
-
-    fun clear() {
-        store.clear()
-        idGenerator.set(1)
     }
 }
