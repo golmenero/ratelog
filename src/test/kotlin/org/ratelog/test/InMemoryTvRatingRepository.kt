@@ -2,12 +2,9 @@ package org.ratelog.test
 
 import org.ratelog.Rank
 import org.ratelog.tvshow.TvShow
-import org.ratelog.tvshow.rating.FeedTvRow
 import org.ratelog.tvshow.rating.TvRating
 import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
-import org.ratelog.user.UserRepository
-import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 

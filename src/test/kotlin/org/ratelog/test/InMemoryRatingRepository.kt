@@ -2,12 +2,9 @@ package org.ratelog.test
 
 import org.ratelog.Rank
 import org.ratelog.movie.Movie
-import org.ratelog.movie.rating.FeedMovieRow
 import org.ratelog.movie.rating.Rating
 import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.user.User
-import org.ratelog.user.UserRepository
-import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 

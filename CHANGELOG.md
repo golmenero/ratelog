@@ -7,7 +7,11 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
-## Release v1.1.8 (pending)
+## Release v1.1.9
+### 🔧 Fixed
+- Fix bug on imports
+
+## Release v1.1.8
 ### ➕ Added
 ### ⚡ Changed
 - Unify followed users use case with community use case
