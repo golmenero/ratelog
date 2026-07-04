@@ -1,5 +1,6 @@
 package org.ratelog.user
 
+import jakarta.servlet.http.HttpServletRequest
 import org.ratelog.Email
 import org.ratelog.Lang
 import org.ratelog.Username
@@ -56,6 +57,11 @@ class UserDetailsService(
                 passwordHash = p.password,
                 lang = p.lang,
             )
+        }
+
+        fun resolve(request: HttpServletRequest): Lang {
+            val browserLocales = request.locales.toList().map { it.language }
+            return Lang.parse(browserLocales.first())
         }
     }
 }

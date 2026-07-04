@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import jakarta.servlet.http.HttpServletRequest
-import org.ratelog.user.BrowserLangResolver
+import org.ratelog.user.UserDetailsService
 
 @Controller
 class RegisterController(
@@ -28,7 +28,7 @@ class RegisterController(
         redirectAttributes: RedirectAttributes,
         request: HttpServletRequest
     ): String {
-        val browserLang = BrowserLangResolver.resolve(request)
+        val browserLang = UserDetailsService.resolve(request)
 
         val parsedUsername = Username.parse(username).getOrElse {
             redirectAttributes.addFlashAttribute("error", "register.error.invalid.username.format")
