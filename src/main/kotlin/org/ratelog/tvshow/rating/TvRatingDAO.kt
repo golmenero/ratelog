@@ -33,6 +33,15 @@ data class SeasonRatingEntity(
     @Column("review_text") val reviewText: String? = null,
 )
 
+data class RatedTvRow(
+    val id: Long?,
+    val tvShowId: Long,
+    val userId: Long,
+    val createdAtEpochMs: Long,
+    val score: Double?,
+    val rank: Long,
+)
+
 @Repository
 interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
     fun findFirstByTvShowIdAndUserId(tvShowId: Long, userId: Long): Optional<TvRatingEntity>
@@ -55,48 +64,7 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
         """
     )
     fun findRankedRows(userId: Long, category: String?, name: String?, limit: Int): List<RatedTvRow>
-
-    @Query(
-        """
-        SELECT COUNT(*)
-        FROM season_ratings r
-        WHERE r.user_id IN (:userIds)
-        """
-    )
-    fun countFeedItemsByUserIds(userIds: List<Long>): Long
-
-    @Query(
-        """
-        SELECT u.username, t.name AS title, t.tmdb_id, r.season_number, r.score, r.review_text, r.created_at_epoch_ms
-        FROM season_ratings r
-        INNER JOIN tv t ON r.tv_show_id = t.id
-        INNER JOIN users u ON r.user_id = u.id
-        WHERE r.user_id IN (:userIds)
-        ORDER BY r.created_at_epoch_ms DESC
-        LIMIT :limit
-        """
-    )
-    fun findFeedItemsByUserIds(userIds: List<Long>, limit: Int): List<FeedTvRow>
 }
-
-data class FeedTvRow(
-    val username: String,
-    val title: String,
-    val tmdbId: Int,
-    val seasonNumber: Int?,
-    val score: Double?,
-    val reviewText: String?,
-    val createdAtEpochMs: Long,
-)
-
-data class RatedTvRow(
-    val id: Long?,
-    val tvShowId: Long,
-    val userId: Long,
-    val createdAtEpochMs: Long,
-    val score: Double?,
-    val rank: Long,
-)
 
 @Repository
 interface SeasonRatingDAO : CrudRepository<SeasonRatingEntity, Long> {

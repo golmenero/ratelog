@@ -22,15 +22,6 @@ data class RatingEntity(
     @Column("review_text") val reviewText: String?,
 )
 
-data class FeedMovieRow(
-    val username: String,
-    val title: String,
-    val tmdbId: Int,
-    val score: Double?,
-    val reviewText: String?,
-    val createdAtEpochMs: Long,
-)
-
 data class RatedMovieRow(
     val id: Long?,
     val movieId: Long,
@@ -69,26 +60,4 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
         """
     )
     fun findRankedRows(userId: Long, category: String?, name: String?, limit: Int): List<RatedMovieRow>
-
-    @Query(
-        """
-        SELECT COUNT(*)
-        FROM movie_ratings r
-        WHERE r.user_id IN (:userIds)
-        """
-    )
-    fun countFeedItemsByUserIds(userIds: List<Long>): Long
-
-    @Query(
-        """
-        SELECT u.username, m.title, m.tmdb_id, r.score, r.review_text, r.created_at_epoch_ms
-        FROM movie_ratings r
-        INNER JOIN movies m ON r.movie_id = m.id
-        INNER JOIN users u ON r.user_id = u.id
-        WHERE r.user_id IN (:userIds)
-        ORDER BY r.created_at_epoch_ms DESC
-        LIMIT :limit
-        """
-    )
-    fun findFeedItemsByUserIds(userIds: List<Long>, limit: Int): List<FeedMovieRow>
 }
