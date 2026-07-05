@@ -34,12 +34,14 @@
             <div class="flex separate">
                 <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
                     <span class="title" th:text="${item.title}">Title</span>
+                    <br>
                     <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
                 </a>
                 <div>
                     <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
                 </div>
             </div>
+            <br>
             <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
             <span class="date">
                 <span th:text="#{community.activity.rated.at}">Rated on</span>
