@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ## Release v1.1.9
 ### ➕ Added
+- New loader animation
 ### ⚡ Changed
 - Refactor of detail and other views
 ### 🔧 Fixed

@@ -188,28 +188,15 @@
   }
 
   .loader-logo {
-    width: 120px;
+    width: 160px;
     height: auto;
     animation: loader-pulse 2s ease-in-out infinite;
   }
-
-  .loader-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--border-strong);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: loader-spin 0.8s linear infinite;
-  }
-}
-
-@keyframes loader-spin {
-  to { transform: rotate(360deg); }
 }
 
 @keyframes loader-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(0.96); }
+  50% { opacity: 0.4; transform: scale(0.96); }
 }
 
 .bmc-footer {
