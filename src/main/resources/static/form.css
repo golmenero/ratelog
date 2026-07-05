@@ -140,14 +140,7 @@ a.btn {
 }
 
 a.link {
-  color: var(--accent);
-  font-weight: 600;
   text-decoration: none;
-
-  &:hover {
-    text-decoration: none;
-    color: var(--accent-strong);
-  }
 }
 
 a.link.secondary {

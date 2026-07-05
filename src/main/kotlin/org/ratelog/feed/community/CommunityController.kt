@@ -1,9 +1,11 @@
 package org.ratelog.feed.community
 
+import org.ratelog.Username
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.feed.FeedItem
 import org.ratelog.toDateString
 import org.ratelog.user.User
+import org.springframework.data.relational.core.sql.In
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,6 +24,11 @@ data class FeedResponse(
     val createdAtEpochMs: Long,
 )
 
+data class UserResponse(
+    val id: Long,
+    val username: String,
+)
+
 @Controller
 class CommunityController(
     private val communityHandler: CommunityHandler,
@@ -36,7 +43,7 @@ class CommunityController(
             .fold(
                 { },
                 {
-                    model.addAttribute("followedUsers", it.followedUsers)
+                    model.addAttribute("followedUsers", it.followedUsers.map(::toResponse))
                     model.addAttribute("feed", it.feed.map(::toResponse))
                     model.addAttribute("hasMore", it.hasMore)
                 }
@@ -57,5 +64,10 @@ class CommunityController(
         reviewText = row.text,
         ratedAt = row.createdAtEpochMs.toDateString(),
         createdAtEpochMs = row.createdAtEpochMs,
+    )
+
+    private fun toResponse(user: User) = UserResponse(
+        id = user.id!!.value,
+        username = user.username.value,
     )
 }

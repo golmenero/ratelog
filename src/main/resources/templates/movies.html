@@ -71,11 +71,9 @@
         </div>
 
         <div>
-            <h2 th:text="#{movies.premieres}">Premieres</h2>
-
             <div th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
-                <div class="separator"></div>
                 <h3 th:text="#{movies.premieres.released}">Released</h3>
+                <div class="separator"></div>
                 <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="card">
                     <span class="title" th:text="${item.title}">Title</span>
                     <br>
@@ -84,8 +82,8 @@
             </div>
 
             <div th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
-                <div class="separator"></div>
                 <h3 th:text="#{movies.premieres.upcoming}">Upcoming</h3>
+                <div class="separator"></div>
                 <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="card">
                     <span class="title" th:text="${item.title}">Title</span>
                     <br>
@@ -94,8 +92,8 @@
             </div>
 
             <div th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
-                <div class="separator"></div>
                 <h3 th:text="#{movies.premieres.no.date}">No release date yet</h3>
+                <div class="separator"></div>
                 <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="card">
                     <span class="title" th:text="${item.title}">Title</span>
                 </a>

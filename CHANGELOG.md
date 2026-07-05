@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 ### 🔧 Fixed
 
 ## Release v1.1.9
+### ➕ Added
+### ⚡ Changed
+- Refactor of detail and other views
+### 🔧 Fixed
+
+## Release v1.1.9
 ### 🔧 Fixed
 - Fix bug on imports
 

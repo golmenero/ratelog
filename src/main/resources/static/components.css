@@ -233,7 +233,8 @@ img {
   overflow: hidden;
   flex-shrink: 0;
 
-  &.lg {
+  &.detail {
     width: 96px;
+    height: fit-content;
   }
 }

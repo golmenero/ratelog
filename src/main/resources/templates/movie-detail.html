@@ -16,7 +16,7 @@
 
     <div class="card">
         <div class="flex gap-lg w-100">
-            <img class="lg" th:src="@{'https://image.tmdb.org/t/p/w185' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
+            <img class="detail" th:src="@{'https://image.tmdb.org/t/p/w185' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
             <div class="flex-1">
                 <div class="flex gap-lg separate">
                     <p th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : #{movie.detail.no.synopsis}">Loading movie information.</p>
@@ -48,7 +48,7 @@
 
     <div th:if="${movie != null && movie.directing != null}" class="card">
         <div class="flex separate">
-            <div th:if="${movie.hasRating}" class="flex gap">
+            <div th:if="${movie.hasRating}" class="flex gap wrap">
                 <div class="category">
                     <i data-lucide="clapperboard"></i>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>

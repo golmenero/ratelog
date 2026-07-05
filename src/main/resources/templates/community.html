@@ -15,7 +15,7 @@
                     <div class="flex separate">
                         <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
                             <span class="title" th:text="${item.title}">Title</span>
-                            <span class="season" th:if="${item.seasonNumber != null}" th:text="'S' + ${item.seasonNumber}">S1</span>
+                            <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
                         </a>
                         <div>
                             <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
