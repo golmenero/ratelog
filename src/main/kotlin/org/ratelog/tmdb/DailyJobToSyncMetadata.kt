@@ -1,9 +1,10 @@
 package org.ratelog.tmdb
 
-import org.ratelog.Lang
 import org.ratelog.movie.Movie
+import org.ratelog.movie.MovieDescriptionRepository
 import org.ratelog.movie.MovieRepository
 import org.ratelog.tvshow.TvShow
+import org.ratelog.tvshow.TvDescriptionRepository
 import org.ratelog.tvshow.TvShowRepository
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -16,6 +17,8 @@ class DailyJobToSyncMetadata(
     private val tmdbClient: TmdbClient,
     private val tvShowRepository: TvShowRepository,
     private val movieRepository: MovieRepository,
+    private val tvDescriptionRepository: TvDescriptionRepository,
+    private val movieDescriptionRepository: MovieDescriptionRepository,
 ) {
     private val logger = LoggerFactory.getLogger(DailyJobToSyncMetadata::class.java)
 
@@ -62,6 +65,14 @@ class DailyJobToSyncMetadata(
                     { err -> logger.error("Failed to sync TV show: $err") },
                     { it.copy(id = show.id).let(tvShowRepository::save) }
                 )
+
+            if (!tvDescriptionRepository.existsAnyByTmdbId(show.tmdbId)) {
+                tmdbClient.tvTranslations(show.tmdbId)
+                    .fold(
+                        { err -> logger.error("Failed to sync TV translations: $err") },
+                        { tvDescriptionRepository.saveAll(it) }
+                    )
+            }
         } catch (e: Exception) {
             logger.error("Error syncing TV show", e)
         }
@@ -74,6 +85,14 @@ class DailyJobToSyncMetadata(
                     { err -> logger.error("Failed to sync movie: $err") },
                     { it.copy(id = movie.id).let(movieRepository::save) }
                 )
+
+            if (!movieDescriptionRepository.existsAnyByTmdbId(movie.tmdbId)) {
+                tmdbClient.movieTranslations(movie.tmdbId)
+                    .fold(
+                        { err -> logger.error("Failed to sync movie translations: $err") },
+                        { movieDescriptionRepository.saveAll(it) }
+                    )
+            }
         } catch (e: Exception) {
             logger.error("Error syncing movie", e)
         }
