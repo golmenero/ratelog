@@ -35,6 +35,7 @@ class ProfileHandlerTest {
         username = "testuser",
         email = "test@example.com",
         lang = Lang.es,
+        metadataLang = Lang.es,
         createdAtEpochMs = 1609459200000
     )
 
@@ -87,7 +88,7 @@ class ProfileHandlerTest {
         whenever(feedRepository.findAll(listOf(User.Id(1)), Lang.es, 10)).thenReturn(rows.take(10))
         whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(15L)
 
-        val query = GetProfile(User.Id(1), User.Id(1), limit = 10, Lang.es, Lang.en)
+        val query = GetProfile(User.Id(1), User.Id(1), limit = 10, Lang.es, Lang.es)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -107,7 +108,7 @@ class ProfileHandlerTest {
         whenever(feedRepository.findAll(listOf(User.Id(1)), Lang.es, 20)).thenReturn(rows)
         whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(25L)
 
-        val query = GetProfile(User.Id(1), User.Id(1), limit = 20, Lang.es, Lang.en)
+        val query = GetProfile(User.Id(1), User.Id(1), limit = 20, Lang.es, Lang.es)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -127,7 +128,7 @@ class ProfileHandlerTest {
         whenever(feedRepository.findAll(listOf(User.Id(1)), Lang.es, 10)).thenReturn(rows)
         whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(5L)
 
-        val query = GetProfile(User.Id(1), User.Id(1), limit = 10, Lang.es, Lang.en)
+        val query = GetProfile(User.Id(1), User.Id(1), limit = 10, Lang.es, Lang.es)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
