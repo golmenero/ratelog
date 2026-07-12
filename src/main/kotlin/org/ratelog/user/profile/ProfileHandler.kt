@@ -19,6 +19,7 @@ data class GetProfile(
     val userId: User.Id,
     val limit: Int,
     val lang: Lang,
+    val metadataLang: Lang,
 )
 
 data class Profile(
@@ -27,6 +28,7 @@ data class Profile(
     val email: Email,
     val memberSince: String,
     val lang: Lang,
+    val metadataLang: Lang,
     val isFollowed: Boolean,
     val feed: List<ProfileRating>,
     val hasMore: Boolean,
@@ -52,7 +54,7 @@ class ProfileHandler(
     @Transactional
     fun handle(query: GetProfile): Either<ProfileHandlerError, Profile> = either {
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
-        val feed = feedRepository.findAll(listOf(query.userId), query.lang, query.limit).map { toResponse(it) }
+        val feed = feedRepository.findAll(listOf(query.userId), query.metadataLang, query.limit).map { toResponse(it) }
         val totalCount = feedRepository.count(listOf(query.userId))
 
         Profile(
@@ -61,6 +63,7 @@ class ProfileHandler(
             email = user.email,
             memberSince = user.createdAtEpochMs.toDateString(),
             lang = user.lang,
+            metadataLang = user.metadataLang,
             isFollowed = userRepository.isFollowing(query.loggedUserId, query.userId),
             feed = feed,
             hasMore = totalCount > query.limit,

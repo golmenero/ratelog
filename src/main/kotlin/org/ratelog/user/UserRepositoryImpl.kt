@@ -53,6 +53,7 @@ class UserRepositoryImpl(
             passwordHash = passwordHash,
             createdAtEpochMs = createdAtEpochMs,
             lang = Lang.valueOf(lang),
+            metadataLang = Lang.valueOf(metadataLang),
         )
 
     private fun User.toEntity(): UserEntity =
@@ -62,6 +63,7 @@ class UserRepositoryImpl(
             email = email.value,
             passwordHash = passwordHash,
             createdAtEpochMs = createdAtEpochMs,
-            lang = lang.name
+            lang = lang.name,
+            metadataLang = metadataLang.name,
         )
 }

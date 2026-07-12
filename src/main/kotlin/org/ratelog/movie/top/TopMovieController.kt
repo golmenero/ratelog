@@ -38,7 +38,7 @@ class TopMovieController(
             genreId = genreId,
             limit = limit,
             name = name,
-            lang = user.lang,
+            lang = user.metadataLang,
         ).let(handler::handle)
 
         model.addAttribute("tops", tops.map { toResponse(it) })
@@ -46,7 +46,7 @@ class TopMovieController(
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        MoviePremieresQuery(user.id, user.lang).let(moviePremieresHandler::handle)
+        MoviePremieresQuery(user.id, user.metadataLang).let(moviePremieresHandler::handle)
             .fold(
                 { },
                 {

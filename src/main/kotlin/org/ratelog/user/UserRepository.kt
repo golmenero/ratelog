@@ -11,6 +11,7 @@ data class User(
     val passwordHash: String,
     val createdAtEpochMs: Long = System.currentTimeMillis(),
     val lang: Lang,
+    val metadataLang: Lang,
 ) {
     data class Id(val value: Long)
 }

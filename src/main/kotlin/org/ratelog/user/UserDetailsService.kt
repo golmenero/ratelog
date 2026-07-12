@@ -18,6 +18,7 @@ class AppUserDetails(
     val email: String,
     private val password: String,
     val lang: Lang,
+    val metadataLang: Lang,
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority> =
         listOf(SimpleGrantedAuthority("ROLE_USER"))
@@ -44,6 +45,7 @@ class UserDetailsService(
             email = user.email.value,
             password = user.passwordHash,
             lang = user.lang,
+            metadataLang = user.metadataLang,
         )
     }
 
@@ -56,6 +58,7 @@ class UserDetailsService(
                 email = Email(p.email),
                 passwordHash = p.password,
                 lang = p.lang,
+                metadataLang = p.metadataLang,
             )
         }
 

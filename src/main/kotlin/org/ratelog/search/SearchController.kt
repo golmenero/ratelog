@@ -24,7 +24,7 @@ class SearchController(
             SearchQuery(
                 query = query,
                 userId = user.id!!,
-                lang = user.lang,
+                lang = user.metadataLang,
             ).let(handler::handle)
             .fold(
                 {

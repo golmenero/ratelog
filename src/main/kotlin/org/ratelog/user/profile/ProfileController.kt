@@ -27,6 +27,7 @@ class ProfileController(
             userId = userId.let(User::Id),
             limit = limit,
             lang = user.lang,
+            metadataLang = user.metadataLang,
         )
             .let(handler::handle)
             .fold(
@@ -40,6 +41,7 @@ class ProfileController(
                     model.addAttribute("email", it.email.value)
                     model.addAttribute("memberSince", it.memberSince)
                     model.addAttribute("currentLang", it.lang.name)
+                    model.addAttribute("currentMetadataLang", it.metadataLang.name)
                     model.addAttribute("isFollowed", it.isFollowed)
                     model.addAttribute("isLoggedUser", it.userId == user.id)
                     model.addAttribute("feed", it.feed)

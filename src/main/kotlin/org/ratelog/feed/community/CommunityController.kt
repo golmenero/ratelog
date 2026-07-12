@@ -38,7 +38,7 @@ class CommunityController(
         @RequestParam(value = "limit", defaultValue = "10") limit: Int,
         model: Model
     ): String {
-        FeedQuery(user.id!!, limit, user.lang).let(communityHandler::handle)
+        FeedQuery(user.id!!, limit, user.metadataLang).let(communityHandler::handle)
             .fold(
                 { },
                 {

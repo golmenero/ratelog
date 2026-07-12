@@ -25,6 +25,7 @@ object UserFactory {
         passwordHash: String = "encoded_password",
         createdAtEpochMs: Long = System.currentTimeMillis(),
         lang: Lang = Lang.en,
+        metadataLang: Lang = Lang.en,
     ) = User(
         id = id?.let { User.Id(it) },
         username = Username(username),
@@ -32,6 +33,7 @@ object UserFactory {
         passwordHash = passwordHash,
         createdAtEpochMs = createdAtEpochMs,
         lang = lang,
+        metadataLang = metadataLang,
     )
 }
 

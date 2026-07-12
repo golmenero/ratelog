@@ -56,7 +56,7 @@ class ProfileHandlerTest {
     fun `should return profile when user exists`() {
         userRepository.save(aUser())
 
-        val query = GetProfile(User.Id(1), User.Id(1), 10, Lang.es)
+        val query = GetProfile(User.Id(1), User.Id(1), 10, Lang.es, Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -72,7 +72,7 @@ class ProfileHandlerTest {
 
     @Test
     fun `should return UserNotFound when user does not exist`() {
-        val query = GetProfile(User.Id(1), User.Id(999), 10, Lang.es)
+        val query = GetProfile(User.Id(1), User.Id(999), 10, Lang.es, Lang.en)
 
         val result = handler.handle(query)
 
@@ -87,7 +87,7 @@ class ProfileHandlerTest {
         whenever(feedRepository.findAll(listOf(User.Id(1)), Lang.es, 10)).thenReturn(rows.take(10))
         whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(15L)
 
-        val query = GetProfile(User.Id(1), User.Id(1), limit = 10, Lang.es)
+        val query = GetProfile(User.Id(1), User.Id(1), limit = 10, Lang.es, Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -107,7 +107,7 @@ class ProfileHandlerTest {
         whenever(feedRepository.findAll(listOf(User.Id(1)), Lang.es, 20)).thenReturn(rows)
         whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(25L)
 
-        val query = GetProfile(User.Id(1), User.Id(1), limit = 20, Lang.es)
+        val query = GetProfile(User.Id(1), User.Id(1), limit = 20, Lang.es, Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -127,7 +127,7 @@ class ProfileHandlerTest {
         whenever(feedRepository.findAll(listOf(User.Id(1)), Lang.es, 10)).thenReturn(rows)
         whenever(feedRepository.count(listOf(User.Id(1)))).thenReturn(5L)
 
-        val query = GetProfile(User.Id(1), User.Id(1), limit = 10, Lang.es)
+        val query = GetProfile(User.Id(1), User.Id(1), limit = 10, Lang.es, Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())

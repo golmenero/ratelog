@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN metadata_lang VARCHAR(10) DEFAULT 'en';

@@ -38,7 +38,7 @@ class TopTvShowController(
             genreId = genreId,
             limit = limit,
             name = name,
-            lang = user.lang,
+            lang = user.metadataLang,
         ).let(handler::handle)
 
         model.addAttribute("tops", tops.map { toResponse(it) })
@@ -46,7 +46,7 @@ class TopTvShowController(
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        TvShowPremieresQuery(user.id, user.lang).let(tvShowPremieresHandler::handle)
+        TvShowPremieresQuery(user.id, user.metadataLang).let(tvShowPremieresHandler::handle)
             .fold(
                 { },
                 {
