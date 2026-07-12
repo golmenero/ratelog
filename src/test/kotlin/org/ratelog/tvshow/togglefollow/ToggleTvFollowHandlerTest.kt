@@ -21,7 +21,7 @@ class ToggleTvFollowHandlerTest {
 
     @Test
     fun `should follow tv show successfully`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Test Show")
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Test Show")
         tvShowRepository.save(show)
 
         val command = ToggleTvFollow(TvShow.Id(1), User.Id(1))
@@ -44,7 +44,7 @@ class ToggleTvFollowHandlerTest {
 
     @Test
     fun `should unfollow tv show when already followed`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Test Show")
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Test Show")
         tvShowRepository.save(show)
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
 

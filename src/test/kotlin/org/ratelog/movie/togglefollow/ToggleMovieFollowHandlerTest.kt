@@ -21,7 +21,7 @@ class ToggleMovieFollowHandlerTest {
 
     @Test
     fun `should follow movie successfully`() {
-        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Test Movie")
+        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, originalTitle = "Test Movie")
         movieRepository.save(movie)
 
         val command = ToggleMovieFollow(Movie.Id(1), User.Id(1))
@@ -44,7 +44,7 @@ class ToggleMovieFollowHandlerTest {
 
     @Test
     fun `should unfollow movie when already followed`() {
-        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Test Movie")
+        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, originalTitle = "Test Movie")
         movieRepository.save(movie)
         movieRepository.toggleFollow(User.Id(1), Movie.Id(1))
 

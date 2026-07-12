@@ -27,7 +27,7 @@ class DeleteSeasonRatingHandlerTest {
 
     @Test
     fun `should delete season rating successfully when show and rating exist`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Test Show")
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Test Show")
         tvShowRepository.save(show)
 
         val seasonRating1 = TvRatingFactory.aSeasonRating(
@@ -76,7 +76,7 @@ class DeleteSeasonRatingHandlerTest {
 
     @Test
     fun `should delete tv rating completely when last season rating is removed`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Test Show")
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Test Show")
         tvShowRepository.save(show)
 
         val seasonRating = TvRatingFactory.aSeasonRating(
@@ -120,7 +120,7 @@ class DeleteSeasonRatingHandlerTest {
 
     @Test
     fun `should return RatingNotFound when rating does not exist`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Test Show")
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Test Show")
         tvShowRepository.save(show)
 
         val command = DeleteSeasonRating(TvShow.Id(1), SeasonNumber(1), User.Id(1))

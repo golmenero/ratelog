@@ -26,7 +26,7 @@ class DeleteRatingHandlerTest {
 
     @Test
     fun `should delete rating successfully when movie and rating exist`() {
-        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Test Movie")
+        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, originalTitle = "Test Movie")
         movieRepository.save(movie)
 
         val rating = RatingFactory.aRating(
@@ -63,7 +63,7 @@ class DeleteRatingHandlerTest {
 
     @Test
     fun `should return RatingNotFound when rating does not exist`() {
-        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, title = "Test Movie")
+        val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, originalTitle = "Test Movie")
         movieRepository.save(movie)
 
         val command = DeleteRating(Movie.Id(1), User.Id(1))
