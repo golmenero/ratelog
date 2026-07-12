@@ -143,6 +143,10 @@ a.link {
   text-decoration: none;
 }
 
+a.link.highlighted {
+  color: var(--accent);
+}
+
 a.link.secondary {
   color: var(--text-soft);
   font-weight: 600;
