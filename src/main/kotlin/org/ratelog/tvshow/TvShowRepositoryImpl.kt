@@ -51,9 +51,7 @@ class TvShowRepositoryImpl(
         return TvShow(
             id = TvShow.Id(id!!),
             tmdbId = TmdbId(tmdbId),
-            name = Title(name),
             originalName = originalName?.let { Title(it) },
-            overview = overview?.let { Overview(it) },
             firstAirDate = firstAirDate?.toLocalDate(),
             firstAirYear = firstAirYear,
             posterPath = posterPath?.let { Url(it) },
@@ -70,9 +68,7 @@ class TvShowRepositoryImpl(
         return TvShowEntity(
             id = id?.value,
             tmdbId = tmdbId.value,
-            name = name.value,
             originalName = originalName?.value,
-            overview = overview?.value,
             firstAirDate = firstAirDate?.toString(),
             firstAirYear = firstAirYear,
             posterPath = posterPath?.value,

@@ -12,9 +12,7 @@ import java.util.Optional
 data class TvShowEntity(
     @Id val id: Long? = null,
     @Column("tmdb_id") val tmdbId: Int,
-    val name: String,
     @Column("original_name") val originalName: String?,
-    val overview: String?,
     @Column("first_air_date") val firstAirDate: String?,
     @Column("first_air_year") val firstAirYear: Int?,
     @Column("poster_path") val posterPath: String?,

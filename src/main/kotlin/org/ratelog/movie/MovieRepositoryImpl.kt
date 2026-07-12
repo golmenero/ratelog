@@ -52,9 +52,7 @@ class MovieRepositoryImpl(
         return Movie(
             id = Movie.Id(id!!),
             tmdbId = TmdbId(tmdbId),
-            title = Title(title),
             originalTitle = originalTitle?.let { Title(it) },
-            overview = overview?.let { Overview(it) },
             releaseDate = releaseDate?.toLocalDate(),
             releaseYear = releaseYear,
             posterPath = posterPath?.let { Url(it) },
@@ -68,9 +66,7 @@ class MovieRepositoryImpl(
         return MovieEntity(
             id = id?.value,
             tmdbId = tmdbId.value,
-            title = title.value,
             originalTitle = originalTitle?.value,
-            overview = overview?.value,
             releaseDate = releaseDate?.toString(),
             releaseYear = releaseYear,
             posterPath = posterPath?.value,

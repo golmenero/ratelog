@@ -12,9 +12,7 @@ import java.util.Optional
 data class MovieEntity(
     @Id val id: Long? = null,
     @Column("tmdb_id") val tmdbId: Int,
-    val title: String,
     @Column("original_title") val originalTitle: String?,
-    val overview: String?,
     @Column("release_date") val releaseDate: String?,
     @Column("release_year") val releaseYear: Int?,
     @Column("poster_path") val posterPath: String?,
