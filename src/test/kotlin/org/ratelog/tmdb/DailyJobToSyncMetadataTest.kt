@@ -150,8 +150,8 @@ class DailyJobToSyncMetadataTest {
         movieRepository.save(movie)
 
         val translations = listOf(
-            MovieDescription(TmdbId(200), Lang.en, Title("EN Title"), Overview("EN Overview")),
-            MovieDescription(TmdbId(200), Lang.es, Title("ES Title"), Overview("ES Overview")),
+            MovieDescription(null,TmdbId(200), Lang.en, Title("EN Title"), Overview("EN Overview")),
+            MovieDescription(null,TmdbId(200), Lang.es, Title("ES Title"), Overview("ES Overview")),
         )
         whenever(tmdbClient.movieDetails(TmdbId(200))).thenReturn(movie.right())
         whenever(tmdbClient.movieTranslations(TmdbId(200))).thenReturn(translations.right())
@@ -167,7 +167,7 @@ class DailyJobToSyncMetadataTest {
         val movie = MovieFactory.aMovie(id = 1, tmdbId = 200, originalTitle = "Test", status = Status.RUMORED)
         movieRepository.save(movie)
         movieDescriptionRepository.saveAll(listOf(
-            MovieDescription(TmdbId(200), Lang.en, Title("EN Title"), Overview("EN Overview"))
+            MovieDescription(null,TmdbId(200), Lang.en, Title("EN Title"), Overview("EN Overview"))
         ))
 
         whenever(tmdbClient.movieDetails(TmdbId(200))).thenReturn(movie.right())
@@ -183,8 +183,8 @@ class DailyJobToSyncMetadataTest {
         tvShowRepository.save(show)
 
         val translations = listOf(
-            TvDescription(TmdbId(100), Lang.en, Title("EN Name"), Overview("EN Overview")),
-            TvDescription(TmdbId(100), Lang.es, Title("ES Name"), Overview("ES Overview")),
+            TvDescription(null,TmdbId(100), Lang.en, Title("EN Name"), Overview("EN Overview")),
+            TvDescription(null,TmdbId(100), Lang.es, Title("ES Name"), Overview("ES Overview")),
         )
         whenever(tmdbClient.tvShowDetails(TmdbId(100))).thenReturn(show.right())
         whenever(tmdbClient.tvTranslations(TmdbId(100))).thenReturn(translations.right())
@@ -200,7 +200,7 @@ class DailyJobToSyncMetadataTest {
         val show = TvShowFactory.aTvShow(id = 1, tmdbId = 100, originalName = "Test", status = Status.RETURNING_SERIES)
         tvShowRepository.save(show)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(100), Lang.en, Title("EN Name"), Overview("EN Overview"))
+            TvDescription(null,TmdbId(100), Lang.en, Title("EN Name"), Overview("EN Overview"))
         ))
 
         whenever(tmdbClient.tvShowDetails(TmdbId(100))).thenReturn(show.right())

@@ -45,8 +45,8 @@ class TopMovieHandlerTest {
         movieRepository.save(movie1)
         movieRepository.save(movie2)
         movieDescriptionRepository.saveAll(listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("Movie A"), null),
-            MovieDescription(TmdbId(456), Lang.en, Title("Movie B"), null),
+            MovieDescription(null,TmdbId(123), Lang.en, Title("Movie A"), null),
+            MovieDescription(null,TmdbId(456), Lang.en, Title("Movie B"), null),
         ))
 
         val rating1 = RatingFactory.aRating(id = 1, movieId = Movie.Id(1), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = null)
@@ -69,7 +69,7 @@ class TopMovieHandlerTest {
         val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, originalTitle = "Movie A")
         movieRepository.save(movie)
         movieDescriptionRepository.saveAll(listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("Movie A"), null),
+            MovieDescription(null,TmdbId(123), Lang.en, Title("Movie A"), null),
         ))
 
         val rating = RatingFactory.aRating(id = 1, movieId = Movie.Id(1), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = null)

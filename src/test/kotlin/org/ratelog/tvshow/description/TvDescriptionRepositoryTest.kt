@@ -25,7 +25,7 @@ class TvDescriptionRepositoryTest {
 
     @Test
     fun `should return description when it exists for tmdbId and lang`() {
-        val desc = TvDescription(TmdbId(1), Lang.en, Title("Test"), Overview("Overview"))
+        val desc = TvDescription(null,TmdbId(1), Lang.en, Title("Test"), Overview("Overview"))
         repository.saveAll(listOf(desc))
 
         val result = repository.findByTmdbIdAndLang(TmdbId(1), Lang.en)
@@ -38,9 +38,9 @@ class TvDescriptionRepositoryTest {
     @Test
     fun `should return all descriptions for a tmdbId`() {
         val descs = listOf(
-            TvDescription(TmdbId(1), Lang.en, Title("EN Name"), Overview("EN Overview")),
-            TvDescription(TmdbId(1), Lang.es, Title("ES Name"), Overview("ES Overview")),
-            TvDescription(TmdbId(2), Lang.en, Title("Other"), null),
+            TvDescription(null,TmdbId(1), Lang.en, Title("EN Name"), Overview("EN Overview")),
+            TvDescription(null,TmdbId(1), Lang.es, Title("ES Name"), Overview("ES Overview")),
+            TvDescription(null,TmdbId(2), Lang.en, Title("Other"), null),
         )
         repository.saveAll(descs)
 
@@ -59,7 +59,7 @@ class TvDescriptionRepositoryTest {
 
     @Test
     fun `should return true when at least one description exists for tmdbId`() {
-        repository.saveAll(listOf(TvDescription(TmdbId(1), Lang.en, Title("Test"), null)))
+        repository.saveAll(listOf(TvDescription(null,TmdbId(1), Lang.en, Title("Test"), null)))
 
         val exists = repository.existsAnyByTmdbId(TmdbId(1))
 
@@ -68,10 +68,10 @@ class TvDescriptionRepositoryTest {
 
     @Test
     fun `should overwrite existing description when saving with same tmdbId and lang`() {
-        val original = TvDescription(TmdbId(1), Lang.en, Title("Original"), Overview("Original"))
+        val original = TvDescription(null,TmdbId(1), Lang.en, Title("Original"), Overview("Original"))
         repository.saveAll(listOf(original))
 
-        val updated = TvDescription(TmdbId(1), Lang.en, Title("Updated"), Overview("Updated"))
+        val updated = TvDescription(null,TmdbId(1), Lang.en, Title("Updated"), Overview("Updated"))
         repository.saveAll(listOf(updated))
 
         val result = repository.findByTmdbIdAndLang(TmdbId(1), Lang.en)

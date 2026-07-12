@@ -1,6 +1,5 @@
 package org.ratelog.tvshow
 
-import org.ratelog.tvshow.TvDescription
 import org.ratelog.Lang
 import org.ratelog.Overview
 import org.ratelog.TmdbId
@@ -22,11 +21,13 @@ class TvDescriptionRepositoryImpl(
         tvDescriptionDAO.existsAnyByTmdbId(tmdbId.value)
 
     override fun saveAll(descriptions: List<TvDescription>) {
-        descriptions.map { it.toEntity() }.forEach { tvDescriptionDAO.save(it) }
+        val entities = descriptions.map { it.toEntity() }
+        tvDescriptionDAO.saveAll(entities)
     }
 
     private fun TvDescriptionEntity.toDomain(): TvDescription =
         TvDescription(
+            id = id?.let(TvDescription::Id),
             tmdbId = TmdbId(tmdbId),
             lang = Lang.parse(lang),
             name = Title(name),
@@ -35,6 +36,7 @@ class TvDescriptionRepositoryImpl(
 
     private fun TvDescription.toEntity(): TvDescriptionEntity =
         TvDescriptionEntity(
+            id = id?.value,
             tmdbId = tmdbId.value,
             lang = lang.name,
             name = name.value,

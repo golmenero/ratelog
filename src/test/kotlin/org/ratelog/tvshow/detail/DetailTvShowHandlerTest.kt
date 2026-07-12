@@ -50,7 +50,7 @@ class DetailTvShowHandlerTest {
         )
         tvShowRepository.save(tmdbShow)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("Translated Name"), Overview("Translated overview"))
+            TvDescription(null,TmdbId(123), Lang.en, Title("Translated Name"), Overview("Translated overview"))
         ))
 
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
@@ -82,7 +82,7 @@ class DetailTvShowHandlerTest {
         tvShowRepository.save(tmdbShow)
 
         val translations = listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview"))
+            TvDescription(null,TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview"))
         )
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
         whenever(tmdbClient.tvTranslations(TmdbId(123))).thenReturn(translations.right())
@@ -129,7 +129,7 @@ class DetailTvShowHandlerTest {
         )
         tvShowRepository.save(tmdbShow)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("Test Show"), null)
+            TvDescription(null,TmdbId(123), Lang.en, Title("Test Show"), null)
         ))
 
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
@@ -157,7 +157,7 @@ class DetailTvShowHandlerTest {
         )
         tvShowRepository.save(tmdbShow)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("Test Show"), null)
+            TvDescription(null,TmdbId(123), Lang.en, Title("Test Show"), null)
         ))
 
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
@@ -186,8 +186,8 @@ class DetailTvShowHandlerTest {
             lastSeasonNumber = 2,
         )
         val translations = listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview")),
-            TvDescription(TmdbId(123), Lang.es, Title("ES Name"), Overview("ES Overview")),
+            TvDescription(null,TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview")),
+            TvDescription(null,TmdbId(123), Lang.es, Title("ES Name"), Overview("ES Overview")),
         )
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
         whenever(tmdbClient.tvTranslations(TmdbId(123))).thenReturn(translations.right())
@@ -210,7 +210,7 @@ class DetailTvShowHandlerTest {
         )
         tvShowRepository.save(tmdbShow)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview"))
+            TvDescription(null,TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview"))
         ))
 
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())

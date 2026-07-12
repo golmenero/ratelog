@@ -48,8 +48,8 @@ class MoviePremieresHandlerTest {
         movieRepository.save(movie1)
         movieRepository.save(movie2)
         movieDescriptionRepository.saveAll(listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("Released Movie"), null),
-            MovieDescription(TmdbId(456), Lang.en, Title("Upcoming Movie"), null),
+            MovieDescription(null,TmdbId(123), Lang.en, Title("Released Movie"), null),
+            MovieDescription(null,TmdbId(456), Lang.en, Title("Upcoming Movie"), null),
         ))
         movieRepository.toggleFollow(User.Id(1), Movie.Id(1))
         movieRepository.toggleFollow(User.Id(1), Movie.Id(2))
@@ -74,7 +74,7 @@ class MoviePremieresHandlerTest {
         val movie = MovieFactory.aMovie(id = 1, tmdbId = 123, originalTitle = "No Date Movie", releaseDate = null)
         movieRepository.save(movie)
         movieDescriptionRepository.saveAll(listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("No Date Movie"), null),
+            MovieDescription(null,TmdbId(123), Lang.en, Title("No Date Movie"), null),
         ))
         movieRepository.toggleFollow(User.Id(1), Movie.Id(1))
 

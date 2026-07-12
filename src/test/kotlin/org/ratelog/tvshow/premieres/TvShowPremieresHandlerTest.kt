@@ -48,8 +48,8 @@ class TvShowPremieresHandlerTest {
         tvShowRepository.save(show1)
         tvShowRepository.save(show2)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("Released Show"), null),
-            TvDescription(TmdbId(456), Lang.en, Title("Upcoming Show"), null),
+            TvDescription(null,TmdbId(123), Lang.en, Title("Released Show"), null),
+            TvDescription(null,TmdbId(456), Lang.en, Title("Upcoming Show"), null),
         ))
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(2))
@@ -74,7 +74,7 @@ class TvShowPremieresHandlerTest {
         val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "No Date Show", lastSeasonAirDate = null)
         tvShowRepository.save(show)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("No Date Show"), null),
+            TvDescription(null,TmdbId(123), Lang.en, Title("No Date Show"), null),
         ))
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
 
@@ -97,7 +97,7 @@ class TvShowPremieresHandlerTest {
         val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Multi Season Show", lastSeasonNumber = 3, lastSeasonAirDate = LocalDate.now().minusDays(1))
         tvShowRepository.save(show)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("Multi Season Show"), null),
+            TvDescription(null,TmdbId(123), Lang.en, Title("Multi Season Show"), null),
         ))
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
 

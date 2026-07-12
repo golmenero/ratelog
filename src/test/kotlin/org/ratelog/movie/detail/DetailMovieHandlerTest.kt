@@ -47,7 +47,7 @@ class DetailMovieHandlerTest {
         )
         movieRepository.save(tmdbMovie)
         movieDescriptionRepository.saveAll(listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("Translated Title"), Overview("Translated overview"))
+            MovieDescription(null,TmdbId(123), Lang.en, Title("Translated Title"), Overview("Translated overview"))
         ))
 
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
@@ -80,7 +80,7 @@ class DetailMovieHandlerTest {
         movieRepository.save(tmdbMovie)
 
         val translations = listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview"))
+            MovieDescription(null,TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview"))
         )
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
         whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(translations.right())
@@ -129,7 +129,7 @@ class DetailMovieHandlerTest {
         )
         movieRepository.save(tmdbMovie)
         movieDescriptionRepository.saveAll(listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("Test Movie"), null)
+            MovieDescription(null,TmdbId(123), Lang.en, Title("Test Movie"), null)
         ))
 
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
@@ -160,8 +160,8 @@ class DetailMovieHandlerTest {
             releaseDate = LocalDate.parse("2023-01-15"),
         )
         val translations = listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview")),
-            MovieDescription(TmdbId(123), Lang.es, Title("ES Title"), Overview("ES Overview")),
+            MovieDescription(null,TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview")),
+            MovieDescription(null,TmdbId(123), Lang.es, Title("ES Title"), Overview("ES Overview")),
         )
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
         whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(translations.right())
@@ -183,7 +183,7 @@ class DetailMovieHandlerTest {
         )
         movieRepository.save(tmdbMovie)
         movieDescriptionRepository.saveAll(listOf(
-            MovieDescription(TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview"))
+            MovieDescription(null,TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview"))
         ))
 
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())

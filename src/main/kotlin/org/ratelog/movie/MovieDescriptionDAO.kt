@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository
 
 @Table("movie_descriptions")
 data class MovieDescriptionEntity(
-    @Id @Column("tmdb_id") val tmdbId: Int,
+    @Id val id: Long? = null,
+    @Column("tmdb_id") val tmdbId: Int,
     val lang: String,
     val title: String,
     val overview: String?,

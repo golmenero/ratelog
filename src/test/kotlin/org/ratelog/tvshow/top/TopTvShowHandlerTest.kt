@@ -45,8 +45,8 @@ class TopTvShowHandlerTest {
         tvShowRepository.save(show1)
         tvShowRepository.save(show2)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("Show A"), null),
-            TvDescription(TmdbId(456), Lang.en, Title("Show B"), null),
+            TvDescription(null,TmdbId(123), Lang.en, Title("Show A"), null),
+            TvDescription(null,TmdbId(456), Lang.en, Title("Show B"), null),
         ))
 
         val rating1 = TvRatingFactory.aTvRating(id = 1, tvShowId = TvShow.Id(1), userId = User.Id(1), createdAt = Instant.now())
@@ -67,7 +67,7 @@ class TopTvShowHandlerTest {
         val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Show A")
         tvShowRepository.save(show)
         tvDescriptionRepository.saveAll(listOf(
-            TvDescription(TmdbId(123), Lang.en, Title("Show A"), null),
+            TvDescription(null,TmdbId(123), Lang.en, Title("Show A"), null),
         ))
 
         val rating = TvRatingFactory.aTvRating(id = 1, tvShowId = TvShow.Id(1), userId = User.Id(1), createdAt = Instant.now())

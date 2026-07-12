@@ -6,11 +6,14 @@ import org.ratelog.TmdbId
 import org.ratelog.Title
 
 data class TvDescription(
+    val id: Id?,
     val tmdbId: TmdbId,
     val lang: Lang,
     val name: Title,
     val overview: Overview?,
-)
+)  {
+    data class Id(val value: Long)
+}
 
 interface TvDescriptionRepository {
     fun findByTmdbIdAndLang(tmdbId: TmdbId, lang: Lang): TvDescription?

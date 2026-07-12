@@ -1,6 +1,5 @@
 package org.ratelog.movie
 
-import org.ratelog.movie.MovieDescription
 import org.ratelog.Lang
 import org.ratelog.Overview
 import org.ratelog.TmdbId
@@ -22,11 +21,13 @@ class MovieDescriptionRepositoryImpl(
         movieDescriptionDAO.existsAnyByTmdbId(tmdbId.value)
 
     override fun saveAll(descriptions: List<MovieDescription>) {
-        descriptions.map { it.toEntity() }.forEach { movieDescriptionDAO.save(it) }
+        val entities = descriptions.map { it.toEntity() }
+        movieDescriptionDAO.saveAll(entities)
     }
 
     private fun MovieDescriptionEntity.toDomain(): MovieDescription =
         MovieDescription(
+            id = id?.let(MovieDescription::Id),
             tmdbId = TmdbId(tmdbId),
             lang = Lang.parse(lang),
             title = Title(title),
@@ -35,6 +36,7 @@ class MovieDescriptionRepositoryImpl(
 
     private fun MovieDescription.toEntity(): MovieDescriptionEntity =
         MovieDescriptionEntity(
+            id = id?.value,
             tmdbId = tmdbId.value,
             lang = lang.name,
             title = title.value,
