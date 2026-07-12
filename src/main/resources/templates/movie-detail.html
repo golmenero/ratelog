@@ -25,7 +25,7 @@
                 <br>
                 <div class="flex gap-lg separate">
                     <div th:if="${!#lists.isEmpty(movie.genres)}" class="flex gap wrap">
-                        <span class="tag" th:each="genre : ${movie.genres}" th:text="${genre}">Genre</span>
+                        <th:block th:each="genreId : ${movie.genres}" th:replace="~{fragments/genre-tag :: genre-tag(${genreId})}"></th:block>
                     </div>
                     <div class="flex gap-lg">
                         <button th:if="${!movie.hasRating}" id="btnOpenRateModal">

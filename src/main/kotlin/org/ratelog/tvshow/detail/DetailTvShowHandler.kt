@@ -2,6 +2,7 @@ package org.ratelog.tvshow.detail
 
 import arrow.core.Either
 import arrow.core.raise.either
+import org.ratelog.Genre
 import org.ratelog.Lang
 import org.ratelog.TmdbId
 import org.ratelog.tvshow.TvDescriptionRepository
@@ -29,7 +30,7 @@ data class GetTvShowDetailResult(
     val firstAirYear: Int?,
     val posterPath: String?,
     val tmdbVoteAverage: Double?,
-    val genres: List<String>,
+    val genres: List<Genre>,
     val status: String?,
     val lastSeasonNumber: Int?,
     val lastSeasonAirDate: String?,
@@ -119,7 +120,7 @@ class DetailTvShowHandler(
             firstAirYear = savedShow.firstAirYear,
             posterPath = savedShow.posterPath?.value,
             tmdbVoteAverage = savedShow.tmdbVoteAverage,
-            genres = savedShow.genres.map { it.value },
+            genres = savedShow.genres,
             status = savedShow.status?.value,
             lastSeasonNumber = savedShow.lastSeasonNumber,
             lastSeasonAirDate = savedShow.lastSeasonAirDate?.toString(),

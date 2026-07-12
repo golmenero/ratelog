@@ -2,6 +2,7 @@ package org.ratelog.movie.detail
 
 import arrow.core.Either
 import arrow.core.raise.either
+import org.ratelog.Genre
 import org.ratelog.Lang
 import org.ratelog.TmdbId
 import org.ratelog.movie.Movie
@@ -29,7 +30,7 @@ data class GetMovieDetailResult(
     val releaseYear: Int?,
     val posterPath: String?,
     val tmdbVoteAverage: Double?,
-    val genres: List<String>,
+    val genres: List<Genre>,
     val status: String?,
     val isRated: Boolean,
     val directing: Double?,
@@ -78,7 +79,7 @@ class DetailMovieHandler(
             overview = overview,
             releaseDate = savedMovie.releaseDate?.toString(),
             releaseYear = savedMovie.releaseYear,
-            genres = savedMovie.genres.map { it.value },
+            genres = savedMovie.genres,
             status = savedMovie.status?.value,
             posterPath = savedMovie.posterPath?.value,
             tmdbVoteAverage = savedMovie.tmdbVoteAverage,
