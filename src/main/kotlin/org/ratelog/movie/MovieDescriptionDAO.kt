@@ -23,6 +23,7 @@ interface MovieDescriptionDAO : CrudRepository<MovieDescriptionEntity, Long> {
         """
         SELECT * FROM movie_descriptions
         WHERE tmdb_id = :tmdbId AND lang = :lang
+        LIMIT 1
         """
     )
     fun findByTmdbIdAndLang(tmdbId: Int, lang: String): MovieDescriptionEntity?

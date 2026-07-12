@@ -4,6 +4,8 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import org.ratelog.Lang
+import org.ratelog.Overview
+import org.ratelog.Title
 import org.ratelog.TmdbId
 import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieDescription
@@ -121,6 +123,8 @@ class TmdbClient(
         requireApiKey()
         rateLimiter.acquire()
 
+        val allowedLanguages = Lang.entries.map { it.name }
+
         val response = restClient.get()
             .uri { builder ->
                 builder.path("/movie/{id}/translations")
@@ -132,14 +136,15 @@ class TmdbClient(
 
         val descriptions = response?.translations
             ?.mapNotNull { entry ->
-                val lang = Lang.parse(entry.iso6391)
+                if (!allowedLanguages.contains(entry.iso6391)) return@mapNotNull null
                 val title = entry.data.title?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+
                 MovieDescription(
                     id = null,
                     tmdbId = tmdbId,
-                    lang = lang,
-                    title = org.ratelog.Title(title),
-                    overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { org.ratelog.Overview(it) },
+                    lang = Lang.parse(entry.iso6391),
+                    title = Title(title),
+                    overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { Overview(it) },
                 )
             }
             ?: emptyList()
@@ -150,6 +155,8 @@ class TmdbClient(
     fun tvTranslations(tmdbId: TmdbId): Either<TmdbError, List<TvDescription>> {
         requireApiKey()
         rateLimiter.acquire()
+
+        val allowedLanguages = Lang.entries.map { it.name }
 
         val response = restClient.get()
             .uri { builder ->
@@ -162,14 +169,15 @@ class TmdbClient(
 
         val descriptions = response?.translations
             ?.mapNotNull { entry ->
-                val lang = Lang.parse(entry.iso6391)
+                if (!allowedLanguages.contains(entry.iso6391)) return@mapNotNull null
                 val name = entry.data.name?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+
                 TvDescription(
                     id = null,
                     tmdbId = tmdbId,
-                    lang = lang,
-                    name = org.ratelog.Title(name),
-                    overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { org.ratelog.Overview(it) },
+                    lang = Lang.parse(entry.iso6391),
+                    name = Title(name),
+                    overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { Overview(it) },
                 )
             }
             ?: emptyList()
