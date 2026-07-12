@@ -20,37 +20,37 @@ enum class MediaType {
     movie, tvshow
 }
 
-enum class Genre(val value: String) {
-    ACTION("Action"),
-    ADVENTURE("Adventure"),
-    ANIMATION("Animation"),
-    COMEDY("Comedy"),
-    CRIME("Crime"),
-    DOCUMENTARY("Documentary"),
-    DRAMA("Drama"),
-    FAMILY("Family"),
-    FANTASY("Fantasy"),
-    HISTORY("History"),
-    HORROR("Horror"),
-    MUSIC("Music"),
-    MYSTERY("Mystery"),
-    ROMANCE("Romance"),
-    SCIENCE_FICTION("Science Fiction"),
-    TV_MOVIE("TV Movie"),
-    THRILLER("Thriller"),
-    WAR("War"),
-    WESTERN("Western"),
-    ACTION_ADVENTURE("Action & Adventure"),
-    KIDS("Kids"),
-    NEWS("News"),
-    REALITY("Reality"),
-    SCI_FI_FANTASY("Sci-Fi & Fantasy"),
-    SOAP("Soap"),
-    TALK("Talk"),
-    WAR_POLITICS("War & Politics");
+enum class Genre(val tmdbId: Int) {
+    ACTION(28),
+    ADVENTURE(12),
+    ANIMATION(16),
+    COMEDY(35),
+    CRIME(80),
+    DOCUMENTARY(99),
+    DRAMA(18),
+    FAMILY(10751),
+    FANTASY(14),
+    HISTORY(36),
+    HORROR(27),
+    MUSIC(10402),
+    MYSTERY(9648),
+    ROMANCE(10749),
+    SCIENCE_FICTION(878),
+    TV_MOVIE(10770),
+    THRILLER(53),
+    WAR(10752),
+    WESTERN(37),
+    ACTION_ADVENTURE(10759),
+    KIDS(10762),
+    NEWS(10763),
+    REALITY(10764),
+    SCI_FI_FANTASY(10765),
+    SOAP(10766),
+    TALK(10767),
+    WAR_POLITICS(10768);
 
     companion object {
-        fun fromValue(value: String): Genre? = entries.find { it.value == value }
+        fun fromTmdbId(tmdbId: Int): Genre? = entries.find { it.tmdbId == tmdbId }
     }
 }
 
