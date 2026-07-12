@@ -72,6 +72,13 @@ class DetailTvShowHandler(
         val show = query.tmdbId.let(tvShowRepository::findByTmdbId)
         val savedShow = show ?: tmdbShow.let(tvShowRepository::save)
 
+        if (!tvDescriptionRepository.existsAnyByTmdbId(savedShow.tmdbId)) {
+            tmdbClient.tvTranslations(savedShow.tmdbId).fold(
+                { },
+                { tvDescriptionRepository.saveAll(it) }
+            )
+        }
+
         val description = tvDescriptionRepository.findByTmdbIdAndLang(savedShow.tmdbId, query.lang)
         val title = description?.name?.value ?: savedShow.originalName?.value ?: ""
         val overview = description?.overview?.value

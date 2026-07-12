@@ -56,6 +56,13 @@ class DetailMovieHandler(
         val movie = query.tmdbId.let(movieRepository::findByTmdbId)
         val savedMovie = movie ?: tmdbMovie.let(movieRepository::save)
 
+        if (!movieDescriptionRepository.existsAnyByTmdbId(savedMovie.tmdbId)) {
+            tmdbClient.movieTranslations(savedMovie.tmdbId).fold(
+                { },
+                { movieDescriptionRepository.saveAll(it) }
+            )
+        }
+
         val description = movieDescriptionRepository.findByTmdbIdAndLang(savedMovie.tmdbId, query.lang)
         val title = description?.title?.value ?: savedMovie.originalTitle?.value ?: ""
         val overview = description?.overview?.value
@@ -71,10 +78,10 @@ class DetailMovieHandler(
             overview = overview,
             releaseDate = savedMovie.releaseDate?.toString(),
             releaseYear = savedMovie.releaseYear,
-            posterPath = savedMovie.posterPath?.value,
-            tmdbVoteAverage = savedMovie.tmdbVoteAverage,
             genres = savedMovie.genres.map { it.value },
             status = savedMovie.status?.value,
+            posterPath = savedMovie.posterPath?.value,
+            tmdbVoteAverage = savedMovie.tmdbVoteAverage,
             isRated = rating != null,
             directing = rating?.directing?.value,
             cinematography = rating?.cinematography?.value,

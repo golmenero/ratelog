@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.ratelog.*
 import org.ratelog.movie.Movie
@@ -50,6 +51,7 @@ class DetailMovieHandlerTest {
         ))
 
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
+        whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(emptyList<MovieDescription>().right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         val result = handler.handle(query)
@@ -77,7 +79,11 @@ class DetailMovieHandlerTest {
         )
         movieRepository.save(tmdbMovie)
 
+        val translations = listOf(
+            MovieDescription(TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview"))
+        )
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
+        whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(translations.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.es)
         val result = handler.handle(query)
@@ -103,6 +109,7 @@ class DetailMovieHandlerTest {
             tmdbVoteAverage = 7.5
         )
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
+        whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(emptyList<MovieDescription>().right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
@@ -142,5 +149,48 @@ class DetailMovieHandlerTest {
                 assertNull(detail.score)
             }
         )
+    }
+
+    @Test
+    fun `should persist translations when no descriptions exist`() {
+        val tmdbMovie = MovieFactory.aMovie(
+            id = 123,
+            tmdbId = 123,
+            originalTitle = "Test Movie",
+            releaseDate = LocalDate.parse("2023-01-15"),
+        )
+        val translations = listOf(
+            MovieDescription(TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview")),
+            MovieDescription(TmdbId(123), Lang.es, Title("ES Title"), Overview("ES Overview")),
+        )
+        whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
+        whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(translations.right())
+
+        val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
+        handler.handle(query)
+
+        val saved = movieDescriptionRepository.findAllByTmdbId(TmdbId(123))
+        assertEquals(2, saved.size)
+    }
+
+    @Test
+    fun `should not fetch translations when descriptions already exist`() {
+        val tmdbMovie = MovieFactory.aMovie(
+            id = 123,
+            tmdbId = 123,
+            originalTitle = "Test Movie",
+            releaseDate = LocalDate.parse("2023-01-15"),
+        )
+        movieRepository.save(tmdbMovie)
+        movieDescriptionRepository.saveAll(listOf(
+            MovieDescription(TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview"))
+        ))
+
+        whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
+
+        val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
+        handler.handle(query)
+
+        verify(tmdbClient, org.mockito.kotlin.never()).movieTranslations(TmdbId(123))
     }
 }

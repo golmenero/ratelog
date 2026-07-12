@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.ratelog.*
 import org.ratelog.test.InMemoryTvDescriptionRepository
@@ -80,7 +81,11 @@ class DetailTvShowHandlerTest {
         )
         tvShowRepository.save(tmdbShow)
 
+        val translations = listOf(
+            TvDescription(TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview"))
+        )
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
+        whenever(tmdbClient.tvTranslations(TmdbId(123))).thenReturn(translations.right())
 
         val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.es)
         val result = handler.handle(query)
@@ -104,6 +109,7 @@ class DetailTvShowHandlerTest {
             firstAirDate = LocalDate.parse("2023-01-15"),
         )
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
+        whenever(tmdbClient.tvTranslations(TmdbId(123))).thenReturn(emptyList<TvDescription>().right())
 
         val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
@@ -168,5 +174,50 @@ class DetailTvShowHandlerTest {
                 assertEquals(2, detail.seasons[1].seasonNumber)
             }
         )
+    }
+
+    @Test
+    fun `should persist translations when no descriptions exist`() {
+        val tmdbShow = TvShowFactory.aTvShow(
+            tmdbId = 123,
+            id = 123,
+            originalName = "Test Show",
+            firstAirDate = LocalDate.parse("2023-01-15"),
+            lastSeasonNumber = 2,
+        )
+        val translations = listOf(
+            TvDescription(TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview")),
+            TvDescription(TmdbId(123), Lang.es, Title("ES Name"), Overview("ES Overview")),
+        )
+        whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
+        whenever(tmdbClient.tvTranslations(TmdbId(123))).thenReturn(translations.right())
+
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
+        handler.handle(query)
+
+        val saved = tvDescriptionRepository.findAllByTmdbId(TmdbId(123))
+        assertEquals(2, saved.size)
+    }
+
+    @Test
+    fun `should not fetch translations when descriptions already exist`() {
+        val tmdbShow = TvShowFactory.aTvShow(
+            tmdbId = 123,
+            id = 123,
+            originalName = "Test Show",
+            firstAirDate = LocalDate.parse("2023-01-15"),
+            lastSeasonNumber = 2,
+        )
+        tvShowRepository.save(tmdbShow)
+        tvDescriptionRepository.saveAll(listOf(
+            TvDescription(TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview"))
+        ))
+
+        whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
+
+        val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
+        handler.handle(query)
+
+        verify(tmdbClient, org.mockito.kotlin.never()).tvTranslations(TmdbId(123))
     }
 }
