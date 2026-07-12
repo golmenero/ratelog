@@ -2,13 +2,15 @@ package org.ratelog.tvshow.premieres
 
 import arrow.core.Either
 import arrow.core.raise.either
+import org.ratelog.Lang
+import org.ratelog.tvshow.TvDescriptionRepository
 import org.ratelog.tvshow.TvShowRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import org.springframework.transaction.annotation.Transactional
 
-data class TvShowPremieresQuery(val userId: User.Id)
+data class TvShowPremieresQuery(val userId: User.Id, val lang: Lang)
 
 data class TvShowPremiereItem(
     val id: Long,
@@ -30,6 +32,7 @@ data class TvShowPremieres(
 @Service
 class TvShowPremieresHandler(
     private val tvShowRepository: TvShowRepository,
+    private val tvDescriptionRepository: TvDescriptionRepository,
 ) {
     @Transactional
     fun handle(query: TvShowPremieresQuery): Either<TvShowPremieresHandlerError, TvShowPremieres> = either {
@@ -41,12 +44,15 @@ class TvShowPremieresHandler(
         val today = LocalDate.now()
 
         for (show in followedTvShows) {
+            val description = tvDescriptionRepository.findByTmdbIdAndLang(show.tmdbId, query.lang)
+            val name = description?.name?.value ?: show.originalName?.value ?: ""
+
             if (show.lastSeasonNumber != null) {
                 if (show.lastSeasonAirDate != null) {
                     val item = TvShowPremiereItem(
                         id = show.id!!.value,
                         tmdbId = show.tmdbId.value,
-                        name = show.name.value,
+                        name = name,
                         seasonNumber = show.lastSeasonNumber,
                         releaseDate = show.lastSeasonAirDate,
                         posterPath = show.posterPath?.value,
@@ -58,7 +64,7 @@ class TvShowPremieresHandler(
                         TvShowPremiereItem(
                             id = show.id!!.value,
                             tmdbId = show.tmdbId.value,
-                            name = show.name.value,
+                            name = name,
                             seasonNumber = show.lastSeasonNumber,
                             releaseDate = today,
                             posterPath = show.posterPath?.value,

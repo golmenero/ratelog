@@ -3,25 +3,30 @@ package org.ratelog.tvshow.premieres
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.ratelog.*
+import org.ratelog.test.InMemoryTvDescriptionRepository
 import org.ratelog.test.InMemoryTvShowRepository
 import org.ratelog.test.TvShowFactory
+import org.ratelog.tvshow.TvDescription
 import org.ratelog.tvshow.TvShow
 import org.ratelog.user.User
 import java.time.LocalDate
 
 class TvShowPremieresHandlerTest {
     private lateinit var tvShowRepository: InMemoryTvShowRepository
+    private lateinit var tvDescriptionRepository: InMemoryTvDescriptionRepository
     private lateinit var handler: TvShowPremieresHandler
 
     @BeforeEach
     fun setUp() {
         tvShowRepository = InMemoryTvShowRepository()
-        handler = TvShowPremieresHandler(tvShowRepository)
+        tvDescriptionRepository = InMemoryTvDescriptionRepository()
+        handler = TvShowPremieresHandler(tvShowRepository, tvDescriptionRepository)
     }
 
     @Test
     fun `should return empty premieres when no followed shows`() {
-        val query = TvShowPremieresQuery(User.Id(1))
+        val query = TvShowPremieresQuery(User.Id(1), Lang.en)
 
         val result = handler.handle(query)
 
@@ -38,14 +43,18 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should categorize shows into released and upcoming based on latest season`() {
-        val show1 = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Released Show", lastSeasonAirDate = LocalDate.now().minusDays(1))
-        val show2 = TvShowFactory.aTvShow(id = 2, tmdbId = 456, name = "Upcoming Show", lastSeasonAirDate = LocalDate.now().plusDays(30))
+        val show1 = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Released Show", lastSeasonAirDate = LocalDate.now().minusDays(1))
+        val show2 = TvShowFactory.aTvShow(id = 2, tmdbId = 456, originalName = "Upcoming Show", lastSeasonAirDate = LocalDate.now().plusDays(30))
         tvShowRepository.save(show1)
         tvShowRepository.save(show2)
+        tvDescriptionRepository.saveAll(listOf(
+            TvDescription(TmdbId(123), Lang.en, Title("Released Show"), null),
+            TvDescription(TmdbId(456), Lang.en, Title("Upcoming Show"), null),
+        ))
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(2))
 
-        val query = TvShowPremieresQuery(User.Id(1))
+        val query = TvShowPremieresQuery(User.Id(1), Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -62,11 +71,14 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should categorize shows with no date into noDate list`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "No Date Show", lastSeasonAirDate = null)
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "No Date Show", lastSeasonAirDate = null)
         tvShowRepository.save(show)
+        tvDescriptionRepository.saveAll(listOf(
+            TvDescription(TmdbId(123), Lang.en, Title("No Date Show"), null),
+        ))
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
 
-        val query = TvShowPremieresQuery(User.Id(1))
+        val query = TvShowPremieresQuery(User.Id(1), Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
@@ -82,11 +94,14 @@ class TvShowPremieresHandlerTest {
 
     @Test
     fun `should use latest season for premiere date`() {
-        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, name = "Multi Season Show", lastSeasonNumber = 3, lastSeasonAirDate = LocalDate.now().minusDays(1))
+        val show = TvShowFactory.aTvShow(id = 1, tmdbId = 123, originalName = "Multi Season Show", lastSeasonNumber = 3, lastSeasonAirDate = LocalDate.now().minusDays(1))
         tvShowRepository.save(show)
+        tvDescriptionRepository.saveAll(listOf(
+            TvDescription(TmdbId(123), Lang.en, Title("Multi Season Show"), null),
+        ))
         tvShowRepository.toggleFollow(User.Id(1), TvShow.Id(1))
 
-        val query = TvShowPremieresQuery(User.Id(1))
+        val query = TvShowPremieresQuery(User.Id(1), Lang.en)
         val result = handler.handle(query)
 
         assertTrue(result.isRight())
