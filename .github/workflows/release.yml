@@ -53,8 +53,6 @@ jobs:
         id: prep
         run: |
           echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
-          IS_STABLE=$(echo "${{ github.ref_name }}" | grep -vE '(-beta|-rc|-alpha)' && echo "true" || echo "false")
-          echo "is_stable=$IS_STABLE" >> "$GITHUB_OUTPUT"
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -63,7 +61,7 @@ jobs:
           push: true
           tags: |
             ${{ steps.prep.outputs.image }}:${{ github.ref_name }}
-            ${{ steps.prep.outputs.is_stable == 'true' && format('{0}:latest', steps.prep.outputs.image) || '' }}
+            ${{ steps.prep.outputs.image }}:latest
 
   cleanup-old-versions:
     needs: build-and-push
