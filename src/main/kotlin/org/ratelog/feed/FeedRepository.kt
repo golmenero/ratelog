@@ -1,5 +1,6 @@
 package org.ratelog.feed
 
+import org.ratelog.Lang
 import org.ratelog.MediaType
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
@@ -22,7 +23,7 @@ data class FeedItem(
 
 @Repository
 interface FeedRepository {
-    fun findAll(userIds: List<User.Id>, limit: Int): List<FeedItem>
+    fun findAll(userIds: List<User.Id>, lang: Lang, limit: Int): List<FeedItem>
 
     fun count(userIds: List<User.Id>): Long
 }

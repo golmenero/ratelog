@@ -1,5 +1,6 @@
 package org.ratelog.feed
 
+import org.ratelog.Lang
 import org.ratelog.MediaType
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
@@ -11,17 +12,17 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class FeedRepositoryImpl(
-        private val feedDAO: FeedDAO,
-    ) : FeedRepository {
-    override fun findAll(userIds: List<User.Id>, limit: Int): List<FeedItem> =
-        feedDAO.findAll(userIds.map { it.value }, limit).map { it.toDomain() }
+    private val feedDAO: FeedDAO,
+) : FeedRepository {
+    override fun findAll(userIds: List<User.Id>, lang: Lang, limit: Int): List<FeedItem> =
+        feedDAO.findAll(userIds.map { it.value }, lang.name, limit).map { it.toDomain() }
 
     override fun count(userIds: List<User.Id>): Long =
         feedDAO.count(userIds.map { it.value })
 
     private fun FeedItemEntity.toDomain() = FeedItem(
         tmdbId = tmdbId.let(::TmdbId),
-        title = title.let(::Title),
+        title = Title(title),
         score = score?.let(::Score),
         username = username.let(::Username),
         text = text,

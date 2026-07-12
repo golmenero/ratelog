@@ -24,7 +24,7 @@ interface FeedDAO : Repository<FeedMarker, Long> {
         """
         SELECT
             m.tmdb_id AS tmdb_id,
-            m.title AS title,
+            COALESCE(md.title, m.original_title, '') AS title,
             mr.score AS score,
             mr.review_text AS text,
             u.username AS username,
@@ -34,13 +34,14 @@ interface FeedDAO : Repository<FeedMarker, Long> {
         FROM movie_ratings mr
         JOIN movies m ON mr.movie_id = m.id
         JOIN users u ON mr.user_id = u.id
+        LEFT JOIN movie_descriptions md ON m.tmdb_id = md.tmdb_id AND md.lang = :lang
         WHERE u.id IN (:userIds)
 
         UNION ALL
 
         SELECT
             t.tmdb_id AS tmdb_id,
-            t.name AS title,
+            COALESCE(td.name, t.original_name, '') AS title,
             sr.score AS score,
             sr.review_text AS text,
             u.username AS username,
@@ -50,13 +51,14 @@ interface FeedDAO : Repository<FeedMarker, Long> {
         FROM season_ratings sr
         JOIN tv t ON t.id = sr.tv_show_id
         JOIN users u ON u.id = sr.user_id
+        LEFT JOIN tv_descriptions td ON t.tmdb_id = td.tmdb_id AND td.lang = :lang
         WHERE u.id IN (:userIds)
 
         ORDER BY date DESC
         LIMIT :limit
         """
     )
-    fun findAll(userIds: List<Long>, limit: Int): List<FeedItemEntity>
+    fun findAll(userIds: List<Long>, lang: String, limit: Int): List<FeedItemEntity>
 
     @Query(
         """
