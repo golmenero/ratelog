@@ -1,5 +1,6 @@
 package org.ratelog.movie
 
+import org.springframework.data.annotation.Id
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Table("movie_descriptions")
 data class MovieDescriptionEntity(
-    @Column("tmdb_id") val tmdbId: Int,
+    @Id @Column("tmdb_id") val tmdbId: Int,
     val lang: String,
     val title: String,
     val overview: String?,
