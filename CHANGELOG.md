@@ -7,12 +7,15 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.12
+### ➕ Added
+- I18N on movie and shows metadata
+
 ## Release v1.1.9
 ### ➕ Added
 - New loader animation
 ### ⚡ Changed
 - Refactor of detail and other views
-### 🔧 Fixed
 
 ## Release v1.1.9
 ### 🔧 Fixed
