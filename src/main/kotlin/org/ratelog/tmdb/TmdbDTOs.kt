@@ -34,9 +34,7 @@ data class TmdbMovieResponse(
     fun toDomain() = Movie(
         id = null,
         tmdbId = TmdbId(id),
-        title = Title(title),
         originalTitle = originalTitle?.let { Title(it) },
-        overview = overview?.let { Overview(it) },
         releaseDate = releaseDate?.toLocalDate(),
         releaseYear = releaseDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
@@ -67,9 +65,7 @@ data class TmdbTvShowResponse(
     fun toDomain() = TvShow(
         id = null,
         tmdbId = TmdbId(id),
-        name = Title(name),
         originalName = originalName?.let { Title(it) },
-        overview = overview?.let { Overview(it) },
         firstAirDate = firstAirDate?.toLocalDate(),
         firstAirYear = firstAirDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
@@ -101,4 +97,22 @@ data class TmdbTvSeasonResponse(
 data class TmdbGenreResponse(
     @JsonProperty("id") val id: Int,
     @JsonProperty("name") val name: String
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TmdbTranslationsResponse(
+    @JsonProperty("translations") val translations: List<TmdbTranslationEntry> = emptyList()
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TmdbTranslationEntry(
+    @JsonProperty("iso_639_1") val iso6391: String,
+    @JsonProperty("data") val data: TmdbTranslationData
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TmdbTranslationData(
+    @JsonProperty("title") val title: String? = null,
+    @JsonProperty("name") val name: String? = null,
+    @JsonProperty("overview") val overview: String? = null,
 )

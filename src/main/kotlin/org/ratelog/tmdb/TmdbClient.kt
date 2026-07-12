@@ -6,6 +6,8 @@ import arrow.core.right
 import org.ratelog.Lang
 import org.ratelog.TmdbId
 import org.ratelog.movie.Movie
+import org.ratelog.movie.MovieDescription
+import org.ratelog.tvshow.TvDescription
 import org.ratelog.tvshow.TvShow
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.client.JdkClientHttpRequestFactory
@@ -115,6 +117,64 @@ class TmdbClient(
             ?.toDomain()
             ?.right()
             ?: TmdbError.TvShowNotFound.left()
+    }
+
+    fun movieTranslations(tmdbId: TmdbId): Either<TmdbError, List<MovieDescription>> {
+        requireApiKey()
+        rateLimiter.acquire()
+
+        val response = restClient.get()
+            .uri { builder ->
+                builder.path("/movie/{id}/translations")
+                    .queryParam("api_key", apiKey)
+                    .build(tmdbId.value)
+            }
+            .retrieve()
+            .body(TmdbTranslationsResponse::class.java)
+
+        val descriptions = response?.translations
+            ?.mapNotNull { entry ->
+                val lang = Lang.parse(entry.iso6391)
+                val title = entry.data.title?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                MovieDescription(
+                    tmdbId = tmdbId,
+                    lang = lang,
+                    title = org.ratelog.Title(title),
+                    overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { org.ratelog.Overview(it) },
+                )
+            }
+            ?: emptyList()
+
+        return descriptions.right()
+    }
+
+    fun tvTranslations(tmdbId: TmdbId): Either<TmdbError, List<TvDescription>> {
+        requireApiKey()
+        rateLimiter.acquire()
+
+        val response = restClient.get()
+            .uri { builder ->
+                builder.path("/tv/{id}/translations")
+                    .queryParam("api_key", apiKey)
+                    .build(tmdbId.value)
+            }
+            .retrieve()
+            .body(TmdbTranslationsResponse::class.java)
+
+        val descriptions = response?.translations
+            ?.mapNotNull { entry ->
+                val lang = Lang.parse(entry.iso6391)
+                val name = entry.data.name?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                TvDescription(
+                    tmdbId = tmdbId,
+                    lang = lang,
+                    name = org.ratelog.Title(name),
+                    overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { org.ratelog.Overview(it) },
+                )
+            }
+            ?: emptyList()
+
+        return descriptions.right()
     }
 
     private fun requireApiKey() {
