@@ -17,7 +17,7 @@ class InMemoryRatingRepository : RatingRepository {
 
     override fun findRankedByUserIdWithFilters(
         userId: User.Id,
-        category: String?,
+        genreId: String?,
         limit: Int,
         name: String?
     ): List<Pair<Rank, Rating>> =
