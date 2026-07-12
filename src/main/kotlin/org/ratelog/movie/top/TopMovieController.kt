@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam
 
 data class GetTopMoviesResponse(
     val rank: Int,
-    val id: Long,
     val tmdbId: Int,
     val title: String,
     val releaseYear: Int?,
@@ -38,15 +37,16 @@ class TopMovieController(
             userId = user.id!!,
             category = category,
             limit = limit,
-            name = name
+            name = name,
+            lang = user.lang,
         ).let(handler::handle)
 
-        model.addAttribute("tops", tops.let(::map))
+        model.addAttribute("tops", tops.map { toResponse(it) })
         model.addAttribute("selectedCategory", category)
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        MoviePremieresQuery(user.id).let(moviePremieresHandler::handle)
+        MoviePremieresQuery(user.id, user.lang).let(moviePremieresHandler::handle)
             .fold(
                 { },
                 {
@@ -59,17 +59,13 @@ class TopMovieController(
         return "movies"
     }
 
-    private fun map(list: List<TopMovieItem>): List<GetTopMoviesResponse> =
-        list.map {
-            GetTopMoviesResponse(
-                rank = it.rank.value,
-                id = it.movie.id!!.value,
-                tmdbId = it.movie.tmdbId.value,
-                title = it.movie.title.value,
-                releaseYear = it.movie.releaseYear,
-                posterPath = it.movie.posterPath?.value,
-                averageScore = it.rating.score?.value ?: 0.0,
-                genres = it.movie.genres.map { g -> g.value }
-            )
-        }
+    private fun toResponse(item: TopMovieItem) = GetTopMoviesResponse(
+        rank = item.rank.value,
+        tmdbId = item.movie.tmdbId.value,
+        title = item.title,
+        releaseYear = item.movie.releaseYear,
+        posterPath = item.movie.posterPath?.value,
+        averageScore = item.rating.score?.value ?: 0.0,
+        genres = item.movie.genres.map { it.value }
+    )
 }

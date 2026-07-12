@@ -11,23 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam
 
 data class GetTopTvShowsResponse(
     val rank: Int,
-    val id: Long,
     val tmdbId: Int,
     val name: String,
     val firstAirYear: Int?,
     val posterPath: String?,
     val averageScore: Double,
     val genres: List<String>
-)
-
-data class GetSeasonResponse(
-    val seasonNumber: Int,
-    val score: Double,
-    val directing: Double,
-    val cinematography: Double,
-    val acting: Double,
-    val soundtrack: Double,
-    val screenplay: Double
 )
 
 @Controller
@@ -48,15 +37,16 @@ class TopTvShowController(
             userId = user.id!!,
             category = category,
             limit = limit,
-            name = name
+            name = name,
+            lang = user.lang,
         ).let(handler::handle)
 
-        model.addAttribute("tops", tops.let(::map))
+        model.addAttribute("tops", tops.map { toResponse(it) })
         model.addAttribute("selectedCategory", category)
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
-        TvShowPremieresQuery(user.id).let(tvShowPremieresHandler::handle)
+        TvShowPremieresQuery(user.id, user.lang).let(tvShowPremieresHandler::handle)
             .fold(
                 { },
                 {
@@ -69,17 +59,13 @@ class TopTvShowController(
         return "tvshows"
     }
 
-    private fun map(list: List<TopTvShowItem>): List<GetTopTvShowsResponse> =
-        list.map { item ->
-            GetTopTvShowsResponse(
-                rank = item.rank.value,
-                id = item.tvShow.id!!.value,
-                tmdbId = item.tvShow.tmdbId.value,
-                name = item.tvShow.name.value,
-                firstAirYear = item.tvShow.firstAirYear,
-                posterPath = item.tvShow.posterPath?.value,
-                averageScore = item.rating.score?.value ?: 0.0,
-                genres = item.tvShow.genres.map { it.value }
-            )
-        }
+    private fun toResponse(item: TopTvShowItem) = GetTopTvShowsResponse(
+        rank = item.rank.value,
+        tmdbId = item.tvShow.tmdbId.value,
+        name = item.title,
+        firstAirYear = item.tvShow.firstAirYear,
+        posterPath = item.tvShow.posterPath?.value,
+        averageScore = item.rating.score?.value ?: 0.0,
+        genres = item.tvShow.genres.map { it.value }
+    )
 }
