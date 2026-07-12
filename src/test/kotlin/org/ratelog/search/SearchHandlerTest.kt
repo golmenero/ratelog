@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.ratelog.Lang
+import org.ratelog.Title
 import org.ratelog.tmdb.TmdbClient
 import org.ratelog.tmdb.TmdbMovieResponse
 import org.ratelog.tmdb.TmdbTvShowResponse
@@ -30,12 +31,12 @@ class SearchHandlerTest {
     @Test
     fun `should return interleaved movie and tv show results`() {
         val movies = listOf(
-            TmdbMovieResponse(1, "Movie 1", overview = "Overview 1", releaseDate = "2023-01-01", posterPath = "/poster1.jpg", voteAverage = 7.5),
-            TmdbMovieResponse(2, "Movie 2", overview = "Overview 2", releaseDate = "2023-02-01", posterPath = "/poster2.jpg", voteAverage = 8.0)
+            TmdbMovieResponse(1, "Movie 1", overview = "Overview 1", releaseDate = "2023-01-01", posterPath = "/poster1.jpg", voteAverage = 7.5, originalTitle = "a-title"),
+            TmdbMovieResponse(2, "Movie 2", overview = "Overview 2", releaseDate = "2023-02-01", posterPath = "/poster2.jpg", voteAverage = 8.0, originalTitle = "a-title")
         )
         val shows = listOf(
-            TmdbTvShowResponse(3, "Show 1", overview = "Overview 3", firstAirDate = "2023-03-01", posterPath = "/poster3.jpg", voteAverage = 8.5),
-            TmdbTvShowResponse(4, "Show 2", overview = "Overview 4", firstAirDate = "2023-04-01", posterPath = "/poster4.jpg", voteAverage = 9.0)
+            TmdbTvShowResponse(3, "Show 1", overview = "Overview 3", firstAirDate = "2023-03-01", posterPath = "/poster3.jpg", voteAverage = 8.5, originalName = "a-title"),
+            TmdbTvShowResponse(4, "Show 2", overview = "Overview 4", firstAirDate = "2023-04-01", posterPath = "/poster4.jpg", voteAverage = 9.0, originalName = "a-title")
         )
 
         whenever(tmdbClient.searchMovies("test", Lang.en)).thenReturn(movies.right())
@@ -56,7 +57,7 @@ class SearchHandlerTest {
     @Test
     fun `should return only movies when no tv shows found`() {
         val movies = listOf(
-            TmdbMovieResponse(1, "Movie 1", overview = "Overview 1", releaseDate = "2023-01-01", posterPath = "/poster1.jpg", voteAverage = 7.5)
+            TmdbMovieResponse(1, "Movie 1", overview = "Overview 1", releaseDate = "2023-01-01", posterPath = "/poster1.jpg", voteAverage = 7.5, originalTitle = "a-title")
         )
 
         whenever(tmdbClient.searchMovies("test", Lang.en)).thenReturn(movies.right())
@@ -74,7 +75,7 @@ class SearchHandlerTest {
     @Test
     fun `should return only tv shows when no movies found`() {
         val shows = listOf(
-            TmdbTvShowResponse(1, "Show 1", overview = "Overview 1", firstAirDate = "2023-01-01", posterPath = "/poster1.jpg", voteAverage = 8.0)
+            TmdbTvShowResponse(1, "Show 1", overview = "Overview 1", firstAirDate = "2023-01-01", posterPath = "/poster1.jpg", voteAverage = 8.0, originalName = "a-title")
         )
 
         whenever(tmdbClient.searchMovies("test", Lang.en)).thenReturn(emptyList<TmdbMovieResponse>().right())
@@ -91,8 +92,8 @@ class SearchHandlerTest {
 
     @Test
     fun `should limit results to 6 per type`() {
-        val movies = (1..10).map { TmdbMovieResponse(it, "Movie $it", overview = "Overview", releaseDate = "2023-01-01", posterPath = "/poster.jpg", voteAverage = 7.5) }
-        val shows = (1..10).map { TmdbTvShowResponse(it, "Show $it", overview = "Overview", firstAirDate = "2023-01-01", posterPath = "/poster.jpg", voteAverage = 8.0) }
+        val movies = (1..10).map { TmdbMovieResponse(it, "Movie $it", overview = "Overview", releaseDate = "2023-01-01", posterPath = "/poster.jpg", voteAverage = 7.5, originalTitle = "a-title") }
+        val shows = (1..10).map { TmdbTvShowResponse(it, "Show $it", overview = "Overview", firstAirDate = "2023-01-01", posterPath = "/poster.jpg", voteAverage = 8.0, originalName = "a-title") }
 
         whenever(tmdbClient.searchMovies("test", Lang.en)).thenReturn(movies.right())
         whenever(tmdbClient.searchTvShows("test", Lang.en)).thenReturn(shows.right())

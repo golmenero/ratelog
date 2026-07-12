@@ -85,7 +85,7 @@ class DetailTvShowHandlerTest {
             TvDescription(null,TmdbId(123), Lang.en, Title("EN Name"), Overview("EN Overview"))
         )
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
-        whenever(tmdbClient.tvTranslations(TmdbId(123))).thenReturn(translations.right())
+        whenever(tmdbClient.tvTranslations(TmdbId(123), Title("Original Name"))).thenReturn(translations.right())
 
         val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.es)
         val result = handler.handle(query)
@@ -109,14 +109,14 @@ class DetailTvShowHandlerTest {
             firstAirDate = LocalDate.parse("2023-01-15"),
         )
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
-        whenever(tmdbClient.tvTranslations(TmdbId(123))).thenReturn(emptyList<TvDescription>().right())
+        whenever(tmdbClient.tvTranslations(TmdbId(123), Title("Test Show"))).thenReturn(emptyList<TvDescription>().right())
 
         val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
 
         val savedShow = tvShowRepository.findByTmdbId(TmdbId(123))
         assertNotNull(savedShow)
-        assertEquals("Test Show", savedShow!!.originalName?.value)
+        assertEquals("Test Show", savedShow!!.originalName.value)
     }
 
     @Test
@@ -190,7 +190,7 @@ class DetailTvShowHandlerTest {
             TvDescription(null,TmdbId(123), Lang.es, Title("ES Name"), Overview("ES Overview")),
         )
         whenever(tmdbClient.tvShowDetails(TmdbId(123))).thenReturn(tmdbShow.right())
-        whenever(tmdbClient.tvTranslations(TmdbId(123))).thenReturn(translations.right())
+        whenever(tmdbClient.tvTranslations(TmdbId(123), Title("Test Show"))).thenReturn(translations.right())
 
         val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
@@ -218,6 +218,6 @@ class DetailTvShowHandlerTest {
         val query = GetTvShowDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
 
-        verify(tmdbClient, org.mockito.kotlin.never()).tvTranslations(TmdbId(123))
+        verify(tmdbClient, org.mockito.kotlin.never()).tvTranslations(TmdbId(123), Title("a-title"))
     }
 }

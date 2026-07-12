@@ -51,7 +51,7 @@ class DetailMovieHandlerTest {
         ))
 
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
-        whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(emptyList<MovieDescription>().right())
+        whenever(tmdbClient.movieTranslations(TmdbId(123), Title("a-title"))).thenReturn(emptyList<MovieDescription>().right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         val result = handler.handle(query)
@@ -83,7 +83,7 @@ class DetailMovieHandlerTest {
             MovieDescription(null,TmdbId(123), Lang.en, Title("EN Title"), Overview("EN Overview"))
         )
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
-        whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(translations.right())
+        whenever(tmdbClient.movieTranslations(TmdbId(123), Title("Original Title"))).thenReturn(translations.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.es)
         val result = handler.handle(query)
@@ -109,14 +109,14 @@ class DetailMovieHandlerTest {
             tmdbVoteAverage = 7.5
         )
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
-        whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(emptyList<MovieDescription>().right())
+        whenever(tmdbClient.movieTranslations(TmdbId(123), Title("Test Movie"))).thenReturn(emptyList<MovieDescription>().right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
 
         val savedMovie = movieRepository.findByTmdbId(TmdbId(123))
         assertNotNull(savedMovie)
-        assertEquals("Test Movie", savedMovie!!.originalTitle?.value)
+        assertEquals("Test Movie", savedMovie!!.originalTitle.value)
     }
 
     @Test
@@ -164,7 +164,7 @@ class DetailMovieHandlerTest {
             MovieDescription(null,TmdbId(123), Lang.es, Title("ES Title"), Overview("ES Overview")),
         )
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
-        whenever(tmdbClient.movieTranslations(TmdbId(123))).thenReturn(translations.right())
+        whenever(tmdbClient.movieTranslations(TmdbId(123), Title("Test Movie"))).thenReturn(translations.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
@@ -191,6 +191,6 @@ class DetailMovieHandlerTest {
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
         handler.handle(query)
 
-        verify(tmdbClient, org.mockito.kotlin.never()).movieTranslations(TmdbId(123))
+        verify(tmdbClient, org.mockito.kotlin.never()).movieTranslations(TmdbId(123), Title("a-title"))
     }
 }

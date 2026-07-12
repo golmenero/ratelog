@@ -45,7 +45,7 @@ class DailyJobToSyncMetadataTest {
 
         val updatedShow = show.copy(originalName = Title("Updated Name"))
         whenever(tmdbClient.tvShowDetails(TmdbId(100))).thenReturn(updatedShow.right())
-        whenever(tmdbClient.tvTranslations(TmdbId(100))).thenReturn(emptyList<TvDescription>().right())
+        whenever(tmdbClient.tvTranslations(TmdbId(100), Title("a-title"))).thenReturn(emptyList<TvDescription>().right())
 
         job.sync()
 
@@ -61,7 +61,7 @@ class DailyJobToSyncMetadataTest {
 
         val updatedMovie = movie.copy(originalTitle = Title("Updated Title"))
         whenever(tmdbClient.movieDetails(TmdbId(200))).thenReturn(updatedMovie.right())
-        whenever(tmdbClient.movieTranslations(TmdbId(200))).thenReturn(emptyList<MovieDescription>().right())
+        whenever(tmdbClient.movieTranslations(TmdbId(200), Title("a-title"))).thenReturn(emptyList<MovieDescription>().right())
 
         job.sync()
 
@@ -81,7 +81,7 @@ class DailyJobToSyncMetadataTest {
 
         val updatedActiveShow = activeShow.copy(originalName = Title("Updated"))
         whenever(tmdbClient.tvShowDetails(TmdbId(102))).thenReturn(updatedActiveShow.right())
-        whenever(tmdbClient.tvTranslations(TmdbId(102))).thenReturn(emptyList<TvDescription>().right())
+        whenever(tmdbClient.tvTranslations(TmdbId(102), Title("a-title"))).thenReturn(emptyList<TvDescription>().right())
 
         job.sync()
 
@@ -99,7 +99,7 @@ class DailyJobToSyncMetadataTest {
 
         val updatedActiveMovie = activeMovie.copy(originalTitle = Title("Updated"))
         whenever(tmdbClient.movieDetails(TmdbId(202))).thenReturn(updatedActiveMovie.right())
-        whenever(tmdbClient.movieTranslations(TmdbId(202))).thenReturn(emptyList<MovieDescription>().right())
+        whenever(tmdbClient.movieTranslations(TmdbId(202), Title("a-title"))).thenReturn(emptyList<MovieDescription>().right())
 
         job.sync()
 
@@ -116,7 +116,7 @@ class DailyJobToSyncMetadataTest {
         whenever(tmdbClient.tvShowDetails(TmdbId(100))).thenReturn(TmdbError.MovieNotFound.left())
         val updatedShow2 = show2.copy(originalName = Title("Updated"))
         whenever(tmdbClient.tvShowDetails(TmdbId(101))).thenReturn(updatedShow2.right())
-        whenever(tmdbClient.tvTranslations(TmdbId(101))).thenReturn(emptyList<TvDescription>().right())
+        whenever(tmdbClient.tvTranslations(TmdbId(101), Title("a-title"))).thenReturn(emptyList<TvDescription>().right())
 
         job.sync()
 
@@ -135,7 +135,7 @@ class DailyJobToSyncMetadataTest {
         whenever(tmdbClient.movieDetails(TmdbId(200))).thenReturn(TmdbError.MovieNotFound.left())
         val updatedMovie2 = movie2.copy(originalTitle = Title("Updated"))
         whenever(tmdbClient.movieDetails(TmdbId(201))).thenReturn(updatedMovie2.right())
-        whenever(tmdbClient.movieTranslations(TmdbId(201))).thenReturn(emptyList<MovieDescription>().right())
+        whenever(tmdbClient.movieTranslations(TmdbId(201), Title("a-title"))).thenReturn(emptyList<MovieDescription>().right())
 
         job.sync()
 
@@ -154,7 +154,7 @@ class DailyJobToSyncMetadataTest {
             MovieDescription(null,TmdbId(200), Lang.es, Title("ES Title"), Overview("ES Overview")),
         )
         whenever(tmdbClient.movieDetails(TmdbId(200))).thenReturn(movie.right())
-        whenever(tmdbClient.movieTranslations(TmdbId(200))).thenReturn(translations.right())
+        whenever(tmdbClient.movieTranslations(TmdbId(200), Title("Test"))).thenReturn(translations.right())
 
         job.sync()
 
@@ -174,7 +174,7 @@ class DailyJobToSyncMetadataTest {
 
         job.sync()
 
-        verify(tmdbClient, org.mockito.kotlin.never()).movieTranslations(TmdbId(200))
+        verify(tmdbClient, org.mockito.kotlin.never()).movieTranslations(TmdbId(200), Title("a-title"))
     }
 
     @Test
@@ -187,7 +187,7 @@ class DailyJobToSyncMetadataTest {
             TvDescription(null,TmdbId(100), Lang.es, Title("ES Name"), Overview("ES Overview")),
         )
         whenever(tmdbClient.tvShowDetails(TmdbId(100))).thenReturn(show.right())
-        whenever(tmdbClient.tvTranslations(TmdbId(100))).thenReturn(translations.right())
+        whenever(tmdbClient.tvTranslations(TmdbId(100), Title("Test"))).thenReturn(translations.right())
 
         job.sync()
 
@@ -207,6 +207,6 @@ class DailyJobToSyncMetadataTest {
 
         job.sync()
 
-        verify(tmdbClient, org.mockito.kotlin.never()).tvTranslations(TmdbId(100))
+        verify(tmdbClient, org.mockito.kotlin.never()).tvTranslations(TmdbId(100), Title("a-title"))
     }
 }
