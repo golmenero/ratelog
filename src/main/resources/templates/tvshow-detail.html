@@ -25,7 +25,7 @@
                 <br>
                 <div class="flex gap-lg separate">
                     <div th:if="${!#lists.isEmpty(show.genres)}" class="flex gap wrap">
-                        <span class="tag" th:each="genreId : ${movie.genres}" th:text="#{${'genre.' + genreId}}">Genre</span>
+                        <span class="tag" th:each="genreId : ${show.genres}" th:text="#{${'genre.' + genreId}}">Genre</span>
                     </div>
                     <div class="flex gap-lg">
                         <form th:action="@{/tvshow/follow}" method="post">
