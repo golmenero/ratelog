@@ -45,7 +45,7 @@ class TvShowRepositoryImpl(
     }
 
     private fun TvShowEntity.toDomain(): TvShow {
-        val genres = genres?.split(',')?.mapNotNull(Genre::fromValue) ?: emptyList()
+        val genres = genres?.split(',')?.mapNotNull { it.toIntOrNull()?.let { id -> Genre.fromTmdbId(id) } } ?: emptyList()
 
         return TvShow(
             id = TvShow.Id(id!!),
@@ -72,7 +72,7 @@ class TvShowRepositoryImpl(
             firstAirYear = firstAirYear,
             posterPath = posterPath?.value,
             tmdbVoteAverage = tmdbVoteAverage,
-            genres = genres.joinToString(",") { it.value },
+            genres = genres.joinToString(",") { it.tmdbId.toString() },
             status = status?.value,
             lastSeasonNumber = lastSeasonNumber,
             lastSeasonAirDate = lastSeasonAirDate?.toString(),

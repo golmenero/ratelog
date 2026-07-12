@@ -46,7 +46,7 @@ class MovieRepositoryImpl(
     }
 
     private fun MovieEntity.toDomain(): Movie {
-        val genres = genres?.split(',')?.mapNotNull(Genre::fromValue) ?: emptyList()
+        val genres = genres?.split(',')?.mapNotNull { it.toIntOrNull()?.let { id -> Genre.fromTmdbId(id) } } ?: emptyList()
 
         return Movie(
             id = Movie.Id(id!!),
@@ -70,7 +70,7 @@ class MovieRepositoryImpl(
             releaseYear = releaseYear,
             posterPath = posterPath?.value,
             tmdbVoteAverage = tmdbVoteAverage,
-            genres = genres.joinToString(",") { it.value },
+            genres = genres.joinToString(",") { it.tmdbId.toString() },
             status = status?.value,
         )
     }

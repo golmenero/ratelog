@@ -38,7 +38,7 @@ data class TmdbMovieResponse(
         releaseYear = releaseDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = voteAverage,
-        genres = genres.mapNotNull { Genre.fromValue(it.name) },
+        genres = genres.mapNotNull { Genre.fromTmdbId(it.id) },
         status = status?.let { Status.fromValue(it) },
     )
 }
@@ -69,7 +69,7 @@ data class TmdbTvShowResponse(
         firstAirYear = firstAirDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
         tmdbVoteAverage = voteAverage,
-        genres = genres.mapNotNull { Genre.fromValue(it.name) },
+        genres = genres.mapNotNull { Genre.fromTmdbId(it.id) },
         status = status?.let { Status.fromValue(it) },
         lastSeasonNumber = seasons.filter { it.seasonNumber > 0 }.maxByOrNull { it.seasonNumber }?.seasonNumber,
         lastSeasonAirDate = seasons.filter { it.seasonNumber > 0 }
