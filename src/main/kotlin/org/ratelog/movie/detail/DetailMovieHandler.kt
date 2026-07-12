@@ -20,6 +20,7 @@ data class GetMovieDetail(
 )
 
 data class GetMovieDetailResult(
+    val id: Long,
     val tmdbId: Int,
     val title: String,
     val originalTitle: String?,
@@ -63,6 +64,7 @@ class DetailMovieHandler(
         val isFollowed = movieRepository.isFollowed(query.userId, savedMovie.id)
 
         GetMovieDetailResult(
+            id = savedMovie.id!!.value,
             tmdbId = savedMovie.tmdbId.value,
             title = title,
             originalTitle = savedMovie.originalTitle?.value,

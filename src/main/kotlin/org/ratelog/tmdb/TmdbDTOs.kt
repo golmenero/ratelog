@@ -3,7 +3,6 @@ package org.ratelog.tmdb
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.ratelog.Genre
-import org.ratelog.Overview
 import org.ratelog.Status
 import org.ratelog.Title
 import org.ratelog.TmdbId

@@ -1,7 +1,6 @@
 package org.ratelog.tvshow
 
 import org.ratelog.Genre
-import org.ratelog.Overview
 import org.ratelog.Status
 import org.ratelog.TmdbId
 import org.ratelog.Title

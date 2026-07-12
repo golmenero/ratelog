@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 
 data class TvShowDetailResponse(
+    val id: Long,
     val tmdbId: Int,
     val name: String,
     val overview: String?,
@@ -65,6 +66,7 @@ class DetailTvShowController(
 
     private fun buildResponse(result: GetTvShowDetailResult): TvShowDetailResponse =
         TvShowDetailResponse(
+            id = result.id,
             tmdbId = result.tmdbId,
             name = result.title,
             overview = result.overview,

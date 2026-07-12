@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 
 data class MovieDetailResponse(
+    val id: Long,
     val tmdbId: Int,
     val name: String,
     val overview: String?,
@@ -57,6 +58,7 @@ class DetailMovieController(
 
     private fun buildResponse(result: GetMovieDetailResult): MovieDetailResponse =
         MovieDetailResponse(
+            id = result.id,
             tmdbId = result.tmdbId,
             name = result.title,
             overview = result.overview,

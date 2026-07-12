@@ -20,6 +20,7 @@ data class GetTvShowDetail(
     )
 
 data class GetTvShowDetailResult(
+    val id: Long,
     val tmdbId: Int,
     val title: String,
     val originalTitle: String?,
@@ -102,6 +103,7 @@ class DetailTvShowHandler(
             }
 
         GetTvShowDetailResult(
+            id = savedShow.id!!.value,
             tmdbId = savedShow.tmdbId.value,
             title = title,
             originalTitle = savedShow.originalName?.value,
