@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.13
+### ➕ Added
+- New metadataLang for split language between system and metadata
+
 ## Release v1.1.12
 ### ➕ Added
 - I18N on movie and shows metadata
