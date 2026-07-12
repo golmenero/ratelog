@@ -54,7 +54,7 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
         FROM ranked
         INNER JOIN movies m ON ranked.movie_id = m.id
         WHERE (:category IS NULL OR m.genres LIKE CONCAT('%', :category, '%'))
-          AND (:name IS NULL OR LOWER(m.title) LIKE LOWER(CONCAT('%', :name, '%')))
+          AND (:name IS NULL OR LOWER(m.original_title) LIKE LOWER(CONCAT('%', :name, '%')))
         ORDER BY ranked.score DESC
         LIMIT :limit
         """
