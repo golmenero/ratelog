@@ -16,7 +16,7 @@ data class GetTopMoviesResponse(
     val releaseYear: Int?,
     val posterPath: String?,
     val averageScore: Double,
-    val genres: List<String>
+    val genreIds: List<Int>
 )
 
 @Controller
@@ -28,21 +28,21 @@ class TopMovieController(
     @GetMapping("/movies")
     fun topsPage(
         @CurrentUser user: User,
-        @RequestParam("category", required = false) category: String?,
+        @RequestParam("category", required = false) genreId: String?,
         @RequestParam("limit", required = false, defaultValue = "10") limit: Int,
         @RequestParam("name", required = false) name: String?,
         model: Model
     ): String {
         val tops = TopMovie(
             userId = user.id!!,
-            category = category,
+            genreId = genreId,
             limit = limit,
             name = name,
             lang = user.lang,
         ).let(handler::handle)
 
         model.addAttribute("tops", tops.map { toResponse(it) })
-        model.addAttribute("selectedCategory", category)
+        model.addAttribute("selectedCategory", genreId)
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
@@ -66,6 +66,6 @@ class TopMovieController(
         releaseYear = item.movie.releaseYear,
         posterPath = item.movie.posterPath?.value,
         averageScore = item.rating.score?.value ?: 0.0,
-        genres = item.movie.genres.map { it.value }
+        genreIds = item.movie.genres.map { it.tmdbId }
     )
 }

@@ -16,27 +16,28 @@
             <form th:action="@{/tvshows}" class="filter" method="get">
                 <select id="category" name="category" th:aria-label="#{tvshows.category.all}">
                     <option value="" th:text="#{tvshows.category.all}">All categories</option>
-                    <option value="Action" th:selected="${selectedCategory == 'Action'}" th:text="#{genre.action}">Action</option>
-                    <option value="Adventure" th:selected="${selectedCategory == 'Adventure'}" th:text="#{genre.adventure}">Adventure</option>
-                    <option value="Animation" th:selected="${selectedCategory == 'Animation'}" th:text="#{genre.animation}">Animation</option>
-                    <option value="Comedy" th:selected="${selectedCategory == 'Comedy'}" th:text="#{genre.comedy}">Comedy</option>
-                    <option value="Crime" th:selected="${selectedCategory == 'Crime'}" th:text="#{genre.crime}">Crime</option>
-                    <option value="Documentary" th:selected="${selectedCategory == 'Documentary'}" th:text="#{genre.documentary}">Documentary</option>
-                    <option value="Drama" th:selected="${selectedCategory == 'Drama'}" th:text="#{genre.drama}">Drama</option>
-                    <option value="Family" th:selected="${selectedCategory == 'Family'}" th:text="#{genre.family}">Family</option>
-                    <option value="Fantasy" th:selected="${selectedCategory == 'Fantasy'}" th:text="#{genre.fantasy}">Fantasy</option>
-                    <option value="History" th:selected="${selectedCategory == 'History'}" th:text="#{genre.history}">History</option>
-                    <option value="Horror" th:selected="${selectedCategory == 'Horror'}" th:text="#{genre.horror}">Horror</option>
-                    <option value="Mystery" th:selected="${selectedCategory == 'Mystery'}" th:text="#{genre.mystery}">Mystery</option>
-                    <option value="Romance" th:selected="${selectedCategory == 'Romance'}" th:text="#{genre.romance}">Romance</option>
-                    <option value="Science Fiction" th:selected="${selectedCategory == 'Science Fiction'}" th:text="#{genre.science.fiction}">Science Fiction</option>
-                    <option value="Sci-Fi &amp; Fantasy" th:selected="${selectedCategory == 'Sci-Fi &amp; Fantasy'}" th:text="#{genre.sci.fi.fantasy}">Sci-Fi &amp; Fantasy</option>
-                    <option value="Soap" th:selected="${selectedCategory == 'Soap'}" th:text="#{genre.soap}">Soap</option>
-                    <option value="Talk" th:selected="${selectedCategory == 'Talk'}" th:text="#{genre.talk}">Talk</option>
-                    <option value="Thriller" th:selected="${selectedCategory == 'Thriller'}" th:text="#{genre.thriller}">Thriller</option>
-                    <option value="War" th:selected="${selectedCategory == 'War'}" th:text="#{genre.war}">War</option>
-                    <option value="War &amp; Politics" th:selected="${selectedCategory == 'War &amp; Politics'}" th:text="#{genre.war.politics}">War &amp; Politics</option>
-                    <option value="Western" th:selected="${selectedCategory == 'Western'}" th:text="#{genre.western}">Western</option>
+                    <option value="28" th:selected="${selectedCategory == '28'}" th:text="#{genre.28}">Action</option>
+                    <option value="12" th:selected="${selectedCategory == '12'}" th:text="#{genre.12}">Adventure</option>
+                    <option value="16" th:selected="${selectedCategory == '16'}" th:text="#{genre.16}">Animation</option>
+                    <option value="35" th:selected="${selectedCategory == '35'}" th:text="#{genre.35}">Comedy</option>
+                    <option value="80" th:selected="${selectedCategory == '80'}" th:text="#{genre.80}">Crime</option>
+                    <option value="99" th:selected="${selectedCategory == '99'}" th:text="#{genre.99}">Documentary</option>
+                    <option value="18" th:selected="${selectedCategory == '18'}" th:text="#{genre.18}">Drama</option>
+                    <option value="10751" th:selected="${selectedCategory == '10751'}" th:text="#{genre.10751}">Family</option>
+                    <option value="14" th:selected="${selectedCategory == '14'}" th:text="#{genre.14}">Fantasy</option>
+                    <option value="36" th:selected="${selectedCategory == '36'}" th:text="#{genre.36}">History</option>
+                    <option value="27" th:selected="${selectedCategory == '27'}" th:text="#{genre.27}">Horror</option>
+                    <option value="9648" th:selected="${selectedCategory == '9648'}" th:text="#{genre.9648}">Mystery</option>
+                    <option value="10749" th:selected="${selectedCategory == '10749'}" th:text="#{genre.10749}">Romance</option>
+                    <option value="878" th:selected="${selectedCategory == '878'}" th:text="#{genre.878}">Science Fiction</option>
+                    <option value="10759" th:selected="${selectedCategory == '10759'}" th:text="#{genre.10759}">Action &amp; Adventure</option>
+                    <option value="10765" th:selected="${selectedCategory == '10765'}" th:text="#{genre.10765}">Sci-Fi &amp; Fantasy</option>
+                    <option value="10766" th:selected="${selectedCategory == '10766'}" th:text="#{genre.10766}">Soap</option>
+                    <option value="10767" th:selected="${selectedCategory == '10767'}" th:text="#{genre.10767}">Talk</option>
+                    <option value="53" th:selected="${selectedCategory == '53'}" th:text="#{genre.53}">Thriller</option>
+                    <option value="10752" th:selected="${selectedCategory == '10752'}" th:text="#{genre.10752}">War</option>
+                    <option value="10768" th:selected="${selectedCategory == '10768'}" th:text="#{genre.10768}">War &amp; Politics</option>
+                    <option value="37" th:selected="${selectedCategory == '37'}" th:text="#{genre.37}">Western</option>
                 </select>
                 <input id="name" name="name" type="text" th:value="${selectedName}" th:placeholder="#{tvshows.search.placeholder}" th:aria-label="#{tvshows.search.placeholder}">
                 <select id="limit" name="limit" th:aria-label="#{tvshows.refresh.ranking}" style="width: auto; min-width: 0;">
@@ -62,8 +63,8 @@
                             <span class="year" th:text="${s.firstAirYear != null} ? ${s.firstAirYear} : #{tvshows.year.unknown}">Year</span>
                             <br>
                             <br>
-                            <div th:if="${!#lists.isEmpty(s.genres)}" class="flex gap wrap">
-                                <span class="tag" th:each="genre : ${s.genres}" th:text="${genre}">Genre</span>
+                            <div th:if="${!#lists.isEmpty(s.genreIds)}" class="flex gap wrap">
+                                <span class="tag" th:each="genreId : ${s.genreIds}" th:text="#{${'genre.' + genreId}}">Genre</span>
                             </div>
                         </div>
                     </div>

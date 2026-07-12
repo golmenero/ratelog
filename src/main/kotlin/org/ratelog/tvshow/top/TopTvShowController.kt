@@ -16,7 +16,7 @@ data class GetTopTvShowsResponse(
     val firstAirYear: Int?,
     val posterPath: String?,
     val averageScore: Double,
-    val genres: List<String>
+    val genreIds: List<Int>
 )
 
 @Controller
@@ -28,21 +28,21 @@ class TopTvShowController(
     @GetMapping("/tvshows")
     fun topsPage(
         @CurrentUser user: User,
-        @RequestParam("category", required = false) category: String?,
+        @RequestParam("category", required = false) genreId: String?,
         @RequestParam("limit", required = false, defaultValue = "10") limit: Int,
         @RequestParam("name", required = false) name: String?,
         model: Model
     ): String {
         val tops = TopTvShow(
             userId = user.id!!,
-            category = category,
+            genreId = genreId,
             limit = limit,
             name = name,
             lang = user.lang,
         ).let(handler::handle)
 
         model.addAttribute("tops", tops.map { toResponse(it) })
-        model.addAttribute("selectedCategory", category)
+        model.addAttribute("selectedCategory", genreId)
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 
@@ -66,6 +66,6 @@ class TopTvShowController(
         firstAirYear = item.tvShow.firstAirYear,
         posterPath = item.tvShow.posterPath?.value,
         averageScore = item.rating.score?.value ?: 0.0,
-        genres = item.tvShow.genres.map { it.value }
+        genreIds = item.tvShow.genres.map { it.tmdbId }
     )
 }

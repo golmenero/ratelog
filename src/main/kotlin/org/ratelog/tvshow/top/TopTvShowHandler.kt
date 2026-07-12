@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 
 data class TopTvShow(
     val userId: User.Id,
-    val category: String?,
+    val genreId: String?,
     val limit: Int = 10,
     val name: String?,
     val lang: Lang,
@@ -34,7 +34,7 @@ class TopTvShowHandler(
 ) {
     @Transactional
     fun handle(query: TopTvShow): List<TopTvShowItem> =
-        tvRatingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
+        tvRatingRepository.findRankedByUserIdWithFilters(query.userId, query.genreId, query.limit, query.name)
             .mapNotNull { toItem(it, query.lang) }
 
     private fun toItem(item: Pair<Rank, TvRating>, lang: Lang) =

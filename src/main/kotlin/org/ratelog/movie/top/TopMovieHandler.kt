@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 
 data class TopMovie(
     val userId: User.Id,
-    val category: String?,
+    val genreId: String?,
     val limit: Int = 10,
     val name: String?,
     val lang: Lang,
@@ -34,7 +34,7 @@ class TopMovieHandler(
 ) {
     @Transactional
     fun handle(query: TopMovie): List<TopMovieItem> =
-        ratingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
+        ratingRepository.findRankedByUserIdWithFilters(query.userId, query.genreId, query.limit, query.name)
             .mapNotNull { toItem(it, query.lang) }
 
     private fun toItem(item: Pair<Rank, Rating>, lang: Lang) =
