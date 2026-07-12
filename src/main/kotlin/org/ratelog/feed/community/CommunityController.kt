@@ -5,7 +5,6 @@ import org.ratelog.annotations.CurrentUser
 import org.ratelog.feed.FeedItem
 import org.ratelog.toDateString
 import org.ratelog.user.User
-import org.springframework.data.relational.core.sql.In
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,7 +38,7 @@ class CommunityController(
         @RequestParam(value = "limit", defaultValue = "10") limit: Int,
         model: Model
     ): String {
-        FeedQuery(user.id!!, limit).let(communityHandler::handle)
+        FeedQuery(user.id!!, limit, user.lang).let(communityHandler::handle)
             .fold(
                 { },
                 {

@@ -2,6 +2,7 @@ package org.ratelog.feed.community
 
 import arrow.core.Either
 import arrow.core.raise.either
+import org.ratelog.Lang
 import org.ratelog.feed.FeedItem
 import org.ratelog.feed.FeedRepository
 import org.ratelog.user.User
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 data class FeedQuery(
     val userId: User.Id,
     val limit: Int,
+    val lang: Lang,
 )
 
 data class FeedResult(
@@ -32,7 +34,7 @@ class CommunityHandler(
         if (followedUsers.isEmpty()) return@either FeedResult(emptyList(), emptyList(),false)
 
         val followedIds = followedUsers.mapNotNull { it.id }
-        val items = feedRepository.findAll(followedIds, query.limit)
+        val items = feedRepository.findAll(followedIds, query.lang, query.limit)
 
         val totalCount = feedRepository.count(followedIds)
         FeedResult(followedUsers, items, totalCount > query.limit)
