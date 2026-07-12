@@ -4,14 +4,8 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.Lang
 import org.ratelog.MediaType
-import org.ratelog.TmdbId
-import org.ratelog.movie.MovieRepository
-import org.ratelog.movie.rating.RatingRepository
 import org.ratelog.tmdb.TmdbClient
-import org.ratelog.tvshow.TvShowRepository
-import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
-import java.time.LocalDate
 import org.springframework.transaction.annotation.Transactional
 
 data class SearchQuery(
@@ -58,11 +52,11 @@ class SearchHandler(
 
             movies.map {
                 SearchResultItem(
-                    tmdbId = it.tmdbId.value,
-                    title = it.title.value,
-                    overview = it.overview?.value,
-                    year = it.releaseDate?.year,
-                    posterPath = it.posterPath?.value,
+                    tmdbId = it.id,
+                    title = it.title,
+                    overview = it.overview,
+                    year = it.releaseDate?.takeIf { d -> d.isNotBlank() }?.take(4)?.toIntOrNull(),
+                    posterPath = it.posterPath,
                     type = MediaType.movie.name,
                 )
             }
@@ -74,11 +68,11 @@ class SearchHandler(
 
             tvshows.map {
                 SearchResultItem(
-                    tmdbId = it.tmdbId.value,
-                    title = it.name.value,
-                    overview = it.overview?.value,
-                    year = it.firstAirDate?.year,
-                    posterPath = it.posterPath?.value,
+                    tmdbId = it.id,
+                    title = it.name,
+                    overview = it.overview,
+                    year = it.firstAirDate?.takeIf { d -> d.isNotBlank() }?.take(4)?.toIntOrNull(),
+                    posterPath = it.posterPath,
                     type = MediaType.tvshow.name,
                 )
         }
