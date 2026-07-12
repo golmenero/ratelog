@@ -42,7 +42,7 @@ class TopTvShowHandler(
             .findById(item.second.tvShowId)
             ?.let { show ->
                 val description = tvDescriptionRepository.findByTmdbIdAndLang(show.tmdbId, lang)
-                val title = description?.name?.value ?: show.originalName?.value ?: ""
+                val title = description?.name?.value ?: show.originalName.value
                 TopTvShowItem(rank = item.first, rating = item.second, tvShow = show, title = title)
             }
 }

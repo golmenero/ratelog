@@ -67,7 +67,7 @@ class DailyJobToSyncMetadata(
                 )
 
             if (!tvDescriptionRepository.existsAnyByTmdbId(show.tmdbId)) {
-                tmdbClient.tvTranslations(show.tmdbId)
+                tmdbClient.tvTranslations(show.tmdbId, show.originalName)
                     .fold(
                         { err -> logger.error("Failed to sync TV translations: $err") },
                         { tvDescriptionRepository.saveAll(it) }
@@ -87,7 +87,7 @@ class DailyJobToSyncMetadata(
                 )
 
             if (!movieDescriptionRepository.existsAnyByTmdbId(movie.tmdbId)) {
-                tmdbClient.movieTranslations(movie.tmdbId)
+                tmdbClient.movieTranslations(movie.tmdbId, movie.originalTitle)
                     .fold(
                         { err -> logger.error("Failed to sync movie translations: $err") },
                         { movieDescriptionRepository.saveAll(it) }

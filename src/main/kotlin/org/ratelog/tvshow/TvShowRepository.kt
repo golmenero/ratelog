@@ -11,7 +11,7 @@ import java.time.LocalDate
 data class TvShow(
     val id: Id?,
     val tmdbId: TmdbId,
-    val originalName: Title?,
+    val originalName: Title,
     val firstAirDate: LocalDate?,
     val firstAirYear: Int?,
     val posterPath: Url?,

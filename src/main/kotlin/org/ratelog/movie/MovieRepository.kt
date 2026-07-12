@@ -11,7 +11,7 @@ import java.time.LocalDate
 data class Movie(
     val id: Id?,
     val tmdbId: TmdbId,
-    val originalTitle: Title?,
+    val originalTitle: Title,
     val releaseDate: LocalDate?,
     val releaseYear: Int?,
     val posterPath: Url?,

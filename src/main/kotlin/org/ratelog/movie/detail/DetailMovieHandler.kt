@@ -23,7 +23,7 @@ data class GetMovieDetailResult(
     val id: Long,
     val tmdbId: Int,
     val title: String,
-    val originalTitle: String?,
+    val originalTitle: String,
     val overview: String?,
     val releaseDate: String?,
     val releaseYear: Int?,
@@ -57,14 +57,14 @@ class DetailMovieHandler(
         val savedMovie = movie ?: tmdbMovie.let(movieRepository::save)
 
         if (!movieDescriptionRepository.existsAnyByTmdbId(savedMovie.tmdbId)) {
-            tmdbClient.movieTranslations(savedMovie.tmdbId).fold(
+            tmdbClient.movieTranslations(savedMovie.tmdbId, savedMovie.originalTitle).fold(
                 { },
                 { movieDescriptionRepository.saveAll(it) }
             )
         }
 
         val description = movieDescriptionRepository.findByTmdbIdAndLang(savedMovie.tmdbId, query.lang)
-        val title = description?.title?.value ?: savedMovie.originalTitle?.value ?: ""
+        val title = description?.title?.value ?: savedMovie.originalTitle.value
         val overview = description?.overview?.value
 
         val rating = ratingRepository.findByMovieIdAndUserId(savedMovie.id!!, query.userId)
@@ -74,7 +74,7 @@ class DetailMovieHandler(
             id = savedMovie.id.value,
             tmdbId = savedMovie.tmdbId.value,
             title = title,
-            originalTitle = savedMovie.originalTitle?.value,
+            originalTitle = savedMovie.originalTitle.value,
             overview = overview,
             releaseDate = savedMovie.releaseDate?.toString(),
             releaseYear = savedMovie.releaseYear,

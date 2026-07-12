@@ -119,7 +119,7 @@ class TmdbClient(
             ?: TmdbError.TvShowNotFound.left()
     }
 
-    fun movieTranslations(tmdbId: TmdbId): Either<TmdbError, List<MovieDescription>> {
+    fun movieTranslations(tmdbId: TmdbId, originalTitle: Title): Either<TmdbError, List<MovieDescription>> {
         requireApiKey()
         rateLimiter.acquire()
 
@@ -137,13 +137,14 @@ class TmdbClient(
         val descriptions = response?.translations
             ?.mapNotNull { entry ->
                 if (!allowedLanguages.contains(entry.iso6391)) return@mapNotNull null
-                val title = entry.data.title?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                val title = entry.data.title?.takeIf { it.isNotBlank() }?.let(::Title)
+                    ?: originalTitle
 
                 MovieDescription(
                     id = null,
                     tmdbId = tmdbId,
                     lang = Lang.parse(entry.iso6391),
-                    title = Title(title),
+                    title = title,
                     overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { Overview(it) },
                 )
             }
@@ -154,7 +155,7 @@ class TmdbClient(
         return descriptions.right()
     }
 
-    fun tvTranslations(tmdbId: TmdbId): Either<TmdbError, List<TvDescription>> {
+    fun tvTranslations(tmdbId: TmdbId, originalTitle: Title): Either<TmdbError, List<TvDescription>> {
         requireApiKey()
         rateLimiter.acquire()
 
@@ -172,13 +173,14 @@ class TmdbClient(
         val descriptions = response?.translations
             ?.mapNotNull { entry ->
                 if (!allowedLanguages.contains(entry.iso6391)) return@mapNotNull null
-                val name = entry.data.name?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                val name = entry.data.name?.takeIf { it.isNotBlank() }?.let(::Title)
+                    ?: originalTitle
 
                 TvDescription(
                     id = null,
                     tmdbId = tmdbId,
                     lang = Lang.parse(entry.iso6391),
-                    name = Title(name),
+                    name = name,
                     overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { Overview(it) },
                 )
             }

@@ -23,7 +23,7 @@ data class GetTvShowDetailResult(
     val id: Long,
     val tmdbId: Int,
     val title: String,
-    val originalTitle: String?,
+    val originalTitle: String,
     val overview: String?,
     val releaseDate: String?,
     val firstAirYear: Int?,
@@ -73,14 +73,14 @@ class DetailTvShowHandler(
         val savedShow = show ?: tmdbShow.let(tvShowRepository::save)
 
         if (!tvDescriptionRepository.existsAnyByTmdbId(savedShow.tmdbId)) {
-            tmdbClient.tvTranslations(savedShow.tmdbId).fold(
+            tmdbClient.tvTranslations(savedShow.tmdbId, savedShow.originalName).fold(
                 { },
                 { tvDescriptionRepository.saveAll(it) }
             )
         }
 
         val description = tvDescriptionRepository.findByTmdbIdAndLang(savedShow.tmdbId, query.lang)
-        val title = description?.name?.value ?: savedShow.originalName?.value ?: ""
+        val title = description?.name?.value ?: savedShow.originalName.value
         val overview = description?.overview?.value
 
         val rating = tvRatingRepository.findByTvShowIdAndUserId(savedShow.id!!, query.userId)
@@ -113,7 +113,7 @@ class DetailTvShowHandler(
             id = savedShow.id.value,
             tmdbId = savedShow.tmdbId.value,
             title = title,
-            originalTitle = savedShow.originalName?.value,
+            originalTitle = savedShow.originalName.value,
             overview = overview,
             releaseDate = savedShow.firstAirDate?.toString(),
             firstAirYear = savedShow.firstAirYear,

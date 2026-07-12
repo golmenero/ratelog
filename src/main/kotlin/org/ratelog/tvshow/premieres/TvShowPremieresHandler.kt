@@ -45,7 +45,7 @@ class TvShowPremieresHandler(
 
         for (show in followedTvShows) {
             val description = tvDescriptionRepository.findByTmdbIdAndLang(show.tmdbId, query.lang)
-            val name = description?.name?.value ?: show.originalName?.value ?: ""
+            val name = description?.name?.value ?: show.originalName.value
 
             if (show.lastSeasonNumber != null) {
                 if (show.lastSeasonAirDate != null) {

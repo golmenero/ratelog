@@ -41,7 +41,7 @@ object MovieFactory {
     fun aMovie(
         id: Long? = null,
         tmdbId: Int = idGenerator.getAndIncrement().toInt(),
-        originalTitle: String? = null,
+        originalTitle: String,
         releaseDate: LocalDate? = LocalDate.now().minusDays(1),
         releaseYear: Int? = null,
         posterPath: String? = null,
@@ -51,7 +51,7 @@ object MovieFactory {
     ) = Movie(
         id = id?.let { Movie.Id(it) },
         tmdbId = TmdbId(tmdbId),
-        originalTitle = originalTitle?.let { Title(it) },
+        originalTitle = Title(originalTitle),
         releaseDate = releaseDate,
         releaseYear = releaseYear,
         posterPath = posterPath?.let { Url(it) },
@@ -67,7 +67,7 @@ object TvShowFactory {
     fun aTvShow(
         id: Long? = null,
         tmdbId: Int = idGenerator.getAndIncrement().toInt(),
-        originalName: String? = null,
+        originalName: String,
         firstAirDate: LocalDate? = null,
         firstAirYear: Int? = null,
         posterPath: String? = null,
@@ -80,7 +80,7 @@ object TvShowFactory {
     ) = TvShow(
         id = id?.let { TvShow.Id(it) },
         tmdbId = TmdbId(tmdbId),
-        originalName = originalName?.let { Title(it) },
+        originalName = Title(originalName),
         firstAirDate = firstAirDate,
         firstAirYear = firstAirYear,
         posterPath = posterPath?.let { Url(it) },

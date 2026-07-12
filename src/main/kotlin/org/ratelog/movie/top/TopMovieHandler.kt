@@ -37,12 +37,12 @@ class TopMovieHandler(
         ratingRepository.findRankedByUserIdWithFilters(query.userId, query.category, query.limit, query.name)
             .mapNotNull { toItem(it, query.lang) }
 
-    private fun toItem(item: Pair<Rank, Rating>, lang: org.ratelog.Lang) =
+    private fun toItem(item: Pair<Rank, Rating>, lang: Lang) =
         movieRepository
             .findById(item.second.movieId)
             ?.let { movie ->
                 val description = movieDescriptionRepository.findByTmdbIdAndLang(movie.tmdbId, lang)
-                val title = description?.title?.value ?: movie.originalTitle?.value ?: ""
+                val title = description?.title?.value ?: movie.originalTitle.value
                 TopMovieItem(rank = item.first, rating = item.second, movie = movie, title = title)
             }
 }

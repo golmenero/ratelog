@@ -44,7 +44,7 @@ class MoviePremieresHandler(
 
         for (movie in followedMovies) {
             val description = movieDescriptionRepository.findByTmdbIdAndLang(movie.tmdbId, query.lang)
-            val title = description?.title?.value ?: movie.originalTitle?.value ?: ""
+            val title = description?.title?.value ?: movie.originalTitle.value
 
             if (movie.releaseDate != null) {
                 val item = MoviePremiereItem(

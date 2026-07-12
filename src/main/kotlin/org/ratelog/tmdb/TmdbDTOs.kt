@@ -22,7 +22,7 @@ data class TmdbSearchResponse(
 data class TmdbMovieResponse(
     @JsonProperty("id") val id: Int,
     @JsonProperty("title") val title: String,
-    @JsonProperty("original_title") val originalTitle: String? = null,
+    @JsonProperty("original_title") val originalTitle: String,
     @JsonProperty("overview") val overview: String? = null,
     @JsonProperty("release_date") val releaseDate: String? = null,
     @JsonProperty("poster_path") val posterPath: String? = null,
@@ -33,7 +33,7 @@ data class TmdbMovieResponse(
     fun toDomain() = Movie(
         id = null,
         tmdbId = TmdbId(id),
-        originalTitle = originalTitle?.let { Title(it) },
+        originalTitle = Title(originalTitle),
         releaseDate = releaseDate?.toLocalDate(),
         releaseYear = releaseDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
@@ -52,7 +52,7 @@ data class TmdbTvShowSearchResponse(
 data class TmdbTvShowResponse(
     @JsonProperty("id") val id: Int,
     @JsonProperty("name") val name: String,
-    @JsonProperty("original_name") val originalName: String? = null,
+    @JsonProperty("original_name") val originalName: String,
     @JsonProperty("overview") val overview: String? = null,
     @JsonProperty("first_air_date") val firstAirDate: String? = null,
     @JsonProperty("poster_path") val posterPath: String? = null,
@@ -64,7 +64,7 @@ data class TmdbTvShowResponse(
     fun toDomain() = TvShow(
         id = null,
         tmdbId = TmdbId(id),
-        originalName = originalName?.let { Title(it) },
+        originalName = Title(originalName),
         firstAirDate = firstAirDate?.toLocalDate(),
         firstAirYear = firstAirDate?.takeIf { it.isNotBlank() }?.take(4)?.toIntOrNull(),
         posterPath = posterPath?.let { Url(it) },
