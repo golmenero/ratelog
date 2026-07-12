@@ -18,6 +18,7 @@ data class GetProfile(
     val loggedUserId: User.Id,
     val userId: User.Id,
     val limit: Int,
+    val lang: Lang,
 )
 
 data class Profile(
@@ -51,7 +52,7 @@ class ProfileHandler(
     @Transactional
     fun handle(query: GetProfile): Either<ProfileHandlerError, Profile> = either {
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
-        val feed = feedRepository.findAll(listOf(query.userId), query.limit).map { toResponse(it) }
+        val feed = feedRepository.findAll(listOf(query.userId), query.lang, query.limit).map { toResponse(it) }
         val totalCount = feedRepository.count(listOf(query.userId))
 
         Profile(
@@ -69,7 +70,7 @@ class ProfileHandler(
     private fun toResponse(rating: FeedItem) = ProfileRating(
         title = rating.title.value,
         tmdbId = rating.tmdbId.value,
-        mediaType = MediaType.tvshow.name,
+        mediaType = rating.mediaType.name,
         seasonNumber = rating.seasonNumber?.value,
         score = rating.score?.value ?: 0.0,
         reviewText = rating.text,

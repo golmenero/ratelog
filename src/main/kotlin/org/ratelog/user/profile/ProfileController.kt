@@ -26,6 +26,7 @@ class ProfileController(
             loggedUserId = user.id!!,
             userId = userId.let(User::Id),
             limit = limit,
+            lang = user.lang,
         )
             .let(handler::handle)
             .fold(
