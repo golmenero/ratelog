@@ -34,11 +34,11 @@ class TvRatingRepositoryImpl(
 
     override fun findRankedByUserIdWithFilters(
         userId: User.Id,
-        category: String?,
+        genreId: String?,
         limit: Int,
         name: String?
     ): List<Pair<Rank, TvRating>> =
-        tvRatingDAO.findRankedRows(userId.value, category, name, limit)
+        tvRatingDAO.findRankedRows(userId.value, genreId, name, limit)
             .map { Rank(it.rank.toInt()) to it.toDomain() }
 
     private fun TvRatingEntity.toDomain(): TvRating {

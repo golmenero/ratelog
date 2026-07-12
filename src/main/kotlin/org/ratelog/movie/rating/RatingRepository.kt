@@ -29,7 +29,7 @@ data class Rating(
 @Repository
 interface RatingRepository {
     fun findByMovieIdAndUserId(movieId: Movie.Id, userId: User.Id): Rating?
-    fun findRankedByUserIdWithFilters(userId: User.Id, category: String?, limit: Int, name: String?): List<Pair<Rank, Rating>>
+    fun findRankedByUserIdWithFilters(userId: User.Id, genreId: String?, limit: Int, name: String?): List<Pair<Rank, Rating>>
 
     fun save(rating: Rating)
     fun deleteById(ratingId: Rating.Id)

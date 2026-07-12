@@ -57,13 +57,13 @@ interface TvRatingDAO : CrudRepository<TvRatingEntity, Long> {
         SELECT ranked.*
         FROM ranked
         INNER JOIN tv t ON ranked.tv_show_id = t.id
-        WHERE (:category IS NULL OR t.genres LIKE CONCAT('%', :category, '%'))
+        WHERE (:genreId IS NULL OR t.genres LIKE CONCAT('%', :genreId, '%'))
           AND (:name IS NULL OR LOWER(t.original_name) LIKE LOWER(CONCAT('%', :name, '%')))
         ORDER BY ranked.score DESC
         LIMIT :limit
         """
     )
-    fun findRankedRows(userId: Long, category: String?, name: String?, limit: Int): List<RatedTvRow>
+    fun findRankedRows(userId: Long, genreId: String?, name: String?, limit: Int): List<RatedTvRow>
 }
 
 @Repository
