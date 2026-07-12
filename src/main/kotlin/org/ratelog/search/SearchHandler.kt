@@ -30,8 +30,8 @@ class SearchHandler(
     @Transactional
     fun handle(query: SearchQuery): Either<SearchHandlerError, List<SearchResultItem>> = either {
         if (query.query.isBlank()) return@either emptyList()
-        val movies = searchMovies(query.query).bind().take(6)
-        val shows = searchTvShows(query.query).bind().take(6)
+        val movies = searchMovies(query.query, query.lang).bind().take(6)
+        val shows = searchTvShows(query.query, query.lang).bind().take(6)
 
         interleave(movies, shows)
     }
@@ -46,9 +46,9 @@ class SearchHandler(
         return result
     }
 
-    private fun searchMovies(query: String): Either<SearchHandlerError, List<SearchResultItem>> =
+    private fun searchMovies(query: String, lang: Lang): Either<SearchHandlerError, List<SearchResultItem>> =
         either {
-            val movies = tmdbClient.searchMovies(query).bind()
+            val movies = tmdbClient.searchMovies(query, lang).bind()
 
             movies.map {
                 SearchResultItem(
@@ -62,9 +62,9 @@ class SearchHandler(
             }
         }
 
-    private fun searchTvShows(query: String): Either<SearchHandlerError,List<SearchResultItem>> =
+    private fun searchTvShows(query: String, lang: Lang): Either<SearchHandlerError,List<SearchResultItem>> =
         either {
-            val tvshows = tmdbClient.searchTvShows(query).bind()
+            val tvshows = tmdbClient.searchTvShows(query, lang).bind()
 
             tvshows.map {
                 SearchResultItem(

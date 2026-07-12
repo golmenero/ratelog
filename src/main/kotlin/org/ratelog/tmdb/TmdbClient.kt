@@ -35,7 +35,7 @@ class TmdbClient(
         )
         .build()
 
-    fun searchMovies(query: String): Either<TmdbError, List<TmdbMovieResponse>> {
+    fun searchMovies(query: String, lang: Lang): Either<TmdbError, List<TmdbMovieResponse>> {
         if (query.isBlank()) return emptyList<TmdbMovieResponse>().right()
         requireApiKey()
         rateLimiter.acquire()
@@ -44,7 +44,7 @@ class TmdbClient(
             .uri { builder ->
                 builder.path("/search/movie")
                     .queryParam("api_key", apiKey)
-                    .queryParam("language", Lang.en)
+                    .queryParam("language", lang)
                     .queryParam("include_adult", false)
                     .queryParam("page", 1)
                     .queryParam("query", query)
@@ -76,7 +76,7 @@ class TmdbClient(
             ?: TmdbError.MovieNotFound.left()
     }
 
-    fun searchTvShows(query: String): Either<TmdbError, List<TmdbTvShowResponse>> {
+    fun searchTvShows(query: String, lang: Lang): Either<TmdbError, List<TmdbTvShowResponse>> {
         if (query.isBlank()) return emptyList<TmdbTvShowResponse>().right()
         requireApiKey()
         rateLimiter.acquire()
@@ -85,7 +85,7 @@ class TmdbClient(
             .uri { builder ->
                 builder.path("/search/tv")
                     .queryParam("api_key", apiKey)
-                    .queryParam("language", Lang.en)
+                    .queryParam("language", lang)
                     .queryParam("include_adult", false)
                     .queryParam("page", 1)
                     .queryParam("query", query)
