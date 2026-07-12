@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 
 data class TvShowDetailResponse(
-    val id: Long,
     val tmdbId: Int,
     val name: String,
     val overview: String?,
@@ -66,14 +65,13 @@ class DetailTvShowController(
 
     private fun buildResponse(result: GetTvShowDetailResult): TvShowDetailResponse =
         TvShowDetailResponse(
-            id = result.show.id!!.value,
-            tmdbId = result.show.tmdbId.value,
-            name = result.show.name.value,
-            overview = result.show.overview?.value,
-            firstAirYear = result.show.firstAirYear,
-            posterPath = result.show.posterPath?.value,
-            tmdbVoteAverage = result.show.tmdbVoteAverage,
-            genres = result.show.genres.map { it.value },
+            tmdbId = result.tmdbId,
+            name = result.title,
+            overview = result.overview,
+            firstAirYear = result.firstAirYear,
+            posterPath = result.posterPath,
+            tmdbVoteAverage = result.tmdbVoteAverage,
+            genres = result.genres,
             seasons = result.seasons.map { s ->
                 SeasonResponse(
                     seasonNumber = s.seasonNumber,

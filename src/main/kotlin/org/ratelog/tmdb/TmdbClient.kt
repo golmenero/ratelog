@@ -35,8 +35,8 @@ class TmdbClient(
         )
         .build()
 
-    fun searchMovies(query: String): Either<TmdbError, List<Movie>> {
-        if (query.isBlank()) return emptyList<Movie>().right()
+    fun searchMovies(query: String): Either<TmdbError, List<TmdbMovieResponse>> {
+        if (query.isBlank()) return emptyList<TmdbMovieResponse>().right()
         requireApiKey()
         rateLimiter.acquire()
 
@@ -53,7 +53,6 @@ class TmdbClient(
             .retrieve()
             .body(TmdbSearchResponse::class.java)
             ?.results
-            ?.map { it.toDomain() }
             ?: emptyList()
 
         return results.right()
@@ -77,8 +76,8 @@ class TmdbClient(
             ?: TmdbError.MovieNotFound.left()
     }
 
-    fun searchTvShows(query: String): Either<TmdbError, List<TvShow>> {
-        if (query.isBlank()) return emptyList<TvShow>().right()
+    fun searchTvShows(query: String): Either<TmdbError, List<TmdbTvShowResponse>> {
+        if (query.isBlank()) return emptyList<TmdbTvShowResponse>().right()
         requireApiKey()
         rateLimiter.acquire()
 
@@ -95,7 +94,6 @@ class TmdbClient(
             .retrieve()
             .body(TmdbTvShowSearchResponse::class.java)
             ?.results
-            ?.map { it.toDomain() }
             ?: emptyList()
 
         return results.right()

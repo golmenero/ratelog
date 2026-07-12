@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.Lang
 import org.ratelog.TmdbId
+import org.ratelog.tvshow.TvDescriptionRepository
 import org.ratelog.tvshow.TvShow
 import org.ratelog.tvshow.TvShowRepository
 import org.ratelog.tmdb.TmdbClient
@@ -19,7 +20,19 @@ data class GetTvShowDetail(
     )
 
 data class GetTvShowDetailResult(
-    val show: TvShow,
+    val tmdbId: Int,
+    val title: String,
+    val originalTitle: String?,
+    val overview: String?,
+    val releaseDate: String?,
+    val firstAirYear: Int?,
+    val posterPath: String?,
+    val tmdbVoteAverage: Double?,
+    val genres: List<String>,
+    val status: String?,
+    val lastSeasonNumber: Int?,
+    val lastSeasonAirDate: String?,
+    val nextSeasonAirDate: String?,
     val seasons: List<SeasonInfo>,
     val overallScore: Double?,
     val isRated: Boolean,
@@ -46,6 +59,7 @@ data class SeasonRatingInfo(
 class DetailTvShowHandler(
     private val tmdbClient: TmdbClient,
     private val tvShowRepository: TvShowRepository,
+    private val tvDescriptionRepository: TvDescriptionRepository,
     private val tvRatingRepository: TvRatingRepository,
 ) {
     @Transactional
@@ -56,6 +70,10 @@ class DetailTvShowHandler(
 
         val show = query.tmdbId.let(tvShowRepository::findByTmdbId)
         val savedShow = show ?: tmdbShow.let(tvShowRepository::save)
+
+        val description = tvDescriptionRepository.findByTmdbIdAndLang(savedShow.tmdbId, query.lang)
+        val title = description?.name?.value ?: savedShow.originalName?.value ?: ""
+        val overview = description?.overview?.value
 
         val rating = tvRatingRepository.findByTvShowIdAndUserId(savedShow.id!!, query.userId)
         val isFollowed = tvShowRepository.isFollowed(query.userId, savedShow.id)
@@ -84,7 +102,19 @@ class DetailTvShowHandler(
             }
 
         GetTvShowDetailResult(
-            show = savedShow,
+            tmdbId = savedShow.tmdbId.value,
+            title = title,
+            originalTitle = savedShow.originalName?.value,
+            overview = overview,
+            releaseDate = savedShow.firstAirDate?.toString(),
+            firstAirYear = savedShow.firstAirYear,
+            posterPath = savedShow.posterPath?.value,
+            tmdbVoteAverage = savedShow.tmdbVoteAverage,
+            genres = savedShow.genres.map { it.value },
+            status = savedShow.status?.value,
+            lastSeasonNumber = savedShow.lastSeasonNumber,
+            lastSeasonAirDate = savedShow.lastSeasonAirDate?.toString(),
+            nextSeasonAirDate = savedShow.nextSeasonAirDate?.toString(),
             seasons = seasons,
             overallScore = rating?.score?.value,
             isRated = rating != null,

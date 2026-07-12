@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 
 data class MovieDetailResponse(
-    val id: Long,
     val tmdbId: Int,
     val name: String,
     val overview: String?,
@@ -58,14 +57,13 @@ class DetailMovieController(
 
     private fun buildResponse(result: GetMovieDetailResult): MovieDetailResponse =
         MovieDetailResponse(
-            id = result.movie.id!!.value,
-            tmdbId = result.movie.tmdbId.value,
-            name = result.movie.title.value,
-            overview = result.movie.overview?.value,
-            firstAirYear = result.movie.releaseYear,
-            posterPath = result.movie.posterPath?.value,
-            tmdbVoteAverage = result.movie.tmdbVoteAverage,
-            genres = result.movie.genres.map { it.value },
+            tmdbId = result.tmdbId,
+            name = result.title,
+            overview = result.overview,
+            firstAirYear = result.releaseYear,
+            posterPath = result.posterPath,
+            tmdbVoteAverage = result.tmdbVoteAverage,
+            genres = result.genres,
             directing = result.directing,
             cinematography = result.cinematography,
             acting = result.acting,

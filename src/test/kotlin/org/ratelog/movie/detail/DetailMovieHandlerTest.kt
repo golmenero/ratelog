@@ -8,42 +8,47 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.ratelog.*
 import org.ratelog.movie.Movie
+import org.ratelog.movie.MovieDescription
+import org.ratelog.test.InMemoryMovieDescriptionRepository
 import org.ratelog.test.InMemoryMovieRepository
 import org.ratelog.test.InMemoryRatingRepository
 import org.ratelog.test.MovieFactory
-import org.ratelog.test.RatingFactory
 import org.ratelog.tmdb.TmdbClient
 import org.ratelog.user.User
-import java.time.Instant
 import java.time.LocalDate
 
 class DetailMovieHandlerTest {
 
     private val tmdbClient: TmdbClient = mock()
     private lateinit var movieRepository: InMemoryMovieRepository
+    private lateinit var movieDescriptionRepository: InMemoryMovieDescriptionRepository
     private lateinit var ratingRepository: InMemoryRatingRepository
     private lateinit var handler: DetailMovieHandler
 
     @BeforeEach
     fun setUp() {
         movieRepository = InMemoryMovieRepository()
+        movieDescriptionRepository = InMemoryMovieDescriptionRepository()
         ratingRepository = InMemoryRatingRepository()
-        handler = DetailMovieHandler(tmdbClient, movieRepository, ratingRepository)
+        handler = DetailMovieHandler(tmdbClient, movieRepository, movieDescriptionRepository, ratingRepository)
     }
 
     @Test
-    fun `should return movie detail when movie exists in TMDB`() {
+    fun `should return movie detail with translated title when description exists for user lang`() {
         val tmdbMovie = MovieFactory.aMovie(
             id = 123,
             tmdbId = 123,
-            title = "Test Movie",
             originalTitle = "Original Title",
-            overview = "A great movie",
             releaseDate = LocalDate.parse("2023-01-15"),
             posterPath = "/poster.jpg",
             tmdbVoteAverage = 7.5,
             genres = listOf(Genre.ACTION)
         )
+        movieRepository.save(tmdbMovie)
+        movieDescriptionRepository.saveAll(listOf(
+            MovieDescription(TmdbId(123), Lang.en, Title("Translated Title"), Overview("Translated overview"))
+        ))
+
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
@@ -53,9 +58,36 @@ class DetailMovieHandlerTest {
         result.fold(
             { fail("Should not return error") },
             { detail ->
-                assertEquals("Test Movie", detail.movie.title.value)
-                assertEquals("Original Title", detail.movie.originalTitle?.value)
-                assertEquals("A great movie", detail.movie.overview?.value)
+                assertEquals("Translated Title", detail.title)
+                assertEquals("Translated overview", detail.overview)
+                assertEquals("Original Title", detail.originalTitle)
+            }
+        )
+    }
+
+    @Test
+    fun `should fallback to original title when no description exists for user lang`() {
+        val tmdbMovie = MovieFactory.aMovie(
+            id = 123,
+            tmdbId = 123,
+            originalTitle = "Original Title",
+            releaseDate = LocalDate.parse("2023-01-15"),
+            posterPath = "/poster.jpg",
+            tmdbVoteAverage = 7.5,
+        )
+        movieRepository.save(tmdbMovie)
+
+        whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
+
+        val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.es)
+        val result = handler.handle(query)
+
+        assertTrue(result.isRight())
+        result.fold(
+            { fail("Should not return error") },
+            { detail ->
+                assertEquals("Original Title", detail.title)
+                assertNull(detail.overview)
             }
         )
     }
@@ -65,7 +97,7 @@ class DetailMovieHandlerTest {
         val tmdbMovie = MovieFactory.aMovie(
             id = 123,
             tmdbId = 123,
-            title = "Test Movie",
+            originalTitle = "Test Movie",
             releaseDate = LocalDate.parse("2023-01-15"),
             posterPath = "/poster.jpg",
             tmdbVoteAverage = 7.5
@@ -77,7 +109,7 @@ class DetailMovieHandlerTest {
 
         val savedMovie = movieRepository.findByTmdbId(TmdbId(123))
         assertNotNull(savedMovie)
-        assertEquals("Test Movie", savedMovie!!.title.value)
+        assertEquals("Test Movie", savedMovie!!.originalTitle?.value)
     }
 
     @Test
@@ -85,9 +117,14 @@ class DetailMovieHandlerTest {
         val tmdbMovie = MovieFactory.aMovie(
             id = 123,
             tmdbId = 123,
-            title = "Test Movie",
+            originalTitle = "Test Movie",
             releaseDate = LocalDate.parse("2023-01-15")
         )
+        movieRepository.save(tmdbMovie)
+        movieDescriptionRepository.saveAll(listOf(
+            MovieDescription(TmdbId(123), Lang.en, Title("Test Movie"), null)
+        ))
+
         whenever(tmdbClient.movieDetails(TmdbId(123))).thenReturn(tmdbMovie.right())
 
         val query = GetMovieDetail(User.Id(1), TmdbId(123), Lang.en)
