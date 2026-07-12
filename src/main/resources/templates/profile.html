@@ -72,6 +72,20 @@
                 <option value="zh" th:text="#{profile.lang.zh}" th:selected="${currentLang == 'zh'}">中文</option>
             </select>
         </form>
+        <form th:if="${isLoggedUser}" th:action="@{/metadata-lang}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <select id="metadataLang" name="metadataLang" onchange="this.form.submit()">
+                <option value="en" th:text="#{profile.lang.en}" th:selected="${currentMetadataLang == 'en'}">English</option>
+                <option value="de" th:text="#{profile.lang.de}" th:selected="${currentMetadataLang == 'de'}">Deutsch</option>
+                <option value="es" th:text="#{profile.lang.es}" th:selected="${currentMetadataLang == 'es'}">Español</option>
+                <option value="fr" th:text="#{profile.lang.fr}" th:selected="${currentMetadataLang == 'fr'}">Français</option>
+                <option value="it" th:text="#{profile.lang.it}" th:selected="${currentMetadataLang == 'it'}">Italiano</option>
+                <option value="ja" th:text="#{profile.lang.ja}" th:selected="${currentMetadataLang == 'ja'}">日本語</option>
+                <option value="pt" th:text="#{profile.lang.pt}" th:selected="${currentMetadataLang == 'pt'}">Português</option>
+                <option value="ru" th:text="#{profile.lang.ru}" th:selected="${currentMetadataLang == 'ru'}">Русский</option>
+                <option value="zh" th:text="#{profile.lang.zh}" th:selected="${currentMetadataLang == 'zh'}">中文</option>
+            </select>
+        </form>
         <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="golmenero" data-color="#d97757" data-emoji="" data-font="Bree" data-text="Buy me a coffee" data-outline-color="#FFFFFF" data-font-color="#FFFFFF" data-coffee-color="#FFDD00"></script>
     </footer>
 
