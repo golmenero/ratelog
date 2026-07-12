@@ -50,6 +50,7 @@ class ChangeLangController(
                 email = currentDetails.email,
                 password = currentDetails.password,
                 lang = newLang,
+                metadataLang = currentDetails.metadataLang,
             ),
             auth.credentials,
             auth.authorities
