@@ -147,6 +147,8 @@ class TmdbClient(
                     overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { Overview(it) },
                 )
             }
+            ?.groupBy { it.lang }
+            ?.map { it.value.first() }
             ?: emptyList()
 
         return descriptions.right()
@@ -180,6 +182,8 @@ class TmdbClient(
                     overview = entry.data.overview?.takeIf { it.isNotBlank() }?.let { Overview(it) },
                 )
             }
+            ?.groupBy { it.lang }
+            ?.map { it.value.first() }
             ?: emptyList()
 
         return descriptions.right()
