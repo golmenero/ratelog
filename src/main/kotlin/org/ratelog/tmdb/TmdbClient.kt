@@ -135,6 +135,7 @@ class TmdbClient(
                 val lang = Lang.parse(entry.iso6391)
                 val title = entry.data.title?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
                 MovieDescription(
+                    id = null,
                     tmdbId = tmdbId,
                     lang = lang,
                     title = org.ratelog.Title(title),
@@ -164,6 +165,7 @@ class TmdbClient(
                 val lang = Lang.parse(entry.iso6391)
                 val name = entry.data.name?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
                 TvDescription(
+                    id = null,
                     tmdbId = tmdbId,
                     lang = lang,
                     name = org.ratelog.Title(name),

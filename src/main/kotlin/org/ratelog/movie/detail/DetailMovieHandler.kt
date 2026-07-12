@@ -71,7 +71,7 @@ class DetailMovieHandler(
         val isFollowed = movieRepository.isFollowed(query.userId, savedMovie.id)
 
         GetMovieDetailResult(
-            id = savedMovie.id!!.value,
+            id = savedMovie.id.value,
             tmdbId = savedMovie.tmdbId.value,
             title = title,
             originalTitle = savedMovie.originalTitle?.value,

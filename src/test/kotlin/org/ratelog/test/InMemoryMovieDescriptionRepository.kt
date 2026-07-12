@@ -7,24 +7,27 @@ import org.ratelog.movie.MovieDescriptionRepository
 import java.util.concurrent.ConcurrentHashMap
 
 class InMemoryMovieDescriptionRepository : MovieDescriptionRepository {
-    private val store = ConcurrentHashMap<Pair<Int, String>, MovieDescription>()
+    private val store = ConcurrentHashMap<Long, MovieDescription>()
+    private val idGenerator = java.util.concurrent.atomic.AtomicLong(1)
 
     override fun findByTmdbIdAndLang(tmdbId: TmdbId, lang: Lang): MovieDescription? =
-        store[Pair(tmdbId.value, lang.name)]
+        store.values.find { it.tmdbId == tmdbId && it.lang == lang }
 
     override fun findAllByTmdbId(tmdbId: TmdbId): List<MovieDescription> =
         store.values.filter { it.tmdbId == tmdbId }
 
     override fun existsAnyByTmdbId(tmdbId: TmdbId): Boolean =
-        store.keys.any { it.first == tmdbId.value }
+        store.values.any { it.tmdbId == tmdbId }
 
     override fun saveAll(descriptions: List<MovieDescription>) {
         descriptions.forEach {
-            store[Pair(it.tmdbId.value, it.lang.name)] = it
+            val desc = if (it.id == null) it.copy(id = idGenerator.getAndIncrement().let(MovieDescription::Id)) else it
+            store[desc.id!!.value] = desc
         }
     }
 
     fun clear() {
         store.clear()
+        idGenerator.set(1)
     }
 }

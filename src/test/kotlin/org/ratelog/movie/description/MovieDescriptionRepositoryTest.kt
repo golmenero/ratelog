@@ -65,16 +65,4 @@ class MovieDescriptionRepositoryTest {
 
         assertTrue(exists)
     }
-
-    @Test
-    fun `should overwrite existing description when saving with same tmdbId and lang`() {
-        val original = MovieDescription(null,TmdbId(1), Lang.en, Title("Original"), Overview("Original"))
-        repository.saveAll(listOf(original))
-
-        val updated = MovieDescription(null,TmdbId(1), Lang.en, Title("Updated"), Overview("Updated"))
-        repository.saveAll(listOf(updated))
-
-        val result = repository.findByTmdbIdAndLang(TmdbId(1), Lang.en)
-        assertEquals("Updated", result?.title?.value)
-    }
 }

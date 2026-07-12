@@ -7,24 +7,27 @@ import org.ratelog.tvshow.TvDescriptionRepository
 import java.util.concurrent.ConcurrentHashMap
 
 class InMemoryTvDescriptionRepository : TvDescriptionRepository {
-    private val store = ConcurrentHashMap<Pair<Int, String>, TvDescription>()
+    private val store = ConcurrentHashMap<Long, TvDescription>()
+    private val idGenerator = java.util.concurrent.atomic.AtomicLong(1)
 
     override fun findByTmdbIdAndLang(tmdbId: TmdbId, lang: Lang): TvDescription? =
-        store[Pair(tmdbId.value, lang.name)]
+        store.values.find { it.tmdbId == tmdbId && it.lang == lang }
 
     override fun findAllByTmdbId(tmdbId: TmdbId): List<TvDescription> =
         store.values.filter { it.tmdbId == tmdbId }
 
     override fun existsAnyByTmdbId(tmdbId: TmdbId): Boolean =
-        store.keys.any { it.first == tmdbId.value }
+        store.values.any { it.tmdbId == tmdbId }
 
     override fun saveAll(descriptions: List<TvDescription>) {
         descriptions.forEach {
-            store[Pair(it.tmdbId.value, it.lang.name)] = it
+            val desc = if (it.id == null) it.copy(id = idGenerator.getAndIncrement().let(TvDescription::Id)) else it
+            store[desc.id!!.value] = desc
         }
     }
 
     fun clear() {
         store.clear()
+        idGenerator.set(1)
     }
 }

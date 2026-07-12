@@ -110,7 +110,7 @@ class DetailTvShowHandler(
             }
 
         GetTvShowDetailResult(
-            id = savedShow.id!!.value,
+            id = savedShow.id.value,
             tmdbId = savedShow.tmdbId.value,
             title = title,
             originalTitle = savedShow.originalName?.value,
