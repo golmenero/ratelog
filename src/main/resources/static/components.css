@@ -25,6 +25,10 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .result-card {
     border: 1px solid var(--border);
     border-radius: var(--radius);
