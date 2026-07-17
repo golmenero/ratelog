@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
+## Release v1.1.14
+### ➕ Added
+- Added media type dependant search filters
+- Added infinite load on search query
+
 ## Release v1.1.13
 ### ➕ Added
 - New metadataLang for split language between system and metadata
