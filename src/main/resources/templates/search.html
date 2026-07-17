@@ -11,6 +11,11 @@
     <section class="panel">
         <form th:action="@{/}" class="filter" method="get">
             <input class="w-75" id="q" name="q" type="text" th:value="${query}" th:placeholder="#{search.placeholder}" autocomplete="off" th:aria-label="#{search.btn}">
+            <select id="mediaType" name="mediaType" class="type-filter" th:aria-label="#{search.filter.type}">
+                <option value="" th:selected="${mediaType == null}" th:text="#{search.filter.any}">Any</option>
+                <option value="movie" th:selected="${mediaType == 'movie'}" th:text="#{search.type.movie}">Movies</option>
+                <option value="tvshow" th:selected="${mediaType == 'tvshow'}" th:text="#{search.type.tv}">TV Shows</option>
+            </select>
             <button class="primary" type="submit" th:aria-label="#{search.btn}" th:title="#{search.btn}">
                 <i data-lucide="search" aria-hidden="true"></i>
             </button>
@@ -36,7 +41,14 @@
                 </div>
             </a>
         </div>
+
+        <div th:if="${hasMore}" id="scroll-sentinel" class="scroll-sentinel"
+             th:data-query="${query}"
+             th:data-media-type="${mediaType}"
+             th:data-page="${currentPage}">
+        </div>
     </section>
 </div>
+<script th:if="${hasMore}" th:src="@{/search.js}"></script>
 </body>
 </html>

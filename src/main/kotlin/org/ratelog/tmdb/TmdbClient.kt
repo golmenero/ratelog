@@ -37,27 +37,25 @@ class TmdbClient(
         )
         .build()
 
-    fun searchMovies(query: String, lang: Lang): Either<TmdbError, List<TmdbMovieResponse>> {
-        if (query.isBlank()) return emptyList<TmdbMovieResponse>().right()
+    fun searchMovies(query: String, lang: Lang, page: Int = 1): Either<TmdbError, Pair<List<TmdbMovieResponse>, Int>> {
+        if (query.isBlank()) return (emptyList<TmdbMovieResponse>() to 1).right()
         requireApiKey()
         rateLimiter.acquire()
 
-        val results = restClient.get()
+        val response = restClient.get()
             .uri { builder ->
                 builder.path("/search/movie")
                     .queryParam("api_key", apiKey)
                     .queryParam("language", lang)
                     .queryParam("include_adult", false)
-                    .queryParam("page", 1)
+                    .queryParam("page", page)
                     .queryParam("query", query)
                     .build()
             }
             .retrieve()
             .body(TmdbSearchResponse::class.java)
-            ?.results
-            ?: emptyList()
 
-        return results.right()
+        return ((response?.results ?: emptyList()) to (response?.totalPages ?: 1)).right()
     }
 
     fun movieDetails(tmdbId: TmdbId): Either<TmdbError, Movie> {
@@ -78,27 +76,25 @@ class TmdbClient(
             ?: TmdbError.MovieNotFound.left()
     }
 
-    fun searchTvShows(query: String, lang: Lang): Either<TmdbError, List<TmdbTvShowResponse>> {
-        if (query.isBlank()) return emptyList<TmdbTvShowResponse>().right()
+    fun searchTvShows(query: String, lang: Lang, page: Int = 1): Either<TmdbError, Pair<List<TmdbTvShowResponse>, Int>> {
+        if (query.isBlank()) return (emptyList<TmdbTvShowResponse>() to 1).right()
         requireApiKey()
         rateLimiter.acquire()
 
-        val results = restClient.get()
+        val response = restClient.get()
             .uri { builder ->
                 builder.path("/search/tv")
                     .queryParam("api_key", apiKey)
                     .queryParam("language", lang)
                     .queryParam("include_adult", false)
-                    .queryParam("page", 1)
+                    .queryParam("page", page)
                     .queryParam("query", query)
                     .build()
             }
             .retrieve()
             .body(TmdbTvShowSearchResponse::class.java)
-            ?.results
-            ?: emptyList()
 
-        return results.right()
+        return ((response?.results ?: emptyList()) to (response?.totalPages ?: 1)).right()
     }
 
     fun tvShowDetails(tmdbId: TmdbId): Either<TmdbError, TvShow> {

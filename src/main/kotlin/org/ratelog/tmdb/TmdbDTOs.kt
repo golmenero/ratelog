@@ -15,7 +15,8 @@ import java.time.LocalDate
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TmdbSearchResponse(
-    @JsonProperty("results") val results: List<TmdbMovieResponse> = emptyList()
+    @JsonProperty("results") val results: List<TmdbMovieResponse> = emptyList(),
+    @JsonProperty("total_pages") val totalPages: Int = 1
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -45,7 +46,8 @@ data class TmdbMovieResponse(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class TmdbTvShowSearchResponse(
-    @JsonProperty("results") val results: List<TmdbTvShowResponse> = emptyList()
+    @JsonProperty("results") val results: List<TmdbTvShowResponse> = emptyList(),
+    @JsonProperty("total_pages") val totalPages: Int = 1
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -12,6 +12,13 @@ data class SearchQuery(
     val query: String,
     val userId: User.Id,
     val lang: Lang,
+    val mediaType: MediaType?,
+    val page: Int = 1,
+)
+
+data class SearchResult(
+    val items: List<SearchResultItem>,
+    val hasMore: Boolean,
 )
 
 data class SearchResultItem(
@@ -28,12 +35,32 @@ class SearchHandler(
     private val tmdbClient: TmdbClient,
 ) {
     @Transactional
-    fun handle(query: SearchQuery): Either<SearchHandlerError, List<SearchResultItem>> = either {
-        if (query.query.isBlank()) return@either emptyList()
-        val movies = searchMovies(query.query, query.lang).bind().take(6)
-        val shows = searchTvShows(query.query, query.lang).bind().take(6)
+    fun handle(query: SearchQuery): Either<SearchHandlerError, SearchResult> = either {
+        if (query.query.isBlank()) return@either SearchResult(emptyList(), false)
 
-        interleave(movies, shows)
+        when (query.mediaType) {
+            MediaType.movie -> {
+                val movies = searchMovies(query.query, query.lang, query.page).bind()
+                val items = movies.first.take(PAGE_SIZE)
+                SearchResult(items, movies.first.size > PAGE_SIZE || movies.second > query.page)
+            }
+            MediaType.tvshow -> {
+                val shows = searchTvShows(query.query, query.lang, query.page).bind()
+                val items = shows.first.take(PAGE_SIZE)
+                SearchResult(items, shows.first.size > PAGE_SIZE || shows.second > query.page)
+            }
+            null -> {
+                val movies = searchMovies(query.query, query.lang, query.page).bind()
+                val shows = searchTvShows(query.query, query.lang, query.page).bind()
+                val interleaved = interleave(movies.first, shows.first)
+                val items = interleaved.take(PAGE_SIZE)
+                SearchResult(items, interleaved.size > PAGE_SIZE || movies.second > query.page || shows.second > query.page)
+            }
+        }
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 9
     }
 
     private fun interleave(movies: List<SearchResultItem>, shows: List<SearchResultItem>): List<SearchResultItem> {
@@ -46,11 +73,10 @@ class SearchHandler(
         return result
     }
 
-    private fun searchMovies(query: String, lang: Lang): Either<SearchHandlerError, List<SearchResultItem>> =
+    private fun searchMovies(query: String, lang: Lang, page: Int): Either<SearchHandlerError, Pair<List<SearchResultItem>, Int>> =
         either {
-            val movies = tmdbClient.searchMovies(query, lang).bind()
-
-            movies.map {
+            val (movies, totalPages) = tmdbClient.searchMovies(query, lang, page).bind()
+            val items = movies.map {
                 SearchResultItem(
                     tmdbId = it.id,
                     title = it.title,
@@ -60,13 +86,13 @@ class SearchHandler(
                     type = MediaType.movie.name,
                 )
             }
+            items to totalPages
         }
 
-    private fun searchTvShows(query: String, lang: Lang): Either<SearchHandlerError,List<SearchResultItem>> =
+    private fun searchTvShows(query: String, lang: Lang, page: Int): Either<SearchHandlerError, Pair<List<SearchResultItem>, Int>> =
         either {
-            val tvshows = tmdbClient.searchTvShows(query, lang).bind()
-
-            tvshows.map {
+            val (tvshows, totalPages) = tmdbClient.searchTvShows(query, lang, page).bind()
+            val items = tvshows.map {
                 SearchResultItem(
                     tmdbId = it.id,
                     title = it.name,
@@ -75,6 +101,7 @@ class SearchHandler(
                     posterPath = it.posterPath,
                     type = MediaType.tvshow.name,
                 )
+            }
+            items to totalPages
         }
-    }
 }

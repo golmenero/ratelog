@@ -22,7 +22,7 @@
 
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 
   .result-card {
@@ -224,4 +224,25 @@ img {
     width: 96px;
     height: fit-content;
   }
+}
+
+.scroll-sentinel {
+  height: 1px;
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+
+  &::after {
+    content: '';
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--text);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
