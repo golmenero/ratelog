@@ -7,6 +7,9 @@ description: Use when the user wants to create a new release. Handles changelog 
 
 ## Workflow
 
+### 0. Integration checking
+Execute 'mvn test' and ensure all tests pass successfully. If there are test failures, **stop** and warn the user.
+
 ### 1. Ask version type
 Ask the user if the release is `major`, `minor` or `patch`.
 
