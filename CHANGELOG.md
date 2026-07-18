@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+- Add skill for release
 ### ⚡ Changed
-### 🔧 Fixed
+- Disable maven wrapper unneeded
 
 ## Release v1.1.14
 ### ➕ Added
