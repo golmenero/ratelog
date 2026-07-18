@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+
+## Release v1.1.17
 ### ⚡ Changed
 - Adjustments on release skill
 
