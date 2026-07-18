@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+### ⚡ Changed
+- Adjustments on release skill
+
+## Release v1.1.15
 ### ➕ Added
 - Add skill for release
 ### ⚡ Changed

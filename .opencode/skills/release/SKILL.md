@@ -27,6 +27,9 @@ Ask the user if the release is `major`, `minor` or `patch`.
 - Rename `## Unreleased` → `## Release v<NEW_VERSION>`.
 - Insert a new empty `## Unreleased` block above the renamed release.
 
+### 5. Commit changes
+- Commit changelog changed with the commit message "release v<NEW_VERSION>-changelog"
+
 ### 5. Git push and tag
 ```bash
 git push
