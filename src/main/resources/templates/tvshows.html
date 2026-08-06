@@ -39,6 +39,14 @@
                     <option value="10768" th:selected="${selectedCategory == '10768'}" th:text="#{genre.10768}">War &amp; Politics</option>
                     <option value="37" th:selected="${selectedCategory == '37'}" th:text="#{genre.37}">Western</option>
                 </select>
+                <select id="ratingCategory" name="ratingCategory" th:aria-label="#{tvshows.rating.category.all}">
+                    <option value="" th:text="#{tvshows.rating.category.all}">All ratings</option>
+                    <option value="directing" th:selected="${selectedRatingCategory == 'directing'}" th:text="#{tvshows.rating.category.directing}">Directing</option>
+                    <option value="cinematography" th:selected="${selectedRatingCategory == 'cinematography'}" th:text="#{tvshows.rating.category.cinematography}">Cinematography</option>
+                    <option value="acting" th:selected="${selectedRatingCategory == 'acting'}" th:text="#{tvshows.rating.category.acting}">Acting</option>
+                    <option value="soundtrack" th:selected="${selectedRatingCategory == 'soundtrack'}" th:text="#{tvshows.rating.category.soundtrack}">Soundtrack</option>
+                    <option value="screenplay" th:selected="${selectedRatingCategory == 'screenplay'}" th:text="#{tvshows.rating.category.screenplay}">Screenplay</option>
+                </select>
                 <input id="name" name="name" type="text" th:value="${selectedName}" th:placeholder="#{tvshows.search.placeholder}" th:aria-label="#{tvshows.search.placeholder}">
                 <select id="limit" name="limit" th:aria-label="#{tvshows.refresh.ranking}" style="width: auto; min-width: 0;">
                     <option value="5" th:selected="${selectedLimit == 5}">5</option>

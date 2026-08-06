@@ -24,9 +24,9 @@ class RatingRepositoryImpl(
     }
 
     override fun findRankedByUserIdWithFilters(
-        userId: User.Id, genreId: String?, limit: Int, name: String?
+        userId: User.Id, genreId: String?, limit: Int, name: String?, ratingCategory: String?
     ): List<Pair<Rank, Rating>> =
-        ratingDAO.findRankedRows(userId.value, genreId, name, limit)
+        ratingDAO.findRankedRows(userId.value, genreId, name, limit, ratingCategory)
             .map { Rank(it.rank.toInt()) to it.toDomain() }
 
     private fun RatingEntity.toDomain(): Rating {

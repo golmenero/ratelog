@@ -46,7 +46,16 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
         WITH ranked AS (
             SELECT r.id, r.movie_id, r.user_id, r.directing, r.cinematography, r.acting,
                    r.soundtrack, r.screenplay, r.created_at_epoch_ms, r.score, r.review_text,
-                   ROW_NUMBER() OVER (ORDER BY r.score DESC) AS rank
+                   ROW_NUMBER() OVER (
+                       ORDER BY CASE :ratingCategory
+                           WHEN 'directing' THEN r.directing
+                           WHEN 'cinematography' THEN r.cinematography
+                           WHEN 'acting' THEN r.acting
+                           WHEN 'soundtrack' THEN r.soundtrack
+                           WHEN 'screenplay' THEN r.screenplay
+                           ELSE r.score
+                       END DESC
+                   ) AS rank
             FROM movie_ratings r
             WHERE r.user_id = :userId
         )
@@ -55,9 +64,16 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
         INNER JOIN movies m ON ranked.movie_id = m.id
         WHERE (:genreId IS NULL OR m.genres LIKE CONCAT('%', :genreId, '%'))
           AND (:name IS NULL OR LOWER(m.original_title) LIKE LOWER(CONCAT('%', :name, '%')))
-        ORDER BY ranked.score DESC
+        ORDER BY CASE :ratingCategory
+            WHEN 'directing' THEN ranked.directing
+            WHEN 'cinematography' THEN ranked.cinematography
+            WHEN 'acting' THEN ranked.acting
+            WHEN 'soundtrack' THEN ranked.soundtrack
+            WHEN 'screenplay' THEN ranked.screenplay
+            ELSE ranked.score
+        END DESC
         LIMIT :limit
         """
     )
-    fun findRankedRows(userId: Long, genreId: String?, name: String?, limit: Int): List<RatedMovieRow>
+    fun findRankedRows(userId: Long, genreId: String?, name: String?, limit: Int, ratingCategory: String?): List<RatedMovieRow>
 }

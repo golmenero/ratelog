@@ -29,6 +29,7 @@ class TopMovieController(
     fun topsPage(
         @CurrentUser user: User,
         @RequestParam("category", required = false) genreId: String?,
+        @RequestParam("ratingCategory", required = false) ratingCategory: String?,
         @RequestParam("limit", required = false, defaultValue = "10") limit: Int,
         @RequestParam("name", required = false) name: String?,
         model: Model
@@ -36,6 +37,7 @@ class TopMovieController(
         val tops = TopMovie(
             userId = user.id!!,
             genreId = genreId,
+            ratingCategory = ratingCategory,
             limit = limit,
             name = name,
             lang = user.metadataLang,
@@ -43,6 +45,7 @@ class TopMovieController(
 
         model.addAttribute("tops", tops.map { toResponse(it) })
         model.addAttribute("selectedCategory", genreId)
+        model.addAttribute("selectedRatingCategory", ratingCategory)
         model.addAttribute("selectedLimit", limit)
         model.addAttribute("selectedName", name)
 

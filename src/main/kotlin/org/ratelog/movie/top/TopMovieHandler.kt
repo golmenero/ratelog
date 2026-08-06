@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 data class TopMovie(
     val userId: User.Id,
     val genreId: String?,
+    val ratingCategory: String?,
     val limit: Int = 10,
     val name: String?,
     val lang: Lang,
@@ -34,7 +35,7 @@ class TopMovieHandler(
 ) {
     @Transactional
     fun handle(query: TopMovie): List<TopMovieItem> =
-        ratingRepository.findRankedByUserIdWithFilters(query.userId, query.genreId, query.limit, query.name)
+        ratingRepository.findRankedByUserIdWithFilters(query.userId, query.genreId, query.limit, query.name, query.ratingCategory)
             .mapNotNull { toItem(it, query.lang) }
 
     private fun toItem(item: Pair<Rank, Rating>, lang: Lang) =

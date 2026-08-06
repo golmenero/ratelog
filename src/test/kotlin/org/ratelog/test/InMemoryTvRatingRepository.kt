@@ -19,11 +19,21 @@ class InMemoryTvRatingRepository: TvRatingRepository {
         userId: User.Id,
         genreId: String?,
         limit: Int,
-        name: String?
+        name: String?,
+        ratingCategory: String?
     ): List<Pair<Rank, TvRating>> =
         store.values
             .filter { it.userId == userId }
-            .sortedByDescending { it.score?.value ?: 0.0 }
+            .sortedByDescending {
+                when (ratingCategory) {
+                    "directing" -> it.seasonRatings.map { sr -> sr.directing.value }.average()
+                    "cinematography" -> it.seasonRatings.map { sr -> sr.cinematography.value }.average()
+                    "acting" -> it.seasonRatings.map { sr -> sr.acting.value }.average()
+                    "soundtrack" -> it.seasonRatings.map { sr -> sr.soundtrack.value }.average()
+                    "screenplay" -> it.seasonRatings.map { sr -> sr.screenplay.value }.average()
+                    else -> it.score?.value ?: 0.0
+                }
+            }
             .take(limit)
             .mapIndexed { index, rating -> Pair(Rank(index + 1), rating) }
 

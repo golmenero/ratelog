@@ -36,9 +36,10 @@ class TvRatingRepositoryImpl(
         userId: User.Id,
         genreId: String?,
         limit: Int,
-        name: String?
+        name: String?,
+        ratingCategory: String?
     ): List<Pair<Rank, TvRating>> =
-        tvRatingDAO.findRankedRows(userId.value, genreId, name, limit)
+        tvRatingDAO.findRankedRows(userId.value, genreId, name, limit, ratingCategory)
             .map { Rank(it.rank.toInt()) to it.toDomain() }
 
     private fun TvRatingEntity.toDomain(): TvRating {

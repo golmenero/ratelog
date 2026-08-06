@@ -19,11 +19,21 @@ class InMemoryRatingRepository : RatingRepository {
         userId: User.Id,
         genreId: String?,
         limit: Int,
-        name: String?
+        name: String?,
+        ratingCategory: String?
     ): List<Pair<Rank, Rating>> =
         store.values
             .filter { it.userId == userId }
-            .sortedByDescending { it.score?.value ?: 0.0 }
+            .sortedByDescending {
+                when (ratingCategory) {
+                    "directing" -> it.directing.value
+                    "cinematography" -> it.cinematography.value
+                    "acting" -> it.acting.value
+                    "soundtrack" -> it.soundtrack.value
+                    "screenplay" -> it.screenplay.value
+                    else -> it.score?.value ?: 0.0
+                }
+            }
             .take(limit)
             .mapIndexed { index, rating -> Pair(Rank(index + 1), rating) }
 

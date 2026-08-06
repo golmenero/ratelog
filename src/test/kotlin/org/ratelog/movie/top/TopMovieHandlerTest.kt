@@ -31,7 +31,7 @@ class TopMovieHandlerTest {
 
     @Test
     fun `should return empty list when user has no ratings`() {
-        val query = TopMovie(User.Id(1), null, 10, null, Lang.en)
+        val query = TopMovie(User.Id(1), null, null, 10, null, Lang.en)
 
         val result = handler.handle(query)
 
@@ -54,7 +54,7 @@ class TopMovieHandlerTest {
         ratingRepository.save(rating1)
         ratingRepository.save(rating2)
 
-        val query = TopMovie(User.Id(1), null, 10, null, Lang.en)
+        val query = TopMovie(User.Id(1), null, null, 10, null, Lang.en)
         val result = handler.handle(query)
 
         assertEquals(2, result.size)
@@ -75,7 +75,7 @@ class TopMovieHandlerTest {
         val rating = RatingFactory.aRating(id = 1, movieId = Movie.Id(1), userId = User.Id(1), directing = 5.0, cinematography = 5.0, acting = 5.0, soundtrack = 5.0, screenplay = 5.0, createdAt = Instant.now(), review = null)
         ratingRepository.save(rating)
 
-        val query = TopMovie(User.Id(1), null, 0, null, Lang.en)
+        val query = TopMovie(User.Id(1), null, null, 0, null, Lang.en)
         val result = handler.handle(query)
 
         assertEquals(0, result.size)

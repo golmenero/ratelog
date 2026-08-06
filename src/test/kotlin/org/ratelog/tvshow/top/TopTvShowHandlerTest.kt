@@ -31,7 +31,7 @@ class TopTvShowHandlerTest {
 
     @Test
     fun `should return empty list when user has no ratings`() {
-        val query = TopTvShow(User.Id(1), null, 10, null, Lang.en)
+        val query = TopTvShow(User.Id(1), null, null, 10, null, Lang.en)
 
         val result = handler.handle(query)
 
@@ -54,7 +54,7 @@ class TopTvShowHandlerTest {
         tvRatingRepository.save(rating1)
         tvRatingRepository.save(rating2)
 
-        val query = TopTvShow(User.Id(1), null, 10, null, Lang.en)
+        val query = TopTvShow(User.Id(1), null, null, 10, null, Lang.en)
         val result = handler.handle(query)
 
         assertEquals(2, result.size)
@@ -73,7 +73,7 @@ class TopTvShowHandlerTest {
         val rating = TvRatingFactory.aTvRating(id = 1, tvShowId = TvShow.Id(1), userId = User.Id(1), createdAt = Instant.now())
         tvRatingRepository.save(rating)
 
-        val query = TopTvShow(User.Id(1), null, 0, null, Lang.en)
+        val query = TopTvShow(User.Id(1), null, null, 0, null, Lang.en)
         val result = handler.handle(query)
 
         assertEquals(0, result.size)
