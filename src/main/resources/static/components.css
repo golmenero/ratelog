@@ -18,6 +18,15 @@
     flex-direction: column;
     align-items: center;
   }
+
+  img:first-child {
+    height: auto;
+    margin: -12px 0px -12px -16px;
+    min-width: 75px;
+    border-radius: 8px 0px 0px 8px;
+    -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%);
+    mask-image: linear-gradient(to right, black 50%, transparent 100%);
+  }
 }
 
 .results-grid {
@@ -76,10 +85,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  font-size: 0.88rem;
+  padding: 0px 12px;
+  border-right: 1px solid var(--text-soft);
+  color: var(--text);
+  font-size: 0.8rem;
   font-weight: 600;
 
   i {
