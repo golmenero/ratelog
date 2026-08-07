@@ -48,7 +48,7 @@
 
     <div th:if="${movie != null && movie.directing != null}" class="card">
         <div class="flex separate">
-            <div th:if="${movie.hasRating}" class="flex gap wrap">
+            <div th:if="${movie.hasRating}" class="flex gap-lg wrap">
                 <div class="category">
                     <i data-lucide="clapperboard"></i>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>

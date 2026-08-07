@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="flex separate">
-                <div th:if="${season.hasRating}" class="flex gap wrap">
+                <div th:if="${season.hasRating}" class="flex gap-lg wrap">
                     <div class="category">
                         <i data-lucide="clapperboard"></i>
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.00</span>

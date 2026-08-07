@@ -85,8 +85,6 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0px 12px;
-  border-right: 1px solid var(--text-soft);
   color: var(--text);
   font-size: 0.8rem;
   font-weight: 600;
