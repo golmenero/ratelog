@@ -217,6 +217,26 @@ a.link.secondary {
   line-height: 1.5;
 }
 
+.warning-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #eab308;
+  background: rgba(234, 179, 8, 0.1);
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.warning-text i,
+.warning-text svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 .search-wrapper {
   position: relative;
 }

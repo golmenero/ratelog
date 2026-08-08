@@ -17,6 +17,11 @@
                 <span th:text="#{import.letterboxd.instructions.step4}">Extract the ZIP and find the ratings.csv file</span>.
             </p>
 
+            <p class="warning-text">
+                <i data-lucide="alert-triangle"></i>
+                <span th:text="#{import.letterboxd.warning}">Duplicates and titles not found in TMDB will be ignored.</span>
+            </p>
+
             <div class="form-group">
                 <div class="file-upload">
                     <input type="file" id="file" name="file" accept=".csv" required />
