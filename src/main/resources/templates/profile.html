@@ -51,7 +51,7 @@
                 </div>
                 <div class="flex gap">
                     <i data-lucide="clock"></i>
-                    <span th:text="${#temporals.format(#temporals.createTemporal(list.createdAtEpochMs / 1000), 'MMM d, yyyy')}">Date</span>
+                    <span th:text="${list.createdAt}">Date</span>
                     <span th:if="${list.isPublic}" class="tag" th:text="#{list.public}">Public</span>
                 </div>
             </a>
