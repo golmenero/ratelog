@@ -17,6 +17,9 @@
         </div>
         <div>
             <div class="flex gap">
+                <button th:if="${isLoggedUser}" id="btnOpenCreateListModal" type="button">
+                    <i data-lucide="list-plus"></i>
+                </button>
                 <button th:if="${isLoggedUser}" id="btnOpenEditModal" type="button">
                     <i data-lucide="pencil"></i>
                 </button>
@@ -32,6 +35,26 @@
                     <i th:data-lucide="${isFollowed} ? 'user-round-x' : 'user-round-check'" aria-hidden="true"></i>
                 </button>
             </form>
+        </div>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(lists)}" class="card">
+        <h2 th:text="#{profile.lists}">Lists</h2>
+        <div class="grid-lists">
+            <a th:each="list : ${lists}" th:href="@{'/list/' + ${list.id.value}}" class="card list-card">
+                <div class="flex separate">
+                    <span class="title" th:text="${list.name.value}">List Name</span>
+                    <div class="flex gap">
+                        <i data-lucide="list"></i>
+                        <span th:text="${list.itemCount}">0</span>
+                    </div>
+                </div>
+                <div class="flex gap">
+                    <i data-lucide="clock"></i>
+                    <span th:text="${#temporals.format(#temporals.createTemporal(list.createdAtEpochMs / 1000), 'MMM d, yyyy')}">Date</span>
+                    <span th:if="${list.isPublic}" class="tag" th:text="#{list.public}">Public</span>
+                </div>
+            </a>
         </div>
     </div>
 
@@ -106,6 +129,7 @@
 
     <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
     <div th:replace="~{fragments/letterboxd-import-modal :: letterboxdImportModal}"></div>
+    <div th:if="${isLoggedUser}" th:replace="~{fragments/create-list-modal :: createListModal}"></div>
 </div>
 </body>
 <script>
@@ -143,6 +167,25 @@
         letterboxdImportModal.addEventListener('click', (e) => {
             if (e.target === letterboxdImportModal) {
                 letterboxdImportModal.classList.remove('visible');
+            }
+        });
+    }
+
+    const btnOpenCreateListModal = document.getElementById('btnOpenCreateListModal');
+    const btnCloseCreateListModal = document.getElementById('btnCloseCreateListModal');
+    const createListModal = document.getElementById('createListModal');
+
+    if (btnOpenCreateListModal) {
+        btnOpenCreateListModal.addEventListener('click', () => createListModal.classList.add('visible'));
+    }
+    if (btnCloseCreateListModal) {
+        btnCloseCreateListModal.addEventListener('click', () => createListModal.classList.remove('visible'));
+    }
+
+    if (createListModal) {
+        createListModal.addEventListener('click', (e) => {
+            if (e.target === createListModal) {
+                createListModal.classList.remove('visible');
             }
         });
     }

@@ -142,8 +142,21 @@ data class Review(val value: String) {
     }
 }
 
+data class ListName(val value: String) {
+    companion object {
+        fun parse(value: String): Either<ParseError, ListName> = either {
+            val trimmed = value.trim()
+            if (trimmed.isEmpty() || trimmed.length > 100) {
+                raise(ParseError.InvalidListName)
+            }
+            ListName(trimmed)
+        }
+    }
+}
+
 sealed interface ParseError {
     data object InvalidUsername : ParseError
     data object InvalidEmail : ParseError
     data object InvalidPassword : ParseError
+    data object InvalidListName : ParseError
 }
