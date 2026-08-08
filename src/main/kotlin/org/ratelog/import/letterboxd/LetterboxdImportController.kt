@@ -34,8 +34,7 @@ class LetterboxdImportController(
                     redirectAttributes.addFlashAttribute("error", "error.import.parse")
                     "redirect:/profile"
                 },
-                { result ->
-                    redirectAttributes.addFlashAttribute("importResult", result)
+                {
                     "redirect:/profile"
                 }
             )

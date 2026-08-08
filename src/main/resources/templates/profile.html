@@ -147,12 +147,6 @@
         });
     }
 
-    // Auto-open modal if there are import results
-    const hasImportResult = [[${importResult != null}]];
-    if (hasImportResult && letterboxdImportModal) {
-        letterboxdImportModal.classList.add('visible');
-    }
-
     // File upload label update
     const fileInput = document.getElementById('file');
     const fileUploadText = document.getElementById('file-upload-text');

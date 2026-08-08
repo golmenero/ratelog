@@ -13,7 +13,7 @@ textarea {
   color: var(--text);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  font-family: var(--font-ui);
+  font-family: var(--font-ui), serif;
   font-size: 0.95rem;
   box-sizing: border-box;
   resize: vertical;
@@ -38,7 +38,7 @@ select {
   color: var(--text);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  font-family: var(--font-ui);
+  font-family: var(--font-ui), serif;
   font-size: 0.95rem;
   box-sizing: border-box;
   accent-color: var(--accent);
@@ -86,7 +86,7 @@ input[type="file"] {
   color: var(--text-soft);
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
-  font-family: var(--font-ui);
+  font-family: var(--font-ui), serif;
   font-size: 0.9rem;
 
   i, svg {
@@ -177,7 +177,7 @@ a.btn {
     background: var(--accent);
     color: white;
     font-weight: 700;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
 
     &:hover {
       background: var(--accent-strong);
@@ -266,7 +266,7 @@ a.link.secondary {
   padding: 10px 18px;
   color: var(--text);
   text-decoration: none;
-  font-family: var(--font-ui);
+  font-family: var(--font-ui), serif;
   font-size: 0.95rem;
   transition: background 0.15s ease;
   cursor: pointer;

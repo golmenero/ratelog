@@ -27,7 +27,7 @@ class LetterboxdCsvParser {
                 .readValues<LetterboxdEntry>(cleanInputStream)
                 .readAll()
                 .filter { it.rating in 0.5..5.0 }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             raise(LetterboxdParseError.InvalidFormat)
         }
 
@@ -46,7 +46,6 @@ class LetterboxdCsvParser {
 }
 
 sealed interface LetterboxdParseError {
-    data object EmptyFile : LetterboxdParseError
     data object InvalidFormat : LetterboxdParseError
     data object NoValidEntries : LetterboxdParseError
 }
