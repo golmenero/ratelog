@@ -47,6 +47,7 @@ class ProfileController(
                     model.addAttribute("feed", it.feed)
                     model.addAttribute("hasMore", it.hasMore)
                     model.addAttribute("limit", limit)
+                    model.addAttribute("lists", it.lists)
                     "profile"
                 }
             )

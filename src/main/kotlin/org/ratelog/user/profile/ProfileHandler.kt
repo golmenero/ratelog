@@ -6,6 +6,8 @@ import org.ratelog.Email
 import org.ratelog.Lang
 import org.ratelog.MediaType
 import org.ratelog.Username
+import org.ratelog.customlist.CustomListRepository
+import org.ratelog.customlist.CustomListSummary
 import org.ratelog.feed.FeedItem
 import org.ratelog.feed.FeedRepository
 import org.ratelog.toDateString
@@ -32,6 +34,7 @@ data class Profile(
     val isFollowed: Boolean,
     val feed: List<ProfileRating>,
     val hasMore: Boolean,
+    val lists: List<CustomListSummary>,
 )
 
 data class ProfileRating(
@@ -49,6 +52,7 @@ data class ProfileRating(
 class ProfileHandler(
     private val userRepository: UserRepository,
     private val feedRepository: FeedRepository,
+    private val customListRepository: CustomListRepository,
 ) {
 
     @Transactional
@@ -56,6 +60,12 @@ class ProfileHandler(
         val user = userRepository.findById(query.userId) ?: raise(ProfileHandlerError.UserNotFound)
         val feed = feedRepository.findAll(listOf(query.userId), query.metadataLang, query.limit).map { toResponse(it) }
         val totalCount = feedRepository.count(listOf(query.userId))
+        val isOwner = query.loggedUserId == query.userId
+        val lists = if (isOwner) {
+            customListRepository.findByUserId(query.userId)
+        } else {
+            customListRepository.findPublicByUserId(query.userId)
+        }
 
         Profile(
             userId = user.id!!,
@@ -67,6 +77,7 @@ class ProfileHandler(
             isFollowed = userRepository.isFollowing(query.loggedUserId, query.userId),
             feed = feed,
             hasMore = totalCount > query.limit,
+            lists = lists,
         )
     }
 

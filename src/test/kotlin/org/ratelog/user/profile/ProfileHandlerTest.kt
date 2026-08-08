@@ -13,6 +13,7 @@ import org.ratelog.TmdbId
 import org.ratelog.Username
 import org.ratelog.feed.FeedItem as FeedRow
 import org.ratelog.feed.FeedRepository
+import org.ratelog.test.InMemoryCustomListRepository
 import org.ratelog.test.InMemoryUserRepository
 import org.ratelog.test.UserFactory
 import org.ratelog.user.User
@@ -22,12 +23,14 @@ class ProfileHandlerTest {
 
     private lateinit var userRepository: InMemoryUserRepository
     private val feedRepository: FeedRepository = mock()
+    private lateinit var customListRepository: InMemoryCustomListRepository
     private lateinit var handler: ProfileHandler
 
     @BeforeEach
     fun setUp() {
         userRepository = InMemoryUserRepository()
-        handler = ProfileHandler(userRepository, feedRepository)
+        customListRepository = InMemoryCustomListRepository()
+        handler = ProfileHandler(userRepository, feedRepository, customListRepository)
     }
 
     private fun aUser() = UserFactory.aUser(
