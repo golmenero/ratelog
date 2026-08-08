@@ -18,6 +18,7 @@ import org.ratelog.user.User
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
+import java.util.concurrent.Executors
 
 data class ImportLetterboxdCommand(
     val userId: User.Id,
@@ -43,6 +44,7 @@ class LetterboxdImportHandler(
     private val tvDescriptionRepository: TvDescriptionRepository,
     private val tvRatingRepository: TvRatingRepository,
 ) {
+    private val concurrencyLimit = 10
 
     @Transactional
     fun handle(command: ImportLetterboxdCommand): Either<LetterboxdImportError, ImportLetterboxdResult> = either {
@@ -50,24 +52,32 @@ class LetterboxdImportHandler(
             .mapLeft { LetterboxdImportError.ParseError }
             .bind()
 
+        val results = Executors.newFixedThreadPool(concurrencyLimit).use { executor ->
+            val futures = entries.map { entry ->
+                executor.submit<ProcessResult> {
+                    try {
+                        processEntry(entry, command.userId)
+                    } catch (e: Exception) {
+                        ProcessResult.Error(e.message ?: "Unknown error")
+                    }
+                }
+            }
+            futures.map { it.get() }
+        }
+
         var importedMovies = 0
         var importedTvShows = 0
         var skippedDuplicates = 0
         val notFound = mutableListOf<String>()
         val errors = mutableListOf<String>()
 
-        entries.forEach { entry: LetterboxdEntry ->
-            try {
-                val result = processEntry(entry, command.userId)
-                when (result) {
-                    is ProcessResult.ImportedMovie -> importedMovies++
-                    is ProcessResult.ImportedTvShow -> importedTvShows++
-                    is ProcessResult.SkippedDuplicate -> skippedDuplicates++
-                    is ProcessResult.NotFound -> notFound.add(entry.name)
-                    is ProcessResult.Error -> errors.add("${entry.name}: ${result.message}")
-                }
-            } catch (e: Exception) {
-                errors.add("${entry.name}: ${e.message}")
+        entries.forEachIndexed { index, entry ->
+            when (val result = results[index]) {
+                is ProcessResult.ImportedMovie -> importedMovies++
+                is ProcessResult.ImportedTvShow -> importedTvShows++
+                is ProcessResult.SkippedDuplicate -> skippedDuplicates++
+                is ProcessResult.NotFound -> notFound.add(entry.name)
+                is ProcessResult.Error -> errors.add("${entry.name}: ${result.message}")
             }
         }
 
