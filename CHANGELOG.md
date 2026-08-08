@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v1.2.0
+### ➕ Added
 - Filter tops by rating category (Directing, Cinematography, Acting, Soundtrack, Screenplay)
 - Import ratings from Letterboxd CSV export
 ### 🔧 Fixed
