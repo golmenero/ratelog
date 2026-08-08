@@ -1,0 +1,33 @@
+<div th:fragment="letterboxdImportModal" id="letterboxdImportModal" class="modal">
+    <div>
+        <div class="flex separate top">
+            <h2 th:text="#{import.letterboxd.title}">Import from Letterboxd</h2>
+            <button id="btnCloseLetterboxdModal" type="button">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+
+        <form th:action="@{/import/letterboxd}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <p class="help-text">
+                <span th:text="#{import.letterboxd.instructions.step1}">Go to your Letterboxd account settings</span>,
+                <span th:text="#{import.letterboxd.instructions.step2}">Click on "Import/Export" in the sidebar</span>,
+                <span th:text="#{import.letterboxd.instructions.step3}">Click "Export your data" and download the ZIP file</span>,
+                <span th:text="#{import.letterboxd.instructions.step4}">Extract the ZIP and find the ratings.csv file</span>.
+            </p>
+
+            <div class="form-group">
+                <div class="file-upload">
+                    <input type="file" id="file" name="file" accept=".csv" required />
+                    <label for="file" class="file-upload-label">
+                        <i data-lucide="upload"></i>
+                        <span id="file-upload-text" th:text="#{import.letterboxd.description}">Sube tu exportación CSV de Letterboxd para importar tus valoraciones</span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="primary w-100" type="submit" th:text="#{import.letterboxd.submit}">Import</button>
+        </form>
+    </div>
+</div>

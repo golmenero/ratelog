@@ -60,6 +60,52 @@ input[type="checkbox"] {
   accent-color: var(--accent);
 }
 
+input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.file-upload {
+  position: relative;
+}
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+
+  i, svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    border-color: var(--accent);
+    color: var(--text);
+    background: rgba(230, 120, 60, 0.05);
+  }
+}
+
+input[type="file"]:focus + .file-upload-label {
+  border-color: var(--accent);
+}
+
 .checkbox-group {
   display: flex;
   align-items: center;
@@ -162,6 +208,13 @@ a.link.secondary {
   display: grid;
   gap: 8px;
   margin-bottom: 16px;
+}
+
+.help-text {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin-bottom: 16px;
+  line-height: 1.5;
 }
 
 .search-wrapper {

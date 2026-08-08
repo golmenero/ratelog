@@ -16,9 +16,15 @@
             </div>
         </div>
         <div>
-            <button th:if="${isLoggedUser}" id="btnOpenEditModal" type="button">
-                <i data-lucide="pencil"></i>
-            </button>
+            <div class="flex gap">
+                <button th:if="${isLoggedUser}" id="btnOpenEditModal" type="button">
+                    <i data-lucide="pencil"></i>
+                </button>
+                <button id="btnOpenLetterboxdModal" type="button" class="link secondary">
+                    <i data-lucide="upload"></i>
+                </button>
+            </div>
+
             <form th:unless="${isLoggedUser}" th:action="@{/user/follow}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="hidden" name="id" th:value="${followId}" />
@@ -99,6 +105,7 @@
     </footer>
 
     <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
+    <div th:replace="~{fragments/letterboxd-import-modal :: letterboxdImportModal}"></div>
 </div>
 </body>
 <script>
@@ -106,13 +113,55 @@
     const btnCloseEditModal = document.getElementById('btnCloseEditModal');
     const editProfileModal = document.getElementById('editProfileModal');
 
-    btnOpenEditModal.addEventListener('click', () => editProfileModal.classList.add('visible'));
-    btnCloseEditModal.addEventListener('click', () => editProfileModal.classList.remove('visible'));
+    if (btnOpenEditModal) {
+        btnOpenEditModal.addEventListener('click', () => editProfileModal.classList.add('visible'));
+    }
+    if (btnCloseEditModal) {
+        btnCloseEditModal.addEventListener('click', () => editProfileModal.classList.remove('visible'));
+    }
 
-    editProfileModal.addEventListener('click', (e) => {
-        if (e.target === editProfileModal) {
-            editProfileModal.classList.remove('visible');
-        }
-    });
+    if (editProfileModal) {
+        editProfileModal.addEventListener('click', (e) => {
+            if (e.target === editProfileModal) {
+                editProfileModal.classList.remove('visible');
+            }
+        });
+    }
+
+    const btnOpenLetterboxdModal = document.getElementById('btnOpenLetterboxdModal');
+    const btnCloseLetterboxdModal = document.getElementById('btnCloseLetterboxdModal');
+    const letterboxdImportModal = document.getElementById('letterboxdImportModal');
+
+    if (btnOpenLetterboxdModal) {
+        btnOpenLetterboxdModal.addEventListener('click', () => letterboxdImportModal.classList.add('visible'));
+    }
+    if (btnCloseLetterboxdModal) {
+        btnCloseLetterboxdModal.addEventListener('click', () => letterboxdImportModal.classList.remove('visible'));
+    }
+
+    if (letterboxdImportModal) {
+        letterboxdImportModal.addEventListener('click', (e) => {
+            if (e.target === letterboxdImportModal) {
+                letterboxdImportModal.classList.remove('visible');
+            }
+        });
+    }
+
+    // Auto-open modal if there are import results
+    const hasImportResult = [[${importResult != null}]];
+    if (hasImportResult && letterboxdImportModal) {
+        letterboxdImportModal.classList.add('visible');
+    }
+
+    // File upload label update
+    const fileInput = document.getElementById('file');
+    const fileUploadText = document.getElementById('file-upload-text');
+    if (fileInput && fileUploadText) {
+        const defaultText = fileUploadText.textContent;
+        fileInput.addEventListener('change', (e) => {
+            const fileName = e.target.files[0]?.name;
+            fileUploadText.textContent = fileName || defaultText;
+        });
+    }
 </script>
 </html>
