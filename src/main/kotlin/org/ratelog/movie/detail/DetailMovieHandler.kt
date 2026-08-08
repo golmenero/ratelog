@@ -5,6 +5,8 @@ import arrow.core.raise.either
 import org.ratelog.Genre
 import org.ratelog.Lang
 import org.ratelog.TmdbId
+import org.ratelog.customlist.CustomListRepository
+import org.ratelog.customlist.CustomListSummary
 import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieDescriptionRepository
 import org.ratelog.movie.MovieRepository
@@ -41,6 +43,7 @@ data class GetMovieDetailResult(
     val score: Double?,
     val review: String?,
     val isFollowed: Boolean,
+    val userLists: List<CustomListSummary>,
 )
 
 @Component
@@ -49,6 +52,7 @@ class DetailMovieHandler(
     private val movieRepository: MovieRepository,
     private val movieDescriptionRepository: MovieDescriptionRepository,
     private val ratingRepository: RatingRepository,
+    private val customListRepository: CustomListRepository,
 ) {
     @Transactional
     fun handle(query: GetMovieDetail): Either<DetailMovieHandlerError, GetMovieDetailResult> = either {
@@ -70,6 +74,7 @@ class DetailMovieHandler(
 
         val rating = ratingRepository.findByMovieIdAndUserId(savedMovie.id!!, query.userId)
         val isFollowed = movieRepository.isFollowed(query.userId, savedMovie.id)
+        val userLists = customListRepository.findByUserId(query.userId)
 
         GetMovieDetailResult(
             id = savedMovie.id.value,
@@ -92,6 +97,7 @@ class DetailMovieHandler(
             score = rating?.score?.value,
             review = rating?.review?.value,
             isFollowed = isFollowed,
+            userLists = userLists,
         )
     }
 }

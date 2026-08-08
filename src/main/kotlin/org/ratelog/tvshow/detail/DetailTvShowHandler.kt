@@ -5,6 +5,8 @@ import arrow.core.raise.either
 import org.ratelog.Genre
 import org.ratelog.Lang
 import org.ratelog.TmdbId
+import org.ratelog.customlist.CustomListRepository
+import org.ratelog.customlist.CustomListSummary
 import org.ratelog.tvshow.TvDescriptionRepository
 import org.ratelog.tvshow.TvShow
 import org.ratelog.tvshow.TvShowRepository
@@ -39,6 +41,7 @@ data class GetTvShowDetailResult(
     val overallScore: Double?,
     val isRated: Boolean,
     val isFollowed: Boolean,
+    val userLists: List<CustomListSummary>,
 )
 
 data class SeasonInfo(
@@ -63,6 +66,7 @@ class DetailTvShowHandler(
     private val tvShowRepository: TvShowRepository,
     private val tvDescriptionRepository: TvDescriptionRepository,
     private val tvRatingRepository: TvRatingRepository,
+    private val customListRepository: CustomListRepository,
 ) {
     @Transactional
     fun handle(query: GetTvShowDetail): Either<DetailTvShowHandlerError, GetTvShowDetailResult> = either {
@@ -110,6 +114,8 @@ class DetailTvShowHandler(
                 )
             }
 
+        val userLists = customListRepository.findByUserId(query.userId)
+
         GetTvShowDetailResult(
             id = savedShow.id.value,
             tmdbId = savedShow.tmdbId.value,
@@ -129,6 +135,7 @@ class DetailTvShowHandler(
             overallScore = rating?.score?.value,
             isRated = rating != null,
             isFollowed = isFollowed,
+            userLists = userLists,
         )
     }
 }

@@ -10,6 +10,7 @@ import org.mockito.kotlin.whenever
 import org.ratelog.*
 import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieDescription
+import org.ratelog.test.InMemoryCustomListRepository
 import org.ratelog.test.InMemoryMovieDescriptionRepository
 import org.ratelog.test.InMemoryMovieRepository
 import org.ratelog.test.InMemoryRatingRepository
@@ -24,6 +25,7 @@ class DetailMovieHandlerTest {
     private lateinit var movieRepository: InMemoryMovieRepository
     private lateinit var movieDescriptionRepository: InMemoryMovieDescriptionRepository
     private lateinit var ratingRepository: InMemoryRatingRepository
+    private lateinit var customListRepository: InMemoryCustomListRepository
     private lateinit var handler: DetailMovieHandler
 
     @BeforeEach
@@ -31,7 +33,8 @@ class DetailMovieHandlerTest {
         movieRepository = InMemoryMovieRepository()
         movieDescriptionRepository = InMemoryMovieDescriptionRepository()
         ratingRepository = InMemoryRatingRepository()
-        handler = DetailMovieHandler(tmdbClient, movieRepository, movieDescriptionRepository, ratingRepository)
+        customListRepository = InMemoryCustomListRepository()
+        handler = DetailMovieHandler(tmdbClient, movieRepository, movieDescriptionRepository, ratingRepository, customListRepository)
     }
 
     @Test

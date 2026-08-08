@@ -8,6 +8,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.ratelog.*
+import org.ratelog.test.InMemoryCustomListRepository
 import org.ratelog.test.InMemoryTvDescriptionRepository
 import org.ratelog.test.InMemoryTvRatingRepository
 import org.ratelog.test.InMemoryTvShowRepository
@@ -26,6 +27,7 @@ class DetailTvShowHandlerTest {
     private lateinit var tvShowRepository: InMemoryTvShowRepository
     private lateinit var tvDescriptionRepository: InMemoryTvDescriptionRepository
     private lateinit var tvRatingRepository: InMemoryTvRatingRepository
+    private lateinit var customListRepository: InMemoryCustomListRepository
     private lateinit var handler: DetailTvShowHandler
 
     @BeforeEach
@@ -33,7 +35,8 @@ class DetailTvShowHandlerTest {
         tvShowRepository = InMemoryTvShowRepository()
         tvDescriptionRepository = InMemoryTvDescriptionRepository()
         tvRatingRepository = InMemoryTvRatingRepository()
-        handler = DetailTvShowHandler(tmdbClient, tvShowRepository, tvDescriptionRepository, tvRatingRepository)
+        customListRepository = InMemoryCustomListRepository()
+        handler = DetailTvShowHandler(tmdbClient, tvShowRepository, tvDescriptionRepository, tvRatingRepository, customListRepository)
     }
 
     @Test

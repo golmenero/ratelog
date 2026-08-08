@@ -60,6 +60,7 @@ class DetailTvShowController(
                 },
                 {
                     model.addAttribute("show", buildResponse(it))
+                    model.addAttribute("userLists", it.userLists)
                     "tvshow-detail"
                 }
             )

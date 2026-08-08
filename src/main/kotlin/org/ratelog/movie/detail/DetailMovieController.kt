@@ -52,6 +52,7 @@ class DetailMovieController(
                 },
                 {
                     model.addAttribute("movie", buildResponse(it))
+                    model.addAttribute("userLists", it.userLists)
                     "movie-detail"
                 }
             )
