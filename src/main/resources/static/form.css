@@ -283,6 +283,6 @@ a.link.secondary {
 .search-dropdown-empty {
   padding: 10px 18px;
   color: var(--text-soft);
-  font-family: var(--font-ui);
+  font-family: var(--font-ui), serif;
   font-size: 0.95rem;
 }
