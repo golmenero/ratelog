@@ -20,7 +20,7 @@
                 <button th:if="${isLoggedUser}" id="btnOpenEditModal" type="button">
                     <i data-lucide="pencil"></i>
                 </button>
-                <button id="btnOpenLetterboxdModal" type="button" class="link secondary">
+                <button th:if="${isLoggedUser}" id="btnOpenLetterboxdModal" type="button" class="link secondary">
                     <i data-lucide="upload"></i>
                 </button>
             </div>
@@ -132,7 +132,7 @@
     </footer>
 
     <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
-    <div th:replace="~{fragments/letterboxd-import-modal :: letterboxdImportModal}"></div>
+    <div th:if="${isLoggedUser}" th:replace="~{fragments/letterboxd-import-modal :: letterboxdImportModal}"></div>
     <div th:if="${isLoggedUser}" th:replace="~{fragments/create-list-modal :: createListModal}"></div>
 </div>
 </body>
