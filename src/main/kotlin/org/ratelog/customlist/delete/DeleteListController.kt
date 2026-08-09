@@ -26,9 +26,9 @@ class DeleteListController(
                     is DeleteListError.NotOwner -> "list.error.not.owner"
                 }
                 redirectAttributes.addFlashAttribute("error", message)
-                "redirect:/profile/" + user.id!!.value
+                "redirect:/profile/" + user.id.value
             },
-            { "redirect:/profile/" + user.id!!.value }
+            { "redirect:/profile/" + user.id.value }
         )
     }
 }

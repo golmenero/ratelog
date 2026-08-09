@@ -4,8 +4,8 @@ import org.ratelog.user.User
 
 interface CustomListRepository {
     fun findById(id: CustomList.Id): CustomList?
-    fun findByUserId(userId: User.Id): List<CustomListSummary>
-    fun findPublicByUserId(userId: User.Id): List<CustomListSummary>
+    fun findByUserId(userId: User.Id): List<CustomList>
+    fun findPublicByUserId(userId: User.Id): List<CustomList>
     fun save(list: CustomList): CustomList
     fun delete(id: CustomList.Id)
     fun addItem(item: CustomListItem): CustomListItem

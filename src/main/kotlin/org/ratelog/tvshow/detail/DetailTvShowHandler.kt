@@ -5,10 +5,9 @@ import arrow.core.raise.either
 import org.ratelog.Genre
 import org.ratelog.Lang
 import org.ratelog.TmdbId
+import org.ratelog.customlist.CustomList
 import org.ratelog.customlist.CustomListRepository
-import org.ratelog.customlist.CustomListSummary
 import org.ratelog.tvshow.TvDescriptionRepository
-import org.ratelog.tvshow.TvShow
 import org.ratelog.tvshow.TvShowRepository
 import org.ratelog.tmdb.TmdbClient
 import org.ratelog.tvshow.rating.TvRatingRepository
@@ -41,7 +40,7 @@ data class GetTvShowDetailResult(
     val overallScore: Double?,
     val isRated: Boolean,
     val isFollowed: Boolean,
-    val userLists: List<CustomListSummary>,
+    val userLists: List<CustomList>,
 )
 
 data class SeasonInfo(

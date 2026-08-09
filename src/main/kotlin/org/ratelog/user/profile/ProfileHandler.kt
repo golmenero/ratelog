@@ -4,10 +4,9 @@ import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.Email
 import org.ratelog.Lang
-import org.ratelog.MediaType
 import org.ratelog.Username
+import org.ratelog.customlist.CustomList
 import org.ratelog.customlist.CustomListRepository
-import org.ratelog.customlist.CustomListSummary
 import org.ratelog.feed.FeedItem
 import org.ratelog.feed.FeedRepository
 import org.ratelog.toDateString
@@ -34,7 +33,7 @@ data class Profile(
     val isFollowed: Boolean,
     val feed: List<ProfileRating>,
     val hasMore: Boolean,
-    val lists: List<CustomListSummary>,
+    val lists: List<CustomList>,
 )
 
 data class ProfileRating(

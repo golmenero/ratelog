@@ -5,9 +5,8 @@ import arrow.core.raise.either
 import org.ratelog.Genre
 import org.ratelog.Lang
 import org.ratelog.TmdbId
+import org.ratelog.customlist.CustomList
 import org.ratelog.customlist.CustomListRepository
-import org.ratelog.customlist.CustomListSummary
-import org.ratelog.movie.Movie
 import org.ratelog.movie.MovieDescriptionRepository
 import org.ratelog.movie.MovieRepository
 import org.ratelog.movie.rating.RatingRepository
@@ -43,7 +42,7 @@ data class GetMovieDetailResult(
     val score: Double?,
     val review: String?,
     val isFollowed: Boolean,
-    val userLists: List<CustomListSummary>,
+    val userLists: List<CustomList>,
 )
 
 @Component

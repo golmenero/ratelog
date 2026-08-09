@@ -26,17 +26,3 @@ data class CustomListItem(
 ) {
     data class Id(val value: Long)
 }
-
-data class CustomListSummary(
-    val id: CustomList.Id,
-    val name: ListName,
-    val isPublic: Boolean,
-) {
-    companion object {
-        fun from(list: CustomList) = CustomListSummary(
-            id = list.id!!,
-            name = list.name,
-            isPublic = list.isPublic,
-        )
-    }
-}

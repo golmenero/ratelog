@@ -17,20 +17,22 @@ class InMemoryCustomListRepository : CustomListRepository {
             list.copy(items = listItems)
         }
 
-    override fun findByUserId(userId: User.Id): List<CustomListSummary> =
+    override fun findByUserId(userId: User.Id): List<CustomList> =
         lists.values
             .filter { it.userId == userId }
             .sortedByDescending { it.createdAtEpochMs }
             .map { list ->
-                CustomListSummary.from(list)
+                val listItems = items.values.filter { it.listId == list.id }.sortedBy { it.position }
+                list.copy(items = listItems)
             }
 
-    override fun findPublicByUserId(userId: User.Id): List<CustomListSummary> =
+    override fun findPublicByUserId(userId: User.Id): List<CustomList> =
         lists.values
             .filter { it.userId == userId && it.isPublic }
             .sortedByDescending { it.createdAtEpochMs }
             .map { list ->
-                CustomListSummary.from(list)
+                val listItems = items.values.filter { it.listId == list.id }.sortedBy { it.position }
+                list.copy(items = listItems)
             }
 
     override fun save(list: CustomList): CustomList {

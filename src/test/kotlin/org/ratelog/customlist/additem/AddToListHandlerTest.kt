@@ -41,7 +41,7 @@ class AddToListHandlerTest {
         val result = handler.handle(command)
 
         assertTrue(result.isRight())
-        val updatedList = customListRepository.findById(list.id!!)!!
+        val updatedList = customListRepository.findById(list.id)!!
         assertEquals(1, updatedList.items.size)
         assertEquals(550L, updatedList.items[0].mediaId)
     }
@@ -107,7 +107,7 @@ class AddToListHandlerTest {
         handler.handle(command1)
 
         val command2 = AddToListCommand(
-            listId = list.id!!,
+            listId = list.id,
             userId = User.Id(1),
             mediaId = 550L,
             mediaType = "movie"

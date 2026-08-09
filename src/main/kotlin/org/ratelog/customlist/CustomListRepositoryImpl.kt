@@ -19,11 +19,17 @@ class CustomListRepositoryImpl(
             entity.toDomain(items)
         }
 
-    override fun findByUserId(userId: User.Id): List<CustomListSummary> =
-        customListDAO.findByUserId(userId.value).map { it.toSummary() }
+    override fun findByUserId(userId: User.Id): List<CustomList> =
+        customListDAO.findByUserId(userId.value).map { entity ->
+            val items = customListItemDAO.findByListId(entity.id!!).map { it.toDomain() }
+            entity.toDomain(items)
+        }
 
-    override fun findPublicByUserId(userId: User.Id): List<CustomListSummary> =
-        customListDAO.findPublicByUserId(userId.value).map { it.toSummary() }
+    override fun findPublicByUserId(userId: User.Id): List<CustomList> =
+        customListDAO.findPublicByUserId(userId.value).map { entity ->
+            val items = customListItemDAO.findByListId(entity.id!!).map { it.toDomain() }
+            entity.toDomain(items)
+        }
 
     override fun save(list: CustomList): CustomList {
         val savedEntity = customListDAO.save(list.toEntity())
@@ -58,13 +64,6 @@ class CustomListRepositoryImpl(
             isPublic = isPublic,
             createdAtEpochMs = createdAtEpochMs,
             items = items
-        )
-
-    private fun CustomListEntity.toSummary(): CustomListSummary =
-        CustomListSummary(
-            id = CustomList.Id(id!!),
-            name = ListName(name),
-            isPublic = isPublic,
         )
 
     private fun CustomList.toEntity(): CustomListEntity =
