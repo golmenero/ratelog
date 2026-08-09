@@ -33,9 +33,9 @@
 
   img:first-child {
     height: auto;
-    margin: -12px 0px -12px -16px;
+    margin: -12px 0 -12px -16px;
     min-width: 75px;
-    border-radius: 8px 0px 0px 8px;
+    border-radius: 8px 0 0 8px;
     -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%);
     mask-image: linear-gradient(to right, black 50%, transparent 100%);
   }
@@ -155,7 +155,7 @@
   color: white;
   font-size: 2rem;
   font-weight: 800;
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -220,7 +220,7 @@
   font-size: 3rem;
   font-weight: 800;
   letter-spacing: -0.05em;
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
 }
 
 .loader-overlay {
