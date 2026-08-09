@@ -22,8 +22,7 @@ class InMemoryCustomListRepository : CustomListRepository {
             .filter { it.userId == userId }
             .sortedByDescending { it.createdAtEpochMs }
             .map { list ->
-                val itemCount = items.values.count { it.listId == list.id }
-                CustomListSummary.from(list, itemCount)
+                CustomListSummary.from(list)
             }
 
     override fun findPublicByUserId(userId: User.Id): List<CustomListSummary> =
@@ -31,17 +30,7 @@ class InMemoryCustomListRepository : CustomListRepository {
             .filter { it.userId == userId && it.isPublic }
             .sortedByDescending { it.createdAtEpochMs }
             .map { list ->
-                val itemCount = items.values.count { it.listId == list.id }
-                CustomListSummary.from(list, itemCount)
-            }
-
-    override fun findPublicLists(): List<CustomListSummary> =
-        lists.values
-            .filter { it.isPublic }
-            .sortedByDescending { it.createdAtEpochMs }
-            .map { list ->
-                val itemCount = items.values.count { it.listId == list.id }
-                CustomListSummary.from(list, itemCount)
+                CustomListSummary.from(list)
             }
 
     override fun save(list: CustomList): CustomList {
@@ -54,17 +43,10 @@ class InMemoryCustomListRepository : CustomListRepository {
         return savedList
     }
 
-    override fun update(list: CustomList) {
-        lists[list.id!!] = list
-    }
-
     override fun delete(id: CustomList.Id) {
         lists.remove(id)
         items.entries.removeAll { it.value.listId == id }
     }
-
-    override fun countByUserId(userId: User.Id): Int =
-        lists.values.count { it.userId == userId }
 
     override fun addItem(item: CustomListItem): CustomListItem {
         val savedItem = if (item.id == null) {

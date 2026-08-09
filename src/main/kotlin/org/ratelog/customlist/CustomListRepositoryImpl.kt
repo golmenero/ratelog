@@ -2,6 +2,7 @@ package org.ratelog.customlist
 
 import org.ratelog.ListName
 import org.ratelog.MediaType
+import org.ratelog.toDateString
 import org.ratelog.user.User
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
@@ -19,39 +20,20 @@ class CustomListRepositoryImpl(
         }
 
     override fun findByUserId(userId: User.Id): List<CustomListSummary> =
-        customListDAO.findByUserId(userId.value).map { entity ->
-            val itemCount = customListItemDAO.findByListId(entity.id!!).size
-            CustomListSummary.from(entity.toDomain(emptyList()), itemCount)
-        }
+        customListDAO.findByUserId(userId.value).map { it.toSummary() }
 
     override fun findPublicByUserId(userId: User.Id): List<CustomListSummary> =
-        customListDAO.findPublicByUserId(userId.value).map { entity ->
-            val itemCount = customListItemDAO.findByListId(entity.id!!).size
-            CustomListSummary.from(entity.toDomain(emptyList()), itemCount)
-        }
-
-    override fun findPublicLists(): List<CustomListSummary> =
-        customListDAO.findPublicLists().map { entity ->
-            val itemCount = customListItemDAO.findByListId(entity.id!!).size
-            CustomListSummary.from(entity.toDomain(emptyList()), itemCount)
-        }
+        customListDAO.findPublicByUserId(userId.value).map { it.toSummary() }
 
     override fun save(list: CustomList): CustomList {
         val savedEntity = customListDAO.save(list.toEntity())
         return savedEntity.toDomain(emptyList())
     }
 
-    override fun update(list: CustomList) {
-        customListDAO.save(list.toEntity())
-    }
-
     override fun delete(id: CustomList.Id) {
         customListItemDAO.deleteByListId(id.value)
         customListDAO.deleteById(id.value)
     }
-
-    override fun countByUserId(userId: User.Id): Int =
-        customListDAO.countByUserId(userId.value)
 
     override fun addItem(item: CustomListItem): CustomListItem {
         val savedEntity = customListItemDAO.save(item.toEntity())
@@ -76,6 +58,14 @@ class CustomListRepositoryImpl(
             isPublic = isPublic,
             createdAtEpochMs = createdAtEpochMs,
             items = items
+        )
+
+    private fun CustomListEntity.toSummary(): CustomListSummary =
+        CustomListSummary(
+            id = CustomList.Id(id!!),
+            name = ListName(name),
+            isPublic = isPublic,
+            createdAt = createdAtEpochMs.toDateString()
         )
 
     private fun CustomList.toEntity(): CustomListEntity =

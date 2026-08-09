@@ -37,11 +37,9 @@ class UpdateListHandler(
 
         val listName = ListName.parse(command.name).mapLeft { UpdateListError.InvalidListName }.bind()
 
-        val updatedList = list.copy(
+        list.copy(
             name = listName,
             isPublic = command.isPublic
-        )
-
-        customListRepository.update(updatedList)
+        ).let(customListRepository::save)
     }
 }

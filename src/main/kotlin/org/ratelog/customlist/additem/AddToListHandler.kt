@@ -50,15 +50,13 @@ class AddToListHandler(
 
         val maxPosition = list.items.maxOfOrNull { it.position } ?: 0
 
-        val newItem = CustomListItem(
+        CustomListItem(
             id = null,
             listId = command.listId,
             mediaId = command.mediaId,
             mediaType = mediaType,
             position = maxPosition + 1,
             addedAtEpochMs = System.currentTimeMillis()
-        )
-
-        customListRepository.addItem(newItem)
+        ).let(customListRepository::addItem)
     }
 }

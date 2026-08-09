@@ -28,8 +28,8 @@ class CreateListHandler(
     fun handle(command: CreateListCommand): Either<CreateListError, CustomList> = either {
         val listName = ListName.parse(command.name).mapLeft { CreateListError.InvalidListName }.bind()
 
-        val currentCount = customListRepository.countByUserId(command.userId)
-        if (currentCount >= MAX_LISTS_PER_USER) {
+        val lists = customListRepository.findByUserId(command.userId)
+        if (lists.size >= MAX_LISTS_PER_USER) {
             raise(CreateListError.ListLimitExceeded)
         }
 

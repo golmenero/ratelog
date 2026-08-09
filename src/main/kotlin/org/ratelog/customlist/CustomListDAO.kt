@@ -35,12 +35,6 @@ interface CustomListDAO : CrudRepository<CustomListEntity, Long> {
 
     @Query("SELECT * FROM custom_lists WHERE user_id = :userId AND is_public = true ORDER BY created_at_epoch_ms DESC")
     fun findPublicByUserId(userId: Long): List<CustomListEntity>
-
-    @Query("SELECT * FROM custom_lists WHERE is_public = true ORDER BY created_at_epoch_ms DESC")
-    fun findPublicLists(): List<CustomListEntity>
-
-    @Query("SELECT COUNT(*) FROM custom_lists WHERE user_id = :userId")
-    fun countByUserId(userId: Long): Int
 }
 
 @Repository
