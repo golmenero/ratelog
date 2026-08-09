@@ -4,8 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+- Custom lists feature: create, edit and delete personal lists
+- Add and remove movies/TV shows from lists
+- Public/private list visibility
+- List detail view with poster grid
+- Add to list modal from movie/TV show detail pages
+- Empty state messages for all views (lists, search, community, profile)
 ### ⚡ Changed
-### 🔧 Fixed
+- Unified empty state styling with consistent CSS class
+- Optimized list repositories and queries
+- Improved empty state messages to be more generic
 
 ## Release v1.2.0
 ### ➕ Added
