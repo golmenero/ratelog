@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v1.3.0
+### ➕ Added
 - Custom lists feature: create, edit and delete personal lists
 - Add and remove movies/TV shows from lists
 - Public/private list visibility
