@@ -9,11 +9,11 @@ CREATE TABLE custom_lists (
 CREATE TABLE custom_list_items (
   id BIGSERIAL PRIMARY KEY,
   list_id BIGINT NOT NULL REFERENCES custom_lists(id) ON DELETE CASCADE,
-  tmdb_id INT NOT NULL,
+  media_id BIGINT NOT NULL,
   media_type VARCHAR(10) NOT NULL,
   position INT NOT NULL,
   added_at_epoch_ms BIGINT NOT NULL,
-  UNIQUE(list_id, tmdb_id, media_type)
+  UNIQUE(list_id, media_id, media_type)
 );
 
 CREATE INDEX idx_custom_lists_user ON custom_lists(user_id);
