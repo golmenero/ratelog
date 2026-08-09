@@ -17,9 +17,6 @@
         </div>
         <div>
             <div class="flex gap">
-                <button th:if="${isLoggedUser}" id="btnOpenCreateListModal" type="button">
-                    <i data-lucide="list-plus"></i>
-                </button>
                 <button th:if="${isLoggedUser}" id="btnOpenEditModal" type="button">
                     <i data-lucide="pencil"></i>
                 </button>
@@ -38,51 +35,61 @@
         </div>
     </div>
 
-    <div th:unless="${#lists.isEmpty(lists)}" class="card">
-        <h2 th:text="#{profile.lists}">Lists</h2>
-        <div class="grid-lists">
-            <a th:each="list : ${lists}" th:href="@{'/list/' + ${list.id.value}}" class="card list-card">
-                <div class="flex separate">
-                    <span class="title" th:text="${list.name.value}">List Name</span>
-                    <div class="flex gap">
-                        <i data-lucide="list"></i>
-                        <span th:text="${list.itemCount}">0</span>
-                    </div>
-                </div>
-                <div class="flex gap">
-                    <i data-lucide="clock"></i>
-                    <span th:text="${list.createdAt}">Date</span>
-                    <span th:if="${list.isPublic}" class="tag" th:text="#{list.public}">Public</span>
-                </div>
-            </a>
-        </div>
-    </div>
+    <div class="separator"></div>
 
-    <div class="card">
-        <div th:each="item : ${feed}">
-            <div class="flex separate">
-                <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
-                    <span class="title" th:text="${item.title}">Title</span>
+    <div class="grid">
+        <div>
+            <h2 th:text="#{profile.posts}">Posts</h2>
+            <div class="card">
+                <div th:each="item : ${feed}">
+                    <div class="flex separate">
+                        <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
+                            <span class="title" th:text="${item.title}">Title</span>
+                            <br>
+                            <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
+                        </a>
+                        <div>
+                            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                        </div>
+                    </div>
                     <br>
-                    <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
-                </a>
-                <div>
-                    <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                    <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
+                    <span class="date">
+                        <span th:text="#{community.activity.rated.at}">Rated on</span>
+                        <span th:text="${item.ratedAt}">date</span>
+                    </span>
+                    <div class="separator"></div>
+                </div>
+                <div th:if="${hasMore}">
+                    <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
+                        <i data-lucide="chevrons-down"></i>
+                        <span th:text="#{community.load.more}">Load More</span>
+                    </a>
                 </div>
             </div>
-            <br>
-            <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
-            <span class="date">
-                <span th:text="#{community.activity.rated.at}">Rated on</span>
-                <span th:text="${item.ratedAt}">date</span>
-            </span>
-            <div class="separator"></div>
         </div>
-        <div th:if="${hasMore}">
-            <a th:href="@{'/profile/' + ${followId}(limit=${limit + 10})}" class="link flex gap">
-                <i data-lucide="chevrons-down"></i>
-                <span th:text="#{community.load.more}">Load More</span>
-            </a>
+
+        <div>
+            <h2 class="flex separate">
+                <span th:text="#{profile.lists}">Lists</span>
+                <button th:if="${isLoggedUser}" id="btnOpenCreateListModal" type="button">
+                    <i data-lucide="list-plus"></i>
+                </button>
+            </h2>
+            <div th:if="${#lists.isEmpty(lists)}" class="feedback info">
+                <p th:text="#{profile.no.lists}">No lists yet.</p>
+            </div>
+            <div th:unless="${#lists.isEmpty(lists)}" class="flex" style="flex-direction: column; gap: 8px;">
+                <a th:each="list : ${lists}" th:href="@{'/list/' + ${list.id.value}}" class="card">
+                    <div class="flex separate">
+                        <span class="title" th:text="${list.name.value}">List Name</span>
+                    </div>
+                    <div class="flex gap">
+                        <span class="date" th:text="${list.createdAt}">Date</span>
+                        <span th:if="${list.isPublic}" class="tag" th:text="#{list.public}">Public</span>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 

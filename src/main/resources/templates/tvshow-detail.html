@@ -35,6 +35,9 @@
                                 <i data-lucide="heart"></i>
                             </button>
                         </form>
+                        <button id="btnOpenAddToListModal">
+                            <i data-lucide="list-plus"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -90,6 +93,7 @@
     </div>
 
     <div th:replace="~{fragments/rate-tvshow-modal :: rateTvShowModal(${show})}"></div>
+    <div th:replace="~{fragments/add-to-list-modal :: addToListModal(${show.id}, 'tvshow')}"></div>
 </div>
 </body>
 <script>
@@ -124,6 +128,30 @@
         rateModal.addEventListener('click', (e) => {
             if (e.target === rateModal) {
                 rateModal.classList.remove('visible');
+            }
+        });
+    }
+
+    const btnOpenAddToListModal = document.getElementById('btnOpenAddToListModal');
+    const btnCloseAddToListModal = document.getElementById('btnCloseAddToListModal');
+    const addToListModal = document.getElementById('addToListModal');
+
+    if (btnOpenAddToListModal) {
+        btnOpenAddToListModal.addEventListener('click', () => {
+            addToListModal.classList.add('visible');
+        });
+    }
+
+    if (btnCloseAddToListModal) {
+        btnCloseAddToListModal.addEventListener('click', () => {
+            addToListModal.classList.remove('visible');
+        });
+    }
+
+    if (addToListModal) {
+        addToListModal.addEventListener('click', (e) => {
+            if (e.target === addToListModal) {
+                addToListModal.classList.remove('visible');
             }
         });
     }
