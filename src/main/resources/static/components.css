@@ -70,6 +70,39 @@
   }
 }
 
+.list-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .list-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 220px 1fr;
+    position: relative;
+    inset: 0;
+    text-decoration: none;
+    color: inherit;
+    z-index: 1;
+
+    .list-content {
+      padding: 12px 16px;
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
 .tag {
   font-size: 0.78rem;
   padding: 4px 10px;

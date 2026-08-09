@@ -31,14 +31,12 @@ data class CustomListSummary(
     val id: CustomList.Id,
     val name: ListName,
     val isPublic: Boolean,
-    val createdAt: String,
 ) {
     companion object {
         fun from(list: CustomList) = CustomListSummary(
             id = list.id!!,
             name = list.name,
             isPublic = list.isPublic,
-            createdAt = list.createdAtEpochMs.toDateString(),
         )
     }
 }

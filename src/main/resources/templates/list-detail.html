@@ -10,53 +10,52 @@
     <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
 
     <div th:if="${list != null}">
-        <div class="card">
-            <div class="flex separate">
-                <div class="flex-1" style="min-width: 0;">
-                    <h1 style="word-wrap: break-word; overflow-wrap: break-word;" th:text="${list.name}">List Name</h1>
-                </div>
-                <div th:if="${isOwner}">
-                    <div class="flex gap">
-                        <button id="btnOpenEditModal" th:aria-label="#{list.edit}">
-                            <i data-lucide="pencil"></i>
+        <div class="flex separate">
+            <div class="flex-1" style="min-width: 0;">
+                <h1 style="word-wrap: break-word; overflow-wrap: break-word;" th:text="${list.name}">List Name</h1>
+            </div>
+            <div th:if="${isOwner}">
+                <div class="flex gap">
+                    <button id="btnOpenEditModal" th:aria-label="#{list.edit}">
+                        <i data-lucide="pencil"></i>
+                    </button>
+                    <form th:action="@{'/list/' + ${list.id.value} + '/delete'}" method="post" th:onsubmit="'return confirm(#{list.delete.confirm})'">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" th:aria-label="#{list.delete}">
+                            <i data-lucide="trash"></i>
                         </button>
-                        <form th:action="@{'/list/' + ${list.id.value} + '/delete'}" method="post" th:onsubmit="'return confirm(#{list.delete.confirm})'">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <button type="submit" th:aria-label="#{list.delete}">
-                                <i data-lucide="trash"></i>
-                            </button>
-                        </form>
-                    </div>
-                    <div th:if="${list.isPublic}">
-                        <span class="tag" th:text="#{list.public}">Public</span>
-                    </div>
+                    </form>
+                </div>
+                <div>
+                    <span th:if="${list.isPublic}" class="tag" th:text="#{list.public}">Public</span>
                 </div>
             </div>
         </div>
 
         <div th:if="${#lists.isEmpty(list.items)}" class="card" th:text="#{list.empty}">This list is empty.</div>
 
-        <div class="poster-grid">
-            <div th:each="item, iterStat : ${list.items}" class="poster-card" th:data-item-id="${item.id.value}">
-                <a th:href="@{${item.mediaType == 'movie'} ? '/movie/' + ${item.tmdbId} : '/tvshow/' + ${item.tmdbId}}">
-                    <img th:src="${item.posterPath != null} ? @{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}} : @{'/images/no-poster.png'}" 
-                         th:alt="${item.title}" 
-                         class="poster">
-                    <div class="poster-info">
-                        <span class="poster-title" th:text="${item.title}">Title</span>
-                        <span th:if="${item.year != null}" class="poster-year" th:text="${item.year}">2024</span>
-                    </div>
-                </a>
-                <div th:if="${isOwner}" class="poster-actions">
-                    <span class="poster-rank" th:text="${iterStat.index + 1}">1</span>
-                    <form th:action="@{'/list/' + ${list.id.value} + '/item/' + ${item.id.value} + '/remove'}" method="post">
+        <div class="list-grid">
+            <a th:each="item, iterStat : ${list.items}"
+               th:href="${item.mediaType == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
+               class="list-card" th:data-item-id="${item.id.value}">
+                <div class="poster-frame">
+                    <span class="tag type-tag" th:text="${item.mediaType == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
+                    <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                    <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                </div>
+                <div class="list-content">
+                    <h3>
+                        <span th:text="${item.title}">Title</span>
+                        <span class="year" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
+                    </h3>
+                    <form th:if="${isOwner}" th:onclick="event.stopPropagation()" th:action="@{'/list/' + ${list.id.value} + '/item/' + ${item.id.value} + '/remove'}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <button type="submit" class="poster-remove" th:aria-label="#{list.item.remove}">
-                            <i data-lucide="x"></i>
+                        <button type="submit" th:aria-label="#{list.item.remove}">
+                            <i data-lucide="trash"></i>
                         </button>
                     </form>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 

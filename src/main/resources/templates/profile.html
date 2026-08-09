@@ -6,7 +6,7 @@
 <div class="page">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='profile')}"></header>
 
-    <div class="card flex separate">
+    <div class="flex separate">
         <div class="flex gap-lg centered">
             <div class="avatar" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
             <div>
@@ -83,9 +83,6 @@
                 <a th:each="list : ${lists}" th:href="@{'/list/' + ${list.id.value}}" class="card">
                     <div class="flex separate">
                         <span class="title" th:text="${list.name.value}">List Name</span>
-                    </div>
-                    <div class="flex gap">
-                        <span class="date" th:text="${list.createdAt}">Date</span>
                         <span th:if="${list.isPublic}" class="tag" th:text="#{list.public}">Public</span>
                     </div>
                 </a>

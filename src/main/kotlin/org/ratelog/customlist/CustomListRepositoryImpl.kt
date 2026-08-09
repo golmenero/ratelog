@@ -65,7 +65,6 @@ class CustomListRepositoryImpl(
             id = CustomList.Id(id!!),
             name = ListName(name),
             isPublic = isPublic,
-            createdAt = createdAtEpochMs.toDateString()
         )
 
     private fun CustomList.toEntity(): CustomListEntity =
