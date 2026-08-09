@@ -9,9 +9,7 @@
                 <i data-lucide="x"></i>
             </button>
         </div>
-        <div th:if="${#lists.isEmpty(userLists)}" class="feedback info">
-            <p th:text="#{list.no.lists}">No lists available. Create one first.</p>
-        </div>
+        <div th:text="#{list.no.lists}" th:if="${#lists.isEmpty(userLists)}" class="empty-state"></div>
         <div th:unless="${#lists.isEmpty(userLists)}" class="list-selection">
             <form th:each="list : ${userLists}" th:action="@{'/list/' + ${list.id.value} + '/item'}" method="post" class="list-selection-item">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

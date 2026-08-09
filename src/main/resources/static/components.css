@@ -1,3 +1,14 @@
+.empty-state {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  color: var(--text-soft);
+  width: 100%;
+}
+
 .card {
   border: 1px solid var(--border);
   border-radius: var(--radius);

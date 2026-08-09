@@ -76,9 +76,7 @@
                     <i data-lucide="list-plus"></i>
                 </button>
             </h2>
-            <div th:if="${#lists.isEmpty(lists)}" class="feedback info">
-                <p th:text="#{profile.no.lists}">No lists yet.</p>
-            </div>
+            <div th:text="#{profile.no.lists}" th:if="${#lists.isEmpty(lists)}" class="empty-state"></div>
             <div th:unless="${#lists.isEmpty(lists)}" class="flex" style="flex-direction: column; gap: 8px;">
                 <a th:each="list : ${lists}" th:href="@{'/list/' + ${list.id.value}}" class="card">
                     <div class="flex separate">

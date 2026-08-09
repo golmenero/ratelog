@@ -64,7 +64,7 @@
             </form>
 
             <div th:if="${tops != null}">
-                <div th:if="${#lists.isEmpty(tops)}" class="card" th:text="#{tvshows.empty.filter}">No rated TV shows yet for this filter.</div>
+                <div th:text="#{tvshows.empty.filter}" th:if="${#lists.isEmpty(tops)}" class="empty-state"></div>
                 <a th:href="@{'/tv/' + ${s.tmdbId}}" th:each="s, iterStat : ${tops}" class="card flex separate">
                     <div class="flex gap-lg">
                         <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${s.posterPath}}" th:alt="'Poster of ' + ${s.name}">

@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <div th:if="${#lists.isEmpty(list.items)}" class="card" th:text="#{list.empty}">This list is empty.</div>
+        <div th:text="#{list.empty}" th:if="${#lists.isEmpty(list.items)}" class="empty-state"></div>
 
         <div class="list-grid">
             <a th:each="item, iterStat : ${list.items}"
