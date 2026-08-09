@@ -15,9 +15,10 @@
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="hidden" name="mediaId" th:value="${mediaId}" />
                 <input type="hidden" name="mediaType" th:value="${mediaType}" />
-                <button type="submit" class="list-selection-button">
+                <button type="submit" class="primary w-100">
                     <span class="list-selection-name" th:text="${list.name.value}">List Name</span>
                 </button>
+                <div class="separator"></div>
             </form>
         </div>
     </div>
