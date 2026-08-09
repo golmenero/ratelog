@@ -10,8 +10,8 @@
 
         <div class="grid">
             <div>
-                <div th:if="${#lists.isEmpty(feed)}" class="empty-state" th:text="#{community.empty}">No posts yet.</div>
-                <div th:unless="${#lists.isEmpty(feed)}" class="card">
+                <div th:if="${feed == null or #lists.isEmpty(feed)}" class="empty-state" th:text="#{community.empty}">No posts yet.</div>
+                <div th:unless="${feed == null or #lists.isEmpty(feed)}" class="card">
                     <div th:each="item : ${feed}">
                         <span class="username" th:text="${item.username}">Username</span>
                         <div class="flex separate">

@@ -40,7 +40,8 @@
     <div class="grid">
         <div>
             <h2 th:text="#{profile.posts}">Posts</h2>
-            <div class="card">
+            <div th:if="${feed == null or #lists.isEmpty(feed)}" class="empty-state" th:text="#{profile.no.posts}">No posts yet.</div>
+            <div th:unless="${feed == null or #lists.isEmpty(feed)}" class="card">
                 <div th:each="item : ${feed}">
                     <div class="flex separate">
                         <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
