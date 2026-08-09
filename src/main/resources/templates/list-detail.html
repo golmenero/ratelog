@@ -12,20 +12,24 @@
     <div th:if="${list != null}">
         <div class="card">
             <div class="flex separate">
-                <div>
-                    <h1 th:text="${list.name}">List Name</h1>
-                    <span class="tag" th:text="#{list.public}">Public</span>
+                <div class="flex-1" style="min-width: 0;">
+                    <h1 style="word-wrap: break-word; overflow-wrap: break-word;" th:text="${list.name}">List Name</h1>
                 </div>
-                <div th:if="${isOwner}" class="flex">
-                    <button id="btnOpenEditModal" th:aria-label="#{list.edit}">
-                        <i data-lucide="edit"></i>
-                    </button>
-                    <form th:action="@{'/list/' + ${list.id.value} + '/delete'}" method="post" th:onsubmit="'return confirm(#{list.delete.confirm})'">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <button type="submit" th:aria-label="#{list.delete}">
-                            <i data-lucide="trash"></i>
+                <div th:if="${isOwner}">
+                    <div class="flex gap">
+                        <button id="btnOpenEditModal" th:aria-label="#{list.edit}">
+                            <i data-lucide="pencil"></i>
                         </button>
-                    </form>
+                        <form th:action="@{'/list/' + ${list.id.value} + '/delete'}" method="post" th:onsubmit="'return confirm(#{list.delete.confirm})'">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" th:aria-label="#{list.delete}">
+                                <i data-lucide="trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div th:if="${list.isPublic}">
+                        <span class="tag" th:text="#{list.public}">Public</span>
+                    </div>
                 </div>
             </div>
         </div>
