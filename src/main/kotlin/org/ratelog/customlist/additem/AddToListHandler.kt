@@ -3,7 +3,6 @@ package org.ratelog.customlist.additem
 import arrow.core.Either
 import arrow.core.raise.either
 import org.ratelog.MediaType
-import org.ratelog.TmdbId
 import org.ratelog.customlist.CustomList
 import org.ratelog.customlist.CustomListItem
 import org.ratelog.customlist.CustomListRepository
@@ -20,7 +19,7 @@ sealed interface AddToListError {
 data class AddToListCommand(
     val listId: CustomList.Id,
     val userId: User.Id,
-    val tmdbId: Int,
+    val mediaId: Long,
     val mediaType: String
 )
 
@@ -37,12 +36,11 @@ class AddToListHandler(
             raise(AddToListError.NotOwner)
         }
 
-        val tmdbId = TmdbId(command.tmdbId)
         val mediaType = MediaType.valueOf(command.mediaType)
 
-        val existingItem = customListRepository.findItemByListIdAndTmdbIdAndMediaType(
+        val existingItem = customListRepository.findItemByListIdAndMediaIdAndMediaType(
             command.listId,
-            command.tmdbId,
+            command.mediaId,
             command.mediaType
         )
 
@@ -55,7 +53,7 @@ class AddToListHandler(
         val newItem = CustomListItem(
             id = null,
             listId = command.listId,
-            tmdbId = tmdbId,
+            mediaId = command.mediaId,
             mediaType = mediaType,
             position = maxPosition + 1,
             addedAtEpochMs = System.currentTimeMillis()

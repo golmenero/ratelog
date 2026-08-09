@@ -2,7 +2,6 @@ package org.ratelog.customlist
 
 import org.ratelog.ListName
 import org.ratelog.MediaType
-import org.ratelog.TmdbId
 import org.ratelog.user.User
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
@@ -66,8 +65,8 @@ class CustomListRepositoryImpl(
     override fun findItemById(itemId: CustomListItem.Id): CustomListItem? =
         customListItemDAO.findById(itemId.value).getOrNull()?.toDomain()
 
-    override fun findItemByListIdAndTmdbIdAndMediaType(listId: CustomList.Id, tmdbId: Int, mediaType: String): CustomListItem? =
-        customListItemDAO.findByListIdAndTmdbIdAndMediaType(listId.value, tmdbId, mediaType).getOrNull()?.toDomain()
+    override fun findItemByListIdAndMediaIdAndMediaType(listId: CustomList.Id, mediaId: Long, mediaType: String): CustomListItem? =
+        customListItemDAO.findByListIdAndMediaIdAndMediaType(listId.value, mediaId, mediaType).getOrNull()?.toDomain()
 
     private fun CustomListEntity.toDomain(items: List<CustomListItem>): CustomList =
         CustomList(
@@ -92,7 +91,7 @@ class CustomListRepositoryImpl(
         CustomListItem(
             id = id!!.let { CustomListItem.Id(it) },
             listId = CustomList.Id(listId),
-            tmdbId = TmdbId(tmdbId),
+            mediaId = mediaId,
             mediaType = MediaType.valueOf(mediaType),
             position = position,
             addedAtEpochMs = addedAtEpochMs
@@ -102,7 +101,7 @@ class CustomListRepositoryImpl(
         CustomListItemEntity(
             id = id?.value,
             listId = listId.value,
-            tmdbId = tmdbId.value,
+            mediaId = mediaId,
             mediaType = mediaType.name,
             position = position,
             addedAtEpochMs = addedAtEpochMs

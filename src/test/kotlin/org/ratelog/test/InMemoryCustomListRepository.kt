@@ -83,6 +83,6 @@ class InMemoryCustomListRepository : CustomListRepository {
     override fun findItemById(itemId: CustomListItem.Id): CustomListItem? =
         items[itemId]
 
-    override fun findItemByListIdAndTmdbIdAndMediaType(listId: CustomList.Id, tmdbId: Int, mediaType: String): CustomListItem? =
-        items.values.find { it.listId == listId && it.tmdbId.value == tmdbId && it.mediaType.name == mediaType }
+    override fun findItemByListIdAndMediaIdAndMediaType(listId: CustomList.Id, mediaId: Long, mediaType: String): CustomListItem? =
+        items.values.find { it.listId == listId && it.mediaId == mediaId && it.mediaType.name == mediaType }
 }

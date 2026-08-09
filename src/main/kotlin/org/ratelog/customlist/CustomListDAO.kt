@@ -22,7 +22,7 @@ data class CustomListEntity(
 data class CustomListItemEntity(
     @Id val id: Long? = null,
     @Column("list_id") val listId: Long,
-    @Column("tmdb_id") val tmdbId: Int,
+    @Column("media_id") val mediaId: Long,
     @Column("media_type") val mediaType: String,
     val position: Int,
     @Column("added_at_epoch_ms") val addedAtEpochMs: Long
@@ -48,8 +48,8 @@ interface CustomListItemDAO : CrudRepository<CustomListItemEntity, Long> {
     @Query("SELECT * FROM custom_list_items WHERE list_id = :listId ORDER BY position ASC")
     fun findByListId(listId: Long): List<CustomListItemEntity>
 
-    @Query("SELECT * FROM custom_list_items WHERE list_id = :listId AND tmdb_id = :tmdbId AND media_type = :mediaType")
-    fun findByListIdAndTmdbIdAndMediaType(listId: Long, tmdbId: Int, mediaType: String): Optional<CustomListItemEntity>
+    @Query("SELECT * FROM custom_list_items WHERE list_id = :listId AND media_id = :mediaId AND media_type = :mediaType")
+    fun findByListIdAndMediaIdAndMediaType(listId: Long, mediaId: Long, mediaType: String): Optional<CustomListItemEntity>
 
     @Modifying
     @Query("DELETE FROM custom_list_items WHERE list_id = :listId")

@@ -36,7 +36,7 @@ class RemoveFromListHandlerTest {
             CustomListItem(
                 id = null,
                 listId = list.id!!,
-                tmdbId = org.ratelog.TmdbId(550),
+                mediaId = 550L,
                 mediaType = org.ratelog.MediaType.movie,
                 position = 1,
                 addedAtEpochMs = System.currentTimeMillis()
@@ -86,7 +86,7 @@ class RemoveFromListHandlerTest {
             CustomListItem(
                 id = null,
                 listId = list.id!!,
-                tmdbId = org.ratelog.TmdbId(550),
+                mediaId = 550L,
                 mediaType = org.ratelog.MediaType.movie,
                 position = 1,
                 addedAtEpochMs = System.currentTimeMillis()

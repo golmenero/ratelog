@@ -17,11 +17,11 @@ class AddToListController(
     fun addItem(
         @PathVariable id: Long,
         @CurrentUser user: User,
-        @RequestParam tmdbId: Int,
+        @RequestParam mediaId: Long,
         @RequestParam mediaType: String,
         redirectAttributes: RedirectAttributes
     ): String {
-        val command = AddToListCommand(CustomList.Id(id), user.id!!, tmdbId, mediaType)
+        val command = AddToListCommand(CustomList.Id(id), user.id!!, mediaId, mediaType)
         return handler.handle(command).fold(
             { error ->
                 val message = when (error) {

@@ -2,7 +2,6 @@ package org.ratelog.customlist
 
 import org.ratelog.ListName
 import org.ratelog.MediaType
-import org.ratelog.TmdbId
 import org.ratelog.toDateString
 import org.ratelog.user.User
 
@@ -20,7 +19,7 @@ data class CustomList(
 data class CustomListItem(
     val id: Id?,
     val listId: CustomList.Id,
-    val tmdbId: TmdbId,
+    val mediaId: Long,
     val mediaType: MediaType,
     val position: Int,
     val addedAtEpochMs: Long

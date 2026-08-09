@@ -14,5 +14,5 @@ interface CustomListRepository {
     fun addItem(item: CustomListItem): CustomListItem
     fun removeItem(itemId: CustomListItem.Id)
     fun findItemById(itemId: CustomListItem.Id): CustomListItem?
-    fun findItemByListIdAndTmdbIdAndMediaType(listId: CustomList.Id, tmdbId: Int, mediaType: String): CustomListItem?
+    fun findItemByListIdAndMediaIdAndMediaType(listId: CustomList.Id, mediaId: Long, mediaType: String): CustomListItem?
 }
