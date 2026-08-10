@@ -25,7 +25,7 @@ Ratelog is a web application that lets you search for movies and TV shows on TMD
 No premium tiers, no hidden features — just a straightforward tool to track and rank what you watch.
 
 <strong>Want to get started?</strong><br/>
-Check out the <a href="#run-locally">installation guide</a> or jump straight to <a href="#docker">Docker deployment</a>.<br/>
+Check out the <a href="#installation-guide">installation guide</a>.<br/>
 
 <strong>Something not working right?</strong><br/>
 Open an <a href="https://github.com/golmenero/ratelog/issues">Issue</a> on GitHub.<br/>
@@ -39,28 +39,35 @@ Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a>
 
 ## Features
 
+### Discovery & Tracking
 - **Search** — Find movies and TV shows via TMDB's API
 - **Follow** — Track upcoming releases and see them on the premieres page (grouped by Released / Upcoming / No Date)
-- **Rate by category** — Score each title from 1 to 10 (0.25 steps) across 5 categories:
-  - Directing
-  - Cinematography
-  - Acting
-  - Soundtrack
-  - Screenplay
+
+### Rating System
+- **Rate by category** — Score each title from 1 to 10 (0.25 steps) across 5 categories: Directing, Cinematography, Acting, Soundtrack, and Screenplay
 - **Average score** — Automatic mean calculation across all 5 categories
-- **Top lists** — Separate pages for movies and TV shows, filterable by year and category with configurable limits
-- **Multi-user** — Each user has their own ratings, follows, and tops
 - **One rating per title** — Delete and re-rate if you change your mind
-- **Multi language support** 
-  - ![EN](https://flagcdn.com/24x18/gb.png)
-    ![DE](https://flagcdn.com/24x18/de.png)
-    ![ES](https://flagcdn.com/24x18/es.png)
-    ![FR](https://flagcdn.com/24x18/fr.png)
-    ![IT](https://flagcdn.com/24x18/it.png)
-    ![JA](https://flagcdn.com/24x18/jp.png)
-    ![PT](https://flagcdn.com/24x18/pt.png)
-    ![RU](https://flagcdn.com/24x18/ru.png)
-    ![ZH](https://flagcdn.com/24x18/cn.png)
+
+### Lists & Organization
+- **Top lists** — Separate pages for movies and TV shows, filterable by year and category with configurable limits
+- **Custom lists** — Create and manage personalized lists of movies and TV shows
+
+### Social & Import
+- **Community** — Explore other users' ratings, lists, and activity
+- **Import from Letterboxd** — Bulk import your ratings and watchlist from a Letterboxd export
+
+### Multi-user & Languages
+- **Multi-user** — Each user has their own ratings, follows, and tops
+- **Multi language support** — 
+  ![EN](https://flagcdn.com/24x18/gb.png)
+  ![DE](https://flagcdn.com/24x18/de.png)
+  ![ES](https://flagcdn.com/24x18/es.png)
+  ![FR](https://flagcdn.com/24x18/fr.png)
+  ![IT](https://flagcdn.com/24x18/it.png)
+  ![JA](https://flagcdn.com/24x18/jp.png)
+  ![PT](https://flagcdn.com/24x18/pt.png)
+  ![RU](https://flagcdn.com/24x18/ru.png)
+  ![ZH](https://flagcdn.com/24x18/cn.png)
 
 
 <p align="center">
@@ -86,30 +93,33 @@ Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a>
 
 ---
 
-## Docker
+## Installation Guide
 
-### Build Image
+### Prerequisites
 
-```powershell
-docker build -t ratelog .
+- Docker & Docker Compose
+- TMDB API key ([get one here](https://www.themoviedb.org/settings/api))
+
+### Quick Start
+
+#### Step 1: Clone the repository
+```bash
+git clone https://github.com/golmenero/ratelog.git
+cd ratelog
 ```
 
-### Run with Docker Compose
+#### Step 2: Copy the environment file
+```bash
+cp .env.example .env
+```
 
-Container services:
+#### Step 3: Configure environment variables
 
-| Service | Description |
-|---|---|
-| **postgres** | PostgreSQL 17 (port 5432, volume `pgdata`) |
-| **ratelog** | App (port 8080, depends on healthy postgres) |
-
----
-
-## Environment Variables
+Edit `.env` and configure the variables:
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `TMDB_API_KEY` | Yes | — | TMDB API key |
+| `TMDB_API_KEY` | Yes | — | TMDB API key ([get one here](https://www.themoviedb.org/settings/api)) |
 | `REMEMBER_ME_KEY` | No | — | Secret key for remember-me cookie |
 | `PORT` | No | `8080` | HTTP port |
 | `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
@@ -118,17 +128,21 @@ Container services:
 | `POSTGRES_USER` | No | `ratelog` | Database user |
 | `POSTGRES_PASSWORD` | No | `ratelog` | Database password |
 
----
+> **Warning:** For production deployments, consider setting a strong `REMEMBER_ME_KEY` and `POSTGRES_PASSWORD` to a secure value
 
-## Deploy to your Server
+#### Step 4: Start the application
+```bash
+docker compose up -d
+```
 
-Minimal flow:
+This will start the following services:
+- **postgres**: PostgreSQL 17 (port 5432, volume `pgdata`)
+- **ratelog**: App (port 8080, depends on healthy postgres)
 
-1. Copy `.env.example` to `.env`
-2. Set all the env variables (see aboce)
-3. Set `RATELOG_IMAGE=ghcr.io/<owner>/ratelog:latest` (or specific version)
-4. Deploy with compose
-5. Verify at `http://LOCAL_IP:8080/api/health`
+#### Step 5: Verify the deployment
+```bash
+curl http://localhost:8080/api/health
+```
 
 ---
 
