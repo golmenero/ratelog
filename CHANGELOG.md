@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+### 🔧 Fixed
+
+## Release v1.4.0
+### ➕ Added
+### ⚡ Changed
 - Upgrade PostgreSQL from 17 to 18
 ### 🔧 Fixed
 
