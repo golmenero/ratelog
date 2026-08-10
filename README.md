@@ -136,7 +136,7 @@ docker compose up -d
 ```
 
 This will start the following services:
-- **postgres**: PostgreSQL 17 (port 5432, volume `pgdata`)
+- **postgres**: PostgreSQL 18 (port 5432, volume `pgdata`)
 - **ratelog**: App (port 8080, depends on healthy postgres)
 
 #### Step 5: Verify the deployment
