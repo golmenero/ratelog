@@ -8,10 +8,8 @@ All notable changes to this project will be documented in this file.
 ### 🔧 Fixed
 
 ## Release v1.4.0
-### ➕ Added
 ### ⚡ Changed
-- Upgrade PostgreSQL from 17 to 18
-### 🔧 Fixed
+- Update Readme
 
 ## Release v1.3.0
 ### ➕ Added
