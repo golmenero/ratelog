@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+- PWA installation guide modal on login page with iOS and Android instructions
 ### ⚡ Changed
 - Removed `REMEMBER_ME_KEY` env var requirement. The key is now auto-generated at startup.
 - Upgraded PostgreSQL to version 18.
