@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v1.5.0
+### ➕ Added
 - PWA installation guide modal on login page with iOS and Android instructions
 ### ⚡ Changed
 - Removed `REMEMBER_ME_KEY` env var requirement. The key is now auto-generated at startup.

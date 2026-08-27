@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<body>
+<div th:fragment="installPwaModal" id="installPwaModal" class="modal">
+    <div class="modal-content">
+        <div class="flex separate">
+            <h2 th:text="#{install.title}">Install App</h2>
+            <button id="btnCloseInstallModal" th:aria-label="#{modal.close}">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="install-tabs">
+            <button class="install-tab active" data-tab="ios">iOS</button>
+            <button class="install-tab" data-tab="android">Android</button>
+        </div>
+        <div id="tab-ios" class="install-tab-content active">
+            <ol class="install-steps">
+                <li th:text="#{install.ios.step1}">Open this page in Safari</li>
+                <li th:text="#{install.ios.step2}">Tap the Share button <i data-lucide="share" class="install-inline-icon"></i></li>
+                <li th:text="#{install.ios.step3}">Scroll down and tap "Add to Home Screen" <i data-lucide="square-plus" class="install-inline-icon"></i></li>
+                <li th:text="#{install.ios.step4}">Tap "Add" to confirm</li>
+            </ol>
+        </div>
+        <div id="tab-android" class="install-tab-content">
+            <ol class="install-steps">
+                <li th:text="#{install.android.step1}">Tap the menu button (⋮) in the top right corner</li>
+                <li th:text="#{install.android.step2}">Tap "Install app" or "Add to Home screen"</li>
+                <li th:text="#{install.android.step3}">Tap "Install" to confirm</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<script>
+    (function() {
+        var modal = document.getElementById('installPwaModal');
+        var btnOpen = document.getElementById('btnOpenInstallModal');
+        var btnClose = document.getElementById('btnCloseInstallModal');
+        var tabs = document.querySelectorAll('.install-tab');
+        var contents = document.querySelectorAll('.install-tab-content');
+
+        if (btnOpen && modal) {
+            btnOpen.addEventListener('click', function() { modal.classList.add('visible'); });
+        }
+        if (btnClose && modal) {
+            btnClose.addEventListener('click', function() { modal.classList.remove('visible'); });
+        }
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) modal.classList.remove('visible');
+            });
+        }
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                contents.forEach(function(c) { c.classList.remove('active'); });
+                tab.classList.add('active');
+                document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+            });
+        });
+    })();
+</script>
+</body>
+</html>
