@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     container_name: ratelog-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-ratelog}
@@ -31,7 +31,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       TMDB_API_KEY: ${TMDB_API_KEY}
-      REMEMBER_ME_KEY: ${REMEMBER_ME_KEY}
     depends_on:
       postgres:
         condition: service_healthy

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### ➕ Added
 ### ⚡ Changed
 - Removed `REMEMBER_ME_KEY` env var requirement. The key is now auto-generated at startup.
+- Upgraded PostgreSQL to version 18.
 ### 🔧 Fixed
 
 ## Release v1.4.0
