@@ -120,7 +120,6 @@ Edit `.env` and configure the variables:
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `TMDB_API_KEY` | Yes | — | TMDB API key ([get one here](https://www.themoviedb.org/settings/api)) |
-| `REMEMBER_ME_KEY` | No | — | Secret key for remember-me cookie |
 | `PORT` | No | `8080` | HTTP port |
 | `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
 | `POSTGRES_PORT` | No | `5432` | PostgreSQL port |
@@ -128,7 +127,7 @@ Edit `.env` and configure the variables:
 | `POSTGRES_USER` | No | `ratelog` | Database user |
 | `POSTGRES_PASSWORD` | No | `ratelog` | Database password |
 
-> **Warning:** For production deployments, consider setting a strong `REMEMBER_ME_KEY` and `POSTGRES_PASSWORD` to a secure value
+> **Warning:** For production deployments, consider setting `POSTGRES_PASSWORD` to a secure value
 
 #### Step 4: Start the application
 ```bash

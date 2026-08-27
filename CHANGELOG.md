@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+- Removed `REMEMBER_ME_KEY` env var requirement. The key is now auto-generated at startup.
 ### 🔧 Fixed
 
 ## Release v1.4.0
