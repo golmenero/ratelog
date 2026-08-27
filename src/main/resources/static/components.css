@@ -302,3 +302,45 @@ img {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.install-steps {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.install-steps li {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.install-icons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.install-icon-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.install-icon-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.install-icon-btn svg {
+  width: 24px;
+  height: 24px;
+}

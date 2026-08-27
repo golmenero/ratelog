@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<body>
+<div th:fragment="installAndroidModal" id="installAndroidModal" class="modal">
+    <div class="modal-content">
+        <div class="flex separate">
+            <h2>Android</h2>
+            <button id="btnCloseAndroidModal" th:aria-label="#{modal.close}">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <ol class="install-steps">
+            <li th:text="#{install.android.step1}">Tap the menu button (⋮) in the top right corner</li>
+            <li th:text="#{install.android.step2}">Tap "Install app" or "Add to Home screen"</li>
+            <li th:text="#{install.android.step3}">Tap "Install" to confirm</li>
+        </ol>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<body>
+<div th:fragment="installIosModal" id="installIosModal" class="modal">
+    <div class="modal-content">
+        <div class="flex separate">
+            <h2>iOS</h2>
+            <button id="btnCloseIosModal" th:aria-label="#{modal.close}">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <ol class="install-steps">
+            <li th:text="#{install.ios.step1}">Open this page in Safari</li>
+            <li th:text="#{install.ios.step2}">Tap the Share button</li>
+            <li th:text="#{install.ios.step3}">Scroll down and tap "Add to Home Screen"</li>
+            <li th:text="#{install.ios.step4}">Tap "Add" to confirm</li>
+        </ol>
+    </div>
+</div>
+</body>
+</html>

@@ -40,6 +40,57 @@
             <a class="link highlighted" th:href="@{/register}" th:text="#{auth.signup}">Sign up</a>
         </div>
     </section>
+
+    <br>
+
+    <section class="card centered">
+        <h3 th:text="#{install.title}">Install mobile app</h3>
+        <div class="install-icons">
+            <button id="btnOpenIosModal" class="install-icon-btn" th:aria-label="#{install.ios}">
+                <i data-lucide="apple"></i>
+            </button>
+            <button id="btnOpenAndroidModal" class="install-icon-btn" th:aria-label="#{install.android}">
+                <i data-lucide="smartphone"></i>
+            </button>
+        </div>
+    </section>
 </div>
+<div th:replace="~{fragments/install-ios-modal :: installIosModal}"></div>
+<div th:replace="~{fragments/install-android-modal :: installAndroidModal}"></div>
+<script>
+    (function() {
+        var iosModal = document.getElementById('installIosModal');
+        var btnOpenIos = document.getElementById('btnOpenIosModal');
+        var btnCloseIos = document.getElementById('btnCloseIosModal');
+
+        if (btnOpenIos && iosModal) {
+            btnOpenIos.addEventListener('click', function() { iosModal.classList.add('visible'); });
+        }
+        if (btnCloseIos && iosModal) {
+            btnCloseIos.addEventListener('click', function() { iosModal.classList.remove('visible'); });
+        }
+        if (iosModal) {
+            iosModal.addEventListener('click', function(e) {
+                if (e.target === iosModal) iosModal.classList.remove('visible');
+            });
+        }
+
+        var androidModal = document.getElementById('installAndroidModal');
+        var btnOpenAndroid = document.getElementById('btnOpenAndroidModal');
+        var btnCloseAndroid = document.getElementById('btnCloseAndroidModal');
+
+        if (btnOpenAndroid && androidModal) {
+            btnOpenAndroid.addEventListener('click', function() { androidModal.classList.add('visible'); });
+        }
+        if (btnCloseAndroid && androidModal) {
+            btnCloseAndroid.addEventListener('click', function() { androidModal.classList.remove('visible'); });
+        }
+        if (androidModal) {
+            androidModal.addEventListener('click', function(e) {
+                if (e.target === androidModal) androidModal.classList.remove('visible');
+            });
+        }
+    })();
+</script>
 </body>
 </html>
