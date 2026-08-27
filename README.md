@@ -145,6 +145,30 @@ curl http://localhost:8080/api/health
 
 ---
 
+## Mobile App
+
+Ratelog is a Progressive Web App (PWA) that can be installed on your mobile device for a native app-like experience.
+
+### Installation
+
+On the login page, click the **iOS** or **Android** icon to see installation instructions, or follow the steps below:
+
+#### iOS (Safari)
+1. Open the app URL in **Safari**
+2. Tap the **Share** button (square with arrow)
+3. Scroll down and tap **"Add to Home Screen"**
+4. Tap **"Add"** to confirm
+
+#### Android (Chrome)
+1. Open the app URL in **Chrome**
+2. Tap the **menu button** (⋮) in the top right corner
+3. Tap **"Install app"** or **"Add to Home screen"**
+4. Tap **"Install"** to confirm
+
+> **Note:** The app must be accessible from your device (same network or via tunnel/VPN)
+
+---
+
 <p align="center">
 This project is powered by:
 <br/>
