@@ -53,9 +53,7 @@ class TopTvShowController(
             .fold(
                 { },
                 {
-                    model.addAttribute("releasedPremieres", it.released)
-                    model.addAttribute("upcomingPremieres", it.upcoming)
-                    model.addAttribute("noDatePremieres", it.noDate)
+                    model.addAttribute("premieres", it.items)
                 }
             )
 

@@ -23,9 +23,7 @@ data class MoviePremiereItem(
 )
 
 data class MoviePremieres(
-    val released: List<MoviePremiereItem>,
-    val upcoming: List<MoviePremiereItem>,
-    val noDate: List<MoviePremiereItem>
+    val items: List<MoviePremiereItem>
 )
 
 @Service
@@ -36,18 +34,14 @@ class MoviePremieresHandler(
     @Transactional
     fun handle(query: MoviePremieresQuery): Either<MoviePremieresHandlerError, MoviePremieres> = either {
         val followedMovies = query.userId.let(movieRepository::findFollowedMovies)
-
-        val released = mutableListOf<MoviePremiereItem>()
-        val upcoming = mutableListOf<MoviePremiereItem>()
-        val noDate = mutableListOf<MoviePremiereItem>()
         val today = LocalDate.now()
 
-        for (movie in followedMovies) {
+        val items = followedMovies.map { movie ->
             val description = movieDescriptionRepository.findByTmdbIdAndLang(movie.tmdbId, query.lang)
             val title = description?.title?.value ?: movie.originalTitle.value
 
             if (movie.releaseDate != null) {
-                val item = MoviePremiereItem(
+                MoviePremiereItem(
                     id = movie.id!!.value,
                     tmdbId = movie.tmdbId.value,
                     title = title,
@@ -55,26 +49,25 @@ class MoviePremieresHandler(
                     posterPath = movie.posterPath?.value,
                     isReleased = movie.releaseDate <= today
                 )
-                if (item.isReleased) released.add(item) else upcoming.add(item)
             } else {
-                noDate.add(
-                    MoviePremiereItem(
-                        id = movie.id!!.value,
-                        tmdbId = movie.tmdbId.value,
-                        title = title,
-                        releaseDate = today,
-                        posterPath = movie.posterPath?.value,
-                        isReleased = false,
-                        hasDate = false
-                    )
+                MoviePremiereItem(
+                    id = movie.id!!.value,
+                    tmdbId = movie.tmdbId.value,
+                    title = title,
+                    releaseDate = today,
+                    posterPath = movie.posterPath?.value,
+                    isReleased = false,
+                    hasDate = false
                 )
             }
         }
 
         MoviePremieres(
-            released = released.sortedBy { it.releaseDate },
-            upcoming = upcoming.sortedBy { it.releaseDate },
-            noDate = noDate
+            items = items.sortedWith(
+                compareBy<MoviePremiereItem> { !it.isReleased }
+                    .thenBy { !it.hasDate }
+                    .thenBy { it.releaseDate }
+            )
         )
     }
 }

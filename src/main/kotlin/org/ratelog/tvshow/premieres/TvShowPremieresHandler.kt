@@ -24,9 +24,7 @@ data class TvShowPremiereItem(
 )
 
 data class TvShowPremieres(
-    val released: List<TvShowPremiereItem>,
-    val upcoming: List<TvShowPremiereItem>,
-    val noDate: List<TvShowPremiereItem>
+    val items: List<TvShowPremiereItem>
 )
 
 @Service
@@ -37,49 +35,44 @@ class TvShowPremieresHandler(
     @Transactional
     fun handle(query: TvShowPremieresQuery): Either<TvShowPremieresHandlerError, TvShowPremieres> = either {
         val followedTvShows = query.userId.let(tvShowRepository::findFollowedTvShows)
-
-        val released = mutableListOf<TvShowPremiereItem>()
-        val upcoming = mutableListOf<TvShowPremiereItem>()
-        val noDate = mutableListOf<TvShowPremiereItem>()
         val today = LocalDate.now()
 
-        for (show in followedTvShows) {
-            val description = tvDescriptionRepository.findByTmdbIdAndLang(show.tmdbId, query.lang)
-            val name = description?.name?.value ?: show.originalName.value
+        val items = followedTvShows
+            .filter { it.lastSeasonNumber != null }
+            .map { show ->
+                val description = tvDescriptionRepository.findByTmdbIdAndLang(show.tmdbId, query.lang)
+                val name = description?.name?.value ?: show.originalName.value
 
-            if (show.lastSeasonNumber != null) {
                 if (show.lastSeasonAirDate != null) {
-                    val item = TvShowPremiereItem(
+                    TvShowPremiereItem(
                         id = show.id!!.value,
                         tmdbId = show.tmdbId.value,
                         name = name,
-                        seasonNumber = show.lastSeasonNumber,
+                        seasonNumber = show.lastSeasonNumber!!,
                         releaseDate = show.lastSeasonAirDate,
                         posterPath = show.posterPath?.value,
                         isReleased = show.lastSeasonAirDate <= today
                     )
-                    if (item.isReleased) released.add(item) else upcoming.add(item)
                 } else {
-                    noDate.add(
-                        TvShowPremiereItem(
-                            id = show.id!!.value,
-                            tmdbId = show.tmdbId.value,
-                            name = name,
-                            seasonNumber = show.lastSeasonNumber,
-                            releaseDate = today,
-                            posterPath = show.posterPath?.value,
-                            isReleased = false,
-                            hasDate = false
-                        )
+                    TvShowPremiereItem(
+                        id = show.id!!.value,
+                        tmdbId = show.tmdbId.value,
+                        name = name,
+                        seasonNumber = show.lastSeasonNumber!!,
+                        releaseDate = today,
+                        posterPath = show.posterPath?.value,
+                        isReleased = false,
+                        hasDate = false
                     )
                 }
             }
-        }
 
         TvShowPremieres(
-            released = released.sortedBy { it.releaseDate },
-            upcoming = upcoming.sortedBy { it.releaseDate },
-            noDate = noDate
+            items = items.sortedWith(
+                compareBy<TvShowPremiereItem> { !it.isReleased }
+                    .thenBy { !it.hasDate }
+                    .thenBy { it.releaseDate }
+            )
         )
     }
 }

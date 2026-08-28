@@ -38,6 +38,12 @@ p {
   color: var(--text-soft);
 }
 
+
+.date.vertical {
+  display: flex;
+  flex-direction: column;
+}
+
 span {
   &.date {
     font-size: 0.84rem;
@@ -46,6 +52,11 @@ span {
 
     &.released {
       color: var(--success-text);
+    }
+
+    &.na {
+      font-weight: 600;
+      opacity: 0.5;
     }
   }
 

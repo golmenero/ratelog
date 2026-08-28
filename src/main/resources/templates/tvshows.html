@@ -85,37 +85,22 @@
         </div>
 
         <div>
-            <div th:if="${releasedPremieres != null and !#lists.isEmpty(releasedPremieres)}">
-                <h3 th:text="#{tvshows.premieres.released}">Released</h3>
+            <div th:if="${premieres != null and !#lists.isEmpty(premieres)}">
+                <h3 th:text="#{tvshows.premieres}">Premieres</h3>
                 <div class="separator"></div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${releasedPremieres}" class="card">
-                    <div class="flex separate">
-                        <span class="title" th:text="${item.name}">Title</span>
-                        <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${premieres}" class="card flex separate">
+                    <div class="date vertical">
+                        <th:block th:unless="${item.hasDate}">
+                            <span class="date na" th:text="#{premieres.na}">N/A</span>
+                        </th:block>
+                        <th:block th:if="${item.hasDate}">
+                            <span class="date" th:classappend="${item.isReleased} ? 'released'" th:text="${#temporals.format(item.releaseDate, 'MMM d')}">Sept. 27</span>
+                            <span class="year" th:text="${#temporals.format(item.releaseDate, 'yyyy')}">2025</span>
+                        </th:block>
                     </div>
-                    <span class="date released" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
-                </a>
-            </div>
-
-            <div th:if="${upcomingPremieres != null and !#lists.isEmpty(upcomingPremieres)}">
-                <h3 th:text="#{tvshows.premieres.upcoming}">Upcoming</h3>
-                <div class="separator"></div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${upcomingPremieres}" class="card">
-                    <div class="flex separate">
+                    <div class="flex gap">
                         <span class="title" th:text="${item.name}">Title</span>
-                        <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
-                    </div>
-                    <span class="date" th:text="${#temporals.format(item.releaseDate, 'MMM d, yyyy')}">Released</span>
-                </a>
-            </div>
-
-            <div th:if="${noDatePremieres != null and !#lists.isEmpty(noDatePremieres)}">
-                <h3 th:text="#{tvshows.premieres.no.date}">No release date yet</h3>
-                <div class="separator"></div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${noDatePremieres}" class="card">
-                    <div class="flex separate">
-                        <span class="title" th:text="${item.name}">Title</span>
-                        <span class="season" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
+                        <span class="season" th:text="#{tvshows.season.prefix} + ' ' + ${item.seasonNumber}">S1</span>
                     </div>
                 </a>
             </div>
