@@ -148,7 +148,7 @@
 }
 
 .premiere-released {
-  background: linear-gradient(to right, rgba(71, 114, 87, 0.2), var(--surface));
+  background: linear-gradient(to right, rgba(71, 150, 87, 0.2), var(--surface));
 }
 
 .premiere-upcoming {

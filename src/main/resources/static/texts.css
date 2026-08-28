@@ -50,10 +50,6 @@ span {
     color: var(--text-soft);
     font-family: var(--font-ui);
 
-    &.released {
-      color: var(--success-text);
-    }
-
     &.na {
       font-weight: 600;
       opacity: 0.5;

@@ -94,7 +94,7 @@
                             <span class="date na" th:text="#{premieres.na}">N/A</span>
                         </th:block>
                         <th:block th:if="${item.hasDate}">
-                            <span class="date" th:classappend="${item.isReleased} ? 'released'" th:text="${#temporals.format(item.releaseDate, 'MMM d')}">Sept. 27</span>
+                            <span class="date" th:text="${#temporals.format(item.releaseDate, 'MMM d')}">Sept. 27</span>
                             <span class="year" th:text="${#temporals.format(item.releaseDate, 'yyyy')}">2025</span>
                         </th:block>
                     </div>
