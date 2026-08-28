@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+### 🔧 Fixed
+
+## Release v1.6.0
+### ➕ Added
+### ⚡ Changed
 - Redesigned premieres feed: unified into a single "Premieres" section with new card layout (date on left, title on right)
 - Premiere cards now have horizontal gradient backgrounds: green for released, orange for upcoming, default for pending
 - TV show season format changed from "Season 1" to "T1" in premiere cards
