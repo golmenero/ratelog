@@ -94,6 +94,10 @@ body {
   &.separate {
     justify-content: space-between;
   }
+
+  &.ellipsis {
+    min-width: 0;
+  }
 }
 
 .flex-1 {
