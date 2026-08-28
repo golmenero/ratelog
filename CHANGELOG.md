@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+- Redesigned premieres feed: unified into a single "Premieres" section with new card layout (date on left, title on right)
 ### 🔧 Fixed
 
 ## Release v1.5.0
