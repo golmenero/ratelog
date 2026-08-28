@@ -92,7 +92,9 @@
                             <span class="year" th:text="${#temporals.format(item.releaseDate, 'yyyy')}">2025</span>
                         </th:block>
                     </div>
-                    <span class="title" th:text="${item.title}">Title</span>
+                    <div style="min-width: 0;">
+                        <span class="title ellipsis" th:text="${item.title}">Title</span>
+                    </div>
                 </a>
             </div>
         </div>

@@ -91,6 +91,14 @@ span {
     text-overflow: ellipsis;
     text-decoration: none;
     display: inline;
+
+    &.ellipsis {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      min-width: 0;
+      flex: 1;
+      display: block;
+    }
   }
 
   &.season {

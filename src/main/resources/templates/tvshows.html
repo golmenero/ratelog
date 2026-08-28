@@ -88,7 +88,7 @@
             <div th:if="${premieres != null and !#lists.isEmpty(premieres)}">
                 <h3 th:text="#{tvshows.premieres}">Premieres</h3>
                 <div class="separator"></div>
-                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${premieres}" class="card flex gap separate" th:classappend="${!item.hasDate} ? 'premiere-pending' : (${item.isReleased} ? 'premiere-released' : 'premiere-upcoming')">
+                <a th:href="@{'/tv/' + ${item.tmdbId}}" th:each="item : ${premieres}" class="card premiere-card flex gap separate" th:classappend="${!item.hasDate} ? 'premiere-pending' : (${item.isReleased} ? 'premiere-released' : 'premiere-upcoming')">
                     <div class="date vertical">
                         <th:block th:unless="${item.hasDate}">
                             <span class="date na" th:text="#{premieres.na}">N/A</span>
@@ -98,8 +98,8 @@
                             <span class="year" th:text="${#temporals.format(item.releaseDate, 'yyyy')}">2025</span>
                         </th:block>
                     </div>
-                    <div class="flex gap">
-                        <span class="title" th:text="${item.name}">Title</span>
+                    <div style="min-width: 0;">
+                        <span class="title ellipsis" th:text="${item.name}">Title</span>
                         <span class="season" th:text="#{tvshows.season.prefix} + ' ' + ${item.seasonNumber}">S1</span>
                     </div>
                 </a>
