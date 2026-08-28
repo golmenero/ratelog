@@ -82,7 +82,7 @@
             <div th:if="${premieres != null and !#lists.isEmpty(premieres)}">
                 <h3 th:text="#{movies.premieres}">Premieres</h3>
                 <div class="separator"></div>
-                <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${premieres}" class="card flex separate">
+                <a th:href="@{'/movie/' + ${item.tmdbId}}" th:each="item : ${premieres}" class="card flex separate" th:classappend="${!item.hasDate} ? 'premiere-pending' : (${item.isReleased} ? 'premiere-released' : 'premiere-upcoming')">
                     <div class="date vertical">
                         <th:block th:unless="${item.hasDate}">
                             <span class="date na" th:text="#{premieres.na}">N/A</span>

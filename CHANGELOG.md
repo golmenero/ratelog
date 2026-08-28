@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### ➕ Added
 ### ⚡ Changed
 - Redesigned premieres feed: unified into a single "Premieres" section with new card layout (date on left, title on right)
+- Premiere cards now have horizontal gradient backgrounds: green for released, orange for upcoming, default for pending
 ### 🔧 Fixed
 
 ## Release v1.5.0

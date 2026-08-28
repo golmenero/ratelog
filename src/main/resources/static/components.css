@@ -147,6 +147,14 @@
   margin: 12px 0;
 }
 
+.premiere-released {
+  background: linear-gradient(to right, rgba(71, 114, 87, 0.2), var(--surface));
+}
+
+.premiere-upcoming {
+  background: linear-gradient(to right, rgba(255, 165, 0, 0.2), var(--surface));
+}
+
 .avatar {
   width: 80px;
   height: 80px;
