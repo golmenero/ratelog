@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+- Styling of cards on community and profile sections
 ### 🔧 Fixed
 
 ## Release v1.6.0
