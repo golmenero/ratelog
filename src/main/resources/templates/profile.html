@@ -41,24 +41,21 @@
         <div>
             <h2 th:text="#{profile.posts}">Posts</h2>
             <div th:if="${feed == null or #lists.isEmpty(feed)}" class="empty-state" th:text="#{profile.no.posts}">No posts yet.</div>
-            <div th:unless="${feed == null or #lists.isEmpty(feed)}" class="card">
+            <div th:unless="${feed == null or #lists.isEmpty(feed)}">
                 <div th:each="item : ${feed}">
-                    <div class="flex separate">
-                        <a class="link secondary" th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
-                            <span class="title" th:text="${item.title}">Title</span>
-                            <br>
-                            <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ' ' +  ${item.seasonNumber}">S1</span>
-                        </a>
+                    <div class="flex gap separate">
                         <div>
-                            <span class="rating" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                            <a th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
+                                <span class="title italic" th:text="${item.title}">Title</span>
+                            </a>
+                            <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
                         </div>
+                        <span class="date" th:text="${item.ratedAt}">date</span>
                     </div>
-                    <br>
-                    <p class="m-0" th:if="${item.reviewText != null}" th:text="${item.reviewText}">Review text</p>
-                    <span class="date">
-                        <span th:text="#{community.activity.rated.at}">Rated on</span>
-                        <span th:text="${item.ratedAt}">date</span>
-                    </span>
+                    <div class="flex separate">
+                        <p th:text="${item.reviewText}">Review text</p>
+                        <span class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
+                    </div>
                     <div class="separator"></div>
                 </div>
                 <div th:if="${hasMore}">

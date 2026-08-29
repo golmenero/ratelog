@@ -171,6 +171,13 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
+
+  &.sm {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
 }
 
 .modal {

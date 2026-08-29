@@ -95,6 +95,10 @@ span {
       flex: 1;
       display: block;
     }
+
+    &.italic {
+      font-style: italic;
+    }
   }
 
   &.season {
@@ -111,10 +115,15 @@ span {
       font-weight: 800;
       font-family: var(--font-serif);
       color: hsl(20 83% 84%);
+
+    &.sm {
+      font-size: 1rem;
+    }
   }
 
   &.username {
     font-size: 1.3rem;
+    color: var(--text-soft);
     line-height: 1.15;
     letter-spacing: -0.04em;
     font-family: var(--font-serif);
@@ -123,6 +132,5 @@ span {
     text-overflow: ellipsis;
     text-decoration: none;
     display: inline;
-    font-style: italic;
   }
 }
