@@ -145,6 +145,11 @@
   height: 1px;
   background: var(--border);
   margin: 12px 0;
+
+  &.lg {
+    height: 2px;
+    margin: 36px 0;
+  }
 }
 
 .premiere-released {

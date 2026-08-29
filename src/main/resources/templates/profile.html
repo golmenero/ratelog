@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="separator"></div>
+    <div class="separator lg"></div>
 
     <div class="grid">
         <div>
@@ -44,12 +44,16 @@
             <div th:unless="${feed == null or #lists.isEmpty(feed)}">
                 <div th:each="item : ${feed}">
                     <div class="flex gap separate">
-                        <div>
-                            <a th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
-                                <span class="title italic" th:text="${item.title}">Title</span>
-                            </a>
-                            <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
+                        <div class="flex gap">
+                            <div class="avatar sm" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
+                            <div>
+                                <a th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
+                                    <span class="title italic" th:text="${item.title}">Title</span>
+                                </a>
+                                <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
+                            </div>
                         </div>
+
                         <span class="date" th:text="${item.ratedAt}">date</span>
                     </div>
                     <div class="flex separate">
