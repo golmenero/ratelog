@@ -133,8 +133,11 @@
   color: var(--text);
   font-size: 0.8rem;
   font-weight: 600;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--tag-bg);
 
-  i {
+  svg {
     width: 14px;
     height: 14px;
     opacity: 0.7;

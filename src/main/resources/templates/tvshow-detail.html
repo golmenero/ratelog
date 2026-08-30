@@ -58,25 +58,30 @@
                 </div>
             </div>
             <div class="flex separate">
-                <div th:if="${season.hasRating}" class="flex gap-lg wrap">
+                <div th:if="${season.hasRating}" class="flex gap wrap">
                     <div class="category">
                         <i data-lucide="clapperboard"></i>
+                        <span th:text="#{tvshows.rating.category.directing}">Directing</span>
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.00</span>
                     </div>
                     <div class="category">
                         <i data-lucide="camera"></i>
+                        <span th:text="#{tvshows.rating.category.cinematography}">Cinematography</span>
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.cinematography, 1, 2), ',', '.')}">0.00</span>
                     </div>
                     <div class="category">
                         <i data-lucide="hat-glasses"></i>
+                        <span th:text="#{tvshows.rating.category.acting}">Acting</span>
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.acting, 1, 2), ',', '.')}">0.00</span>
                     </div>
                     <div class="category">
                         <i data-lucide="music"></i>
+                        <span th:text="#{tvshows.rating.category.soundtrack}">Soundtrack</span>
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.soundtrack, 1, 2), ',', '.')}">0.00</span>
                     </div>
                     <div class="category">
                         <i data-lucide="file-text"></i>
+                        <span th:text="#{tvshows.rating.category.screenplay}">Screenplay</span>
                         <span th:text="${#strings.replace(#numbers.formatDecimal(season.screenplay, 1, 2), ',', '.')}">0.00</span>
                     </div>
                 </div>
@@ -88,6 +93,7 @@
                     </button>
                 </form>
             </div>
+            <br th:if="${season.review}">
             <p th:if="${season.review}" th:text="${season.review}"></p>
         </div>
     </div>

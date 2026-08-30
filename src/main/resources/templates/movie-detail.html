@@ -51,25 +51,30 @@
 
     <div th:if="${movie != null && movie.directing != null}" class="card">
         <div class="flex separate">
-            <div th:if="${movie.hasRating}" class="flex gap-lg wrap">
+            <div th:if="${movie.hasRating}" class="flex gap wrap">
                 <div class="category">
                     <i data-lucide="clapperboard"></i>
+                    <span th:text="#{movies.rating.category.directing}">Directing</span>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.directing, 1, 2), ',', '.')}">0.00</span>
                 </div>
                 <div class="category">
                     <i data-lucide="camera"></i>
+                    <span th:text="#{movies.rating.category.cinematography}">Cinematography</span>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.cinematography, 1, 2), ',', '.')}">0.00</span>
                 </div>
                 <div class="category">
                     <i data-lucide="hat-glasses"></i>
+                    <span th:text="#{movies.rating.category.acting}">Acting</span>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.acting, 1, 2), ',', '.')}">0.00</span>
                 </div>
                 <div class="category">
                     <i data-lucide="music"></i>
+                    <span th:text="#{movies.rating.category.soundtrack}">Soundtrack</span>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.soundtrack, 1, 2), ',', '.')}">0.00</span>
                 </div>
                 <div class="category">
                     <i data-lucide="file-text"></i>
+                    <span th:text="#{movies.rating.category.screenplay}">Screenplay</span>
                     <span th:text="${#strings.replace(#numbers.formatDecimal(movie.screenplay, 1, 2), ',', '.')}">0.00</span>
                 </div>
             </div>
@@ -80,6 +85,7 @@
                 </button>
             </form>
         </div>
+        <br th:if="${movie.review}">
         <p th:if="${movie.review}" th:text="${movie.review}"></p>
     </div>
 
