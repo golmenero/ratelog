@@ -49,7 +49,7 @@
     <div th:if="${show != null && !#lists.isEmpty(show.seasons)}">
         <div th:each="season : ${show.seasons}" class="card">
             <div class="flex separate">
-                <span class="season" th:if="${season.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ' ' +  ${season.seasonNumber}">S1</span>
+                <span class="season" th:if="${season.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
                 <div>
                     <span th:if="${season.hasRating}" class="rating" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
                     <button th:unless="${season.hasRating}" class="season-rate-btn" th:data-season="${season.seasonNumber}">
