@@ -51,7 +51,7 @@
             <div class="flex separate">
                 <span class="season" th:if="${season.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
                 <div>
-                    <span th:if="${season.hasRating}" class="rating" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
+                    <span th:if="${season.hasRating}" class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
                     <button th:unless="${season.hasRating}" class="season-rate-btn" th:data-season="${season.seasonNumber}">
                         <i data-lucide="star"></i>
                     </button>
