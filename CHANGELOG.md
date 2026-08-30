@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+### 🔧 Fixed
+
+## Release v1.6.2
+### ➕ Added
+### ⚡ Changed
 - Styling of dates and community section
 ### 🔧 Fixed
 
