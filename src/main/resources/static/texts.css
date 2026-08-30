@@ -46,7 +46,7 @@ p {
 
 span {
   &.date {
-    font-size: 0.84rem;
+    font-size: 0.9rem;
     color: var(--text-soft);
     font-family: var(--font-ui);
 
@@ -102,12 +102,9 @@ span {
   }
 
   &.season {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--accent);
-    border-radius: 6px;
-    white-space: nowrap;
-    font-family: var(--font-ui);
   }
 
   &.rating {

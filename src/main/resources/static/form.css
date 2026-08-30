@@ -187,6 +187,10 @@ a.btn {
 
 a.link {
   text-decoration: none;
+
+  &:hover {
+    color: var(--accent);
+  }
 }
 
 a.link.highlighted {
