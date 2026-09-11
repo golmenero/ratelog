@@ -28,6 +28,7 @@ class RememberMeKeyProvider(
         val generated = ConfigKey.unsafe(raw.toHex())
         generalConfigRepository.save(
             GeneralConfig(
+                id = null,
                 key = REMEMBER_ME_KEY,
                 value = generated.value,
                 updatedAtEpochMs = System.currentTimeMillis(),

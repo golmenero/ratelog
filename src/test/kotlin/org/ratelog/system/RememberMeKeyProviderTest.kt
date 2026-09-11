@@ -38,6 +38,7 @@ class RememberMeKeyProviderTest {
         val existingKey = "a".repeat(64)
         repository.save(
             GeneralConfig(
+                id = null,
                 key = ConfigKey.unsafe("remember_me_key"),
                 value = existingKey,
                 updatedAtEpochMs = 0L,

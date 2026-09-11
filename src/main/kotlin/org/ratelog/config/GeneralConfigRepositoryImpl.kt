@@ -16,12 +16,14 @@ class GeneralConfigRepositoryImpl(
     }
 
     private fun toDomain(entity: GeneralConfigEntity): GeneralConfig = GeneralConfig(
-        key = ConfigKey.unsafe(entity.key!!),
+        id = entity.id?.let(GeneralConfig::Id),
+        key = ConfigKey.unsafe(entity.key),
         value = entity.value,
         updatedAtEpochMs = entity.updatedAtEpochMs,
     )
 
     private fun toEntity(config: GeneralConfig): GeneralConfigEntity = GeneralConfigEntity(
+        id = config.id?.value,
         key = config.key.value,
         value = config.value,
         updatedAtEpochMs = config.updatedAtEpochMs,
