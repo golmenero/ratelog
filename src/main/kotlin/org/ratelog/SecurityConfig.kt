@@ -1,5 +1,6 @@
 package org.ratelog
 
+import org.ratelog.system.RememberMeKeyProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -9,12 +10,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
-import java.util.UUID
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
-    private val rememberMeKey: String = UUID.randomUUID().toString()
+class SecurityConfig(
+    private val rememberMeKeyProvider: RememberMeKeyProvider,
+) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -47,7 +48,7 @@ class SecurityConfig {
 
         http.rememberMe { remember ->
             remember
-                .key(rememberMeKey)
+                .key(rememberMeKeyProvider.key().value)
                 .tokenValiditySeconds(86400 * 30)
                 .rememberMeParameter("remember-me")
         }
