@@ -37,7 +37,7 @@ class AddRatingHandler(
             command.soundtrack,
             command.screenplay
         ).forEach { value ->
-            ensure(value in 1.0..10.0) { AddRatingHandlerError.InvalidRatingValue }
+            ensure(value in 0.0..10.0) { AddRatingHandlerError.InvalidRatingValue }
         }
 
         val existingRating = ratingRepository.findByMovieIdAndUserId(command.movieId, command.userId)

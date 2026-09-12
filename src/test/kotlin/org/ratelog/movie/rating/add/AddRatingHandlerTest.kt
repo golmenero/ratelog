@@ -47,7 +47,7 @@ class AddRatingHandlerTest {
         val command = AddRating(
             movieId = Movie.Id(1),
             userId = User.Id(1),
-            directing = 0.0,
+            directing = -1.0,
             cinematography = 5.0,
             acting = 5.0,
             soundtrack = 5.0,
@@ -86,7 +86,7 @@ class AddRatingHandlerTest {
             userId = User.Id(1),
             directing = 5.0,
             cinematography = 5.0,
-            acting = 0.5,
+            acting = -0.5,
             soundtrack = 5.0,
             screenplay = 5.0,
             review = null
