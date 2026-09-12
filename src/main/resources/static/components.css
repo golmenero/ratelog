@@ -322,6 +322,17 @@ img {
     height: 150px;
     margin: auto;
   }
+
+  .modal > div:first-child {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    border: none;
+    overflow-y: auto;
+    box-shadow: none;
+  }
 }
 
 .scroll-sentinel {
