@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+- New rating display front end
 ### 🔧 Fixed
+- Ratings now go from 0 to 10 (instead of 1 to 10)
 
 ## Release v1.6.3
 ### ➕ Added
