@@ -94,8 +94,14 @@
 
     if (rateModal) {
         rateModal.addEventListener('click', (e) => {
-            if (e.target === rateModal) {
-                rateModal.classList.remove('visible');
+            e.stopPropagation();
+        });
+    }
+
+    if (addToListModal) {
+        addToListModal.addEventListener('click', (e) => {
+            if (e.target === addToListModal) {
+                addToListModal.classList.remove('visible');
             }
         });
     }
@@ -118,7 +124,7 @@
 
     if (addToListModal) {
         addToListModal.addEventListener('click', (e) => {
-            if (e.target === addToListModal) {
+            if (e.target === e.currentTarget) {
                 addToListModal.classList.remove('visible');
             }
         });

@@ -121,9 +121,7 @@
 
     if (rateModal) {
         rateModal.addEventListener('click', (e) => {
-            if (e.target === rateModal) {
-                rateModal.classList.remove('visible');
-            }
+            e.stopPropagation();
         });
     }
 
