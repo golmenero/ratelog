@@ -397,3 +397,65 @@ img {
   width: 24px;
   height: 24px;
 }
+
+.card.clickable {
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.card.clickable:hover {
+  border-color: var(--border-strong);
+}
+
+.season-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.season-card-header {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.season-card.expandable .season-card-header:hover {
+  background: var(--surface-muted);
+}
+
+.season-card-body {
+  display: none;
+  padding: 16px 16px 20px;
+  border-top: 1px solid var(--border);
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.season-card.expanded .season-card-body {
+  display: flex;
+}
+
+form.inline {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+}
+
+.delete-rating-btn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease;
+  box-shadow: none;
+}
+
+.delete-rating-btn:hover {
+  color: var(--danger);
+  background: rgba(199, 103, 103, 0.1);
+}
