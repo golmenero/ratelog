@@ -24,13 +24,8 @@
             <div th:replace="~{fragments/rate-slider :: rateSlider('soundtrack', 'modal.soundtrack')}"></div>
             <div th:replace="~{fragments/rate-slider :: rateSlider('screenplay', 'modal.script')}"></div>
 
-            <div class="separator"></div>
-
             <div class="rate-modal-review">
-                <label for="review" class="rate-modal-label">
-                    <i data-lucide="message-square"></i>
-                    <span th:text="#{modal.review}">Review</span>
-                </label>
+                <label for="review" class="rate-modal-label" th:text="#{modal.review}">Review</label>
                 <textarea id="review" name="review" rows="4" maxlength="1000" th:placeholder="#{modal.review.placeholder}"></textarea>
             </div>
 
