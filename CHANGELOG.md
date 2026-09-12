@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Changed
 ### 🔧 Fixed
 
-## Release v1.6.3-beta.1
+## Release v1.6.3
 ### ➕ Added
 - Added general config persistence
 ### ⚡ Changed
