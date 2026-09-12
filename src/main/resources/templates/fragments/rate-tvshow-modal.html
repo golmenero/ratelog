@@ -2,9 +2,15 @@
     <div>
         <div class="flex separate top">
             <h2 th:text="${show.name}">TV Show Title</h2>
-            <button id="btnCloseModal" type="button">
+            <button id="btnCloseModal" type="button" th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
+        </div>
+
+        <div class="rating-modal-summary">
+            <span class="rating-modal-summary-label" th:text="#{modal.overall}">Overall</span>
+            <span class="rating-modal-summary-value" id="ratingOverallValue">5.00</span>
+            <span class="rating-modal-summary-max">/ 10</span>
         </div>
 
         <form th:action="@{/tv/rate}" method="post">
@@ -13,50 +19,21 @@
             <input type="hidden" name="tmdbId" th:value="${show.tmdbId}">
             <input type="hidden" id="seasonNumber" name="seasonNumber">
 
-            <label class="flex separate" for="directing">
-                <span class="flex centered gap"><i data-lucide="clapperboard"></i><span th:text="#{modal.direction}">Direction</span></span>
-                <span class="rating" id="directingValue">5.00</span>
-            </label>
-            <input id="directing" class="w-100" name="directing" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('directingValue').textContent = parseFloat(this.value).toFixed(2)">
+            <div th:replace="~{fragments/rate-slider :: rateSlider('directing', 'modal.direction')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('cinematography', 'modal.photography')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('acting', 'modal.acting')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('soundtrack', 'modal.soundtrack')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('screenplay', 'modal.script')}"></div>
 
             <div class="separator"></div>
 
-            <label class="flex separate" for="cinematography">
-                <span class="flex centered gap"><i data-lucide="camera"></i><span th:text="#{modal.photography}">Photography</span></span>
-                <span class="rating" id="cinematographyValue">5.00</span>
-            </label>
-            <input id="cinematography" class="w-100" name="cinematography" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('cinematographyValue').textContent = parseFloat(this.value).toFixed(2)">
-
-            <div class="separator"></div>
-
-            <label class="flex separate" for="acting">
-                <span class="flex centered gap"><i data-lucide="hat-glasses"></i><span th:text="#{modal.acting}">Acting</span></span>
-                <span class="rating" id="actingValue">5.00</span>
-            </label>
-            <input id="acting" class="w-100" name="acting" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('actingValue').textContent = parseFloat(this.value).toFixed(2)">
-
-            <div class="separator"></div>
-
-            <label class="flex separate" for="soundtrack">
-                <span class="flex centered gap"><i data-lucide="music"></i><span th:text="#{modal.soundtrack}">Soundtrack</span></span>
-                <span class="rating" id="soundtrackValue">5.00</span>
-            </label>
-            <input id="soundtrack" class="w-100" name="soundtrack" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('soundtrackValue').textContent = parseFloat(this.value).toFixed(2)">
-
-            <div class="separator"></div>
-
-            <label class="flex separate" for="screenplay">
-                <span class="flex centered gap"><i data-lucide="file-text"></i><span th:text="#{modal.script}">Script</span></span>
-                <span class="rating" id="screenplayValue">5.00</span>
-            </label>
-            <input id="screenplay" class="w-100" name="screenplay" type="range" min="1" max="10" step="0.25" value="5" oninput="document.getElementById('screenplayValue').textContent = parseFloat(this.value).toFixed(2)">
-
-            <div class="separator"></div>
-
-            <label for="review" class="flex centered gap">
-                <i data-lucide="message-square"></i><span th:text="#{modal.review}">Review</span>
-            </label>
-            <textarea id="review" class="w-100" name="review" rows="3" maxlength="1000" th:placeholder="#{modal.review.placeholder}" style="margin-top: 8px;"></textarea>
+            <div class="rate-modal-review">
+                <label for="review" class="rate-modal-label">
+                    <i data-lucide="message-square"></i>
+                    <span th:text="#{modal.review}">Review</span>
+                </label>
+                <textarea id="review" name="review" rows="4" maxlength="1000" th:placeholder="#{modal.review.placeholder}"></textarea>
+            </div>
 
             <button class="primary w-100" type="submit" th:text="#{profile.save}">Save</button>
         </form>

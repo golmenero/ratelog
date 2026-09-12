@@ -1,0 +1,26 @@
+<div th:fragment="rateSlider(name, labelKey)" class="rate-slider"
+     th:attr="data-name=${name},data-min='1',data-max='10',data-step='0.25',data-value='5'">
+    <input type="hidden" th:name="${name}" value="5">
+    <div class="rate-slider-header">
+        <span class="rate-slider-label">
+            <span th:text="#{${labelKey}}">Label</span>
+        </span>
+        <span class="rate-slider-value">5.00</span>
+    </div>
+    <div class="rate-slider-track">
+        <div class="rate-slider-fill"></div>
+        <div class="rate-slider-thumb"></div>
+    </div>
+    <div class="rate-slider-marks">
+        <span>1</span>
+        <span>2</span>
+        <span>3</span>
+        <span>4</span>
+        <span>5</span>
+        <span>6</span>
+        <span>7</span>
+        <span>8</span>
+        <span>9</span>
+        <span>10</span>
+    </div>
+</div>

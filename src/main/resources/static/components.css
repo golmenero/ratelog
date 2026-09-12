@@ -459,3 +459,70 @@ form.inline {
   color: var(--danger);
   background: rgba(199, 103, 103, 0.1);
 }
+
+.rating-modal-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.rating-modal-summary-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.rating-modal-summary-value {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: hsl(20 83% 84%);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.rating-modal-summary-max {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  opacity: 0.6;
+}
+
+.rate-modal-review {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.rate-modal-review textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  resize: vertical;
+  min-height: 96px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  outline: none;
+}
+
+.rate-modal-review textarea::placeholder {
+  color: var(--text-soft);
+  opacity: 0.5;
+}
+
+.rate-modal-review textarea:focus {
+  border-color: rgba(230, 120, 60, 0.45);
+  background: rgba(255, 255, 255, 0.05);
+}
