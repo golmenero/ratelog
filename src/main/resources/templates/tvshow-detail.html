@@ -47,54 +47,34 @@
     <div class="separator"></div>
 
     <div th:if="${show != null && !#lists.isEmpty(show.seasons)}">
-        <div th:each="season : ${show.seasons}" class="card">
-            <div class="flex separate">
+        <div th:each="season : ${show.seasons}" class="card season-card"
+             th:classappend="${season.hasRating} ? 'clickable expandable' : ''">
+            <div class="season-card-header flex separate">
                 <span class="season" th:if="${season.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
-                <div>
-                    <span th:if="${season.hasRating}" class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
-                    <button th:unless="${season.hasRating}" class="season-rate-btn" th:data-season="${season.seasonNumber}">
-                        <i data-lucide="star"></i>
-                    </button>
+                <span th:if="${season.hasRating}" class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
+                <button th:unless="${season.hasRating}" class="season-rate-btn" style="padding: 0;" th:data-season="${season.seasonNumber}">
+                    <i data-lucide="star"></i>
+                </button>
+            </div>
+            <div th:if="${season.hasRating}" class="season-card-body">
+                <div class="rating-radar"
+                     th:data-categories="'directing:' + ${season.directing} + ',cinematography:' + ${season.cinematography} + ',acting:' + ${season.acting} + ',soundtrack:' + ${season.soundtrack} + ',screenplay:' + ${season.screenplay}"></div>
+                <span class="visually-hidden" data-i18n-key="directing" th:text="#{tvshows.rating.category.directing}">Directing</span>
+                <span class="visually-hidden" data-i18n-key="cinematography" th:text="#{tvshows.rating.category.cinematography}">Cinematography</span>
+                <span class="visually-hidden" data-i18n-key="acting" th:text="#{tvshows.rating.category.acting}">Acting</span>
+                <span class="visually-hidden" data-i18n-key="soundtrack" th:text="#{tvshows.rating.category.soundtrack}">Soundtrack</span>
+                <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{tvshows.rating.category.screenplay}">Screenplay</span>
+                <div class="rating-detail-footer">
+                    <p th:if="${season.review}" class="rating-review-text" th:text="${season.review}"></p>
+                    <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
+                        <button type="submit" class="delete-rating-btn" th:aria-label="#{tvshow.detail.delete.rating}">
+                            <i data-lucide="trash"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
-            <div class="flex separate">
-                <div th:if="${season.hasRating}" class="flex gap wrap">
-                    <div class="category">
-                        <i data-lucide="clapperboard"></i>
-                        <span th:text="#{tvshows.rating.category.directing}">Directing</span>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.directing, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <div class="category">
-                        <i data-lucide="camera"></i>
-                        <span th:text="#{tvshows.rating.category.cinematography}">Cinematography</span>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.cinematography, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <div class="category">
-                        <i data-lucide="hat-glasses"></i>
-                        <span th:text="#{tvshows.rating.category.acting}">Acting</span>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.acting, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <div class="category">
-                        <i data-lucide="music"></i>
-                        <span th:text="#{tvshows.rating.category.soundtrack}">Soundtrack</span>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.soundtrack, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                    <div class="category">
-                        <i data-lucide="file-text"></i>
-                        <span th:text="#{tvshows.rating.category.screenplay}">Screenplay</span>
-                        <span th:text="${#strings.replace(#numbers.formatDecimal(season.screenplay, 1, 2), ',', '.')}">0.00</span>
-                    </div>
-                </div>
-                <form th:if="${season.hasRating}" th:action="@{'/tvshows/delete/' + ${show.id}}" method="post">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
-                    <button type="submit" th:aria-label="#{tvshow.detail.delete.rating}">
-                        <i data-lucide="trash"></i>
-                    </button>
-                </form>
-            </div>
-            <br th:if="${season.review}">
-            <p th:if="${season.review}" th:text="${season.review}"></p>
         </div>
     </div>
 
@@ -121,6 +101,15 @@
                 seasonNumberSelect.value = season;
             }
             rateModal.classList.add('visible');
+        });
+    });
+
+    document.querySelectorAll('.season-card.expandable').forEach(card => {
+        const header = card.querySelector('.season-card-header');
+        if (!header) return;
+        header.addEventListener('click', (e) => {
+            if (e.target.closest('form, button')) return;
+            card.classList.toggle('expanded');
         });
     });
 
