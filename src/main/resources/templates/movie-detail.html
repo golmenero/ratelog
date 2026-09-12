@@ -15,7 +15,7 @@
     <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
 
     <div class="card">
-        <div class="flex gap-lg w-100">
+        <div class="flex column-on-sm gap-lg w-100">
             <img class="detail" th:src="@{'https://image.tmdb.org/t/p/w185' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
             <div class="flex-1">
                 <div class="flex gap-lg separate">

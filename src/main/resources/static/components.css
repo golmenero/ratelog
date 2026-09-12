@@ -309,6 +309,21 @@ img {
   }
 }
 
+@media (max-width: 600px) {
+  .column-on-sm {
+    flex-direction: column;
+  }
+
+  .card img.detail {
+    width: 100%;
+    mask-image: none;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+    height: 150px;
+    margin: auto;
+  }
+}
+
 .scroll-sentinel {
   height: 1px;
   display: flex;
