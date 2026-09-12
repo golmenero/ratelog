@@ -17,6 +17,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect beta
+        id: meta
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == *-beta.* ]]; then
+            echo "is_beta=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_beta=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Extract changelog body
         id: changelog
         run: |
@@ -30,6 +39,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body: ${{ steps.changelog.outputs.body }}
+          prerelease: ${{ steps.meta.outputs.is_beta == 'true' }}
 
   build-and-push:
     needs: create-release
@@ -49,19 +59,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare image name (lowercase)
+      - name: Prepare image tags
         id: prep
         run: |
-          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
+          TAGS="${IMAGE}:${GITHUB_REF_NAME}"
+          if [[ "${GITHUB_REF_NAME}" != *-beta.* ]]; then
+            TAGS="${TAGS}
+          ${IMAGE}:latest"
+          fi
+          {
+            echo "tags<<EOF"
+            echo "$TAGS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: |
-            ${{ steps.prep.outputs.image }}:${{ github.ref_name }}
-            ${{ steps.prep.outputs.image }}:latest
+          tags: ${{ steps.prep.outputs.tags }}
 
   cleanup-old-versions:
     needs: build-and-push
