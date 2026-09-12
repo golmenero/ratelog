@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v1.6.3-beta.1
+### ➕ Added
 - Added general config persistence
 ### ⚡ Changed
 - Remember-me key is no longer regenerated on every application startup.
