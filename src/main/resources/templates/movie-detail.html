@@ -51,7 +51,7 @@
 
     <div th:if="${movie != null && movie.hasRating}" class="card rating-detail-card">
         <h2 class="rating-detail-title" th:text="#{movie.detail.your.rating}">Your rating</h2>
-        <div class="rating-radar"
+        <div class="rating-breakdown"
              th:data-categories="'directing:' + ${movie.directing} + ',cinematography:' + ${movie.cinematography} + ',acting:' + ${movie.acting} + ',soundtrack:' + ${movie.soundtrack} + ',screenplay:' + ${movie.screenplay}"></div>
         <span class="visually-hidden" data-i18n-key="directing" th:text="#{movies.rating.category.directing}">Directing</span>
         <span class="visually-hidden" data-i18n-key="cinematography" th:text="#{movies.rating.category.cinematography}">Cinematography</span>
@@ -60,13 +60,13 @@
         <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{movies.rating.category.screenplay}">Screenplay</span>
         <div class="rating-detail-footer">
             <p th:if="${movie.review}" class="rating-review-text" th:text="${movie.review}"></p>
-            <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="inline">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <button type="submit" class="delete-rating-btn" th:aria-label="#{movie.detail.delete.rating}">
-                    <i data-lucide="trash"></i>
-                </button>
-            </form>
         </div>
+        <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="rating-delete-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" class="delete-rating-btn" th:aria-label="#{movie.detail.delete.rating}">
+                <i data-lucide="trash"></i>
+            </button>
+        </form>
     </div>
 
 

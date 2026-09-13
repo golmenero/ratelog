@@ -1,0 +1,78 @@
+.rating-breakdown {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rating-breakdown .breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rating-breakdown .breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.rating-breakdown .breakdown-label {
+  flex: 0 0 110px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-soft);
+  text-align: left;
+}
+
+.rating-breakdown .breakdown-track {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.rating-breakdown .breakdown-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+@media (max-width: 480px) {
+  .rating-breakdown .breakdown-label {
+    flex-basis: 90px;
+    font-size: 11px;
+  }
+}
+
+.rating-detail-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.rating-detail-title {
+  width: 100%;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.rating-review-text {
+  width: 100%;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text);
+  font-style: italic;
+}
+
+.rating-delete-form {
+  align-self: flex-end;
+}
