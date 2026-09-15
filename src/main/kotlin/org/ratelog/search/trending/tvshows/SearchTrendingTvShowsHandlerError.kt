@@ -1,3 +1,0 @@
-package org.ratelog.search.trending.tvshows
-
-interface SearchTrendingTvShowsHandlerError

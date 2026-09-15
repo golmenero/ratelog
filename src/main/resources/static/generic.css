@@ -61,11 +61,36 @@ body {
   & > div {
     min-width: 0;
   }
-}
 
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr;
+  &.trending {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+
+     a {
+        position: relative;
+     }
+
+     img,
+     .poster-fallback {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+        filter: brightness(0.55) saturate(0.6);
+        transition: filter 0.2s ease;
+     }
+
+     a:hover img,
+     a:hover .poster-fallback {
+        filter: brightness(1) saturate(1);
+     }
+
+     .type-tag {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 2;
+     }
   }
 }
 
