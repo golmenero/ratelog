@@ -3,6 +3,9 @@ package org.ratelog.search
 import arrow.core.getOrElse
 import org.ratelog.MediaType
 import org.ratelog.annotations.CurrentUser
+import org.ratelog.search.trending.SearchTrending
+import org.ratelog.search.trending.SearchTrendingHandler
+import org.ratelog.search.trending.SearchTrendingQuery
 import org.ratelog.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -28,6 +31,7 @@ data class SearchResultResponse(
 @Controller
 class SearchController(
     private val handler: SearchHandler,
+    private val trendingHandler: SearchTrendingHandler,
 ) {
 
     @GetMapping("/")
@@ -62,6 +66,13 @@ class SearchController(
                     model.addAttribute("currentPage", page)
                 }
             )
+        } else {
+            SearchTrendingQuery(lang = user.metadataLang)
+                .let(trendingHandler::handle)
+                .getOrElse { SearchTrending(emptyList()) }
+                .let { trending ->
+                    model.addAttribute("trendingItems", trending.items)
+                }
         }
         return "search"
     }

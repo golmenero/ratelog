@@ -356,6 +356,43 @@ img {
   to { transform: rotate(360deg); }
 }
 
+.trending-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.trending-card {
+  flex: 0 0 auto;
+  width: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+
+  .poster-frame {
+    width: 110px;
+    height: 165px;
+  }
+
+  img,
+  .poster-fallback {
+    filter: brightness(0.55) saturate(0.6);
+    transition: filter 0.2s ease;
+  }
+
+  &:hover img,
+  &:hover .poster-fallback {
+    filter: brightness(1) saturate(1);
+  }
+}
+
 .install-steps {
   padding-left: 20px;
   margin: 0;

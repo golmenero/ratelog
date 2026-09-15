@@ -97,6 +97,40 @@ class TmdbClient(
         return ((response?.results ?: emptyList()) to (response?.totalPages ?: 1)).right()
     }
 
+    fun trendingMovies(lang: Lang): Either<TmdbError, List<TmdbMovieResponse>> {
+        requireApiKey()
+        rateLimiter.acquire()
+
+        val response = restClient.get()
+            .uri { builder ->
+                builder.path("/trending/movie/week")
+                    .queryParam("api_key", apiKey)
+                    .queryParam("language", lang)
+                    .build()
+            }
+            .retrieve()
+            .body(TmdbSearchResponse::class.java)
+
+        return (response?.results ?: emptyList()).right()
+    }
+
+    fun trendingTvShows(lang: Lang): Either<TmdbError, List<TmdbTvShowResponse>> {
+        requireApiKey()
+        rateLimiter.acquire()
+
+        val response = restClient.get()
+            .uri { builder ->
+                builder.path("/trending/tv/week")
+                    .queryParam("api_key", apiKey)
+                    .queryParam("language", lang)
+                    .build()
+            }
+            .retrieve()
+            .body(TmdbTvShowSearchResponse::class.java)
+
+        return (response?.results ?: emptyList()).right()
+    }
+
     fun tvShowDetails(tmdbId: TmdbId): Either<TmdbError, TvShow> {
         requireApiKey()
         rateLimiter.acquire()
