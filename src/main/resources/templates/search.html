@@ -51,14 +51,31 @@
         <div class="separator"></div>
 
         <div th:if="${results == null}">
-            <h2 th:if="${!#lists.isEmpty(trendingItems)}" th:text="#{search.trending.title}">Trending</h2>
-            <div th:if="${!#lists.isEmpty(trendingItems)}" class="trending-carousel">
-                <a th:each="item : ${trendingItems}"
-                   th:href="${item.type.name() == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
+            <h3 th:if="${!#lists.isEmpty(trendingTvShows)}" th:text="#{search.trending.tvshows.title}">Trending TV shows</h3>
+            <br>
+            <div th:if="${!#lists.isEmpty(trendingTvShows)}" class="trending-carousel">
+                <a th:each="item : ${trendingTvShows}"
+                   th:href="@{/tv/{id}(id=${item.tmdbId})}"
                    class="trending-card"
                    th:title="${item.title}">
                     <div class="poster-frame">
-                        <span class="tag type-tag" th:text="${item.type.name() == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
+                        <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
+                        <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
+                    </div>
+                    <p th:text="${item.title}">Title</p>
+                </a>
+            </div>
+
+            <div class="separator"></div>
+
+            <h3 th:if="${!#lists.isEmpty(trendingMovies)}" th:text="#{search.trending.movies.title}">Trending movies</h3>
+            <br>
+            <div th:if="${!#lists.isEmpty(trendingMovies)}" class="trending-carousel">
+                <a th:each="item : ${trendingMovies}"
+                   th:href="@{/movie/{id}(id=${item.tmdbId})}"
+                   class="trending-card"
+                   th:title="${item.title}">
+                    <div class="poster-frame">
                         <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                         <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                     </div>
@@ -69,6 +86,5 @@
     </section>
 </div>
 <script th:if="${hasMore}" th:src="@{/search.js}"></script>
-<script th:if="${results == null}" th:src="@{/trending.js}"></script>
 </body>
 </html>
