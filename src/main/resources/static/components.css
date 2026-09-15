@@ -356,20 +356,7 @@ img {
   to { transform: rotate(360deg); }
 }
 
-.trending-carousel {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
 .trending-card {
-  flex: 0 0 auto;
   width: 110px;
   display: flex;
   flex-direction: column;

@@ -53,7 +53,7 @@
         <div th:if="${results == null}">
             <h3 th:if="${!#lists.isEmpty(trendingTvShows)}" th:text="#{search.trending.tvshows.title}">Trending TV shows</h3>
             <br>
-            <div th:if="${!#lists.isEmpty(trendingTvShows)}" class="trending-carousel">
+            <div th:if="${!#lists.isEmpty(trendingTvShows)}" class="flex wrap gap">
                 <a th:each="item : ${trendingTvShows}"
                    th:href="@{/tv/{id}(id=${item.tmdbId})}"
                    class="trending-card"
@@ -70,7 +70,7 @@
 
             <h3 th:if="${!#lists.isEmpty(trendingMovies)}" th:text="#{search.trending.movies.title}">Trending movies</h3>
             <br>
-            <div th:if="${!#lists.isEmpty(trendingMovies)}" class="trending-carousel">
+            <div th:if="${!#lists.isEmpty(trendingMovies)}" class="flex wrap gap">
                 <a th:each="item : ${trendingMovies}"
                    th:href="@{/movie/{id}(id=${item.tmdbId})}"
                    class="trending-card"
