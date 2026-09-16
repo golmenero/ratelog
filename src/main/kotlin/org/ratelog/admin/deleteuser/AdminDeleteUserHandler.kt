@@ -24,7 +24,7 @@ class AdminDeleteUserHandler(
         ensure(command.currentUser.id != command.targetUserId) { AdminDeleteUserHandlerError.CannotDeleteYourself }
 
         val target = userRepository.findById(command.targetUserId) ?: raise(AdminDeleteUserHandlerError.UserNotFound)
-        ensure(!(target.role == Role.SUPERADMIN && command.currentUser.role != Role.SUPERADMIN)) {
+        ensure(target.role != Role.SUPERADMIN) {
             AdminDeleteUserHandlerError.CannotDeleteSuperadmin
         }
 

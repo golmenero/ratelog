@@ -75,7 +75,7 @@ class AdminDeleteUserHandlerTest {
     }
 
     @Test
-    fun `given superadmin deleting a SUPERADMIN then succeeds`() {
+    fun `given superadmin deleting a SUPERADMIN then returns CannotDeleteSuperadmin`() {
         // Given
         val superadmin = userRepository.save(UserFactory.aUser(username = "root1", role = Role.SUPERADMIN))
         val other = userRepository.save(UserFactory.aUser(username = "root2", role = Role.SUPERADMIN))
@@ -84,8 +84,8 @@ class AdminDeleteUserHandlerTest {
         val result = handler.handle(AdminDeleteUserCommand(currentUser = superadmin, targetUserId = other.id!!))
 
         // Then
-        assertTrue(result.isRight())
-        assertNull(userRepository.findById(other.id!!))
+        assertTrue(result.isLeft())
+        assertEquals(AdminDeleteUserHandlerError.CannotDeleteSuperadmin, result.fold({ it }, { Unit }))
     }
 
     @Test

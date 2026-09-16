@@ -15,13 +15,15 @@
             <a class="nav-link" href="/movies" th:text="#{nav.movies}">Movies</a>
             <a class="nav-link" href="/tvshows" th:text="#{nav.tvshows}">TV Shows</a>
             <a class="nav-link" href="/community" th:text="#{nav.community}">Community</a>
-            <a class="nav-link" href="/admin/dashboard"
-               th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''SUPERADMIN'')')}"
-               th:text="#{admin.title}">Admin</a>
         </nav>
         <div class="nav-auth" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
             <a href="/profile" class="nav-link btn" th:aria-label="#{nav.profile}">
                 <i data-lucide="user" aria-hidden="true"></i>
+            </a>
+            <a href="/admin/dashboard" class="nav-link btn"
+               th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''SUPERADMIN'')')}"
+               th:aria-label="#{admin.title}">
+                <i data-lucide="users" aria-hidden="true"></i>
             </a>
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="nav-link" th:aria-label="#{auth.logout}">
