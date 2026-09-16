@@ -35,6 +35,7 @@ class SecurityConfig(
                     .requestMatchers("/login", "/register", "/styles.css", "/lucide.min.js", "/img/**", "/manifest.webmanifest").permitAll()
                     .requestMatchers("/*.css", "/*.js").permitAll()
                     .requestMatchers("/api/health").permitAll()
+                    .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                     .anyRequest().authenticated()
             }
             .formLogin { form ->
@@ -61,6 +62,13 @@ class SecurityConfig(
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID")
                     .permitAll()
+            }
+
+        http
+            .exceptionHandling { eh ->
+                eh.accessDeniedHandler { _, response, _ ->
+                    response.sendRedirect("/profile")
+                }
             }
 
         return http.build()
