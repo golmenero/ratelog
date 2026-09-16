@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head th:replace="~{fragments/head :: head(#{admin.title})}"></head>
+<body>
+<div th:replace="~{fragments/loader}"></div>
+<div class="page">
+    <header class="site-header" th:replace="~{fragments/nav :: nav(active='admin')}"></header>
+
+    <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
+    <div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
+
+    <section class="card">
+        <div class="flex separate">
+            <h2 class="m-0" th:text="#{admin.users.title}">Users</h2>
+            <button id="btnOpenCreateUserModal" type="button" class="primary">
+                <span class="flex gap-sm">
+                    <i data-lucide="user-plus"></i>
+                    <span th:text="#{admin.user.create}">Create user</span>
+                </span>
+            </button>
+        </div>
+
+        <div th:if="${users == null or #lists.isEmpty(users)}" class="empty-state" th:text="#{admin.users.empty}">No users yet.</div>
+
+        <table th:unless="${users == null or #lists.isEmpty(users)}" class="w-100">
+            <thead>
+            <tr>
+                <th th:text="#{admin.user.username}">Username</th>
+                <th th:text="#{admin.user.email}">Email</th>
+                <th th:text="#{admin.user.role}">Role</th>
+                <th th:text="#{admin.user.created}">Created</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${users}">
+                <td>
+                    <div class="flex gap">
+                        <div class="avatar sm" th:text="${#strings.toUpperCase(#strings.substring(u.username.value, 0, 1))}">U</div>
+                        <span th:text="${u.username.value}">username</span>
+                    </div>
+                </td>
+                <td th:text="${u.email.value}">email</td>
+                <td>
+                    <span th:switch="${u.role.name()}">
+                        <span th:case="'SUPERADMIN'" class="badge superadmin" th:text="#{admin.user.role.superadmin}">Superadmin</span>
+                        <span th:case="'ADMIN'" class="badge admin" th:text="#{admin.user.role.admin}">Admin</span>
+                        <span th:case="'USER'" class="badge user" th:text="#{admin.user.role.user}">User</span>
+                    </span>
+                </td>
+                <td class="date"
+                    th:text="${#dates.format(u.createdAtEpochMs, 'yyyy-MM-dd')}">2024-01-01</td>
+                <td>
+                    <div class="flex gap">
+                        <button type="button" class="open-edit-user"
+                                th:data-id="${u.id.value}"
+                                th:data-username="${u.username.value}"
+                                th:data-role="${u.role.name()}"
+                                th:aria-label="#{admin.user.edit}">
+                            <i data-lucide="pencil"></i>
+                        </button>
+                        <form th:action="@{'/admin/users/' + ${u.id.value} + '/delete'}" method="post"
+                              th:onsubmit="|return confirm('${#messages.msg('admin.user.delete.confirm')}')|">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="danger" th:aria-label="#{admin.user.delete}"
+                                    th:disabled="${u.id.value == currentUserId}">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+
+<div th:replace="~{fragments/admin-create-user-modal :: createUserModal}"></div>
+<div th:replace="~{fragments/admin-edit-user-modal :: editUserModal}"></div>
+<script>
+    (function() {
+        document.querySelectorAll('.open-edit-user').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var modal = document.getElementById('editUserModal');
+                if (!modal) return;
+                var id = btn.dataset.id;
+                var credsForm = document.getElementById('editCredentialsForm');
+                var roleForm = document.getElementById('editRoleForm');
+                if (credsForm) credsForm.action = '/admin/users/' + id + '/credentials';
+                if (roleForm) roleForm.action = '/admin/users/' + id + '/role';
+                modal.querySelector('input[name="username"]').value = btn.dataset.username;
+                modal.querySelector('select[name="role"]').value = btn.dataset.role;
+                modal.classList.add('visible');
+            });
+        });
+
+        var create = document.getElementById('createUserModal');
+        var openCreate = document.getElementById('btnOpenCreateUserModal');
+        var closeCreate = document.getElementById('btnCloseCreateUserModal');
+        if (openCreate && create) openCreate.addEventListener('click', function() { create.classList.add('visible'); });
+        if (closeCreate && create) closeCreate.addEventListener('click', function() { create.classList.remove('visible'); });
+        if (create) create.addEventListener('click', function(e) { if (e.target === create) create.classList.remove('visible'); });
+
+        var edit = document.getElementById('editUserModal');
+        var closeEdit = document.getElementById('btnCloseEditUserModal');
+        if (closeEdit && edit) closeEdit.addEventListener('click', function() { edit.classList.remove('visible'); });
+        if (edit) edit.addEventListener('click', function(e) { if (e.target === edit) edit.classList.remove('visible'); });
+    })();
+</script>
+</body>
+</html>

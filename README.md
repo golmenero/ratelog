@@ -58,6 +58,7 @@ Open a <a href="https://github.com/golmenero/ratelog/discussions">Discussion</a>
 
 ### Multi-user & Languages
 - **Multi-user** — Each user has their own ratings, follows, and tops
+- **Roles** — `USER`, `ADMIN` and `SUPERADMIN`. Superadmins can manage every account from the `/admin/dashboard`. A bootstrap superadmin is seeded on first run (see below).
 - **Multi language support** — 
   ![EN](https://flagcdn.com/24x18/gb.png)
   ![DE](https://flagcdn.com/24x18/de.png)
@@ -142,6 +143,21 @@ This will start the following services:
 ```bash
 curl http://localhost:8080/api/health
 ```
+
+#### Step 6: Log in as the bootstrap admin
+
+On first run, the Flyway migration `V20__add_role_and_seed_admin.sql` seeds a superadmin account:
+
+| Field    | Value             |
+|----------|-------------------|
+| Username | `admin`           |
+| Password | `admin`           |
+| Email    | `admin@admin.com` |
+| Role     | `SUPERADMIN`      |
+
+> **Important:** Change the password from the admin dashboard immediately after first login.
+
+If an `admin` user already exists (e.g. created via the registration form), the migration only forces its role to `SUPERADMIN` and leaves its existing email and password untouched.
 
 ---
 
