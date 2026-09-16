@@ -40,7 +40,7 @@ class SearchTrendingHandler(
     }
 
     companion object {
-        private const val LIMIT = 8
+        private const val LIMIT = 5
 
         private fun interleave(movies: List<SearchTrendingItem>, tvShows: List<SearchTrendingItem>): List<SearchTrendingItem> {
             val result = mutableListOf<SearchTrendingItem>()

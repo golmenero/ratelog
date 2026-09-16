@@ -47,7 +47,7 @@ class SearchTrendingHandlerTest {
     }
 
     @Test
-    fun `given tmdb returns more than 8 per type when handle then limit each list to 8`() {
+    fun `given tmdb returns more than 5 per type when handle then limit each list to 5`() {
         val movies = (1..12).map {
             TmdbMovieResponse(it, "Movie $it", overview = "Overview", releaseDate = "2023-01-01", posterPath = "/p.jpg", originalTitle = "Movie $it")
         }
@@ -60,9 +60,9 @@ class SearchTrendingHandlerTest {
         val result = handler.handle(SearchTrendingQuery(lang = Lang.en))
 
         val trending = result.getOrElse { SearchTrending(emptyList()) }
-        assertEquals(16, trending.items.size)
-        assertEquals(8, trending.items.count { it.type == MediaType.movie })
-        assertEquals(8, trending.items.count { it.type == MediaType.tvshow })
+        assertEquals(10, trending.items.size)
+        assertEquals(5, trending.items.count { it.type == MediaType.movie })
+        assertEquals(5, trending.items.count { it.type == MediaType.tvshow })
     }
 
     @Test
