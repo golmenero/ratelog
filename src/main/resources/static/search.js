@@ -33,6 +33,7 @@ const SearchInfinite = {
             const data = await response.json();
 
             data.items.forEach(item => this.results.appendChild(this.createCard(item)));
+            if (window.lucide) lucide.createIcons();
 
             if (data.hasMore) {
                 this.sentinel.dataset.page = page;
@@ -55,8 +56,12 @@ const SearchInfinite = {
         posterFrame.className = 'poster-frame';
 
         const typeTag = document.createElement('span');
-        typeTag.className = 'tag type-tag';
-        typeTag.textContent = item.type === 'movie' ? 'Movie' : 'TV';
+        typeTag.className = 'type-tag';
+        typeTag.title = item.type === 'movie' ? 'Movie' : 'TV';
+        const typeIcon = document.createElement('i');
+        typeIcon.setAttribute('data-lucide', item.type === 'movie' ? 'film' : 'tv');
+        typeIcon.setAttribute('aria-hidden', 'true');
+        typeTag.appendChild(typeIcon);
         posterFrame.appendChild(typeTag);
 
         if (item.posterPath) {

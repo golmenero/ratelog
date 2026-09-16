@@ -28,7 +28,8 @@
                th:href="${item.type == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
                class="result-card">
                 <div class="poster-frame">
-                    <span class="tag type-tag" th:text="${item.type == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
+                    <span class="type-tag" th:if="${item.type == 'movie'}" th:title="#{search.type.movie}"><i data-lucide="film" aria-hidden="true"></i></span>
+                    <span class="type-tag" th:unless="${item.type == 'movie'}" th:title="#{search.type.tv}"><i data-lucide="tv" aria-hidden="true"></i></span>
                     <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                     <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                 </div>
@@ -56,7 +57,8 @@
                 <a th:each="item : ${trendingItems}"
                    th:href="${item.type.name() == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
                    th:title="${item.title}">
-                    <span class="tag type-tag" th:text="${item.type.name() == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
+                    <span class="type-tag" th:if="${item.type.name() == 'movie'}" th:title="#{search.type.movie}"><i data-lucide="film" aria-hidden="true"></i></span>
+                    <span class="type-tag" th:unless="${item.type.name() == 'movie'}" th:title="#{search.type.tv}"><i data-lucide="tv" aria-hidden="true"></i></span>
                     <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                     <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                     <h3 th:text="${item.title}">Title</h3>

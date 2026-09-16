@@ -90,6 +90,23 @@ body {
         top: 8px;
         left: 8px;
         z-index: 2;
+        width: 28px;
+        height: 28px;
+        padding: 6px;
+        background: var(--tag-bg);
+        border-radius: 999px;
+        color: var(--text);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        flex-shrink: 0;
+
+        svg {
+          width: 16px;
+          height: 16px;
+          display: block;
+        }
      }
 
      h3 {

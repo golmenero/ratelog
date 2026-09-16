@@ -39,7 +39,8 @@
                th:href="${item.mediaType == 'movie'} ? @{/movie/{id}(id=${item.tmdbId})} : @{/tv/{id}(id=${item.tmdbId})}"
                class="list-card" th:data-item-id="${item.id.value}">
                 <div class="poster-frame">
-                    <span class="tag type-tag" th:text="${item.mediaType == 'movie'} ? #{search.type.movie} : #{search.type.tv}">Type</span>
+                    <span class="type-tag" th:if="${item.mediaType == 'movie'}" th:title="#{search.type.movie}"><i data-lucide="film" aria-hidden="true"></i></span>
+                    <span class="type-tag" th:unless="${item.mediaType == 'movie'}" th:title="#{search.type.tv}"><i data-lucide="tv" aria-hidden="true"></i></span>
                     <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                     <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
                 </div>
