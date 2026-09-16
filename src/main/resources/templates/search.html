@@ -32,13 +32,13 @@
                     <span class="type-tag" th:unless="${item.type == 'movie'}" th:title="#{search.type.tv}"><i data-lucide="tv" aria-hidden="true"></i></span>
                     <img th:if="${item.posterPath != null}" th:src="@{'https://image.tmdb.org/t/p/w185' + ${item.posterPath}}" th:alt="'Poster of ' + ${item.title}">
                     <div th:unless="${item.posterPath != null}" class="poster-fallback" th:text="${#strings.toUpperCase(#strings.substring(item.title, 0, 1))}">?</div>
-                </div>
-                <div class="result-content">
-                    <h3>
-                        <span th:text="${item.title}">Title</span>
-                        <span class="year" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
-                    </h3>
-                    <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : #{search.no.synopsis}">Overview</p>
+                    <div class="result-content">
+                        <h3>
+                            <span th:text="${item.title}">Title</span>
+                            <span class="year" th:text="${item.year != null} ? ${item.year} : #{movies.year.unknown}">Year</span>
+                        </h3>
+                        <p class="result-overview" th:text="${item.overview != null and item.overview.trim().length() > 0} ? ${item.overview} : #{search.no.synopsis}">Overview</p>
+                    </div>
                 </div>
             </a>
         </div>
