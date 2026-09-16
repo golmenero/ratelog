@@ -3,6 +3,7 @@ package org.ratelog.user
 import jakarta.servlet.http.HttpServletRequest
 import org.ratelog.Email
 import org.ratelog.Lang
+import org.ratelog.Role
 import org.ratelog.Username
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -19,9 +20,20 @@ class AppUserDetails(
     private val password: String,
     val lang: Lang,
     val metadataLang: Lang,
+    val role: Role,
 ) : UserDetails {
-    override fun getAuthorities(): Collection<GrantedAuthority> =
-        listOf(SimpleGrantedAuthority("ROLE_USER"))
+    override fun getAuthorities(): Collection<GrantedAuthority> = when (role) {
+        Role.SUPERADMIN -> listOf(
+            SimpleGrantedAuthority(Role.USER.authority),
+            SimpleGrantedAuthority(Role.ADMIN.authority),
+            SimpleGrantedAuthority(Role.SUPERADMIN.authority),
+        )
+        Role.ADMIN -> listOf(
+            SimpleGrantedAuthority(Role.USER.authority),
+            SimpleGrantedAuthority(Role.ADMIN.authority),
+        )
+        Role.USER -> listOf(SimpleGrantedAuthority(Role.USER.authority))
+    }
 
     override fun getPassword(): String = password
     override fun getUsername(): String = username
@@ -46,6 +58,7 @@ class UserDetailsService(
             password = user.passwordHash,
             lang = user.lang,
             metadataLang = user.metadataLang,
+            role = user.role,
         )
     }
 
@@ -59,6 +72,7 @@ class UserDetailsService(
                 passwordHash = p.password,
                 lang = p.lang,
                 metadataLang = p.metadataLang,
+                role = p.role,
             )
         }
 

@@ -17,6 +17,7 @@ data class UserEntity(
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
     val lang: String,
     @Column("metadata_lang") val metadataLang: String = "en",
+    val role: String,
 )
 
 @Table("users_follows")
@@ -34,6 +35,21 @@ interface UserDAO : CrudRepository<UserEntity, Long> {
 
     @Query("SELECT * FROM users WHERE username LIKE CONCAT('%', :username, '%')")
     fun findByUsernameContaining(username: String): List<UserEntity>
+
+    @Query("SELECT * FROM users ORDER BY created_at_epoch_ms DESC, id DESC")
+    fun findAllOrdered(): List<UserEntity>
+
+    @org.springframework.data.jdbc.repository.query.Modifying
+    @Query("DELETE FROM users WHERE id = :id")
+    fun deleteByIdRaw(id: Long)
+
+    @org.springframework.data.jdbc.repository.query.Modifying
+    @Query("UPDATE users SET role = :role WHERE id = :id")
+    fun updateRoleRaw(id: Long, role: String)
+
+    @org.springframework.data.jdbc.repository.query.Modifying
+    @Query("UPDATE users SET username = :username, password_hash = :passwordHash WHERE id = :id")
+    fun updateCredentialsRaw(id: Long, username: String, passwordHash: String)
 }
 
 @Repository

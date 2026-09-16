@@ -2,6 +2,7 @@ package org.ratelog.user
 
 import org.ratelog.Email
 import org.ratelog.Lang
+import org.ratelog.Role
 import org.ratelog.Username
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
@@ -20,8 +21,9 @@ class UserRepositoryImpl(
     override fun findByEmail(email: Email): User? =
         userDAO.findByEmail(email.value).getOrNull()?.toDomain()
 
-    override fun save(user: User) {
-        user.toEntity().let(userDAO::save)
+    override fun save(user: User): User {
+        val saved = user.toEntity().let(userDAO::save)
+        return saved.toDomain()
     }
 
     override fun findByUsernameContaining(username: Username): List<User> =
@@ -45,6 +47,21 @@ class UserRepositoryImpl(
         }
     }
 
+    override fun findAll(): List<User> =
+        userDAO.findAllOrdered().map { it.toDomain() }
+
+    override fun deleteById(id: User.Id) {
+        userDAO.deleteByIdRaw(id.value)
+    }
+
+    override fun updateRole(id: User.Id, role: Role) {
+        userDAO.updateRoleRaw(id.value, role.name)
+    }
+
+    override fun updateCredentials(id: User.Id, username: Username, passwordHash: String) {
+        userDAO.updateCredentialsRaw(id.value, username.value, passwordHash)
+    }
+
     private fun UserEntity.toDomain(): User =
         User(
             id = id!!.let { User.Id(it) },
@@ -54,6 +71,7 @@ class UserRepositoryImpl(
             createdAtEpochMs = createdAtEpochMs,
             lang = Lang.valueOf(lang),
             metadataLang = Lang.valueOf(metadataLang),
+            role = Role.valueOf(role),
         )
 
     private fun User.toEntity(): UserEntity =
@@ -65,5 +83,6 @@ class UserRepositoryImpl(
             createdAtEpochMs = createdAtEpochMs,
             lang = lang.name,
             metadataLang = metadataLang.name,
+            role = role.name,
         )
 }

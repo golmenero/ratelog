@@ -26,6 +26,7 @@ object UserFactory {
         createdAtEpochMs: Long = System.currentTimeMillis(),
         lang: Lang = Lang.en,
         metadataLang: Lang = Lang.en,
+        role: Role = Role.USER,
     ) = User(
         id = id?.let { User.Id(it) },
         username = Username(username),
@@ -34,6 +35,7 @@ object UserFactory {
         createdAtEpochMs = createdAtEpochMs,
         lang = lang,
         metadataLang = metadataLang,
+        role = role,
     )
 }
 

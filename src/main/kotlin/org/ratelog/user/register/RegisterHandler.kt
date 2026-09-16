@@ -6,6 +6,7 @@ import arrow.core.raise.ensure
 import org.ratelog.Email
 import org.ratelog.Lang
 import org.ratelog.Password
+import org.ratelog.Role
 import org.ratelog.Username
 import org.ratelog.user.User
 import org.ratelog.user.UserRepository
@@ -39,6 +40,7 @@ class RegisterHandler(
             passwordHash = hashedPassword,
             lang = command.lang,
             metadataLang = command.lang,
+            role = Role.USER,
         ).let(userRepository::save)
     }
 }

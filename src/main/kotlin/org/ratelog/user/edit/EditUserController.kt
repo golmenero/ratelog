@@ -87,6 +87,7 @@ class EditUserController(
                 password = password ?: currentDetails.password,
                 lang = currentDetails.lang,
                 metadataLang = currentDetails.metadataLang,
+                role = currentDetails.role,
             ),
             auth.credentials,
             auth.authorities

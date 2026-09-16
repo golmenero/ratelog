@@ -131,6 +131,21 @@ enum class Lang {
     }
 }
 
+enum class Role {
+    USER, ADMIN, SUPERADMIN;
+
+    val authority: String get() = "ROLE_$name"
+
+    val isAdminLike: Boolean get() = this == ADMIN || this == SUPERADMIN
+
+    companion object {
+        fun parse(value: String): Either<ParseError, Role> = either {
+            entries.find { it.name.equals(value, ignoreCase = true) }
+                ?: raise(ParseError.InvalidRole)
+        }
+    }
+}
+
 data class Review(val value: String) {
     companion object {
         fun sanitize(raw: String): Review = Review(
@@ -159,4 +174,5 @@ sealed interface ParseError {
     data object InvalidEmail : ParseError
     data object InvalidPassword : ParseError
     data object InvalidListName : ParseError
+    data object InvalidRole : ParseError
 }
