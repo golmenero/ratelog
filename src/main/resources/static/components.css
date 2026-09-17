@@ -563,61 +563,58 @@ form.inline {
   background: rgba(255, 255, 255, 0.05);
 }
 
-.admin-users-table {
-  border-collapse: separate;
-  border-spacing: 0 6px;
+.user-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.admin-users-table thead th {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  padding: 0 12px 8px;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
+.user-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.admin-users-table thead th.col-actions {
-  text-align: right;
+.user-card-info > * {
+  overflow-wrap: anywhere;
 }
 
-.admin-users-table tbody td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-}
-
-.admin-users-table tbody td:last-child {
-  text-align: right;
-}
-
-.admin-users-table .row-actions {
-  display: inline-flex;
+.user-card-add {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  justify-content: flex-end;
-}
+  padding: 12px 16px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-soft);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: none;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 
-.admin-users-table .row-actions form {
-  margin: 0;
-}
+  i, svg {
+    width: 24px;
+    height: 24px;
+  }
 
-.admin-users-table a.link {
-  color: var(--text);
-  text-decoration: none;
-}
-
-.admin-users-table a.link:hover {
-  color: var(--accent);
-}
-
-.admin-add-user-btn {
-  padding: 8px;
-  border-radius: 10px;
-  margin-left: auto;
-  margin-bottom: 12px;
+  &:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(230, 120, 60, 0.04);
+  }
 }
 
 .pill {

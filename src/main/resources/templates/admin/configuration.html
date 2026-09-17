@@ -16,78 +16,63 @@
         <div class="empty-state" th:text="#{config.general.empty}">No settings yet.</div>
     </section>
 
+    <br>
+
     <h2 th:text="#{config.users.title}">Users</h2>
-    <section class="card">
-        <div class="flex separate">
-            <button id="btnOpenCreateUserModal" type="button" class="primary admin-add-user-btn" th:aria-label="#{admin.user.create}">
-                <i data-lucide="plus"></i>
-            </button>
+
+    <div class="user-cards">
+        <div th:each="u : ${users}" class="card user-card">
+            <div class="flex centered gap">
+                <div class="avatar sm" th:text="${#strings.toUpperCase(#strings.substring(u.username.value, 0, 1))}">U</div>
+                <div class="flex-1 user-card-info ellipsis">
+                    <span class="title" th:text="${u.username.value}">username</span>
+                    <span class="date" th:text="${u.email.value}">email@example.com</span>
+                </div>
+                <th:block th:switch="${u.role.name()}">
+                    <span th:case="'SUPERADMIN'" class="pill superadmin" th:text="#{admin.user.role.superadmin}">Superadmin</span>
+                    <span th:case="'ADMIN'" class="pill admin" th:text="#{admin.user.role.admin}">Admin</span>
+                    <span th:case="'USER'" class="pill user" th:text="#{admin.user.role.user}">User</span>
+                </th:block>
+            </div>
+            <div class="separator"></div>
+            <div class="flex separate">
+                <span class="date" th:text="${#dates.format(u.createdAtEpochMs, 'yyyy-MM-dd')}">2024-01-01</span>
+                <div class="flex gap">
+                    <a th:href="@{'/profile/' + ${u.id.value}}" class="btn" th:aria-label="#{admin.user.view.profile}">
+                        <i data-lucide="eye"></i>
+                    </a>
+                    <button type="button" class="open-edit-user"
+                            th:data-id="${u.id.value}"
+                            th:data-username="${u.username.value}"
+                            th:data-email="${u.email.value}"
+                            th:data-role="${u.role.name()}"
+                            th:aria-label="#{admin.user.edit}"
+                            th:if="${currentUserRole == 'SUPERADMIN' or u.role.name() == 'USER'}">
+                        <i data-lucide="pencil"></i>
+                    </button>
+                    <form class="delete-user-form inline" th:action="@{'/admin/users/' + ${u.id.value} + '/delete'}" method="post"
+                          th:data-confirm="#{admin.user.delete.confirm}"
+                          th:if="${
+                              u.id.value != currentUserId and (
+                                  (currentUserRole == 'SUPERADMIN' and u.role.name() != 'SUPERADMIN')
+                                  or
+                                  (currentUserRole == 'ADMIN' and u.role.name() == 'USER')
+                              )
+                          }">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="danger" th:aria-label="#{admin.user.delete}">
+                            <i data-lucide="trash-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <div th:if="${users == null or #lists.isEmpty(users)}" class="empty-state" th:text="#{admin.users.empty}">No users yet.</div>
-
-        <table th:unless="${users == null or #lists.isEmpty(users)}" class="w-100 admin-users-table">
-            <thead>
-            <tr>
-                <th class="col-user" th:text="#{admin.user.username}">Username</th>
-                <th class="col-email" th:text="#{admin.user.email}">Email</th>
-                <th class="col-role" th:text="#{admin.user.role}">Role</th>
-                <th class="col-date" th:text="#{admin.user.created}">Created</th>
-                <th class="col-actions"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="u : ${users}">
-                <td>
-                    <div class="flex centered gap">
-                        <div class="avatar sm" th:text="${#strings.toUpperCase(#strings.substring(u.username.value, 0, 1))}">U</div>
-                        <span th:text="${u.username.value}">username</span>
-                    </div>
-                </td>
-                <td th:text="${u.email.value}">email</td>
-                <td>
-                    <span th:switch="${u.role.name()}">
-                        <span th:case="'SUPERADMIN'" class="pill superadmin" th:text="#{admin.user.role.superadmin}">Superadmin</span>
-                        <span th:case="'ADMIN'" class="pill admin" th:text="#{admin.user.role.admin}">Admin</span>
-                        <span th:case="'USER'" class="pill user" th:text="#{admin.user.role.user}">User</span>
-                    </span>
-                </td>
-                <td class="date"
-                    th:text="${#dates.format(u.createdAtEpochMs, 'yyyy-MM-dd')}">2024-01-01</td>
-                <td>
-                    <div class="row-actions">
-                        <a th:href="@{'/profile/' + ${u.id.value}}" class="btn" th:aria-label="#{admin.user.view.profile}">
-                            <i data-lucide="eye"></i>
-                        </a>
-                        <button type="button" class="open-edit-user"
-                                th:data-id="${u.id.value}"
-                                th:data-username="${u.username.value}"
-                                th:data-email="${u.email.value}"
-                                th:data-role="${u.role.name()}"
-                                th:aria-label="#{admin.user.edit}"
-                                th:if="${currentUserRole == 'SUPERADMIN' or u.role.name() == 'USER'}">
-                            <i data-lucide="pencil"></i>
-                        </button>
-                        <form class="delete-user-form" th:action="@{'/admin/users/' + ${u.id.value} + '/delete'}" method="post"
-                              th:data-confirm="#{admin.user.delete.confirm}"
-                              th:if="${
-                                  u.id.value != currentUserId and (
-                                      (currentUserRole == 'SUPERADMIN' and u.role.name() != 'SUPERADMIN')
-                                      or
-                                      (currentUserRole == 'ADMIN' and u.role.name() == 'USER')
-                                  )
-                              }">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <button type="submit" class="danger" th:aria-label="#{admin.user.delete}">
-                                <i data-lucide="trash-2"></i>
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </section>
+        <button id="btnOpenCreateUserModal" type="button" class="user-card-add" th:aria-label="#{admin.user.create}">
+            <i data-lucide="user-plus"></i>
+            <span th:text="#{admin.user.create}">Create user</span>
+        </button>
+    </div>
 </div>
 
 <div th:replace="~{fragments/admin-create-user-modal :: createUserModal}"></div>
