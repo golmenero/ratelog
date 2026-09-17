@@ -31,16 +31,16 @@ class AdminUpdateCredentialsController(
     ): String {
         val parsedUsername = Username.parse(username).getOrElse {
             redirectAttributes.addFlashAttribute("error", "admin.error.invalid.username")
-            return "redirect:/admin/dashboard"
+            return "redirect:/admin/configuration"
         }
         val parsedEmail = Email.parse(email).getOrElse {
             redirectAttributes.addFlashAttribute("error", "admin.error.invalid.email")
-            return "redirect:/admin/dashboard"
+            return "redirect:/admin/configuration"
         }
         val parsedPassword = password?.ifEmpty { null }?.let {
             Password.parse(it).getOrElse {
                 redirectAttributes.addFlashAttribute("error", "admin.error.invalid.password")
-                return "redirect:/admin/dashboard"
+                return "redirect:/admin/configuration"
             }
         }
 
@@ -55,14 +55,14 @@ class AdminUpdateCredentialsController(
             .fold(
                 { msg ->
                     redirectAttributes.addFlashAttribute("error", msg)
-                    "redirect:/admin/dashboard"
+                    "redirect:/admin/configuration"
                 },
                 { updated ->
                     if (currentUser.id!!.value == id) {
                         refreshCurrentUserDetails(updated)
                     }
                     redirectAttributes.addFlashAttribute("success", "admin.success.user.updated")
-                    "redirect:/admin/dashboard"
+                    "redirect:/admin/configuration"
                 }
             )
     }

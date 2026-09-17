@@ -25,7 +25,7 @@ class AdminDeleteUserController(
             .fold(
                 { msg ->
                     redirectAttributes.addFlashAttribute("error", msg)
-                    "redirect:/admin/dashboard"
+                    "redirect:/admin/configuration"
                 },
                 {
                     if (currentUser.id!!.value == id) {
@@ -34,7 +34,7 @@ class AdminDeleteUserController(
                         "redirect:/login?deleted=true"
                     } else {
                         redirectAttributes.addFlashAttribute("success", "admin.success.user.deleted")
-                        "redirect:/admin/dashboard"
+                        "redirect:/admin/configuration"
                     }
                 }
             )

@@ -29,7 +29,7 @@ class AdminUpdateRoleController(
     ): String {
         val parsedRole = Role.parse(role).getOrElse {
             redirectAttributes.addFlashAttribute("error", "admin.error.invalid.role")
-            return "redirect:/admin/dashboard"
+            return "redirect:/admin/configuration"
         }
         return AdminUpdateRoleCommand(currentUser, User.Id(id), parsedRole)
             .let(handler::handle)
@@ -37,14 +37,14 @@ class AdminUpdateRoleController(
             .fold(
                 { msg ->
                     redirectAttributes.addFlashAttribute("error", msg)
-                    "redirect:/admin/dashboard"
+                    "redirect:/admin/configuration"
                 },
                 { updated ->
                     if (currentUser.id!!.value == id) {
                         refreshCurrentUserDetails(updated)
                     }
                     redirectAttributes.addFlashAttribute("success", "admin.success.user.role.updated")
-                    "redirect:/admin/dashboard"
+                    "redirect:/admin/configuration"
                 }
             )
     }

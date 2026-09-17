@@ -12,7 +12,7 @@ class ListUsersController(
     private val handler: ListUsersHandler,
 ) {
 
-    @GetMapping("/admin/dashboard")
+    @GetMapping("/admin/configuration")
     fun dashboard(
         @CurrentUser currentUser: User,
         model: Model,
@@ -33,6 +33,6 @@ class ListUsersController(
             )
         model.addAttribute("users", users)
         model.addAttribute("currentUserId", currentUser.id!!.value)
-        return "admin/dashboard"
+        return "admin/configuration"
     }
 }

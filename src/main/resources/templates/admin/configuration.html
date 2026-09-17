@@ -9,8 +9,14 @@
     <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
     <div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
 
-    <h1 th:text="#{admin.users.title}">Users</h1>
+    <h1 th:text="#{config.title}">Configuration</h1>
 
+    <h2 th:text="#{config.general}">General</h2>
+    <section class="card">
+        <div class="empty-state" th:text="#{config.general.empty}">No settings yet.</div>
+    </section>
+
+    <h2 th:text="#{config.users.title}">Users</h2>
     <section class="card">
         <div class="flex separate">
             <button id="btnOpenCreateUserModal" type="button" class="primary admin-add-user-btn" th:aria-label="#{admin.user.create}">
@@ -118,7 +124,7 @@
             if (!roleSection || roleSection.style.display !== 'none') {
                 fetches.push(fetch(roleForm.action, { method: 'POST', body: new FormData(roleForm), redirect: 'manual' }));
             }
-            Promise.all(fetches).finally(function() { window.location.href = '/admin/dashboard'; });
+            Promise.all(fetches).finally(function() { window.location.href = '/admin/configuration'; });
         });
 
         document.querySelectorAll('.delete-user-form').forEach(function(form) {

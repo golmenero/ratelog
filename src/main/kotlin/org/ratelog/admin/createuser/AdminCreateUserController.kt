@@ -33,19 +33,19 @@ class AdminCreateUserController(
     ): String {
         val parsedUsername = Username.parse(username).getOrElse {
             redirectAttributes.addFlashAttribute("error", "admin.error.invalid.username")
-            return "redirect:/admin/dashboard"
+            return "redirect:/admin/configuration"
         }
         val parsedEmail = Email.parse(email).getOrElse {
             redirectAttributes.addFlashAttribute("error", "admin.error.invalid.email")
-            return "redirect:/admin/dashboard"
+            return "redirect:/admin/configuration"
         }
         val parsedPassword = Password.parse(password).getOrElse {
             redirectAttributes.addFlashAttribute("error", "admin.error.invalid.password")
-            return "redirect:/admin/dashboard"
+            return "redirect:/admin/configuration"
         }
         val parsedRole = Role.parse(role).getOrElse {
             redirectAttributes.addFlashAttribute("error", "admin.error.invalid.role")
-            return "redirect:/admin/dashboard"
+            return "redirect:/admin/configuration"
         }
         val resolvedLang = lang?.let { runCatching { Lang.valueOf(it) }.getOrNull() }
             ?: UserDetailsService.resolve(request)
@@ -62,11 +62,11 @@ class AdminCreateUserController(
             .fold(
                 { msg ->
                     redirectAttributes.addFlashAttribute("error", msg)
-                    "redirect:/admin/dashboard"
+                    "redirect:/admin/configuration"
                 },
                 {
                     redirectAttributes.addFlashAttribute("success", "admin.success.user.created")
-                    "redirect:/admin/dashboard"
+                    "redirect:/admin/configuration"
                 }
             )
     }
