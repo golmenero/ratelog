@@ -88,7 +88,7 @@ class UpdateUserHandlerTest {
     }
 
     @Test
-    fun `given admin updating superadmin email then succeeds`() {
+    fun `given admin updating superadmin email then returns CannotEditAdmin`() {
         // Given
         val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
         val target = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN, email = "old@root.com"))
@@ -97,9 +97,50 @@ class UpdateUserHandlerTest {
         val result = handler.handle(command(admin, target, email = Email("new@root.com")))
 
         // Then
+        assertTrue(result.isLeft())
+        assertEquals(UpdateUserHandlerError.CannotEditAdmin, result.fold({ it }, { Unit }))
+    }
+
+    @Test
+    fun `given superadmin updating superadmin email then succeeds`() {
+        // Given
+        val superadmin = userRepository.save(UserFactory.aUser(username = "root1", role = Role.SUPERADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "root2", role = Role.SUPERADMIN, email = "old@root.com"))
+
+        // When
+        val result = handler.handle(command(superadmin, target, email = Email("new@root.com")))
+
+        // Then
         assertTrue(result.isRight())
         val updated = result.fold({ null }, { it })
         assertEquals(Email("new@root.com"), updated!!.email)
+    }
+
+    @Test
+    fun `given admin updating another admin then returns CannotEditAdmin`() {
+        // Given
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+        val otherAdmin = userRepository.save(UserFactory.aUser(username = "admin2", role = Role.ADMIN))
+
+        // When
+        val result = handler.handle(command(admin, otherAdmin, email = Email("new@example.com")))
+
+        // Then
+        assertTrue(result.isLeft())
+        assertEquals(UpdateUserHandlerError.CannotEditAdmin, result.fold({ it }, { Unit }))
+    }
+
+    @Test
+    fun `given admin updating themselves then returns CannotEditAdmin`() {
+        // Given
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+
+        // When
+        val result = handler.handle(command(admin, admin, email = Email("new@example.com")))
+
+        // Then
+        assertTrue(result.isLeft())
+        assertEquals(UpdateUserHandlerError.CannotEditAdmin, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -145,30 +186,6 @@ class UpdateUserHandlerTest {
         // Then
         assertTrue(result.isLeft())
         assertEquals(UpdateUserHandlerError.EmailAlreadyExists, result.fold({ it }, { Unit }))
-    }
-
-    @Test
-    fun `given admin updating own email to the same value then succeeds`() {
-        // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
-
-        // When
-        val result = handler.handle(command(admin, admin))
-
-        // Then
-        assertTrue(result.isRight())
-    }
-
-    @Test
-    fun `given admin updating own username to the same value then succeeds`() {
-        // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
-
-        // When
-        val result = handler.handle(command(admin, admin))
-
-        // Then
-        assertTrue(result.isRight())
     }
 
     @Test

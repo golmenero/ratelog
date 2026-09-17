@@ -27,6 +27,11 @@ class DeleteUserHandler(
         ensure(target.role != Role.SUPERADMIN) {
             DeleteUserHandlerError.CannotDeleteSuperadmin
         }
+        if (command.currentUser.role == Role.ADMIN) {
+            ensure(target.role != Role.ADMIN) {
+                DeleteUserHandlerError.CannotDeleteAdmin
+            }
+        }
 
         userRepository.deleteById(command.targetUserId)
     }

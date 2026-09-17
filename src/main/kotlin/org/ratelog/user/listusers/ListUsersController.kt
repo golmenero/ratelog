@@ -33,6 +33,7 @@ class ListUsersController(
             )
         model.addAttribute("users", users)
         model.addAttribute("currentUserId", currentUser.id!!.value)
+        model.addAttribute("currentUserRole", currentUser.role.name)
         return "admin/configuration"
     }
 }

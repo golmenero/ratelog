@@ -45,5 +45,6 @@ class DeleteUserController(
         DeleteUserHandlerError.UserNotFound -> "admin.error.user.not.found"
         DeleteUserHandlerError.CannotDeleteYourself -> "admin.error.cannot.delete.self"
         DeleteUserHandlerError.CannotDeleteSuperadmin -> "admin.error.cannot.delete.superadmin"
+        DeleteUserHandlerError.CannotDeleteAdmin -> "admin.error.cannot.delete.admin"
     }
 }

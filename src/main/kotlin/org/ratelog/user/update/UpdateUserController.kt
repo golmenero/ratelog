@@ -116,5 +116,6 @@ class UpdateUserController(
         UpdateUserHandlerError.CannotChangeSuperadminRole -> "admin.error.cannot.change.superadmin.role"
         UpdateUserHandlerError.CannotDemoteYourself -> "admin.error.cannot.demote.self"
         UpdateUserHandlerError.CannotChangeRole -> "admin.error.cannot.change.role"
+        UpdateUserHandlerError.CannotEditAdmin -> "admin.error.cannot.edit.admin"
     }
 }

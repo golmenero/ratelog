@@ -34,6 +34,10 @@ class UpdateUserHandler(
         val target = userRepository.findById(command.targetUserId)
             ?: raise(UpdateUserHandlerError.UserNotFound)
 
+        if (command.currentUser.role == Role.ADMIN) {
+            ensure(target.role == Role.USER) { UpdateUserHandlerError.CannotEditAdmin }
+        }
+
         val existingByUsername = userRepository.findByUsername(command.newUsername)
         ensure(existingByUsername == null || existingByUsername.id == command.targetUserId) {
             UpdateUserHandlerError.UsernameAlreadyExists

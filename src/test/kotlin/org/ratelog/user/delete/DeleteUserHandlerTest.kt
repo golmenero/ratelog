@@ -89,6 +89,34 @@ class DeleteUserHandlerTest {
     }
 
     @Test
+    fun `given admin deleting another admin then returns CannotDeleteAdmin`() {
+        // Given
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+        val otherAdmin = userRepository.save(UserFactory.aUser(username = "admin2", role = Role.ADMIN))
+
+        // When
+        val result = handler.handle(DeleteUserCommand(currentUser = admin, targetUserId = otherAdmin.id!!))
+
+        // Then
+        assertTrue(result.isLeft())
+        assertEquals(DeleteUserHandlerError.CannotDeleteAdmin, result.fold({ it }, { Unit }))
+    }
+
+    @Test
+    fun `given superadmin deleting an admin then admin is removed`() {
+        // Given
+        val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+
+        // When
+        val result = handler.handle(DeleteUserCommand(currentUser = superadmin, targetUserId = admin.id!!))
+
+        // Then
+        assertTrue(result.isRight())
+        assertNull(userRepository.findById(admin.id!!))
+    }
+
+    @Test
     fun `given admin deleting a non-existent user then returns UserNotFound`() {
         // Given
         val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
