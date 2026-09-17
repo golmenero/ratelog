@@ -33,10 +33,10 @@
             <tbody>
             <tr th:each="u : ${users}">
                 <td>
-                    <a th:href="@{'/profile/' + ${u.id.value}}" class="link flex centered gap">
+                    <div class="flex centered gap">
                         <div class="avatar sm" th:text="${#strings.toUpperCase(#strings.substring(u.username.value, 0, 1))}">U</div>
                         <span th:text="${u.username.value}">username</span>
-                    </a>
+                    </div>
                 </td>
                 <td th:text="${u.email.value}">email</td>
                 <td>
@@ -50,6 +50,9 @@
                     th:text="${#dates.format(u.createdAtEpochMs, 'yyyy-MM-dd')}">2024-01-01</td>
                 <td>
                     <div class="row-actions">
+                        <a th:href="@{'/profile/' + ${u.id.value}}" class="btn" th:aria-label="#{admin.user.view.profile}">
+                            <i data-lucide="eye"></i>
+                        </a>
                         <button type="button" class="open-edit-user"
                                 th:data-id="${u.id.value}"
                                 th:data-username="${u.username.value}"
