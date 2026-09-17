@@ -36,13 +36,8 @@
                 <select id="editRole" name="role" required>
                     <option value="USER" th:text="#{admin.user.role.user}">User</option>
                     <option value="ADMIN" th:text="#{admin.user.role.admin}">Admin</option>
-                    <option value="SUPERADMIN" th:text="#{admin.user.role.superadmin}"
-                            th:disabled="${!#authorization.expression('hasRole(''SUPERADMIN'')')}">Superadmin</option>
                 </select>
             </div>
-
-            <p class="hint" th:if="${!#authorization.expression('hasRole(''SUPERADMIN'')')}"
-               th:text="#{admin.role.superadmin.note}">Superadmin can only be assigned by another superadmin.</p>
 
             <button type="submit" class="primary w-100" th:text="#{admin.user.save}">Save</button>
         </form>

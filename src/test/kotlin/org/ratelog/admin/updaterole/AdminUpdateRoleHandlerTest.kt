@@ -117,7 +117,7 @@ class AdminUpdateRoleHandlerTest {
     }
 
     @Test
-    fun `given superadmin promoting to SUPERADMIN then succeeds`() {
+    fun `given superadmin promoting to SUPERADMIN then returns CannotPromoteToSuperadmin`() {
         // Given
         val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
         val target = userRepository.save(UserFactory.aUser(username = "victim"))
@@ -128,9 +128,24 @@ class AdminUpdateRoleHandlerTest {
         )
 
         // Then
-        assertTrue(result.isRight())
-        val updated = result.fold({ null }, { it })
-        assertEquals(Role.SUPERADMIN, updated!!.role)
+        assertTrue(result.isLeft())
+        assertEquals(AdminUpdateRoleHandlerError.CannotPromoteToSuperadmin, result.fold({ it }, { Unit }))
+    }
+
+    @Test
+    fun `given superadmin trying to change another SUPERADMIN's role then returns CannotChangeSuperadminRole`() {
+        // Given
+        val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
+        val otherSuperadmin = userRepository.save(UserFactory.aUser(username = "root2", role = Role.SUPERADMIN))
+
+        // When
+        val result = handler.handle(
+            AdminUpdateRoleCommand(currentUser = superadmin, targetUserId = otherSuperadmin.id!!, newRole = Role.USER)
+        )
+
+        // Then
+        assertTrue(result.isLeft())
+        assertEquals(AdminUpdateRoleHandlerError.CannotChangeSuperadminRole, result.fold({ it }, { Unit }))
     }
 
     @Test

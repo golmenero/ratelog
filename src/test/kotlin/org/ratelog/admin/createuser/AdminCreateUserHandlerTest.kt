@@ -117,7 +117,7 @@ class AdminCreateUserHandlerTest {
     }
 
     @Test
-    fun `given a SUPERADMIN current user creating another SUPERADMIN then user is created`() {
+    fun `given a SUPERADMIN current user trying to create SUPERADMIN then returns CannotPromoteToSuperadmin`() {
         // Given
         val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
 
@@ -134,8 +134,8 @@ class AdminCreateUserHandlerTest {
         )
 
         // Then
-        assertTrue(result.isRight())
-        assertEquals(Role.SUPERADMIN, userRepository.findByUsername(Username("root2"))!!.role)
+        assertTrue(result.isLeft())
+        assertEquals(AdminCreateUserHandlerError.CannotPromoteToSuperadmin, result.fold({ it }, { Unit }))
     }
 
     @Test

@@ -25,12 +25,8 @@ class AdminUpdateRoleHandler(
 
         val target = userRepository.findById(command.targetUserId) ?: raise(AdminUpdateRoleHandlerError.UserNotFound)
 
-        ensure(!(command.newRole == Role.SUPERADMIN && command.currentUser.role != Role.SUPERADMIN)) {
-            AdminUpdateRoleHandlerError.CannotPromoteToSuperadmin
-        }
-        ensure(!(target.role == Role.SUPERADMIN && command.currentUser.role != Role.SUPERADMIN)) {
-            AdminUpdateRoleHandlerError.CannotChangeSuperadminRole
-        }
+        ensure(command.newRole != Role.SUPERADMIN) { AdminUpdateRoleHandlerError.CannotPromoteToSuperadmin }
+        ensure(target.role != Role.SUPERADMIN) { AdminUpdateRoleHandlerError.CannotChangeSuperadminRole }
         ensure(!(command.currentUser.id == command.targetUserId && command.newRole != command.currentUser.role)) {
             AdminUpdateRoleHandlerError.CannotDemoteYourself
         }

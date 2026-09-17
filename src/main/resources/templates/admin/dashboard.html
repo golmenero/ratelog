@@ -33,7 +33,7 @@
             <tbody>
             <tr th:each="u : ${users}">
                 <td>
-                    <a th:href="@{'/profile/' + ${u.id.value}}" class="link flex gap">
+                    <a th:href="@{'/profile/' + ${u.id.value}}" class="link flex centered gap">
                         <div class="avatar sm" th:text="${#strings.toUpperCase(#strings.substring(u.username.value, 0, 1))}">U</div>
                         <span th:text="${u.username.value}">username</span>
                     </a>

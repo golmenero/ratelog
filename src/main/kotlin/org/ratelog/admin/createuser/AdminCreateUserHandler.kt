@@ -31,9 +31,7 @@ class AdminCreateUserHandler(
     @Transactional
     fun handle(command: AdminCreateUserCommand): Either<AdminCreateUserHandlerError, Unit> = either {
         ensure(command.currentUser.role.isAdminLike) { AdminCreateUserHandlerError.Forbidden }
-        ensure(command.role != Role.SUPERADMIN || command.currentUser.role == Role.SUPERADMIN) {
-            AdminCreateUserHandlerError.CannotPromoteToSuperadmin
-        }
+        ensure(command.role != Role.SUPERADMIN) { AdminCreateUserHandlerError.CannotPromoteToSuperadmin }
         ensure(userRepository.findByUsername(command.username) == null) {
             AdminCreateUserHandlerError.UsernameAlreadyExists
         }
