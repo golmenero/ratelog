@@ -56,6 +56,7 @@
                         <button type="button" class="open-edit-user"
                                 th:data-id="${u.id.value}"
                                 th:data-username="${u.username.value}"
+                                th:data-email="${u.email.value}"
                                 th:data-role="${u.role.name()}"
                                 th:aria-label="#{admin.user.edit}">
                             <i data-lucide="pencil"></i>
@@ -93,6 +94,7 @@
                 if (credsForm) credsForm.action = '/admin/users/' + id + '/credentials';
                 if (roleForm) roleForm.action = '/admin/users/' + id + '/role';
                 modal.querySelector('input[name="username"]').value = btn.dataset.username;
+                modal.querySelector('input[name="email"]').value = btn.dataset.email;
                 modal.querySelector('select[name="role"]').value = btn.dataset.role;
                 if (roleSection) roleSection.style.display = btn.dataset.role === 'SUPERADMIN' ? 'none' : '';
                 modal.classList.add('visible');

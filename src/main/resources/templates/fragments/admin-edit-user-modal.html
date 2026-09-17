@@ -19,6 +19,11 @@
             </div>
 
             <div class="form-group">
+                <label for="editEmail" th:text="#{admin.user.email}">Email</label>
+                <input type="email" id="editEmail" name="email" required>
+            </div>
+
+            <div class="form-group">
                 <label for="editPassword" th:text="#{admin.user.new.password}">New password</label>
                 <input type="password" id="editPassword" name="password" autocomplete="new-password">
                 <p class="help-text" th:text="#{admin.user.password.hint}">Leave empty to keep current</p>
