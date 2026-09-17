@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 - Add trending row on homepage
+- New administrator account
+- Introduced user permissions
 ### ⚡ Changed
+- Removed traditional user registration
 ### 🔧 Fixed
 
 ## Release v1.7.0
