@@ -2,7 +2,6 @@ package org.ratelog.user.edit
 
 import arrow.core.getOrElse
 import org.ratelog.Email
-import org.ratelog.ParseError
 import org.ratelog.Password
 import org.ratelog.Username
 import org.ratelog.annotations.CurrentUser
@@ -11,7 +10,6 @@ import org.ratelog.user.User
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
@@ -20,9 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 class EditUserController(
     private val handler: EditUserHandler,
 ) {
-
-    @GetMapping("/edit-profile")
-    fun editProfilePage(): String = "edit-profile"
 
     @PostMapping("/edit-profile")
     fun editProfile(

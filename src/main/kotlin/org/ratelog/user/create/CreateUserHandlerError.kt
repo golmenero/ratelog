@@ -5,4 +5,5 @@ sealed interface CreateUserHandlerError {
     data object UsernameAlreadyExists : CreateUserHandlerError
     data object EmailAlreadyExists : CreateUserHandlerError
     data object CannotPromoteToSuperadmin : CreateUserHandlerError
+    data object CannotCreateAdmin : CreateUserHandlerError
 }

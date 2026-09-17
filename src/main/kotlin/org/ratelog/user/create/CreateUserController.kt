@@ -76,5 +76,6 @@ class CreateUserController(
         CreateUserHandlerError.UsernameAlreadyExists -> "admin.error.username.exists"
         CreateUserHandlerError.EmailAlreadyExists -> "admin.error.email.exists"
         CreateUserHandlerError.CannotPromoteToSuperadmin -> "admin.error.cannot.promote.superadmin"
+        CreateUserHandlerError.CannotCreateAdmin -> "admin.error.cannot.create.admin"
     }
 }

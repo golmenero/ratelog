@@ -29,7 +29,7 @@
                 <p class="help-text" th:text="#{admin.user.password.hint}">Leave empty to keep current</p>
             </div>
 
-            <div id="editRoleSection" class="form-group">
+            <div id="editRoleSection" class="form-group" th:if="${#authorization.expression('hasRole(''SUPERADMIN'')')}">
                 <label for="editRole" th:text="#{admin.user.role}">Role</label>
                 <select id="editRole" name="role" required>
                     <option value="USER" th:text="#{admin.user.role.user}">User</option>

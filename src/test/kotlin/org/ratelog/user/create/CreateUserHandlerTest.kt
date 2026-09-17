@@ -72,7 +72,7 @@ class CreateUserHandlerTest {
     }
 
     @Test
-    fun `given an ADMIN current user creating an ADMIN then user is created with ADMIN role`() {
+    fun `given an ADMIN current user creating an ADMIN then returns CannotCreateAdmin`() {
         // Given
         val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
 
@@ -80,6 +80,28 @@ class CreateUserHandlerTest {
         val result = handler.handle(
             CreateUserCommand(
                 currentUser = admin,
+                username = Username("newadmin"),
+                email = Email("admin@example.com"),
+                password = Password("Password1!"),
+                lang = Lang.en,
+                role = Role.ADMIN,
+            )
+        )
+
+        // Then
+        assertTrue(result.isLeft())
+        assertEquals(CreateUserHandlerError.CannotCreateAdmin, result.fold({ it }, { Unit }))
+    }
+
+    @Test
+    fun `given a SUPERADMIN current user creating an ADMIN then user is created with ADMIN role`() {
+        // Given
+        val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
+
+        // When
+        val result = handler.handle(
+            CreateUserCommand(
+                currentUser = superadmin,
                 username = Username("newadmin"),
                 email = Email("admin@example.com"),
                 password = Password("Password1!"),

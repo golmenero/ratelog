@@ -32,6 +32,9 @@ class CreateUserHandler(
     fun handle(command: CreateUserCommand): Either<CreateUserHandlerError, Unit> = either {
         ensure(command.currentUser.role.isAdminLike) { CreateUserHandlerError.Forbidden }
         ensure(command.role != Role.SUPERADMIN) { CreateUserHandlerError.CannotPromoteToSuperadmin }
+        ensure(!(command.currentUser.role == Role.ADMIN && command.role == Role.ADMIN)) {
+            CreateUserHandlerError.CannotCreateAdmin
+        }
         ensure(userRepository.findByUsername(command.username) == null) {
             CreateUserHandlerError.UsernameAlreadyExists
         }
