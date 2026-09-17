@@ -64,15 +64,21 @@
                                 th:data-username="${u.username.value}"
                                 th:data-email="${u.email.value}"
                                 th:data-role="${u.role.name()}"
-                                th:aria-label="#{admin.user.edit}">
+                                th:aria-label="#{admin.user.edit}"
+                                th:if="${currentUserRole == 'SUPERADMIN' or u.role.name() == 'USER'}">
                             <i data-lucide="pencil"></i>
                         </button>
                         <form class="delete-user-form" th:action="@{'/admin/users/' + ${u.id.value} + '/delete'}" method="post"
                               th:data-confirm="#{admin.user.delete.confirm}"
-                              th:if="${u.role.name() != 'SUPERADMIN'}">
+                              th:if="${
+                                  u.id.value != currentUserId and (
+                                      (currentUserRole == 'SUPERADMIN' and u.role.name() != 'SUPERADMIN')
+                                      or
+                                      (currentUserRole == 'ADMIN' and u.role.name() == 'USER')
+                                  )
+                              }">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <button type="submit" class="danger" th:aria-label="#{admin.user.delete}"
-                                    th:disabled="${u.id.value == currentUserId}">
+                            <button type="submit" class="danger" th:aria-label="#{admin.user.delete}">
                                 <i data-lucide="trash-2"></i>
                             </button>
                         </form>
@@ -99,7 +105,8 @@
                 if (editForm) editForm.action = '/admin/users/' + id;
                 modal.querySelector('input[name="username"]').value = btn.dataset.username;
                 modal.querySelector('input[name="email"]').value = btn.dataset.email;
-                modal.querySelector('select[name="role"]').value = btn.dataset.role;
+                var roleSelect = modal.querySelector('select[name="role"]');
+                if (roleSelect) roleSelect.value = btn.dataset.role;
                 if (roleSection) roleSection.style.display = btn.dataset.role === 'SUPERADMIN' ? 'none' : '';
                 modal.classList.add('visible');
             });
