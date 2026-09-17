@@ -10,7 +10,7 @@
             </button>
         </div>
 
-        <form id="editCredentialsForm" method="post" th:action="@{/admin/users/0/credentials}">
+        <form id="editUserForm" method="post" th:action="@{/admin/users/0}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
             <div class="form-group">
@@ -28,23 +28,17 @@
                 <input type="password" id="editPassword" name="password" autocomplete="new-password">
                 <p class="help-text" th:text="#{admin.user.password.hint}">Leave empty to keep current</p>
             </div>
-        </form>
 
-        <div id="editRoleSection">
-            <form id="editRoleForm" method="post" th:action="@{/admin/users/0/role}">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-            <div class="form-group">
+            <div id="editRoleSection" class="form-group">
                 <label for="editRole" th:text="#{admin.user.role}">Role</label>
                 <select id="editRole" name="role" required>
                     <option value="USER" th:text="#{admin.user.role.user}">User</option>
                     <option value="ADMIN" th:text="#{admin.user.role.admin}">Admin</option>
                 </select>
             </div>
-            </form>
-        </div>
 
-        <button id="btnSaveEditUser" type="button" class="primary w-100" th:text="#{admin.user.save}">Save</button>
+            <button type="submit" class="primary w-100" th:text="#{admin.user.save}">Save</button>
+        </form>
     </div>
 </div>
 </body>

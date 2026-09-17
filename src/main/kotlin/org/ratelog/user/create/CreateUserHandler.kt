@@ -1,4 +1,4 @@
-package org.ratelog.admin.createuser
+package org.ratelog.user.create
 
 import arrow.core.Either
 import arrow.core.raise.either
@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
-data class AdminCreateUserCommand(
+data class CreateUserCommand(
     val currentUser: User,
     val username: Username,
     val email: Email,
@@ -24,19 +24,19 @@ data class AdminCreateUserCommand(
 )
 
 @Component
-class AdminCreateUserHandler(
+class CreateUserHandler(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
     @Transactional
-    fun handle(command: AdminCreateUserCommand): Either<AdminCreateUserHandlerError, Unit> = either {
-        ensure(command.currentUser.role.isAdminLike) { AdminCreateUserHandlerError.Forbidden }
-        ensure(command.role != Role.SUPERADMIN) { AdminCreateUserHandlerError.CannotPromoteToSuperadmin }
+    fun handle(command: CreateUserCommand): Either<CreateUserHandlerError, Unit> = either {
+        ensure(command.currentUser.role.isAdminLike) { CreateUserHandlerError.Forbidden }
+        ensure(command.role != Role.SUPERADMIN) { CreateUserHandlerError.CannotPromoteToSuperadmin }
         ensure(userRepository.findByUsername(command.username) == null) {
-            AdminCreateUserHandlerError.UsernameAlreadyExists
+            CreateUserHandlerError.UsernameAlreadyExists
         }
         ensure(userRepository.findByEmail(command.email) == null) {
-            AdminCreateUserHandlerError.EmailAlreadyExists
+            CreateUserHandlerError.EmailAlreadyExists
         }
 
         val hashedPassword = command.password.value.let(passwordEncoder::encode)

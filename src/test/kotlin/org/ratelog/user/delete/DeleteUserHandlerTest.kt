@@ -1,4 +1,4 @@
-package org.ratelog.admin.deleteuser
+package org.ratelog.user.delete
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -8,15 +8,15 @@ import org.ratelog.test.InMemoryUserRepository
 import org.ratelog.test.UserFactory
 import org.ratelog.user.User
 
-class AdminDeleteUserHandlerTest {
+class DeleteUserHandlerTest {
 
     private lateinit var userRepository: InMemoryUserRepository
-    private lateinit var handler: AdminDeleteUserHandler
+    private lateinit var handler: DeleteUserHandler
 
     @BeforeEach
     fun setUp() {
         userRepository = InMemoryUserRepository()
-        handler = AdminDeleteUserHandler(userRepository)
+        handler = DeleteUserHandler(userRepository)
     }
 
     @Test
@@ -26,11 +26,11 @@ class AdminDeleteUserHandlerTest {
         val target = userRepository.save(UserFactory.aUser(username = "target"))
 
         // When
-        val result = handler.handle(AdminDeleteUserCommand(currentUser = current, targetUserId = target.id!!))
+        val result = handler.handle(DeleteUserCommand(currentUser = current, targetUserId = target.id!!))
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminDeleteUserHandlerError.Forbidden, result.fold({ it }, { Unit }))
+        assertEquals(DeleteUserHandlerError.Forbidden, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -40,7 +40,7 @@ class AdminDeleteUserHandlerTest {
         val target = userRepository.save(UserFactory.aUser(username = "victim"))
 
         // When
-        val result = handler.handle(AdminDeleteUserCommand(currentUser = admin, targetUserId = target.id!!))
+        val result = handler.handle(DeleteUserCommand(currentUser = admin, targetUserId = target.id!!))
 
         // Then
         assertTrue(result.isRight())
@@ -53,11 +53,11 @@ class AdminDeleteUserHandlerTest {
         val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
 
         // When
-        val result = handler.handle(AdminDeleteUserCommand(currentUser = admin, targetUserId = admin.id!!))
+        val result = handler.handle(DeleteUserCommand(currentUser = admin, targetUserId = admin.id!!))
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminDeleteUserHandlerError.CannotDeleteYourself, result.fold({ it }, { Unit }))
+        assertEquals(DeleteUserHandlerError.CannotDeleteYourself, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -67,11 +67,11 @@ class AdminDeleteUserHandlerTest {
         val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
 
         // When
-        val result = handler.handle(AdminDeleteUserCommand(currentUser = admin, targetUserId = superadmin.id!!))
+        val result = handler.handle(DeleteUserCommand(currentUser = admin, targetUserId = superadmin.id!!))
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminDeleteUserHandlerError.CannotDeleteSuperadmin, result.fold({ it }, { Unit }))
+        assertEquals(DeleteUserHandlerError.CannotDeleteSuperadmin, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -81,11 +81,11 @@ class AdminDeleteUserHandlerTest {
         val other = userRepository.save(UserFactory.aUser(username = "root2", role = Role.SUPERADMIN))
 
         // When
-        val result = handler.handle(AdminDeleteUserCommand(currentUser = superadmin, targetUserId = other.id!!))
+        val result = handler.handle(DeleteUserCommand(currentUser = superadmin, targetUserId = other.id!!))
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminDeleteUserHandlerError.CannotDeleteSuperadmin, result.fold({ it }, { Unit }))
+        assertEquals(DeleteUserHandlerError.CannotDeleteSuperadmin, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -94,10 +94,10 @@ class AdminDeleteUserHandlerTest {
         val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
 
         // When
-        val result = handler.handle(AdminDeleteUserCommand(currentUser = admin, targetUserId = User.Id(9999)))
+        val result = handler.handle(DeleteUserCommand(currentUser = admin, targetUserId = User.Id(9999)))
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminDeleteUserHandlerError.UserNotFound, result.fold({ it }, { Unit }))
+        assertEquals(DeleteUserHandlerError.UserNotFound, result.fold({ it }, { Unit }))
     }
 }

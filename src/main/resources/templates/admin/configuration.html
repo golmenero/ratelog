@@ -88,8 +88,7 @@
 <div th:replace="~{fragments/admin-edit-user-modal :: editUserModal}"></div>
 <script>
     (function() {
-        var credsForm = document.getElementById('editCredentialsForm');
-        var roleForm = document.getElementById('editRoleForm');
+        var editForm = document.getElementById('editUserForm');
         var roleSection = document.getElementById('editRoleSection');
 
         document.querySelectorAll('.open-edit-user').forEach(function(btn) {
@@ -97,8 +96,7 @@
                 var modal = document.getElementById('editUserModal');
                 if (!modal) return;
                 var id = btn.dataset.id;
-                if (credsForm) credsForm.action = '/admin/users/' + id + '/credentials';
-                if (roleForm) roleForm.action = '/admin/users/' + id + '/role';
+                if (editForm) editForm.action = '/admin/users/' + id;
                 modal.querySelector('input[name="username"]').value = btn.dataset.username;
                 modal.querySelector('input[name="email"]').value = btn.dataset.email;
                 modal.querySelector('select[name="role"]').value = btn.dataset.role;
@@ -116,16 +114,8 @@
 
         var edit = document.getElementById('editUserModal');
         var closeEdit = document.getElementById('btnCloseEditUserModal');
-        var saveEdit = document.getElementById('btnSaveEditUser');
         if (closeEdit && edit) closeEdit.addEventListener('click', function() { edit.classList.remove('visible'); });
         if (edit) edit.addEventListener('click', function(e) { if (e.target === edit) edit.classList.remove('visible'); });
-        if (saveEdit && credsForm && roleForm) saveEdit.addEventListener('click', function() {
-            var fetches = [fetch(credsForm.action, { method: 'POST', body: new FormData(credsForm), redirect: 'manual' })];
-            if (!roleSection || roleSection.style.display !== 'none') {
-                fetches.push(fetch(roleForm.action, { method: 'POST', body: new FormData(roleForm), redirect: 'manual' }));
-            }
-            Promise.all(fetches).finally(function() { window.location.href = '/admin/configuration'; });
-        });
 
         document.querySelectorAll('.delete-user-form').forEach(function(form) {
             form.addEventListener('submit', function(e) {

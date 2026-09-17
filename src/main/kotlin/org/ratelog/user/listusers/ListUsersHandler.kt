@@ -1,4 +1,4 @@
-package org.ratelog.admin.listusers
+package org.ratelog.user.listusers
 
 import arrow.core.Either
 import arrow.core.raise.either

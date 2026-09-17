@@ -1,4 +1,4 @@
-package org.ratelog.admin.createuser
+package org.ratelog.user.create
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -12,17 +12,17 @@ import org.ratelog.test.FakePasswordEncoder
 import org.ratelog.test.InMemoryUserRepository
 import org.ratelog.test.UserFactory
 
-class AdminCreateUserHandlerTest {
+class CreateUserHandlerTest {
 
     private lateinit var userRepository: InMemoryUserRepository
     private lateinit var passwordEncoder: FakePasswordEncoder
-    private lateinit var handler: AdminCreateUserHandler
+    private lateinit var handler: CreateUserHandler
 
     @BeforeEach
     fun setUp() {
         userRepository = InMemoryUserRepository()
         passwordEncoder = FakePasswordEncoder()
-        handler = AdminCreateUserHandler(userRepository, passwordEncoder)
+        handler = CreateUserHandler(userRepository, passwordEncoder)
     }
 
     @Test
@@ -32,7 +32,7 @@ class AdminCreateUserHandlerTest {
 
         // When
         val result = handler.handle(
-            AdminCreateUserCommand(
+            CreateUserCommand(
                 currentUser = current,
                 username = Username("newuser"),
                 email = Email("new@example.com"),
@@ -44,7 +44,7 @@ class AdminCreateUserHandlerTest {
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminCreateUserHandlerError.Forbidden, result.fold({ it }, { Unit }))
+        assertEquals(CreateUserHandlerError.Forbidden, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -54,7 +54,7 @@ class AdminCreateUserHandlerTest {
 
         // When
         val result = handler.handle(
-            AdminCreateUserCommand(
+            CreateUserCommand(
                 currentUser = admin,
                 username = Username("newuser"),
                 email = Email("new@example.com"),
@@ -78,7 +78,7 @@ class AdminCreateUserHandlerTest {
 
         // When
         val result = handler.handle(
-            AdminCreateUserCommand(
+            CreateUserCommand(
                 currentUser = admin,
                 username = Username("newadmin"),
                 email = Email("admin@example.com"),
@@ -101,7 +101,7 @@ class AdminCreateUserHandlerTest {
 
         // When
         val result = handler.handle(
-            AdminCreateUserCommand(
+            CreateUserCommand(
                 currentUser = admin,
                 username = Username("root"),
                 email = Email("root@example.com"),
@@ -113,7 +113,7 @@ class AdminCreateUserHandlerTest {
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminCreateUserHandlerError.CannotPromoteToSuperadmin, result.fold({ it }, { Unit }))
+        assertEquals(CreateUserHandlerError.CannotPromoteToSuperadmin, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -123,7 +123,7 @@ class AdminCreateUserHandlerTest {
 
         // When
         val result = handler.handle(
-            AdminCreateUserCommand(
+            CreateUserCommand(
                 currentUser = superadmin,
                 username = Username("root2"),
                 email = Email("root2@example.com"),
@@ -135,7 +135,7 @@ class AdminCreateUserHandlerTest {
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminCreateUserHandlerError.CannotPromoteToSuperadmin, result.fold({ it }, { Unit }))
+        assertEquals(CreateUserHandlerError.CannotPromoteToSuperadmin, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -146,7 +146,7 @@ class AdminCreateUserHandlerTest {
 
         // When
         val result = handler.handle(
-            AdminCreateUserCommand(
+            CreateUserCommand(
                 currentUser = admin,
                 username = Username("taken"),
                 email = Email("fresh@example.com"),
@@ -158,7 +158,7 @@ class AdminCreateUserHandlerTest {
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminCreateUserHandlerError.UsernameAlreadyExists, result.fold({ it }, { Unit }))
+        assertEquals(CreateUserHandlerError.UsernameAlreadyExists, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -169,7 +169,7 @@ class AdminCreateUserHandlerTest {
 
         // When
         val result = handler.handle(
-            AdminCreateUserCommand(
+            CreateUserCommand(
                 currentUser = admin,
                 username = Username("fresh"),
                 email = Email("dupe@example.com"),
@@ -181,6 +181,6 @@ class AdminCreateUserHandlerTest {
 
         // Then
         assertTrue(result.isLeft())
-        assertEquals(AdminCreateUserHandlerError.EmailAlreadyExists, result.fold({ it }, { Unit }))
+        assertEquals(CreateUserHandlerError.EmailAlreadyExists, result.fold({ it }, { Unit }))
     }
 }

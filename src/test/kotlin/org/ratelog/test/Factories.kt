@@ -21,7 +21,7 @@ object UserFactory {
     fun aUser(
         id: Long? = null,
         username: String = "user${idGenerator.getAndIncrement()}",
-        email: String = "user${idGenerator.get()}@example.com",
+        email: String = "user${idGenerator.getAndIncrement()}@example.com",
         passwordHash: String = "encoded_password",
         createdAtEpochMs: Long = System.currentTimeMillis(),
         lang: Lang = Lang.en,

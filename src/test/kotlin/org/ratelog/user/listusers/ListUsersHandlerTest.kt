@@ -1,4 +1,4 @@
-package org.ratelog.admin.listusers
+package org.ratelog.user.listusers
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach

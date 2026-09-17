@@ -1,4 +1,4 @@
-package org.ratelog.admin.deleteuser
+package org.ratelog.user.delete
 
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.user.User
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
-class AdminDeleteUserController(
-    private val handler: AdminDeleteUserHandler,
+class DeleteUserController(
+    private val handler: DeleteUserHandler,
 ) {
 
     @PostMapping("/admin/users/{id}/delete")
@@ -19,7 +19,7 @@ class AdminDeleteUserController(
         @PathVariable("id") id: Long,
         redirectAttributes: RedirectAttributes,
     ): String {
-        return AdminDeleteUserCommand(currentUser, User.Id(id))
+        return DeleteUserCommand(currentUser, User.Id(id))
             .let(handler::handle)
             .mapLeft(::mapError)
             .fold(
@@ -40,10 +40,10 @@ class AdminDeleteUserController(
             )
     }
 
-    private fun mapError(error: AdminDeleteUserHandlerError): String = when (error) {
-        AdminDeleteUserHandlerError.Forbidden -> "admin.error.forbidden"
-        AdminDeleteUserHandlerError.UserNotFound -> "admin.error.user.not.found"
-        AdminDeleteUserHandlerError.CannotDeleteYourself -> "admin.error.cannot.delete.self"
-        AdminDeleteUserHandlerError.CannotDeleteSuperadmin -> "admin.error.cannot.delete.superadmin"
+    private fun mapError(error: DeleteUserHandlerError): String = when (error) {
+        DeleteUserHandlerError.Forbidden -> "admin.error.forbidden"
+        DeleteUserHandlerError.UserNotFound -> "admin.error.user.not.found"
+        DeleteUserHandlerError.CannotDeleteYourself -> "admin.error.cannot.delete.self"
+        DeleteUserHandlerError.CannotDeleteSuperadmin -> "admin.error.cannot.delete.superadmin"
     }
 }

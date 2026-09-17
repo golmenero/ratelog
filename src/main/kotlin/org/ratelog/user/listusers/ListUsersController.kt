@@ -1,4 +1,4 @@
-package org.ratelog.admin.listusers
+package org.ratelog.user.listusers
 
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.user.User

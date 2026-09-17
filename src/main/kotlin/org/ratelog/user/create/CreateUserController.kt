@@ -1,4 +1,4 @@
-package org.ratelog.admin.createuser
+package org.ratelog.user.create
 
 import arrow.core.getOrElse
 import jakarta.servlet.http.HttpServletRequest
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
-class AdminCreateUserController(
-    private val handler: AdminCreateUserHandler,
+class CreateUserController(
+    private val handler: CreateUserHandler,
 ) {
 
     @PostMapping("/admin/users/create")
@@ -50,7 +50,7 @@ class AdminCreateUserController(
         val resolvedLang = lang?.let { runCatching { Lang.valueOf(it) }.getOrNull() }
             ?: UserDetailsService.resolve(request)
 
-        return AdminCreateUserCommand(
+        return CreateUserCommand(
             currentUser = currentUser,
             username = parsedUsername,
             email = parsedEmail,
@@ -71,10 +71,10 @@ class AdminCreateUserController(
             )
     }
 
-    private fun mapError(error: AdminCreateUserHandlerError): String = when (error) {
-        AdminCreateUserHandlerError.Forbidden -> "admin.error.forbidden"
-        AdminCreateUserHandlerError.UsernameAlreadyExists -> "admin.error.username.exists"
-        AdminCreateUserHandlerError.EmailAlreadyExists -> "admin.error.email.exists"
-        AdminCreateUserHandlerError.CannotPromoteToSuperadmin -> "admin.error.cannot.promote.superadmin"
+    private fun mapError(error: CreateUserHandlerError): String = when (error) {
+        CreateUserHandlerError.Forbidden -> "admin.error.forbidden"
+        CreateUserHandlerError.UsernameAlreadyExists -> "admin.error.username.exists"
+        CreateUserHandlerError.EmailAlreadyExists -> "admin.error.email.exists"
+        CreateUserHandlerError.CannotPromoteToSuperadmin -> "admin.error.cannot.promote.superadmin"
     }
 }
