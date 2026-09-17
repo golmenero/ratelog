@@ -21,14 +21,12 @@
             <div class="form-group">
                 <label for="editPassword" th:text="#{admin.user.new.password}">New password</label>
                 <input type="password" id="editPassword" name="password" autocomplete="new-password">
+                <p class="help-text" th:text="#{admin.user.password.hint}">Leave empty to keep current</p>
             </div>
-
-            <button type="submit" class="primary w-100" th:text="#{admin.user.save}">Save</button>
         </form>
 
-        <div class="separator"></div>
-
-        <form id="editRoleForm" method="post" th:action="@{/admin/users/0/role}">
+        <div id="editRoleSection">
+            <form id="editRoleForm" method="post" th:action="@{/admin/users/0/role}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
             <div class="form-group">
@@ -38,9 +36,10 @@
                     <option value="ADMIN" th:text="#{admin.user.role.admin}">Admin</option>
                 </select>
             </div>
+            </form>
+        </div>
 
-            <button type="submit" class="primary w-100" th:text="#{admin.user.save}">Save</button>
-        </form>
+        <button id="btnSaveEditUser" type="button" class="primary w-100" th:text="#{admin.user.save}">Save</button>
     </div>
 </div>
 </body>
