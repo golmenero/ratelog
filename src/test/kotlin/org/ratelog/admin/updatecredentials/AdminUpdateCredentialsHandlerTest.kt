@@ -3,6 +3,7 @@ package org.ratelog.admin.updatecredentials
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.ratelog.Email
 import org.ratelog.Password
 import org.ratelog.Role
 import org.ratelog.Username
@@ -36,6 +37,7 @@ class AdminUpdateCredentialsHandlerTest {
                 currentUser = current,
                 targetUserId = target.id!!,
                 newUsername = Username("newName"),
+                newEmail = target.email,
                 newPassword = null,
             )
         )
@@ -57,6 +59,7 @@ class AdminUpdateCredentialsHandlerTest {
                 currentUser = admin,
                 targetUserId = target.id!!,
                 newUsername = Username("newName"),
+                newEmail = target.email,
                 newPassword = null,
             )
         )
@@ -67,6 +70,54 @@ class AdminUpdateCredentialsHandlerTest {
         assertEquals(Username("newName"), updated!!.username)
         val persisted = userRepository.findById(target.id)
         assertEquals(target.passwordHash, persisted!!.passwordHash)
+    }
+
+    @Test
+    fun `given admin updating email then target email is updated`() {
+        // Given
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "victim", email = "old@example.com"))
+
+        // When
+        val result = handler.handle(
+            AdminUpdateCredentialsCommand(
+                currentUser = admin,
+                targetUserId = target.id!!,
+                newUsername = target.username,
+                newEmail = Email("new@example.com"),
+                newPassword = null,
+            )
+        )
+
+        // Then
+        assertTrue(result.isRight())
+        val updated = result.fold({ null }, { it })
+        assertEquals(Email("new@example.com"), updated!!.email)
+        val persisted = userRepository.findById(target.id)
+        assertEquals(Email("new@example.com"), persisted!!.email)
+    }
+
+    @Test
+    fun `given admin updating superadmin email then succeeds`() {
+        // Given
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN, email = "old@root.com"))
+
+        // When
+        val result = handler.handle(
+            AdminUpdateCredentialsCommand(
+                currentUser = admin,
+                targetUserId = target.id!!,
+                newUsername = target.username,
+                newEmail = Email("new@root.com"),
+                newPassword = null,
+            )
+        )
+
+        // Then
+        assertTrue(result.isRight())
+        val updated = result.fold({ null }, { it })
+        assertEquals(Email("new@root.com"), updated!!.email)
     }
 
     @Test
@@ -81,6 +132,7 @@ class AdminUpdateCredentialsHandlerTest {
                 currentUser = admin,
                 targetUserId = target.id!!,
                 newUsername = target.username,
+                newEmail = target.email,
                 newPassword = Password("NewPass1!"),
             )
         )
@@ -104,6 +156,7 @@ class AdminUpdateCredentialsHandlerTest {
                 currentUser = admin,
                 targetUserId = target.id!!,
                 newUsername = Username("taken"),
+                newEmail = target.email,
                 newPassword = null,
             )
         )
@@ -111,6 +164,49 @@ class AdminUpdateCredentialsHandlerTest {
         // Then
         assertTrue(result.isLeft())
         assertEquals(AdminUpdateCredentialsHandlerError.UsernameAlreadyExists, result.fold({ it }, { Unit }))
+    }
+
+    @Test
+    fun `given admin updating to an email taken by another user then returns EmailAlreadyExists`() {
+        // Given
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "victim", email = "victim@example.com"))
+        userRepository.save(UserFactory.aUser(username = "taken", email = "taken@example.com"))
+
+        // When
+        val result = handler.handle(
+            AdminUpdateCredentialsCommand(
+                currentUser = admin,
+                targetUserId = target.id!!,
+                newUsername = target.username,
+                newEmail = Email("taken@example.com"),
+                newPassword = null,
+            )
+        )
+
+        // Then
+        assertTrue(result.isLeft())
+        assertEquals(AdminUpdateCredentialsHandlerError.EmailAlreadyExists, result.fold({ it }, { Unit }))
+    }
+
+    @Test
+    fun `given admin updating own email to the same value then succeeds`() {
+        // Given
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+
+        // When
+        val result = handler.handle(
+            AdminUpdateCredentialsCommand(
+                currentUser = admin,
+                targetUserId = admin.id!!,
+                newUsername = admin.username,
+                newEmail = admin.email,
+                newPassword = null,
+            )
+        )
+
+        // Then
+        assertTrue(result.isRight())
     }
 
     @Test
@@ -124,6 +220,7 @@ class AdminUpdateCredentialsHandlerTest {
                 currentUser = admin,
                 targetUserId = admin.id!!,
                 newUsername = admin.username,
+                newEmail = admin.email,
                 newPassword = null,
             )
         )
@@ -143,6 +240,7 @@ class AdminUpdateCredentialsHandlerTest {
                 currentUser = admin,
                 targetUserId = User.Id(9999),
                 newUsername = Username("whatever"),
+                newEmail = Email("whatever@example.com"),
                 newPassword = null,
             )
         )

@@ -58,8 +58,8 @@ class UserRepositoryImpl(
         userDAO.updateRoleRaw(id.value, role.name)
     }
 
-    override fun updateCredentials(id: User.Id, username: Username, passwordHash: String) {
-        userDAO.updateCredentialsRaw(id.value, username.value, passwordHash)
+    override fun updateCredentials(id: User.Id, username: Username, email: Email, passwordHash: String) {
+        userDAO.updateCredentialsRaw(id.value, username.value, email.value, passwordHash)
     }
 
     private fun UserEntity.toDomain(): User =

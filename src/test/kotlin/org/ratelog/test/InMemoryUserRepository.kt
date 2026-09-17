@@ -63,8 +63,8 @@ class InMemoryUserRepository : UserRepository {
         store[id] = existing.copy(role = role)
     }
 
-    override fun updateCredentials(id: User.Id, username: Username, passwordHash: String) {
+    override fun updateCredentials(id: User.Id, username: Username, email: Email, passwordHash: String) {
         val existing = store[id] ?: return
-        store[id] = existing.copy(username = username, passwordHash = passwordHash)
+        store[id] = existing.copy(username = username, email = email, passwordHash = passwordHash)
     }
 }

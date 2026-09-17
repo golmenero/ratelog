@@ -1,15 +1,13 @@
 package org.ratelog.admin.updatecredentials
 
 import arrow.core.getOrElse
+import org.ratelog.Email
 import org.ratelog.Password
-import org.ratelog.Role
 import org.ratelog.Username
 import org.ratelog.annotations.CurrentUser
 import org.ratelog.user.AppUserDetails
 import org.ratelog.user.User
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
@@ -27,11 +25,16 @@ class AdminUpdateCredentialsController(
         @CurrentUser currentUser: User,
         @PathVariable("id") id: Long,
         @RequestParam("username") username: String,
+        @RequestParam("email") email: String,
         @RequestParam("password", required = false) password: String?,
         redirectAttributes: RedirectAttributes,
     ): String {
         val parsedUsername = Username.parse(username).getOrElse {
             redirectAttributes.addFlashAttribute("error", "admin.error.invalid.username")
+            return "redirect:/admin/dashboard"
+        }
+        val parsedEmail = Email.parse(email).getOrElse {
+            redirectAttributes.addFlashAttribute("error", "admin.error.invalid.email")
             return "redirect:/admin/dashboard"
         }
         val parsedPassword = password?.ifEmpty { null }?.let {
@@ -45,6 +48,7 @@ class AdminUpdateCredentialsController(
             currentUser = currentUser,
             targetUserId = User.Id(id),
             newUsername = parsedUsername,
+            newEmail = parsedEmail,
             newPassword = parsedPassword,
         ).let(handler::handle)
             .mapLeft(::mapError)
@@ -86,5 +90,6 @@ class AdminUpdateCredentialsController(
         AdminUpdateCredentialsHandlerError.Forbidden -> "admin.error.forbidden"
         AdminUpdateCredentialsHandlerError.UserNotFound -> "admin.error.user.not.found"
         AdminUpdateCredentialsHandlerError.UsernameAlreadyExists -> "admin.error.username.exists"
+        AdminUpdateCredentialsHandlerError.EmailAlreadyExists -> "admin.error.email.exists"
     }
 }

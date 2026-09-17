@@ -3,6 +3,7 @@ package org.ratelog.admin.updatecredentials
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import org.ratelog.Email
 import org.ratelog.Password
 import org.ratelog.Username
 import org.ratelog.user.User
@@ -15,6 +16,7 @@ data class AdminUpdateCredentialsCommand(
     val currentUser: User,
     val targetUserId: User.Id,
     val newUsername: Username,
+    val newEmail: Email,
     val newPassword: Password?,
 )
 
@@ -34,9 +36,14 @@ class AdminUpdateCredentialsHandler(
             AdminUpdateCredentialsHandlerError.UsernameAlreadyExists
         }
 
+        val existingByEmail = userRepository.findByEmail(command.newEmail)
+        ensure(existingByEmail == null || existingByEmail.id == command.targetUserId) {
+            AdminUpdateCredentialsHandlerError.EmailAlreadyExists
+        }
+
         val newHash = command.newPassword?.value?.let(passwordEncoder::encode) ?: target.passwordHash
 
-        userRepository.updateCredentials(command.targetUserId, command.newUsername, newHash)
+        userRepository.updateCredentials(command.targetUserId, command.newUsername, command.newEmail, newHash)
         userRepository.findById(command.targetUserId)!!
     }
 }

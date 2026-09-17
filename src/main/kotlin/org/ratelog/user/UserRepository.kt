@@ -33,5 +33,5 @@ interface UserRepository {
     fun findAll(): List<User>
     fun deleteById(id: User.Id)
     fun updateRole(id: User.Id, role: Role)
-    fun updateCredentials(id: User.Id, username: Username, passwordHash: String)
+    fun updateCredentials(id: User.Id, username: Username, email: Email, passwordHash: String)
 }

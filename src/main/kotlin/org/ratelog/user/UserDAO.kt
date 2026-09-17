@@ -48,8 +48,8 @@ interface UserDAO : CrudRepository<UserEntity, Long> {
     fun updateRoleRaw(id: Long, role: String)
 
     @org.springframework.data.jdbc.repository.query.Modifying
-    @Query("UPDATE users SET username = :username, password_hash = :passwordHash WHERE id = :id")
-    fun updateCredentialsRaw(id: Long, username: String, passwordHash: String)
+    @Query("UPDATE users SET username = :username, email = :email, password_hash = :passwordHash WHERE id = :id")
+    fun updateCredentialsRaw(id: Long, username: String, email: String, passwordHash: String)
 }
 
 @Repository
