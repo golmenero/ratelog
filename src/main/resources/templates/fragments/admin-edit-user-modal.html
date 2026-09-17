@@ -25,8 +25,9 @@
 
             <div class="form-group">
                 <label for="editPassword" th:text="#{admin.user.new.password}">New password</label>
-                <input type="password" id="editPassword" name="password" autocomplete="new-password">
+                <input type="password" id="editPassword" name="password" autocomplete="new-password" minlength="8">
                 <p class="help-text" th:text="#{admin.user.password.hint}">Leave empty to keep current</p>
+                <p class="help-text" th:text="#{password.help}">Min 8 characters, with uppercase, number and special character.</p>
             </div>
 
             <div id="editRoleSection" class="form-group" th:if="${#authorization.expression('hasRole(''SUPERADMIN'')')}">

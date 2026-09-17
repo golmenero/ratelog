@@ -28,6 +28,7 @@
             <div class="form-group">
                 <label for="newPassword" th:text="#{profile.new.password}">New Password (optional)</label>
                 <input type="password" id="newPassword" name="newPassword" minlength="8">
+                <p class="help-text" th:text="#{password.help}">Min 8 characters, with uppercase, number and special character.</p>
             </div>
 
             <div th:if="${error}"  class="feedback error" th:text="#{${error}}"></div>
