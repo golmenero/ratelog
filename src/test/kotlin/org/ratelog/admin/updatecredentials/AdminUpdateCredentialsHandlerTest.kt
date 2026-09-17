@@ -50,8 +50,8 @@ class AdminUpdateCredentialsHandlerTest {
     @Test
     fun `given admin updating username then target is updated`() {
         // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
-        val target = userRepository.save(UserFactory.aUser(username = "oldName"))
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", email = "admin@example.com", role = Role.ADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "oldName", email = "old@example.com"))
 
         // When
         val result = handler.handle(
@@ -123,8 +123,8 @@ class AdminUpdateCredentialsHandlerTest {
     @Test
     fun `given admin updating password then target password hash changes`() {
         // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
-        val target = userRepository.save(UserFactory.aUser(username = "victim"))
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", email = "admin@example.com", role = Role.ADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "victim", email = "victim@example.com"))
 
         // When
         val result = handler.handle(
@@ -146,9 +146,9 @@ class AdminUpdateCredentialsHandlerTest {
     @Test
     fun `given admin updating to a username taken by another user then returns UsernameAlreadyExists`() {
         // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
-        val target = userRepository.save(UserFactory.aUser(username = "victim"))
-        userRepository.save(UserFactory.aUser(username = "taken"))
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", email = "admin@example.com", role = Role.ADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "victim", email = "victim@example.com"))
+        userRepository.save(UserFactory.aUser(username = "taken", email = "taken1@example.com"))
 
         // When
         val result = handler.handle(
