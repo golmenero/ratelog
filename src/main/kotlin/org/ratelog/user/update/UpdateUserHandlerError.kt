@@ -8,4 +8,5 @@ sealed interface UpdateUserHandlerError {
     data object CannotPromoteToSuperadmin : UpdateUserHandlerError
     data object CannotChangeSuperadminRole : UpdateUserHandlerError
     data object CannotDemoteYourself : UpdateUserHandlerError
+    data object CannotChangeRole : UpdateUserHandlerError
 }

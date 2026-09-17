@@ -172,7 +172,7 @@ class UpdateUserHandlerTest {
     }
 
     @Test
-    fun `given admin promoting a USER to ADMIN then target role becomes ADMIN`() {
+    fun `given admin trying to change a role then returns CannotChangeRole`() {
         // Given
         val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
         val target = userRepository.save(UserFactory.aUser(username = "victim"))
@@ -181,65 +181,38 @@ class UpdateUserHandlerTest {
         val result = handler.handle(command(admin, target, role = Role.ADMIN))
 
         // Then
+        assertTrue(result.isLeft())
+        assertEquals(UpdateUserHandlerError.CannotChangeRole, result.fold({ it }, { Unit }))
+    }
+
+    @Test
+    fun `given superadmin promoting a USER to ADMIN then target role becomes ADMIN`() {
+        // Given
+        val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "victim"))
+
+        // When
+        val result = handler.handle(command(superadmin, target, role = Role.ADMIN))
+
+        // Then
         assertTrue(result.isRight())
         val updated = result.fold({ null }, { it })
         assertEquals(Role.ADMIN, updated!!.role)
     }
 
     @Test
-    fun `given admin demoting a USER then target role becomes USER`() {
+    fun `given superadmin demoting an ADMIN then target role becomes USER`() {
         // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+        val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
         val target = userRepository.save(UserFactory.aUser(username = "victim", role = Role.ADMIN))
 
         // When
-        val result = handler.handle(command(admin, target, role = Role.USER))
+        val result = handler.handle(command(superadmin, target, role = Role.USER))
 
         // Then
         assertTrue(result.isRight())
         val updated = result.fold({ null }, { it })
         assertEquals(Role.USER, updated!!.role)
-    }
-
-    @Test
-    fun `given admin promoting to SUPERADMIN then returns CannotPromoteToSuperadmin`() {
-        // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
-        val target = userRepository.save(UserFactory.aUser(username = "victim"))
-
-        // When
-        val result = handler.handle(command(admin, target, role = Role.SUPERADMIN))
-
-        // Then
-        assertTrue(result.isLeft())
-        assertEquals(UpdateUserHandlerError.CannotPromoteToSuperadmin, result.fold({ it }, { Unit }))
-    }
-
-    @Test
-    fun `given non-superadmin admin trying to change a SUPERADMIN's role then returns CannotChangeSuperadminRole`() {
-        // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
-        val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
-
-        // When
-        val result = handler.handle(command(admin, superadmin, role = Role.USER))
-
-        // Then
-        assertTrue(result.isLeft())
-        assertEquals(UpdateUserHandlerError.CannotChangeSuperadminRole, result.fold({ it }, { Unit }))
-    }
-
-    @Test
-    fun `given admin changing own role then returns CannotDemoteYourself`() {
-        // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
-
-        // When
-        val result = handler.handle(command(admin, admin, role = Role.USER))
-
-        // Then
-        assertTrue(result.isLeft())
-        assertEquals(UpdateUserHandlerError.CannotDemoteYourself, result.fold({ it }, { Unit }))
     }
 
     @Test
@@ -271,6 +244,19 @@ class UpdateUserHandlerTest {
     }
 
     @Test
+    fun `given superadmin demoting themselves then returns CannotChangeSuperadminRole`() {
+        // Given
+        val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
+
+        // When
+        val result = handler.handle(command(superadmin, superadmin, role = Role.ADMIN))
+
+        // Then
+        assertTrue(result.isLeft())
+        assertEquals(UpdateUserHandlerError.CannotChangeSuperadminRole, result.fold({ it }, { Unit }))
+    }
+
+    @Test
     fun `given admin updating a non-existent user then returns UserNotFound`() {
         // Given
         val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
@@ -294,15 +280,15 @@ class UpdateUserHandlerTest {
     }
 
     @Test
-    fun `given admin updating credentials and role atomically then both are applied`() {
+    fun `given superadmin updating credentials and role atomically then both are applied`() {
         // Given
-        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+        val superadmin = userRepository.save(UserFactory.aUser(username = "root", role = Role.SUPERADMIN))
         val target = userRepository.save(UserFactory.aUser(username = "oldName", email = "old@example.com", role = Role.USER))
 
         // When
         val result = handler.handle(
             command(
-                admin,
+                superadmin,
                 target,
                 username = Username("newName"),
                 email = Email("new@example.com"),
@@ -318,5 +304,21 @@ class UpdateUserHandlerTest {
         assertEquals(Email("new@example.com"), persisted.email)
         assertEquals("encoded_NewPass1!", persisted.passwordHash)
         assertEquals(Role.ADMIN, persisted.role)
+    }
+
+    @Test
+    fun `given admin updating credentials only then role is preserved`() {
+        // Given
+        val admin = userRepository.save(UserFactory.aUser(username = "admin1", role = Role.ADMIN))
+        val target = userRepository.save(UserFactory.aUser(username = "victim", email = "old@example.com", role = Role.USER))
+
+        // When
+        val result = handler.handle(command(admin, target, email = Email("new@example.com")))
+
+        // Then
+        assertTrue(result.isRight())
+        val persisted = userRepository.findById(target.id!!)!!
+        assertEquals(Email("new@example.com"), persisted.email)
+        assertEquals(Role.USER, persisted.role)
     }
 }

@@ -45,6 +45,9 @@ class UpdateUserHandler(
         }
 
         if (command.newRole != target.role) {
+            ensure(command.currentUser.role == Role.SUPERADMIN) {
+                UpdateUserHandlerError.CannotChangeRole
+            }
             ensure(command.newRole != Role.SUPERADMIN) { UpdateUserHandlerError.CannotPromoteToSuperadmin }
             ensure(target.role != Role.SUPERADMIN) { UpdateUserHandlerError.CannotChangeSuperadminRole }
             ensure(command.currentUser.id != command.targetUserId) {
