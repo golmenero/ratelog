@@ -13,12 +13,12 @@ All notable changes to this project will be documented in this file.
 - New administrator account
 - Introduced user permissions
 - TMDB API key can now be configured from Configuración > General (stored in `general_config`).
-- Mostrar mensaje de aviso si la tmdb api key no esta configurada
+- Display warning message if TMDB api key is not configured
 ### ⚡ Changed
 - Removed traditional user registration
 - TMDB API key is no longer configured via the `TMDB_API_KEY` environment variable; it is persisted as a general configuration entry and edited from the admin UI. The variable is still read on startup as a one-shot seed into `general_config` so existing setups do not break.
 ### 🔧 Fixed
-- Arreglado encoding incorrecto en mensajes de traduccion
+- Fixed incorrect encoding on i18n messages
 
 ## Release v1.7.0
 ### ➕ Added
