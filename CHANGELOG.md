@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Add trending row on homepage
 - New administrator account
 - Introduced user permissions
+- TMDB API key can now be configured from Configuración > General (stored in `general_config`).
 ### ⚡ Changed
 - Removed traditional user registration
 ### 🔧 Fixed
