@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v2.0.0-beta.2
+### ➕ Added
 - Mostrar mensaje de aviso si la tmdb api key no esta configurada
 ### ⚡ Changed
 ### 🔧 Fixed
