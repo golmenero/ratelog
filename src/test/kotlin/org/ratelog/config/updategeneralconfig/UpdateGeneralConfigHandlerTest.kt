@@ -61,9 +61,9 @@ class UpdateGeneralConfigHandlerTest {
     }
 
     @Test
-    fun `given an empty value when updating then returns EmptyValue and does not persist`() {
+    fun `given an empty value when updating a key that disallows blank then returns EmptyValue and does not persist`() {
         // Given
-        val key = ConfigKey.TMDB_API_KEY
+        val key = ConfigKey.REMEMBER_ME_KEY
         repository.save(
             GeneralConfig(
                 id = null,
@@ -82,6 +82,47 @@ class UpdateGeneralConfigHandlerTest {
         assertEquals(UpdateGeneralConfigHandlerError.EmptyValue, result.fold({ it }, { Unit }))
         val saved = repository.findByKey(key)!!
         assertEquals("old", saved.value)
+    }
+
+    @Test
+    fun `given a blank value when updating TMDB_API_KEY then it is persisted as blank`() {
+        // Given
+        val key = ConfigKey.TMDB_API_KEY
+        repository.save(
+            GeneralConfig(
+                id = null,
+                key = key,
+                value = "old",
+                updatedAtEpochMs = 0L,
+            )
+        )
+        val command = UpdateGeneralConfigCommand(key = key, value = "")
+
+        // When
+        val result = handler.handle(command)
+
+        // Then
+        assertTrue(result.isRight())
+        val saved = repository.findByKey(key)!!
+        assertEquals("", saved.value)
+        assertTrue(saved.updatedAtEpochMs > 0L)
+    }
+
+    @Test
+    fun `given a non-existent TMDB_API_KEY when updating with blank value then it is persisted as blank`() {
+        // Given
+        val command = UpdateGeneralConfigCommand(
+            key = ConfigKey.TMDB_API_KEY,
+            value = "   ",
+        )
+
+        // When
+        val result = handler.handle(command)
+
+        // Then
+        assertTrue(result.isRight())
+        val saved = repository.findByKey(command.key)!!
+        assertEquals("   ", saved.value)
     }
 
     @Test

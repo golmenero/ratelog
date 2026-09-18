@@ -14,7 +14,7 @@ class UpdateGeneralConfigHandler(
 ) {
     @Transactional
     fun handle(command: UpdateGeneralConfigCommand): Either<UpdateGeneralConfigHandlerError, GeneralConfig> = either {
-        ensure(command.value.isNotBlank()) { UpdateGeneralConfigHandlerError.EmptyValue }
+        ensure(command.key.allowsBlankValue() || command.value.isNotBlank()) { UpdateGeneralConfigHandlerError.EmptyValue }
         ensure(command.value.length <= MAX_VALUE_LENGTH) { UpdateGeneralConfigHandlerError.ValueTooLong }
 
         val existing = generalConfigRepository.findByKey(command.key)

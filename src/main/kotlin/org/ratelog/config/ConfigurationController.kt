@@ -70,7 +70,7 @@ class ConfigurationController(
             redirectAttributes.addFlashAttribute("error", "config.general.error.invalid.key")
             return "redirect:/admin/configuration"
         }
-        if (value.isBlank()) {
+        if (value.isBlank() && !key.allowsBlankValue()) {
             redirectAttributes.addFlashAttribute("error", "config.general.error.empty.value")
             return "redirect:/admin/configuration"
         }
