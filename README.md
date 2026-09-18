@@ -120,13 +120,12 @@ Edit `.env` and configure the variables:
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `TMDB_API_KEY` | Yes | — | TMDB API key ([get one here](https://www.themoviedb.org/settings/api)) |
 | `PORT` | No | `8080` | HTTP port |
 | `POSTGRES_HOST` | No | `localhost` | PostgreSQL host |
 | `POSTGRES_PORT` | No | `5432` | PostgreSQL port |
 | `POSTGRES_DB` | No | `ratelog` | Database name |
-| `POSTGRES_USER` | No | `ratelog` | Database user |
-| `POSTGRES_PASSWORD` | No | `ratelog` | Database password |
+| `POSTGRES_USER` | No | `ratelog` | PostgreSQL user |
+| `POSTGRES_PASSWORD` | No | `ratelog` | PostgreSQL password |
 
 > **Warning:** For production deployments, consider setting `POSTGRES_PASSWORD` to a secure value
 
@@ -158,6 +157,10 @@ On first run, the Flyway migration `V20__add_role_and_seed_admin.sql` seeds a su
 > **Important:** Change the password from the admin dashboard immediately after first login.
 
 If an `admin` user already exists (e.g. created via the registration form), the migration only forces its role to `SUPERADMIN` and leaves its existing email and password untouched.
+
+#### Step 7: Configure the TMDB API key
+
+The TMDB API key is stored in `general_config` and editable from **Configuración > General** (`/admin/configuration`). Log in as the superadmin, paste the key and save. Search, trending and detail endpoints require a configured key.
 
 ---
 
