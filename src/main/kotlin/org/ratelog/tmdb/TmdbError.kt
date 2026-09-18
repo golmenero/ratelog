@@ -16,4 +16,5 @@ interface TmdbError:
     TvShowPremieresHandlerError {
     object MovieNotFound: TmdbError
     object TvShowNotFound: TmdbError
+    object ApiKeyMissing: TmdbError
 }
