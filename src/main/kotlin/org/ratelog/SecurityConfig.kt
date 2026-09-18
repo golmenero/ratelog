@@ -49,7 +49,7 @@ class SecurityConfig(
 
         http.rememberMe { remember ->
             remember
-                .key(rememberMeKeyProvider.key().value)
+                .key(rememberMeKeyProvider.key())
                 .tokenValiditySeconds(86400 * 30)
                 .rememberMeParameter("remember-me")
         }

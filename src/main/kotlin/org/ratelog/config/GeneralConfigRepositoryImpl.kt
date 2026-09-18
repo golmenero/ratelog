@@ -1,5 +1,6 @@
 package org.ratelog.config
 
+import arrow.core.getOrElse
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
 
@@ -20,7 +21,8 @@ class GeneralConfigRepositoryImpl(
 
     private fun toDomain(entity: GeneralConfigEntity): GeneralConfig = GeneralConfig(
         id = entity.id?.let(GeneralConfig::Id),
-        key = ConfigKey.unsafe(entity.key),
+        key = ConfigKey.parse(entity.key)
+            .getOrElse { error("Unknown config key stored in database: ${entity.key}") },
         value = entity.value,
         updatedAtEpochMs = entity.updatedAtEpochMs,
     )

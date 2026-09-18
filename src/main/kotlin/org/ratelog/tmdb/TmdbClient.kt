@@ -226,16 +226,12 @@ class TmdbClient(
     }
 
     private fun apiKey(): String =
-        generalConfigRepository.findByKey(TMDB_API_KEY)?.value.orEmpty()
+        generalConfigRepository.findByKey(ConfigKey.TMDB_API_KEY)?.value.orEmpty()
 
     private fun requireApiKey(): Either<TmdbError, Unit> {
         if (apiKey().isBlank()) {
             return TmdbError.ApiKeyMissing.left()
         }
         return Unit.right()
-    }
-
-    companion object {
-        val TMDB_API_KEY: ConfigKey = ConfigKey.unsafe("tmdb_api_key")
     }
 }

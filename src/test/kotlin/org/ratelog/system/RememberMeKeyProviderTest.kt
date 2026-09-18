@@ -15,9 +15,9 @@ class RememberMeKeyProviderTest {
 
         provider.init()
 
-        val persisted = repository.findByKey(ConfigKey.unsafe("remember_me_key"))
+        val persisted = repository.findByKey(ConfigKey.REMEMBER_ME_KEY)
         assertNotNull(persisted)
-        assertEquals(provider.key().value, persisted!!.value)
+        assertEquals(provider.key(), persisted!!.value)
     }
 
     @Test
@@ -27,7 +27,7 @@ class RememberMeKeyProviderTest {
 
         provider.init()
 
-        val value = provider.key().value
+        val value = provider.key()
         assertEquals(64, value.length)
         assertTrue(value.matches(Regex("^[0-9a-f]+$")), "expected hex chars but was: $value")
     }
@@ -39,7 +39,7 @@ class RememberMeKeyProviderTest {
         repository.save(
             GeneralConfig(
                 id = null,
-                key = ConfigKey.unsafe("remember_me_key"),
+                key = ConfigKey.REMEMBER_ME_KEY,
                 value = existingKey,
                 updatedAtEpochMs = 0L,
             )
@@ -48,8 +48,8 @@ class RememberMeKeyProviderTest {
 
         provider.init()
 
-        assertEquals(existingKey, provider.key().value)
-        assertEquals(0L, repository.findByKey(ConfigKey.unsafe("remember_me_key"))!!.updatedAtEpochMs)
+        assertEquals(existingKey, provider.key())
+        assertEquals(0L, repository.findByKey(ConfigKey.REMEMBER_ME_KEY)!!.updatedAtEpochMs)
     }
 
     @Test
@@ -62,8 +62,8 @@ class RememberMeKeyProviderTest {
         val second = provider.key()
         val third = provider.key()
 
-        assertEquals(first.value, second.value)
-        assertEquals(second.value, third.value)
+        assertEquals(first, second)
+        assertEquals(second, third)
     }
 
     @Test
@@ -76,7 +76,7 @@ class RememberMeKeyProviderTest {
         firstProvider.init()
         secondProvider.init()
 
-        assertNotEquals(firstProvider.key().value, secondProvider.key().value)
+        assertNotEquals(firstProvider.key(), secondProvider.key())
     }
 
     @Test
@@ -84,11 +84,11 @@ class RememberMeKeyProviderTest {
         val repository = InMemoryGeneralConfigRepository()
         val firstProvider = RememberMeKeyProvider(repository)
         firstProvider.init()
-        val originalKey = firstProvider.key().value
+        val originalKey = firstProvider.key()
 
         val secondProvider = RememberMeKeyProvider(repository)
         secondProvider.init()
 
-        assertEquals(originalKey, secondProvider.key().value)
+        assertEquals(originalKey, secondProvider.key())
     }
 }

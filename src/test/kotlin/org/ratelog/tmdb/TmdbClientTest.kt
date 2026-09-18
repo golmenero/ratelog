@@ -36,7 +36,7 @@ class TmdbClientTest {
         repository.save(
             GeneralConfig(
                 id = null,
-                key = TmdbClient.TMDB_API_KEY,
+                key = ConfigKey.TMDB_API_KEY,
                 value = "   ",
                 updatedAtEpochMs = 0L,
             )
@@ -56,7 +56,7 @@ class TmdbClientTest {
         repository.save(
             GeneralConfig(
                 id = null,
-                key = TmdbClient.TMDB_API_KEY,
+                key = ConfigKey.TMDB_API_KEY,
                 value = "",
                 updatedAtEpochMs = 0L,
             )
@@ -80,25 +80,5 @@ class TmdbClientTest {
         val (items, totalPages) = result.fold({ null to null }, { it })
         assertEquals(emptyList<TmdbMovieResponse>(), items)
         assertEquals(1, totalPages)
-    }
-
-    @Test
-    fun `given an empty key in the repository when querying by key then no api key is found`() {
-        // Given
-        repository.save(
-            GeneralConfig(
-                id = null,
-                key = ConfigKey.unsafe("other_key"),
-                value = "ignored",
-                updatedAtEpochMs = 0L,
-            )
-        )
-
-        // When
-        val result = client.searchMovies(query = "matrix", lang = Lang.en)
-
-        // Then
-        assertTrue(result.isLeft())
-        assertEquals(TmdbError.ApiKeyMissing, result.fold({ it }, { null }))
     }
 }

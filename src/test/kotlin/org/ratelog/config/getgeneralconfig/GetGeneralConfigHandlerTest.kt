@@ -51,16 +51,16 @@ class GetGeneralConfigHandlerTest {
         repository.save(
             GeneralConfig(
                 id = null,
-                key = ConfigKey.unsafe("tmdb_api_key"),
-                value = "zzz",
+                key = ConfigKey.TMDB_API_KEY,
+                value = "tmdb-value",
                 updatedAtEpochMs = 1L,
             )
         )
         repository.save(
             GeneralConfig(
                 id = null,
-                key = ConfigKey.unsafe("aaa_setting"),
-                value = "111",
+                key = ConfigKey.REMEMBER_ME_KEY,
+                value = "remember-value",
                 updatedAtEpochMs = 2L,
             )
         )
@@ -73,7 +73,7 @@ class GetGeneralConfigHandlerTest {
         assertTrue(result.isRight())
         val entries = result.fold({ emptyList() }, { it })
         assertEquals(2, entries.size)
-        assertEquals("aaa_setting", entries[0].key.value)
+        assertEquals("remember_me_key", entries[0].key.value)
         assertEquals("tmdb_api_key", entries[1].key.value)
     }
 

@@ -175,4 +175,5 @@ sealed interface ParseError {
     data object InvalidPassword : ParseError
     data object InvalidListName : ParseError
     data object InvalidRole : ParseError
+    data object InvalidConfigKey : ParseError
 }

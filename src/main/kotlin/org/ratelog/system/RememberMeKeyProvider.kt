@@ -13,24 +13,24 @@ class RememberMeKeyProvider(
     private val generalConfigRepository: GeneralConfigRepository,
 ) {
     private val logger = LoggerFactory.getLogger(RememberMeKeyProvider::class.java)
-    private lateinit var key: ConfigKey
+    private lateinit var value: String
 
     @PostConstruct
     fun init() {
-        key = generalConfigRepository.findByKey(REMEMBER_ME_KEY)?.value?.let(::ConfigKey)
+        value = generalConfigRepository.findByKey(ConfigKey.REMEMBER_ME_KEY)?.value
             ?: generateAndPersist().also { logger.info("Remember-me key generated and persisted") }
     }
 
-    fun key(): ConfigKey = key
+    fun key(): String = value
 
-    private fun generateAndPersist(): ConfigKey {
+    private fun generateAndPersist(): String {
         val raw = ByteArray(KEY_BYTES).also(SecureRandom()::nextBytes)
-        val generated = ConfigKey.unsafe(raw.toHex())
+        val generated = raw.toHex()
         generalConfigRepository.save(
             GeneralConfig(
                 id = null,
-                key = REMEMBER_ME_KEY,
-                value = generated.value,
+                key = ConfigKey.REMEMBER_ME_KEY,
+                value = generated,
                 updatedAtEpochMs = System.currentTimeMillis(),
             )
         )
@@ -41,7 +41,6 @@ class RememberMeKeyProvider(
         joinToString("") { "%02x".format(it) }
 
     companion object {
-        private val REMEMBER_ME_KEY = ConfigKey.unsafe("remember_me_key")
         private const val KEY_BYTES = 32
     }
 }

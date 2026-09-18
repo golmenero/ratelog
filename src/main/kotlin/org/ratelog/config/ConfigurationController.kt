@@ -7,7 +7,6 @@ import org.ratelog.config.getgeneralconfig.GetGeneralConfigQuery
 import org.ratelog.config.updategeneralconfig.UpdateGeneralConfigCommand
 import org.ratelog.config.updategeneralconfig.UpdateGeneralConfigHandler
 import org.ratelog.config.updategeneralconfig.UpdateGeneralConfigHandlerError
-import org.ratelog.tmdb.TmdbClient
 import org.ratelog.user.User
 import org.ratelog.user.listusers.ListUsersHandler
 import org.ratelog.user.listusers.ListUsersQuery
@@ -43,7 +42,7 @@ class ConfigurationController(
         val generalConfigs = getGeneralConfigHandler.handle(GetGeneralConfigQuery(currentUser))
             .getOrElse { emptyList() }
         val tmdbApiKeyValue = generalConfigs
-            .firstOrNull { it.key == TmdbClient.TMDB_API_KEY }
+            .firstOrNull { it.key == ConfigKey.TMDB_API_KEY }
             ?.value
             .orEmpty()
         model.addAttribute("users", users)
@@ -66,7 +65,8 @@ class ConfigurationController(
             redirectAttributes.addFlashAttribute("error", "admin.error.forbidden")
             return "redirect:/admin/configuration"
         }
-        val key = ConfigKey.parse(keyValue).getOrElse {
+        val key = ConfigKey.parse(keyValue).getOrNull()
+        if (key == null) {
             redirectAttributes.addFlashAttribute("error", "config.general.error.invalid.key")
             return "redirect:/admin/configuration"
         }

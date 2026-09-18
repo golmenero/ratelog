@@ -22,7 +22,7 @@ class UpdateGeneralConfigHandlerTest {
     fun `given a non-existent key when updating then it is persisted`() {
         // Given
         val command = UpdateGeneralConfigCommand(
-            key = ConfigKey.unsafe("tmdb_api_key"),
+            key = ConfigKey.TMDB_API_KEY,
             value = "abc123",
         )
 
@@ -39,7 +39,7 @@ class UpdateGeneralConfigHandlerTest {
     @Test
     fun `given an existing key when updating then value is overwritten and id is preserved`() {
         // Given
-        val key = ConfigKey.unsafe("tmdb_api_key")
+        val key = ConfigKey.TMDB_API_KEY
         repository.save(
             GeneralConfig(
                 id = null,
@@ -63,7 +63,7 @@ class UpdateGeneralConfigHandlerTest {
     @Test
     fun `given an empty value when updating then returns EmptyValue and does not persist`() {
         // Given
-        val key = ConfigKey.unsafe("tmdb_api_key")
+        val key = ConfigKey.TMDB_API_KEY
         repository.save(
             GeneralConfig(
                 id = null,
@@ -88,7 +88,7 @@ class UpdateGeneralConfigHandlerTest {
     fun `given a value longer than 500 chars when updating then returns ValueTooLong`() {
         // Given
         val command = UpdateGeneralConfigCommand(
-            key = ConfigKey.unsafe("tmdb_api_key"),
+            key = ConfigKey.TMDB_API_KEY,
             value = "a".repeat(UpdateGeneralConfigHandler.MAX_VALUE_LENGTH + 1),
         )
 
@@ -104,7 +104,7 @@ class UpdateGeneralConfigHandlerTest {
     fun `given a value exactly at the max length when updating then it is persisted`() {
         // Given
         val command = UpdateGeneralConfigCommand(
-            key = ConfigKey.unsafe("tmdb_api_key"),
+            key = ConfigKey.TMDB_API_KEY,
             value = "a".repeat(UpdateGeneralConfigHandler.MAX_VALUE_LENGTH),
         )
 

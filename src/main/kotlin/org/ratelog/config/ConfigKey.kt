@@ -2,20 +2,16 @@ package org.ratelog.config
 
 import arrow.core.Either
 import arrow.core.raise.either
+import org.ratelog.ParseError
 
-data class ConfigKey(val value: String) {
+enum class ConfigKey(val value: String) {
+    REMEMBER_ME_KEY("remember_me_key"),
+    TMDB_API_KEY("tmdb_api_key");
+
     companion object {
-        private val regex = Regex("^[a-z][a-z0-9_]{2,49}$")
-
         fun parse(value: String): Either<ParseError, ConfigKey> = either {
-            if (!value.matches(regex)) raise(ParseError.InvalidConfigKey)
-            ConfigKey(value)
+            entries.firstOrNull { it.value == value }
+                ?: raise(ParseError.InvalidConfigKey)
         }
-
-        fun unsafe(value: String): ConfigKey = ConfigKey(value)
     }
-}
-
-sealed interface ParseError {
-    data object InvalidConfigKey : ParseError
 }
