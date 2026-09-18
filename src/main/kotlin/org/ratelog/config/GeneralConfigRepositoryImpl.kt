@@ -11,6 +11,9 @@ class GeneralConfigRepositoryImpl(
     override fun findByKey(key: ConfigKey): GeneralConfig? =
         generalConfigDAO.findByKey(key.value).getOrNull()?.let(::toDomain)
 
+    override fun findAll(): List<GeneralConfig> =
+        generalConfigDAO.findAllOrdered().map(::toDomain)
+
     override fun save(config: GeneralConfig) {
         generalConfigDAO.save(toEntity(config))
     }

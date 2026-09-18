@@ -10,6 +10,8 @@ class InMemoryGeneralConfigRepository : GeneralConfigRepository {
 
     override fun findByKey(key: ConfigKey): GeneralConfig? = store[key.value]
 
+    override fun findAll(): List<GeneralConfig> = store.values.sortedBy { it.key.value }
+
     override fun save(config: GeneralConfig) {
         store[config.key.value] = config
     }

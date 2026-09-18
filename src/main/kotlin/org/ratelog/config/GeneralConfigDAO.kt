@@ -21,4 +21,7 @@ interface GeneralConfigDAO : CrudRepository<GeneralConfigEntity, Long> {
 
     @Query("SELECT * FROM general_config WHERE key = :key")
     fun findByKey(key: String): Optional<GeneralConfigEntity>
+
+    @Query("SELECT * FROM general_config ORDER BY key")
+    fun findAllOrdered(): List<GeneralConfigEntity>
 }
