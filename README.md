@@ -24,6 +24,8 @@ Ratelog is a web application that lets you search for movies and TV shows on TMD
 
 No premium tiers, no hidden features — just a straightforward tool to track and rank what you watch.
 
+> **Disclaimer:** This is a man-driven project, heavily supported by AI-assisted development. All code is manually reviewed by the maintainers before being merged.
+
 <strong>Want to get started?</strong><br/>
 Check out the <a href="#installation-guide">installation guide</a>.<br/>
 
