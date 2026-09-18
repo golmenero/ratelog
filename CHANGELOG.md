@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - TMDB API key can now be configured from Configuración > General (stored in `general_config`).
 ### ⚡ Changed
 - Removed traditional user registration
+- TMDB API key is no longer read from the `TMDB_API_KEY` environment variable; it is persisted as a general configuration entry and edited from the admin UI.
 ### 🔧 Fixed
 
 ## Release v1.7.0
