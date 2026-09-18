@@ -13,7 +13,24 @@
 
     <h2 th:text="#{config.general}">General</h2>
     <section class="card">
-        <div class="empty-state" th:text="#{config.general.empty}">No settings yet.</div>
+        <form th:action="@{/admin/configuration/general}" method="post" class="form-general-config">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" name="key" value="tmdb_api_key" />
+
+            <div class="form-group">
+                <label for="tmdbApiKey" th:text="#{config.general.tmdb.api.key.label}">TMDB API Key</label>
+                <input type="password"
+                       id="tmdbApiKey"
+                       name="value"
+                       autocomplete="new-password"
+                       th:value="${tmdbApiKeyValue}" />
+                <p class="help-text" th:text="#{config.general.tmdb.api.key.help}">
+                    Used by Ratelog to search and fetch metadata from TMDB.
+                </p>
+            </div>
+
+            <button type="submit" class="primary" th:text="#{config.general.save}">Save</button>
+        </form>
     </section>
 
     <br>
