@@ -3,6 +3,8 @@ package org.ratelog.search
 import arrow.core.getOrElse
 import org.ratelog.MediaType
 import org.ratelog.annotations.CurrentUser
+import org.ratelog.config.istmdbconfigured.IsTmdbConfiguredHandler
+import org.ratelog.config.istmdbconfigured.IsTmdbConfiguredQuery
 import org.ratelog.search.trending.SearchTrending
 import org.ratelog.search.trending.SearchTrendingHandler
 import org.ratelog.search.trending.SearchTrendingQuery
@@ -32,6 +34,7 @@ data class SearchResultResponse(
 class SearchController(
     private val handler: SearchHandler,
     private val trendingHandler: SearchTrendingHandler,
+    private val isTmdbConfiguredHandler: IsTmdbConfiguredHandler,
 ) {
 
     @GetMapping("/")
@@ -43,6 +46,10 @@ class SearchController(
         model: Model,
         redirectAttributes: RedirectAttributes
     ): String {
+        model.addAttribute(
+            "tmdbConfigured",
+            isTmdbConfiguredHandler.handle(IsTmdbConfiguredQuery).getOrElse { false }
+        )
         if (!query.isNullOrBlank()) {
             val type = mediaType?.takeIf { it.isNotBlank() }
                 ?.let(MediaType::valueOf)

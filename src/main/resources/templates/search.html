@@ -21,6 +21,11 @@
             </button>
         </form>
 
+        <p th:if="${!tmdbConfigured}" class="warning-text">
+            <i data-lucide="alert-triangle" aria-hidden="true"></i>
+            <span th:text="#{search.tmdb.not.configured}">A TMDB API key must be configured for Ratelog to work.</span>
+        </p>
+
         <div th:if="${results != null}" id="results" class="results-grid">
             <div th:text="#{search.empty}" th:if="${#lists.isEmpty(results)}" class="empty-state"></div>
 
