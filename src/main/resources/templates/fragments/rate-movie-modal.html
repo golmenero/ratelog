@@ -18,11 +18,11 @@
             <input type="hidden" name="movieId" th:value="${movie.id}">
             <input type="hidden" name="tmdbId" th:value="${movie.tmdbId}">
 
-            <div th:replace="~{fragments/rate-slider :: rateSlider('directing', 'modal.direction')}"></div>
-            <div th:replace="~{fragments/rate-slider :: rateSlider('cinematography', 'modal.photography')}"></div>
-            <div th:replace="~{fragments/rate-slider :: rateSlider('acting', 'modal.acting')}"></div>
-            <div th:replace="~{fragments/rate-slider :: rateSlider('soundtrack', 'modal.soundtrack')}"></div>
-            <div th:replace="~{fragments/rate-slider :: rateSlider('screenplay', 'modal.script')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('directing', 'movies.rating.category.directing')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('cinematography', 'movies.rating.category.cinematography')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('acting', 'movies.rating.category.acting')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('soundtrack', 'movies.rating.category.soundtrack')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('screenplay', 'movies.rating.category.screenplay')}"></div>
 
             <div class="rate-modal-review">
                 <label for="review" class="rate-modal-label" th:text="#{modal.review}">Review</label>

@@ -19,11 +19,11 @@
             <input type="hidden" name="tmdbId" th:value="${show.tmdbId}">
             <input type="hidden" id="seasonNumber" name="seasonNumber">
 
-            <div th:replace="~{fragments/rate-slider :: rateSlider('directing', 'modal.direction')}"></div>
-            <div th:replace="~{fragments/rate-slider :: rateSlider('cinematography', 'modal.photography')}"></div>
-            <div th:replace="~{fragments/rate-slider :: rateSlider('acting', 'modal.acting')}"></div>
-            <div th:replace="~{fragments/rate-slider :: rateSlider('soundtrack', 'modal.soundtrack')}"></div>
-            <div th:replace="~{fragments/rate-slider :: rateSlider('screenplay', 'modal.script')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('directing', 'tvshows.rating.category.directing')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('cinematography', 'tvshows.rating.category.cinematography')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('acting', 'tvshows.rating.category.acting')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('soundtrack', 'tvshows.rating.category.soundtrack')}"></div>
+            <div th:replace="~{fragments/rate-slider :: rateSlider('screenplay', 'tvshows.rating.category.screenplay')}"></div>
 
             <div class="rate-modal-review">
                 <label for="review" class="rate-modal-label" th:text="#{modal.review}">Review</label>
