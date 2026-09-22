@@ -3,9 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
-### ➕ Added
-### ⚡ Changed
 ### 🔧 Fixed
+- Fixed encoding corruption on some translations.
+- Recover responsiveness on top views
+- Rating modals now have proper category translations
 
 ## Release v2.0.0
 ### ➕ Added
