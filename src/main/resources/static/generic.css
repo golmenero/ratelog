@@ -62,6 +62,11 @@ body {
     min-width: 0;
   }
 
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
   &.trending {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
