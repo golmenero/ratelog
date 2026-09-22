@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
+### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v2.0.1
 ### 🔧 Fixed
 - Fixed encoding corruption on some translations.
 - Recover responsiveness on top views
