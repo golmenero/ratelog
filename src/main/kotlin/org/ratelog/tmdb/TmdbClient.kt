@@ -7,8 +7,15 @@ import arrow.core.raise.ensure
 import arrow.core.right
 import org.ratelog.Lang
 import org.ratelog.Overview
+import org.ratelog.ProviderId
+import org.ratelog.ProviderLogoPath
+import org.ratelog.ProviderName
 import org.ratelog.Title
 import org.ratelog.TmdbId
+import org.ratelog.Url
+import org.ratelog.WatchProvider
+import org.ratelog.WatchProviders
+import org.ratelog.WatchRegion
 import org.ratelog.config.ConfigKey
 import org.ratelog.config.GeneralConfigRepository
 import org.ratelog.movie.Movie
@@ -223,6 +230,52 @@ class TmdbClient(
             ?.groupBy { it.lang }
             ?.map { it.value.first() }
             ?: emptyList()
+    }
+
+    fun movieWatchProviders(tmdbId: TmdbId, region: WatchRegion): Either<TmdbError, WatchProviders> = either {
+        requireApiKey().bind()
+        rateLimiter.acquire()
+
+        val response = restClient.get()
+            .uri { builder ->
+                builder.path("/movie/{id}/watch/providers")
+                    .queryParam("api_key", apiKey())
+                    .build(tmdbId.value)
+            }
+            .retrieve()
+            .body(TmdbWatchProvidersResponse::class.java)
+
+        response.toWatchProviders(region)
+    }
+
+    fun tvWatchProviders(tmdbId: TmdbId, region: WatchRegion): Either<TmdbError, WatchProviders> = either {
+        requireApiKey().bind()
+        rateLimiter.acquire()
+
+        val response = restClient.get()
+            .uri { builder ->
+                builder.path("/tv/{id}/watch/providers")
+                    .queryParam("api_key", apiKey())
+                    .build(tmdbId.value)
+            }
+            .retrieve()
+            .body(TmdbWatchProvidersResponse::class.java)
+
+        response.toWatchProviders(region)
+    }
+
+    private fun TmdbWatchProvidersResponse?.toWatchProviders(region: WatchRegion): WatchProviders {
+        val entry = this?.results?.get(region.value) ?: return WatchProviders(region, emptyList(), null)
+        val flatrate = entry.flatrate.mapNotNull { p ->
+            val logo = p.logoPath?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            WatchProvider(
+                id = ProviderId(p.providerId),
+                name = ProviderName(p.providerName),
+                logoPath = ProviderLogoPath(logo),
+            )
+        }
+        val link = entry.link?.takeIf { it.isNotBlank() }?.let { Url(it) }
+        return WatchProviders(region, flatrate, link)
     }
 
     private fun apiKey(): String =

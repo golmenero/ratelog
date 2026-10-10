@@ -2,7 +2,6 @@ package org.ratelog.tvshow.detail
 
 import org.ratelog.TmdbId
 import org.ratelog.annotations.CurrentUser
-import org.ratelog.tvshow.rating.TvRatingRepository
 import org.ratelog.user.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -58,9 +57,10 @@ class DetailTvShowController(
                     model.addAttribute("error", "error.load.tvshow")
                     "tvshow-detail"
                 },
-                {
-                    model.addAttribute("show", buildResponse(it))
-                    model.addAttribute("userLists", it.userLists)
+                { detail ->
+                    model.addAttribute("show", buildResponse(detail))
+                    model.addAttribute("userLists", detail.userLists)
+                    model.addAttribute("watchProviders", detail.watchProviders)
                     "tvshow-detail"
                 }
             )

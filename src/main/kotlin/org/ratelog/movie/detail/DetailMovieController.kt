@@ -50,9 +50,10 @@ class DetailMovieController(
                     model.addAttribute("error", "error.load.movie")
                     "movie-detail"
                 },
-                {
-                    model.addAttribute("movie", buildResponse(it))
-                    model.addAttribute("userLists", it.userLists)
+                { detail ->
+                    model.addAttribute("movie", buildResponse(detail))
+                    model.addAttribute("userLists", detail.userLists)
+                    model.addAttribute("watchProviders", detail.watchProviders)
                     "movie-detail"
                 }
             )

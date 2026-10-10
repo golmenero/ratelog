@@ -42,7 +42,14 @@
         </div>
     </div>
 
-    <div class="separator"></div>
+    <div class="flex wrap gap" th:if="${watchProviders != null and !#lists.isEmpty(watchProviders.flatrate)}">
+        <a th:each="provider : ${watchProviders.flatrate}"
+           class="watch-provider"
+           th:href="${watchProviders.link != null} ? ${watchProviders.link.value} : null"
+           target="_blank" rel="noopener noreferrer">
+            <img th:src="@{'https://image.tmdb.org/t/p/w45' + ${provider.logoPath.value}}" loading="lazy" />
+        </a>
+    </div>
 
     <div th:if="${show != null && !#lists.isEmpty(show.seasons)}">
         <div th:each="season : ${show.seasons}" class="card season-card"

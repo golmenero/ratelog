@@ -4,6 +4,7 @@ import arrow.core.right
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -37,6 +38,7 @@ class DetailTvShowHandlerTest {
         tvRatingRepository = InMemoryTvRatingRepository()
         customListRepository = InMemoryCustomListRepository()
         handler = DetailTvShowHandler(tmdbClient, tvShowRepository, tvDescriptionRepository, tvRatingRepository, customListRepository)
+        whenever(tmdbClient.tvWatchProviders(any(), any())).thenReturn(WatchProviders(WatchRegion("ES"), emptyList(), null).right())
     }
 
     @Test

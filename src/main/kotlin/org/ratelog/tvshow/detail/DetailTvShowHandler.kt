@@ -5,6 +5,8 @@ import arrow.core.raise.either
 import org.ratelog.Genre
 import org.ratelog.Lang
 import org.ratelog.TmdbId
+import org.ratelog.WatchProviders
+import org.ratelog.WatchRegion
 import org.ratelog.customlist.CustomList
 import org.ratelog.customlist.CustomListRepository
 import org.ratelog.tvshow.TvDescriptionRepository
@@ -41,6 +43,7 @@ data class GetTvShowDetailResult(
     val isRated: Boolean,
     val isFollowed: Boolean,
     val userLists: List<CustomList>,
+    val watchProviders: WatchProviders?,
 )
 
 data class SeasonInfo(
@@ -114,6 +117,7 @@ class DetailTvShowHandler(
             }
 
         val userLists = customListRepository.findByUserId(query.userId)
+        val watchProviders = tmdbClient.tvWatchProviders(savedShow.tmdbId, WatchRegion.fromLang(query.lang)).getOrNull()
 
         GetTvShowDetailResult(
             id = savedShow.id.value,
@@ -135,6 +139,7 @@ class DetailTvShowHandler(
             isRated = rating != null,
             isFollowed = isFollowed,
             userLists = userLists,
+            watchProviders = watchProviders,
         )
     }
 }

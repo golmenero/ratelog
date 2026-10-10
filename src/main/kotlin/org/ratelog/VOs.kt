@@ -16,6 +16,50 @@ data class Overview(val value: String)
 
 data class Url(val value: String)
 
+data class WatchRegion(val value: String) {
+    init {
+        require(value.matches(Regex("^[A-Z]{2}$"))) { "WatchRegion must be a 2-letter ISO-3166-1 code" }
+    }
+
+    companion object {
+        val DEFAULT = WatchRegion("ES")
+
+        fun fromLang(lang: Lang): WatchRegion = when (lang) {
+            Lang.en -> WatchRegion("US")
+            Lang.de -> WatchRegion("DE")
+            Lang.es -> WatchRegion("ES")
+            Lang.fr -> WatchRegion("FR")
+            Lang.it -> WatchRegion("IT")
+            Lang.ja -> WatchRegion("JP")
+            Lang.pt -> WatchRegion("BR")
+            Lang.ru -> WatchRegion("RU")
+            Lang.zh -> WatchRegion("CN")
+        }
+    }
+}
+
+data class ProviderId(val value: Int) {
+    init {
+        require(value > 0) { "ProviderId must be greater than 0" }
+    }
+}
+
+data class ProviderName(val value: String)
+
+data class ProviderLogoPath(val value: String)
+
+data class WatchProvider(
+    val id: ProviderId,
+    val name: ProviderName,
+    val logoPath: ProviderLogoPath,
+)
+
+data class WatchProviders(
+    val region: WatchRegion,
+    val flatrate: List<WatchProvider>,
+    val link: Url?,
+)
+
 enum class MediaType {
     movie, tvshow
 }

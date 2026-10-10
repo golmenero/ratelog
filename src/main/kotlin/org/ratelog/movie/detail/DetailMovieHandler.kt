@@ -5,6 +5,8 @@ import arrow.core.raise.either
 import org.ratelog.Genre
 import org.ratelog.Lang
 import org.ratelog.TmdbId
+import org.ratelog.WatchProviders
+import org.ratelog.WatchRegion
 import org.ratelog.customlist.CustomList
 import org.ratelog.customlist.CustomListRepository
 import org.ratelog.movie.MovieDescriptionRepository
@@ -43,6 +45,7 @@ data class GetMovieDetailResult(
     val review: String?,
     val isFollowed: Boolean,
     val userLists: List<CustomList>,
+    val watchProviders: WatchProviders?,
 )
 
 @Component
@@ -74,6 +77,7 @@ class DetailMovieHandler(
         val rating = ratingRepository.findByMovieIdAndUserId(savedMovie.id!!, query.userId)
         val isFollowed = movieRepository.isFollowed(query.userId, savedMovie.id)
         val userLists = customListRepository.findByUserId(query.userId)
+        val watchProviders = tmdbClient.movieWatchProviders(savedMovie.tmdbId, WatchRegion.fromLang(query.lang)).getOrNull()
 
         GetMovieDetailResult(
             id = savedMovie.id.value,
@@ -97,6 +101,7 @@ class DetailMovieHandler(
             review = rating?.review?.value,
             isFollowed = isFollowed,
             userLists = userLists,
+            watchProviders = watchProviders,
         )
     }
 }

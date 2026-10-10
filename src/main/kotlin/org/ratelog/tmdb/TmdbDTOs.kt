@@ -117,3 +117,22 @@ data class TmdbTranslationData(
     @JsonProperty("name") val name: String? = null,
     @JsonProperty("overview") val overview: String? = null,
 )
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TmdbWatchProvidersResponse(
+    @JsonProperty("id") val id: Int? = null,
+    @JsonProperty("results") val results: Map<String, TmdbWatchProvidersRegion> = emptyMap(),
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TmdbWatchProvidersRegion(
+    @JsonProperty("link") val link: String? = null,
+    @JsonProperty("flatrate") val flatrate: List<TmdbProviderEntry> = emptyList(),
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TmdbProviderEntry(
+    @JsonProperty("provider_id") val providerId: Int,
+    @JsonProperty("provider_name") val providerName: String,
+    @JsonProperty("logo_path") val logoPath: String? = null,
+)

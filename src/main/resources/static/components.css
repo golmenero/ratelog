@@ -280,6 +280,20 @@
   font-family: var(--font-serif), serif;
 }
 
+.watch-provider {
+  line-height: 0;
+  transition: transform 0.15s ease;
+  margin: 8px 0;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  img {
+    width: 28px;
+  }
+}
+
 .loader-overlay {
   position: fixed;
   inset: 0;
