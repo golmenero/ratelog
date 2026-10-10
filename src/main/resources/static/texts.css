@@ -8,7 +8,6 @@ h1 {
   display: inline-flex;
   align-items: baseline;
   gap: 12px;
-  width: 50%;
 }
 
 h2 {
@@ -26,14 +25,8 @@ h3 {
   font-family: var(--font-serif);
 }
 
-@media (max-width: 720px) {
-  h1 {
-    width: 100%;
-  }
-}
-
 p {
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   line-height: 1.55;
   color: var(--text-soft);
 }
