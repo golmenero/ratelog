@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v2.0.2
+### ➕ Added
 - Media detail (movies and TV shows) now displays "where to watch" providers.
 ### ⚡ Changed
 - Updated project dependencies.
