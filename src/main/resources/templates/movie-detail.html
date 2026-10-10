@@ -2,82 +2,83 @@
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head th:replace="~{fragments/head :: head(#{movie.detail.title})}"></head>
 <body>
-<div th:replace="~{fragments/loader}"></div>
-<div class="page">
-    <header class="site-header" th:replace="~{fragments/nav :: nav(active='movies')}"></header>
+    <div th:replace="~{fragments/loader}"></div>
+    <div class="page">
+        <header class="site-header" th:replace="~{fragments/nav :: nav(active='movies')}"></header>
 
-    <h1>
-        <span th:text="${movie != null} ? ${movie.name} : #{movie.detail.not.found}">Loading movie...</span>
-        <span th:if="${movie != null && movie.firstAirYear != null}" class="year" th:text="${movie.firstAirYear}">Year</span>
-    </h1>
+        <h1>
+            <span th:text="${movie != null} ? ${movie.name} : #{movie.detail.not.found}">Loading movie...</span>
+            <span th:if="${movie != null && movie.firstAirYear != null}" class="year" th:text="${movie.firstAirYear}">Year</span>
+        </h1>
 
-    <div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
-    <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
+        <div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
+        <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
 
-    <div class="flex column-on-sm gap-lg w-100">
-        <img class="detail" th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
-            <div class="flex-1">
-                <div class="flex gap-lg separate">
-                    <p th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : #{movie.detail.no.synopsis}">Loading movie information.</p>
-                    <span th:if="${movie.score != null}" class="rating" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
-                </div>
-                <br>
-                <div class="flex gap-lg separate">
-                    <div th:if="${!#lists.isEmpty(movie.genres)}" class="flex gap wrap">
-                        <span class="tag" th:each="genreId : ${movie.genres}" th:text="#{${'genre.' + genreId}}">Genre</span>
+        <div class="flex column-on-sm gap-lg w-100">
+            <img class="detail" th:src="@{'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}}" th:alt="'Poster of ' + ${movie.name}">
+                <div class="flex-1">
+                    <div class="flex gap-lg separate">
+                        <p th:text="${movie.overview != null and movie.overview.trim().length() > 0} ? ${movie.overview} : #{movie.detail.no.synopsis}">Loading movie information.</p>
+                        <span th:if="${movie.score != null}" class="rating" th:text="${#strings.replace(#numbers.formatDecimal(movie.score, 1, 2), ',', '.')}">0.00</span>
                     </div>
-                    <div class="flex gap-lg">
-                        <button th:if="${!movie.hasRating}" id="btnOpenRateModal">
-                            <i data-lucide="star"></i>
-                        </button>
-                        <form th:action="@{/movie/follow}" method="post">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <input type="hidden" name="movieId" th:value="${movie.id}" />
-                            <button type="submit" th:class="${movie.isFollowed} ? 'green' : ''">
-                                <i data-lucide="heart"></i>
+                    <br>
+                    <div class="flex gap-lg separate">
+                        <div th:if="${!#lists.isEmpty(movie.genres)}" class="flex gap wrap">
+                            <span class="tag" th:each="genreId : ${movie.genres}" th:text="#{${'genre.' + genreId}}">Genre</span>
+                        </div>
+                        <div class="flex gap-lg">
+                            <button th:if="${!movie.hasRating}" id="btnOpenRateModal">
+                                <i data-lucide="star"></i>
                             </button>
-                        </form>
-                        <button id="btnOpenAddToListModal">
-                            <i data-lucide="list-plus"></i>
-                        </button>
+                            <form th:action="@{/movie/follow}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <input type="hidden" name="movieId" th:value="${movie.id}" />
+                                <button type="submit" th:class="${movie.isFollowed} ? 'green' : ''">
+                                    <i data-lucide="heart"></i>
+                                </button>
+                            </form>
+                            <button id="btnOpenAddToListModal">
+                                <i data-lucide="list-plus"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-    </div>
-
-     <div class="flex wrap gap" th:if="${watchProviders != null and !#lists.isEmpty(watchProviders.flatrate)}">
-        <a th:each="provider : ${watchProviders.flatrate}"
-           class="watch-provider"
-           th:href="${watchProviders.link != null} ? ${watchProviders.link.value} : null"
-           target="_blank" rel="noopener noreferrer">
-            <img th:src="@{'https://image.tmdb.org/t/p/w45' + ${provider.logoPath.value}}" loading="lazy" />
-        </a>
-    </div>
-
-    <div th:if="${movie != null && movie.hasRating}" class="card rating-detail-card">
-        <h2 class="rating-detail-title" th:text="#{movie.detail.your.rating}">Your rating</h2>
-        <div class="rating-breakdown"
-             th:data-categories="'directing:' + ${movie.directing} + ',cinematography:' + ${movie.cinematography} + ',acting:' + ${movie.acting} + ',soundtrack:' + ${movie.soundtrack} + ',screenplay:' + ${movie.screenplay}"></div>
-        <span class="visually-hidden" data-i18n-key="directing" th:text="#{movies.rating.category.directing}">Directing</span>
-        <span class="visually-hidden" data-i18n-key="cinematography" th:text="#{movies.rating.category.cinematography}">Cinematography</span>
-        <span class="visually-hidden" data-i18n-key="acting" th:text="#{movies.rating.category.acting}">Acting</span>
-        <span class="visually-hidden" data-i18n-key="soundtrack" th:text="#{movies.rating.category.soundtrack}">Soundtrack</span>
-        <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{movies.rating.category.screenplay}">Screenplay</span>
-        <div class="rating-detail-footer">
-            <p th:if="${movie.review}" class="rating-review-text" th:text="${movie.review}"></p>
         </div>
-        <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="rating-delete-form">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <button type="submit" class="delete-rating-btn" th:aria-label="#{movie.detail.delete.rating}">
-                <i data-lucide="trash"></i>
-            </button>
-        </form>
+
+        <div class="flex wrap gap" th:if="${watchProviders != null and !#lists.isEmpty(watchProviders.flatrate)}">
+            <a th:each="provider : ${watchProviders.flatrate}"
+               class="watch-provider"
+               th:href="${watchProviders.link != null} ? ${watchProviders.link.value} : null"
+               target="_blank" rel="noopener noreferrer">
+                <img th:src="@{'https://image.tmdb.org/t/p/w45' + ${provider.logoPath.value}}" loading="lazy" />
+            </a>
+        </div>
+
+        <div class="separator"></div>
+
+        <div th:if="${movie != null && movie.hasRating}" class="card rating-detail-card">
+            <h2 class="rating-detail-title" th:text="#{movie.detail.your.rating}">Your rating</h2>
+            <div class="rating-breakdown"
+                 th:data-categories="'directing:' + ${movie.directing} + ',cinematography:' + ${movie.cinematography} + ',acting:' + ${movie.acting} + ',soundtrack:' + ${movie.soundtrack} + ',screenplay:' + ${movie.screenplay}"></div>
+            <span class="visually-hidden" data-i18n-key="directing" th:text="#{movies.rating.category.directing}">Directing</span>
+            <span class="visually-hidden" data-i18n-key="cinematography" th:text="#{movies.rating.category.cinematography}">Cinematography</span>
+            <span class="visually-hidden" data-i18n-key="acting" th:text="#{movies.rating.category.acting}">Acting</span>
+            <span class="visually-hidden" data-i18n-key="soundtrack" th:text="#{movies.rating.category.soundtrack}">Soundtrack</span>
+            <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{movies.rating.category.screenplay}">Screenplay</span>
+            <div class="rating-detail-footer">
+                <p th:if="${movie.review}" class="rating-review-text" th:text="${movie.review}"></p>
+            </div>
+            <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="rating-delete-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="delete-rating-btn" th:aria-label="#{movie.detail.delete.rating}">
+                    <i data-lucide="trash"></i>
+                </button>
+            </form>
+        </div>
+
+        <div th:replace="~{fragments/rate-movie-modal :: rateMovieModal(${movie})}"></div>
+        <div th:replace="~{fragments/add-to-list-modal :: addToListModal(${movie.id}, 'movie')}"></div>
     </div>
-
-
-
-    <div th:replace="~{fragments/rate-movie-modal :: rateMovieModal(${movie})}"></div>
-    <div th:replace="~{fragments/add-to-list-modal :: addToListModal(${movie.id}, 'movie')}"></div>
-</div>
 </body>
 <script>
     const btnOpenRateModal = document.getElementById('btnOpenRateModal');

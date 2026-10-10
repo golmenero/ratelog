@@ -2,90 +2,92 @@
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head th:replace="~{fragments/head :: head(#{tvshow.detail.title})}"></head>
 <body>
-<div th:replace="~{fragments/loader}"></div>
-<div class="page">
-    <header class="site-header" th:replace="~{fragments/nav :: nav(active='tvshows')}"></header>
+    <div th:replace="~{fragments/loader}"></div>
+    <div class="page">
+        <header class="site-header" th:replace="~{fragments/nav :: nav(active='tvshows')}"></header>
 
-    <h1>
-        <span th:text="${show != null} ? ${show.name} : #{tvshow.detail.not.found}">Loading TV show...</span>
-        <span th:if="${show != null && show.firstAirYear != null}" class="year" th:text="${show.firstAirYear}">Year</span>
-    </h1>
+        <h1>
+            <span th:text="${show != null} ? ${show.name} : #{tvshow.detail.not.found}">Loading TV show...</span>
+            <span th:if="${show != null && show.firstAirYear != null}" class="year" th:text="${show.firstAirYear}">Year</span>
+        </h1>
 
-    <div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
-    <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
+        <div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
+        <div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
 
-    <div class="flex column-on-sm gap-lg w-100">
-        <img class="detail" th:src="@{'https://image.tmdb.org/t/p/w500' + ${show.posterPath}}" th:alt="'Poster of ' + ${show.name}">
-            <div class="flex-1">
-                <div class="flex gap-lg separate">
-                    <p th:text="${show.overview != null and show.overview.trim().length() > 0} ? ${show.overview} : #{tvshow.detail.no.synopsis}">Loading TV show information.</p>
-                    <span th:if="${show.overallScore != null}" class="rating" th:text="${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')}">0.00</span>
-                </div>
-                <br>
-                <div class="flex gap-lg separate">
-                    <div th:if="${!#lists.isEmpty(show.genres)}" class="flex gap wrap">
-                        <span class="tag" th:each="genreId : ${show.genres}" th:text="#{${'genre.' + genreId}}">Genre</span>
+        <div class="flex column-on-sm gap-lg w-100">
+            <img class="detail" th:src="@{'https://image.tmdb.org/t/p/w500' + ${show.posterPath}}" th:alt="'Poster of ' + ${show.name}">
+                <div class="flex-1">
+                    <div class="flex gap-lg separate">
+                        <p th:text="${show.overview != null and show.overview.trim().length() > 0} ? ${show.overview} : #{tvshow.detail.no.synopsis}">Loading TV show information.</p>
+                        <span th:if="${show.overallScore != null}" class="rating" th:text="${#strings.replace(#numbers.formatDecimal(show.overallScore, 1, 2), ',', '.')}">0.00</span>
                     </div>
-                    <div class="flex gap-lg">
-                        <form th:action="@{/tvshow/follow}" method="post">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <input type="hidden" name="tvShowId" th:value="${show.id}" />
-                            <button type="submit" th:class="${show.isFollowed} ? 'green' : ''">
-                                <i data-lucide="heart"></i>
+                    <br>
+                    <div class="flex gap-lg separate">
+                        <div th:if="${!#lists.isEmpty(show.genres)}" class="flex gap wrap">
+                            <span class="tag" th:each="genreId : ${show.genres}" th:text="#{${'genre.' + genreId}}">Genre</span>
+                        </div>
+                        <div class="flex gap-lg">
+                            <form th:action="@{/tvshow/follow}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <input type="hidden" name="tvShowId" th:value="${show.id}" />
+                                <button type="submit" th:class="${show.isFollowed} ? 'green' : ''">
+                                    <i data-lucide="heart"></i>
+                                </button>
+                            </form>
+                            <button id="btnOpenAddToListModal">
+                                <i data-lucide="list-plus"></i>
                             </button>
-                        </form>
-                        <button id="btnOpenAddToListModal">
-                            <i data-lucide="list-plus"></i>
-                        </button>
+                        </div>
                     </div>
-                </div>
-        </div>
-    </div>
-
-    <div class="flex wrap gap" th:if="${watchProviders != null and !#lists.isEmpty(watchProviders.flatrate)}">
-        <a th:each="provider : ${watchProviders.flatrate}"
-           class="watch-provider"
-           th:href="${watchProviders.link != null} ? ${watchProviders.link.value} : null"
-           target="_blank" rel="noopener noreferrer">
-            <img th:src="@{'https://image.tmdb.org/t/p/w45' + ${provider.logoPath.value}}" loading="lazy" />
-        </a>
-    </div>
-
-    <div th:if="${show != null && !#lists.isEmpty(show.seasons)}">
-        <div th:each="season : ${show.seasons}" class="card season-card"
-             th:classappend="${season.hasRating} ? 'clickable expandable' : ''">
-            <div class="season-card-header flex separate">
-                <span class="season" th:if="${season.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
-                <span th:if="${season.hasRating}" class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
-                <button th:unless="${season.hasRating}" class="season-rate-btn" style="padding: 0;" th:data-season="${season.seasonNumber}">
-                    <i data-lucide="star"></i>
-                </button>
             </div>
-            <div th:if="${season.hasRating}" class="season-card-body">
-                <div class="rating-breakdown"
-                     th:data-categories="'directing:' + ${season.directing} + ',cinematography:' + ${season.cinematography} + ',acting:' + ${season.acting} + ',soundtrack:' + ${season.soundtrack} + ',screenplay:' + ${season.screenplay}"></div>
-                <span class="visually-hidden" data-i18n-key="directing" th:text="#{tvshows.rating.category.directing}">Directing</span>
-                <span class="visually-hidden" data-i18n-key="cinematography" th:text="#{tvshows.rating.category.cinematography}">Cinematography</span>
-                <span class="visually-hidden" data-i18n-key="acting" th:text="#{tvshows.rating.category.acting}">Acting</span>
-                <span class="visually-hidden" data-i18n-key="soundtrack" th:text="#{tvshows.rating.category.soundtrack}">Soundtrack</span>
-                <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{tvshows.rating.category.screenplay}">Screenplay</span>
-                <div class="rating-detail-footer">
-                    <p th:if="${season.review}" class="rating-review-text" th:text="${season.review}"></p>
-                </div>
-                <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="rating-delete-form">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
-                    <button type="submit" class="delete-rating-btn" th:aria-label="#{tvshow.detail.delete.rating}">
-                        <i data-lucide="trash"></i>
+        </div>
+
+        <div class="flex wrap gap" th:if="${watchProviders != null and !#lists.isEmpty(watchProviders.flatrate)}">
+            <a th:each="provider : ${watchProviders.flatrate}"
+               class="watch-provider"
+               th:href="${watchProviders.link != null} ? ${watchProviders.link.value} : null"
+               target="_blank" rel="noopener noreferrer">
+                <img th:src="@{'https://image.tmdb.org/t/p/w45' + ${provider.logoPath.value}}" loading="lazy" />
+            </a>
+        </div>
+
+        <div class="separator"></div>
+
+        <div th:if="${show != null && !#lists.isEmpty(show.seasons)}">
+            <div th:each="season : ${show.seasons}" class="card season-card"
+                 th:classappend="${season.hasRating} ? 'clickable expandable' : ''">
+                <div class="season-card-header flex separate">
+                    <span class="season" th:if="${season.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
+                    <span th:if="${season.hasRating}" class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
+                    <button th:unless="${season.hasRating}" class="season-rate-btn" style="padding: 0;" th:data-season="${season.seasonNumber}">
+                        <i data-lucide="star"></i>
                     </button>
-                </form>
+                </div>
+                <div th:if="${season.hasRating}" class="season-card-body">
+                    <div class="rating-breakdown"
+                         th:data-categories="'directing:' + ${season.directing} + ',cinematography:' + ${season.cinematography} + ',acting:' + ${season.acting} + ',soundtrack:' + ${season.soundtrack} + ',screenplay:' + ${season.screenplay}"></div>
+                    <span class="visually-hidden" data-i18n-key="directing" th:text="#{tvshows.rating.category.directing}">Directing</span>
+                    <span class="visually-hidden" data-i18n-key="cinematography" th:text="#{tvshows.rating.category.cinematography}">Cinematography</span>
+                    <span class="visually-hidden" data-i18n-key="acting" th:text="#{tvshows.rating.category.acting}">Acting</span>
+                    <span class="visually-hidden" data-i18n-key="soundtrack" th:text="#{tvshows.rating.category.soundtrack}">Soundtrack</span>
+                    <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{tvshows.rating.category.screenplay}">Screenplay</span>
+                    <div class="rating-detail-footer">
+                        <p th:if="${season.review}" class="rating-review-text" th:text="${season.review}"></p>
+                    </div>
+                    <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="rating-delete-form">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
+                        <button type="submit" class="delete-rating-btn" th:aria-label="#{tvshow.detail.delete.rating}">
+                            <i data-lucide="trash"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div th:replace="~{fragments/rate-tvshow-modal :: rateTvShowModal(${show})}"></div>
-    <div th:replace="~{fragments/add-to-list-modal :: addToListModal(${show.id}, 'tvshow')}"></div>
-</div>
+        <div th:replace="~{fragments/rate-tvshow-modal :: rateTvShowModal(${show})}"></div>
+        <div th:replace="~{fragments/add-to-list-modal :: addToListModal(${show.id}, 'tvshow')}"></div>
+    </div>
 </body>
 <script>
     const btnOpenRateModal = document.getElementById('btnOpenRateModal');

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### ➕ Added
 ### ⚡ Changed
 ### 🔧 Fixed
+- Fixed layout on ranked movie
 
 ## Release v2.0.2
 ### ➕ Added

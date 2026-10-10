@@ -283,7 +283,7 @@
 .watch-provider {
   line-height: 0;
   transition: transform 0.15s ease;
-  margin: 8px 0;
+  margin-top: 12px;
 
   &:hover {
     transform: scale(1.05);
