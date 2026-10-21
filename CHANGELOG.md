@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### ➕ Added
 ### ⚡ Changed
 ### 🔧 Fixed
+- Respect aspect ratio
 
 ## Release v2.0.3
 ### ➕ Added
