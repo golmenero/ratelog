@@ -349,7 +349,9 @@ img {
 
   &.detail {
     width: 320px;
-    height: fit-content;
+    max-width: 100%;
+    height: auto;
+    align-self: flex-start;
     -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%);
     mask-image: linear-gradient(to right, black 50%, transparent 100%);
   }
