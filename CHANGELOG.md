@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 ### ➕ Added
 ### ⚡ Changed
 ### 🔧 Fixed
+
+## Release v2.1.1
+### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
 - The top logo is no longer shown on mobile devices; the bottom navigation bar already provides home access.
 
 ## Release v2.1.0
