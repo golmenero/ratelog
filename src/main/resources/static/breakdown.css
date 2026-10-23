@@ -19,7 +19,7 @@
 
 .rating-breakdown .breakdown-label {
   flex: 0 0 110px;
-  font-family: var(--font-ui);
+  font-family: var(--font);
   font-size: 12px;
   font-weight: 500;
   color: var(--text-soft);
@@ -57,7 +57,7 @@
 .rating-detail-title {
   width: 100%;
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font);
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--text);
