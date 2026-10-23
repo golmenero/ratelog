@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+- New bottom navigation bar for mobile devices, with quick access to Movies, TV Shows, Home and Community, plus a settings sheet for profile, configuration and logout.
 ### ⚡ Changed
+- Typography now uses the self-hosted Sentient font, replacing the previous Inter and Newsreader combination.
 ### 🔧 Fixed
 - Respect aspect ratio
 
