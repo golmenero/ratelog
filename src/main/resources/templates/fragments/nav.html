@@ -5,52 +5,129 @@
     <div class="nav-brand">
         <a href="/" class="nav-monogram" th:aria-label="#{nav.home}"><img src="/img/logo.svg" th:alt="#{app.name}"></a>
     </div>
-    <button class="nav-hamburger" th:aria-label="#{nav.toggle.menu}" aria-expanded="false" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-    </button>
-    <div class="nav-mobile-menu">
-        <nav class="nav-links" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
-            <a class="nav-link" href="/movies" th:text="#{nav.movies}">Movies</a>
-            <a class="nav-link" href="/tvshows" th:text="#{nav.tvshows}">TV Shows</a>
-            <a class="nav-link" href="/community" th:text="#{nav.community}">Community</a>
-        </nav>
-        <div class="nav-auth" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
-            <a href="/profile" class="nav-link btn" th:aria-label="#{nav.profile}">
-                <i data-lucide="user" aria-hidden="true"></i>
-            </a>
-            <a href="/admin/configuration" class="nav-link btn"
-               th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''SUPERADMIN'')')}"
-               th:aria-label="#{admin.title}">
-                <i data-lucide="settings" aria-hidden="true"></i>
-            </a>
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="nav-link" th:aria-label="#{auth.logout}">
-                    <i data-lucide="log-out" aria-hidden="true"></i>
-                </button>
-            </form>
-        </div>
+
+    <nav class="nav-links" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}"
+         th:aria-label="#{nav.menu.main}">
+        <a class="nav-link" href="/movies" th:text="#{nav.movies}" th:classappend="${active == 'movies'} ? 'active' : ''">Movies</a>
+        <a class="nav-link" href="/tvshows" th:text="#{nav.tvshows}" th:classappend="${active == 'tvshows'} ? 'active' : ''">TV Shows</a>
+        <a class="nav-link" href="/community" th:text="#{nav.community}" th:classappend="${active == 'community'} ? 'active' : ''">Community</a>
+    </nav>
+
+    <div class="nav-auth" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}">
+        <a href="/profile" class="nav-link btn" th:aria-label="#{nav.profile}">
+            <i data-lucide="user" aria-hidden="true"></i>
+        </a>
+        <a href="/admin/configuration" class="nav-link btn"
+           th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''SUPERADMIN'')')}"
+           th:aria-label="#{admin.title}">
+            <i data-lucide="settings" aria-hidden="true"></i>
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="nav-link" th:aria-label="#{auth.logout}">
+                <i data-lucide="log-out" aria-hidden="true"></i>
+            </button>
+        </form>
     </div>
+
+    <nav class="bottom-nav" th:if="${#authentication.isAuthenticated() and #authentication.name != 'anonymousUser'}"
+         th:aria-label="#{nav.menu.bottom}">
+        <a class="bottom-nav-item" href="/movies" th:aria-label="#{nav.movies}" th:classappend="${active == 'movies'} ? 'active' : ''">
+            <i data-lucide="film" aria-hidden="true"></i>
+        </a>
+        <a class="bottom-nav-item" href="/tvshows" th:aria-label="#{nav.tvshows}" th:classappend="${active == 'tvshows'} ? 'active' : ''">
+            <i data-lucide="tv" aria-hidden="true"></i>
+        </a>
+        <a class="bottom-nav-item bottom-nav-home" href="/" th:aria-label="#{nav.home}" th:classappend="${active == 'search'} ? 'active' : ''">
+            <img src="/img/logo.svg" alt="">
+        </a>
+        <a class="bottom-nav-item" href="/community" th:aria-label="#{nav.community}" th:classappend="${active == 'community'} ? 'active' : ''">
+            <i data-lucide="users" aria-hidden="true"></i>
+        </a>
+        <button class="bottom-nav-item" id="btnNavSettings" type="button"
+                th:aria-label="#{nav.settings}" aria-expanded="false" aria-controls="navSettingsSheet">
+            <i data-lucide="settings" aria-hidden="true"></i>
+        </button>
+    </nav>
+
+    <div class="nav-sheet-backdrop" id="navSheetBackdrop" hidden></div>
+
+    <div class="nav-sheet" id="navSettingsSheet" role="dialog" aria-modal="true" th:aria-label="#{nav.settings}" hidden>
+        <button class="nav-sheet-close" id="btnNavSettingsClose" type="button" th:aria-label="#{modal.close}">
+            <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+        <a class="nav-sheet-item" href="/profile">
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span th:text="#{nav.profile}">Profile</span>
+        </a>
+        <a class="nav-sheet-item" href="/admin/configuration"
+           th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''SUPERADMIN'')')}">
+            <i data-lucide="sliders-horizontal" aria-hidden="true"></i>
+            <span th:text="#{admin.title}">Configuration</span>
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-sheet-item" type="submit">
+                <i data-lucide="log-out" aria-hidden="true"></i>
+                <span th:text="#{auth.logout}">Logout</span>
+            </button>
+        </form>
+    </div>
+
     <script>
         (function() {
-            var hamburger = document.querySelector('.nav-hamburger');
-            var mobileMenu = document.querySelector('.nav-mobile-menu');
-            if (hamburger && mobileMenu) {
-                hamburger.addEventListener('click', function() {
-                    var expanded = hamburger.getAttribute('aria-expanded') === 'true';
-                    hamburger.setAttribute('aria-expanded', !expanded);
-                    hamburger.classList.toggle('active');
-                    mobileMenu.classList.toggle('open');
-                });
-                document.addEventListener('click', function(e) {
-                    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
-                        hamburger.setAttribute('aria-expanded', 'false');
-                        hamburger.classList.remove('active');
-                        mobileMenu.classList.remove('open');
-                    }
-                });
+            var btn = document.getElementById('btnNavSettings');
+            var sheet = document.getElementById('navSettingsSheet');
+            var backdrop = document.getElementById('navSheetBackdrop');
+            var btnClose = document.getElementById('btnNavSettingsClose');
+            if (!btn || !sheet || !backdrop) {
+                return;
             }
+
+            var isOpen = function() {
+                return btn.getAttribute('aria-expanded') === 'true';
+            };
+
+            var open = function() {
+                backdrop.hidden = false;
+                sheet.hidden = false;
+                void sheet.offsetWidth;
+                backdrop.classList.add('open');
+                sheet.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+            };
+
+            var close = function() {
+                if (!isOpen()) {
+                    return;
+                }
+                var onTransitionEnd = function(e) {
+                    if (e.propertyName !== 'transform') {
+                        return;
+                    }
+                    sheet.removeEventListener('transitionend', onTransitionEnd);
+                    sheet.hidden = true;
+                    backdrop.hidden = true;
+                };
+                sheet.addEventListener('transitionend', onTransitionEnd);
+                backdrop.classList.remove('open');
+                sheet.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+            };
+
+            btn.addEventListener('click', function() {
+                isOpen() ? close() : open();
+            });
+
+            if (btnClose) {
+                btnClose.addEventListener('click', close);
+            }
+
+            backdrop.addEventListener('click', close);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    close();
+                }
+            });
         })();
     </script>
 </header>
