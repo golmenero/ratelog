@@ -1,0 +1,79 @@
+@font-face {
+  font-family: "Sentient";
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/fonts/Sentient-Extralight.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/fonts/Sentient-ExtralightItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/Sentient-Light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/Sentient-LightItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Sentient-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Sentient-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/Sentient-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/Sentient-MediumItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url("/fonts/Sentient-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Sentient";
+  font-style: italic;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url("/fonts/Sentient-BoldItalic.woff2") format("woff2");
+}
