@@ -150,7 +150,7 @@
 
     if (addToListModal) {
         addToListModal.addEventListener('click', (e) => {
-            if (e.target === addToListModal) {
+            if (e.target === e.currentTarget) {
                 addToListModal.classList.remove('visible');
             }
         });

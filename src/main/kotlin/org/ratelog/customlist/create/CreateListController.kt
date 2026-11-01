@@ -26,7 +26,7 @@ class CreateListController(
                     is CreateListError.ListLimitExceeded -> "list.error.limit.exceeded"
                 }
                 redirectAttributes.addFlashAttribute("error", message)
-                "redirect:/lists"
+                "redirect:/profile"
             },
             { list -> "redirect:/list/${list.id!!.value}" }
         )
