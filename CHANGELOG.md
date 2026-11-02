@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+- The create list modal button now reads "Create" instead of "Create List".
 ### 🔧 Fixed
 - The "Add to list" modal now opens on movie details; a duplicated script block was aborting the page script and leaving the button without its click handler.
 - Creating a list with an invalid name no longer returns a 404; the profile page is now shown with the error message.
