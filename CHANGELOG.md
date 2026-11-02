@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+### 🔧 Fixed
+
+## Release v2.2.0
+### ➕ Added
+### ⚡ Changed
 - The create list modal button now reads "Create" instead of "Create List".
 ### 🔧 Fixed
 - The "Add to list" modal now opens on movie details; a duplicated script block was aborting the page script and leaving the button without its click handler.
