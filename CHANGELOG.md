@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### ➕ Added
 ### ⚡ Changed
 ### 🔧 Fixed
+- The release workflow no longer deletes untagged container versions from the registry.
 
 ## Release v2.3.0
 ### ➕ Added
