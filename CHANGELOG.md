@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Simplify user edition (unify edit from own profile and edit from configuration).
 - The password policy has been removed: no minimum length nor complexity requirements anymore.
 ### 🔧 Fixed
+- Do not delete old tags of the app on release
 
 ## Release v2.2.0
 ### ➕ Added
