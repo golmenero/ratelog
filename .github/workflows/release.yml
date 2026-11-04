@@ -81,17 +81,3 @@ jobs:
           push: true
           tags: ${{ steps.prep.outputs.tags }}
 
-  cleanup-untagged-versions:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-
-    steps:
-      - name: Delete untagged container versions
-        uses: actions/delete-package-versions@v5
-        with:
-          package-name: ${{ github.event.repository.name }}
-          package-type: container
-          delete-only-untagged-versions: true
-
