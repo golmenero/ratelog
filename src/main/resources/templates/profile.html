@@ -3,6 +3,8 @@
 <head th:replace="~{fragments/head :: head(#{profile.title})}"></head>
 <body>
 <div th:replace="~{fragments/loader}"></div>
+<div th:if="${error}" class="feedback error" th:text="#{${error}}"></div>
+<div th:if="${success}" class="feedback success" th:text="#{${success}}"></div>
 <div class="page">
     <header class="site-header" th:replace="~{fragments/nav :: nav(active='profile')}"></header>
 
@@ -17,7 +19,7 @@
         </div>
         <div>
             <div class="flex gap">
-                <button th:if="${isLoggedUser}" id="btnOpenEditModal" type="button">
+                <button th:if="${isLoggedUser}" id="btnOpenEditUserModal" type="button">
                     <i data-lucide="pencil"></i>
                 </button>
                 <button th:if="${isLoggedUser}" id="btnOpenLetterboxdModal" type="button" class="link secondary">
@@ -131,27 +133,27 @@
         <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="golmenero" data-color="#d97757" data-emoji="" data-font="Bree" data-text="Buy me a coffee" data-outline-color="#FFFFFF" data-font-color="#FFFFFF" data-coffee-color="#FFDD00"></script>
     </footer>
 
-    <div th:replace="~{fragments/edit-user-modal :: editUserModal}"></div>
+    <div th:replace="~{fragments/edit-user-modal :: editUserModal('/edit-profile', false)}"></div>
     <div th:if="${isLoggedUser}" th:replace="~{fragments/letterboxd-import-modal :: letterboxdImportModal}"></div>
     <div th:if="${isLoggedUser}" th:replace="~{fragments/create-list-modal :: createListModal}"></div>
 </div>
 </body>
 <script>
-    const btnOpenEditModal = document.getElementById('btnOpenEditModal');
-    const btnCloseEditModal = document.getElementById('btnCloseEditModal');
-    const editProfileModal = document.getElementById('editProfileModal');
+    const btnOpenEditUserModal = document.getElementById('btnOpenEditUserModal');
+    const btnCloseEditUserModal = document.getElementById('btnCloseEditUserModal');
+    const editUserModal = document.getElementById('editUserModal');
 
-    if (btnOpenEditModal) {
-        btnOpenEditModal.addEventListener('click', () => editProfileModal.classList.add('visible'));
+    if (btnOpenEditUserModal) {
+        btnOpenEditUserModal.addEventListener('click', () => editUserModal.classList.add('visible'));
     }
-    if (btnCloseEditModal) {
-        btnCloseEditModal.addEventListener('click', () => editProfileModal.classList.remove('visible'));
+    if (btnCloseEditUserModal) {
+        btnCloseEditUserModal.addEventListener('click', () => editUserModal.classList.remove('visible'));
     }
 
-    if (editProfileModal) {
-        editProfileModal.addEventListener('click', (e) => {
-            if (e.target === editProfileModal) {
-                editProfileModal.classList.remove('visible');
+    if (editUserModal) {
+        editUserModal.addEventListener('click', (e) => {
+            if (e.target === editUserModal) {
+                editUserModal.classList.remove('visible');
             }
         });
     }

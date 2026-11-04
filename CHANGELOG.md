@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### ➕ Added
 ### ⚡ Changed
+- Simplify user edition (unify edit from own profile and edit from configuration).
+- The password policy has been removed: no minimum length nor complexity requirements anymore.
 ### 🔧 Fixed
 
 ## Release v2.2.0

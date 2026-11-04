@@ -151,7 +151,7 @@ data class Email(val value: String) {
 data class Password(val value: String) {
     companion object {
         fun parse(value: String): Either<ParseError, Password> = either {
-            if (!value.matches(Regex("^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$"))) {
+            if (value.isBlank()) {
                 raise(ParseError.InvalidPassword)
             }
             Password(value)

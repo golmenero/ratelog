@@ -1,39 +1,46 @@
-<div th:fragment="editUserModal" id="editProfileModal" class="modal">
-    <div>
-        <div class="flex separate top">
-            <h2 th:text="#{profile.edit.title}">Edit Profile</h2>
-            <button id="btnCloseEditModal" type="button">
+<div th:fragment="editUserModal(action, withRole)" id="editUserModal" class="modal">
+    <div class="modal-content card">
+        <div class="flex separate">
+            <h3 class="m-0" th:text="#{admin.user.edit}">Edit user</h3>
+            <button id="btnCloseEditUserModal" type="button" th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
         </div>
 
-        <form th:action="@{/edit-profile}" method="post">
+        <form id="editUserForm" method="post" th:action="@{${action}}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
             <div class="form-group">
-                <label for="username" th:text="#{auth.username}">Username</label>
-                <input type="text" id="username" name="username" th:value="${username}" required minlength="3" maxlength="50">
+                <label for="editUsername" th:text="#{admin.user.username}">Username</label>
+                <input type="text" id="editUsername" name="username" th:value="${username}" required minlength="3" maxlength="50">
             </div>
 
             <div class="form-group">
-                <label for="email" th:text="#{auth.email}">Email</label>
-                <input type="email" id="email" name="email" th:value="${email}" required>
+                <label for="editEmail" th:text="#{admin.user.email}">Email</label>
+                <input type="email" id="editEmail" name="email" th:value="${email}" required>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" th:unless="${#authorization.expression('hasRole(''SUPERADMIN'')')}">
                 <label for="currentPassword" th:text="#{profile.current.password}">Current Password</label>
-                <input type="password" id="currentPassword" name="currentPassword" required>
+                <input type="password" id="currentPassword" name="currentPassword" autocomplete="current-password" required>
             </div>
 
             <div class="form-group">
-                <label for="newPassword" th:text="#{profile.new.password}">New Password (optional)</label>
-                <input type="password" id="newPassword" name="newPassword" minlength="8">
-                <p class="help-text" th:text="#{password.help}">Min 8 characters, with uppercase, number and special character.</p>
+                <label for="editPassword" th:text="#{admin.user.new.password}">New password</label>
+                <input type="password" id="editPassword" name="newPassword" autocomplete="new-password">
+                <p class="help-text" th:text="#{admin.user.password.hint}">Leave empty to keep current</p>
             </div>
 
-            <div th:if="${error}"  class="feedback error" th:text="#{${error}}"></div>
+            <div id="editRoleSection" class="form-group"
+                 th:if="${withRole and #authorization.expression('hasRole(''SUPERADMIN'')')}">
+                <label for="editRole" th:text="#{admin.user.role}">Role</label>
+                <select id="editRole" name="role" required>
+                    <option value="USER" th:text="#{admin.user.role.user}">User</option>
+                    <option value="ADMIN" th:text="#{admin.user.role.admin}">Admin</option>
+                </select>
+            </div>
 
-            <button class="primary w-100" type="submit" th:text="#{profile.save}">Save</button>
+            <button type="submit" class="primary w-100" th:text="#{admin.user.save}">Save</button>
         </form>
     </div>
 </div>

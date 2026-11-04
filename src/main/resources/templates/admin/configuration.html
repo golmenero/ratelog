@@ -93,7 +93,7 @@
 </div>
 
 <div th:replace="~{fragments/admin-create-user-modal :: createUserModal}"></div>
-<div th:replace="~{fragments/admin-edit-user-modal :: editUserModal}"></div>
+<div th:replace="~{fragments/edit-user-modal :: editUserModal('/admin/users/0', true)}"></div>
 <script>
     (function() {
         var editForm = document.getElementById('editUserForm');
@@ -107,9 +107,16 @@
                 if (editForm) editForm.action = '/admin/users/' + id;
                 modal.querySelector('input[name="username"]').value = btn.dataset.username;
                 modal.querySelector('input[name="email"]').value = btn.dataset.email;
+                modal.querySelectorAll('input[name="currentPassword"], input[name="newPassword"]').forEach(function(input) {
+                    input.value = '';
+                });
                 var roleSelect = modal.querySelector('select[name="role"]');
-                if (roleSelect) roleSelect.value = btn.dataset.role;
-                if (roleSection) roleSection.style.display = btn.dataset.role === 'SUPERADMIN' ? 'none' : '';
+                var isSuperadminTarget = btn.dataset.role === 'SUPERADMIN';
+                if (roleSelect) {
+                    roleSelect.disabled = isSuperadminTarget;
+                    if (!isSuperadminTarget) roleSelect.value = btn.dataset.role;
+                }
+                if (roleSection) roleSection.style.display = isSuperadminTarget ? 'none' : '';
                 modal.classList.add('visible');
             });
         });
