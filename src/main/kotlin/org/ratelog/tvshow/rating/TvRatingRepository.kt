@@ -48,6 +48,27 @@ data class TvRating(
             review = review,
         )).updateScore()
 
+    fun updateSeasonRating(
+        seasonNumber: SeasonNumber,
+        directing: Score,
+        cinematography: Score,
+        acting: Score,
+        soundtrack: Score,
+        screenplay: Score,
+        review: Review?,
+    ) =
+        copy(seasonRatings = seasonRatings.map { seasonRating ->
+            if (seasonRating.seasonNumber == seasonNumber) seasonRating.copy(
+                directing = directing,
+                cinematography = cinematography,
+                acting = acting,
+                soundtrack = soundtrack,
+                screenplay = screenplay,
+                score = Score((directing.value + cinematography.value + acting.value + soundtrack.value + screenplay.value) / 5.0),
+                review = review,
+            ) else seasonRating
+        }).updateScore()
+
     private fun updateScore() = if (seasonRatings.isEmpty()) copy(score = null)
         else copy(score = seasonRatings.map { it.score.value }.average().let(::Score))
 
