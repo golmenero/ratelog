@@ -567,6 +567,20 @@ form.inline {
   margin-bottom: 16px;
 }
 
+.confirm-modal-message {
+  margin: 20px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+
+.confirm-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+}
+
 .rate-modal-review textarea {
   width: 100%;
   box-sizing: border-box;

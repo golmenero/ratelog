@@ -183,6 +183,33 @@ a.btn {
       background: var(--accent-strong);
     }
   }
+
+  &.danger {
+    padding: 10px 10px;
+    border-radius: 10px;
+    background: var(--danger);
+    color: white;
+    font-weight: 700;
+    font-family: var(--font);
+
+    &:hover {
+      background: var(--danger-strong);
+    }
+  }
+
+  &.secondary {
+    padding: 10px 10px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: var(--text-soft);
+    font-weight: 700;
+    font-family: var(--font);
+
+    &:hover {
+      color: var(--text);
+    }
+  }
 }
 
 a.link {
