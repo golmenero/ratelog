@@ -1,79 +1,127 @@
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: normal;
   font-weight: 200;
   font-display: swap;
-  src: url("/fonts/Sentient-Extralight.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-ExtraLight.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: italic;
   font-weight: 200;
   font-display: swap;
-  src: url("/fonts/Sentient-ExtralightItalic.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-ExtraLightItalic.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url("/fonts/Sentient-Light.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-Light.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: italic;
   font-weight: 300;
   font-display: swap;
-  src: url("/fonts/Sentient-LightItalic.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-LightItalic.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/fonts/Sentient-Regular.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-Regular.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url("/fonts/Sentient-Italic.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-Italic.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("/fonts/Sentient-Medium.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-Medium.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: italic;
   font-weight: 500;
   font-display: swap;
-  src: url("/fonts/Sentient-MediumItalic.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-MediumItalic.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: normal;
-  font-weight: 600 800;
+  font-weight: 600;
   font-display: swap;
-  src: url("/fonts/Sentient-Bold.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-SemiBold.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Sentient";
+  font-family: "Crimson Pro";
   font-style: italic;
-  font-weight: 600 800;
+  font-weight: 600;
   font-display: swap;
-  src: url("/fonts/Sentient-BoldItalic.woff2") format("woff2");
+  src: url("/fonts/CrimsonPro-SemiBoldItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/CrimsonPro-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/CrimsonPro-BoldItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/CrimsonPro-ExtraBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/CrimsonPro-ExtraBoldItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/CrimsonPro-Black.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/CrimsonPro-BlackItalic.woff2") format("woff2");
 }

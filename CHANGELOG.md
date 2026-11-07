@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Ratings can now be edited (movies and TV show seasons): an edit icon next to delete opens the rating modal prefilled with the current scores and review, and saving updates the existing rating.
 - A confirmation modal is now shown before deleting a rating.
 ### ⚡ Changed
+- Typography now uses the Crimson Pro font, replacing the previous Sentient font.
 ### 🔧 Fixed
 
 ## Release v2.3.1
