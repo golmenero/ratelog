@@ -73,6 +73,13 @@
   font-style: italic;
 }
 
-.rating-delete-form {
+.rating-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   align-self: flex-end;
+}
+
+.rating-delete-form {
+  display: inline-flex;
 }

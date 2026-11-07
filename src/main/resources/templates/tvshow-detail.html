@@ -74,13 +74,26 @@
                     <div class="rating-detail-footer">
                         <p th:if="${season.review}" class="rating-review-text" th:text="${season.review}"></p>
                     </div>
-                    <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="rating-delete-form">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
-                        <button type="submit" class="delete-rating-btn" th:aria-label="#{tvshow.detail.delete.rating}">
-                            <i data-lucide="trash"></i>
+                    <div class="rating-actions">
+                        <button type="button" class="edit-rating-btn"
+                                th:data-season="${season.seasonNumber}"
+                                th:data-directing="${season.directing}"
+                                th:data-cinematography="${season.cinematography}"
+                                th:data-acting="${season.acting}"
+                                th:data-soundtrack="${season.soundtrack}"
+                                th:data-screenplay="${season.screenplay}"
+                                th:data-review="${season.review}"
+                                th:aria-label="#{tvshow.detail.edit.rating}">
+                            <i data-lucide="pencil"></i>
                         </button>
-                    </form>
+                        <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post" class="rating-delete-form">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
+                            <button type="submit" class="delete-rating-btn" th:aria-label="#{tvshow.detail.delete.rating}">
+                                <i data-lucide="trash"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,27 +103,6 @@
     </div>
 </body>
 <script>
-    const btnOpenRateModal = document.getElementById('btnOpenRateModal');
-    const btnCloseModal = document.getElementById('btnCloseModal');
-    const rateModal = document.getElementById('rateModal');
-    const seasonNumberSelect = document.getElementById('seasonNumber');
-
-    if (btnOpenRateModal) {
-        btnOpenRateModal.addEventListener('click', () => {
-            rateModal.classList.add('visible');
-        });
-    }
-
-    document.querySelectorAll('.season-rate-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const season = btn.getAttribute('data-season');
-            if (seasonNumberSelect) {
-                seasonNumberSelect.value = season;
-            }
-            rateModal.classList.add('visible');
-        });
-    });
-
     document.querySelectorAll('.season-card.expandable').forEach(card => {
         const header = card.querySelector('.season-card-header');
         if (!header) return;
@@ -119,18 +111,6 @@
             card.classList.toggle('expanded');
         });
     });
-
-    if (btnCloseModal) {
-        btnCloseModal.addEventListener('click', () => {
-            rateModal.classList.remove('visible');
-        });
-    }
-
-    if (rateModal) {
-        rateModal.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    }
 
     const btnOpenAddToListModal = document.getElementById('btnOpenAddToListModal');
     const btnCloseAddToListModal = document.getElementById('btnCloseAddToListModal');

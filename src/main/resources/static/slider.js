@@ -129,6 +129,12 @@
     updateOverall();
   }
 
+  window.rateLogSliders = {
+    set: function (slider, value) {
+      setValue(slider, value);
+    },
+  };
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAll);
   } else {

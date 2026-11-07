@@ -68,12 +68,24 @@
             <div class="rating-detail-footer">
                 <p th:if="${movie.review}" class="rating-review-text" th:text="${movie.review}"></p>
             </div>
-            <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="rating-delete-form">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <button type="submit" class="delete-rating-btn" th:aria-label="#{movie.detail.delete.rating}">
-                    <i data-lucide="trash"></i>
+            <div class="rating-actions">
+                <button type="button" class="edit-rating-btn"
+                        th:data-directing="${movie.directing}"
+                        th:data-cinematography="${movie.cinematography}"
+                        th:data-acting="${movie.acting}"
+                        th:data-soundtrack="${movie.soundtrack}"
+                        th:data-screenplay="${movie.screenplay}"
+                        th:data-review="${movie.review}"
+                        th:aria-label="#{movie.detail.edit.rating}">
+                    <i data-lucide="pencil"></i>
                 </button>
-            </form>
+                <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="rating-delete-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="delete-rating-btn" th:aria-label="#{movie.detail.delete.rating}">
+                        <i data-lucide="trash"></i>
+                    </button>
+                </form>
+            </div>
         </div>
 
         <div th:replace="~{fragments/rate-movie-modal :: rateMovieModal(${movie})}"></div>
@@ -81,28 +93,6 @@
     </div>
 </body>
 <script>
-    const btnOpenRateModal = document.getElementById('btnOpenRateModal');
-    const btnCloseModal = document.getElementById('btnCloseModal');
-    const rateModal = document.getElementById('rateModal');
-
-    if (btnOpenRateModal) {
-        btnOpenRateModal.addEventListener('click', () => {
-            rateModal.classList.add('visible');
-        });
-    }
-
-    if (btnCloseModal) {
-        btnCloseModal.addEventListener('click', () => {
-            rateModal.classList.remove('visible');
-        });
-    }
-
-    if (rateModal) {
-        rateModal.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    }
-
     const btnOpenAddToListModal = document.getElementById('btnOpenAddToListModal');
     const btnCloseAddToListModal = document.getElementById('btnCloseAddToListModal');
     const addToListModal = document.getElementById('addToListModal');

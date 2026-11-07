@@ -508,6 +508,25 @@ form.inline {
   background: rgba(199, 103, 103, 0.1);
 }
 
+.edit-rating-btn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease;
+  box-shadow: none;
+}
+
+.edit-rating-btn:hover {
+  color: var(--accent);
+  background: rgba(230, 120, 60, 0.1);
+}
+
 .rating-modal-summary {
   display: flex;
   align-items: baseline;
