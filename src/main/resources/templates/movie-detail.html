@@ -81,17 +81,14 @@
                         th:aria-label="#{movie.detail.edit.rating}">
                     <i data-lucide="pencil"></i>
                 </button>
-                <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="rating-delete-form">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <button type="button" class="delete-rating-btn" data-open-modal="confirmModal" th:aria-label="#{movie.detail.delete.rating}">
-                        <i data-lucide="trash"></i>
-                    </button>
-                </form>
+                <button type="button" class="delete-rating-btn" data-open-modal="deleteMovieRatingModal" th:aria-label="#{movie.detail.delete.rating}">
+                    <i data-lucide="trash"></i>
+                </button>
             </div>
         </div>
 
         <div th:replace="~{fragments/rate-movie-modal :: rateMovieModal(${movie})}"></div>
-        <div th:replace="~{fragments/confirm-modal :: confirmModal('rating.delete.title', 'rating.delete.confirm')}"></div>
+        <div th:replace="~{fragments/delete-movie-rating-modal :: deleteMovieRatingModal(${movie})}"></div>
         <div th:replace="~{fragments/add-to-list-modal :: addToListModal(${movie.id}, 'movie')}"></div>
     </div>
 </body>
