@@ -196,7 +196,7 @@ data class Review(val value: String) {
             raw.replace(Regex("<[^>]*>"), "")
                 .replace(Regex("&[^;]+;"), "")
                 .trim()
-                .take(1000)
+                .take(2000)
         )
     }
 }
