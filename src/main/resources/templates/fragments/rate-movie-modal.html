@@ -33,3 +33,48 @@
         </form>
     </div>
 </div>
+<script>
+    (function () {
+        const CATEGORIES = ['directing', 'cinematography', 'acting', 'soundtrack', 'screenplay'];
+        const DEFAULT_SCORE = 5;
+        const modal = document.getElementById('rateMovieModal');
+        if (!modal) return;
+
+        function setSlider(name, value) {
+            if (value === undefined || value === null || value === '') return;
+            const slider = modal.querySelector('.rate-slider[data-name="' + name + '"]');
+            if (slider && window.rateLogSliders) window.rateLogSliders.set(slider, value);
+        }
+
+        function resetSliders() {
+            CATEGORIES.forEach((name) => setSlider(name, DEFAULT_SCORE));
+        }
+
+        function fillSliders(data) {
+            CATEGORIES.forEach((name) => setSlider(name, data[name]));
+        }
+
+        function setReview(value) {
+            const review = modal.querySelector('textarea[name="review"]');
+            if (review) review.value = value || '';
+        }
+
+        modal.addEventListener('modal:open', function (e) {
+            const trigger = e.detail.trigger;
+            const form = modal.querySelector('form');
+            const mode = trigger?.dataset.modalMode || 'create';
+
+            if (form) {
+                form.action = mode === 'edit' ? form.dataset.updateAction : form.dataset.createAction;
+            }
+
+            if (mode === 'edit' && trigger) {
+                setReview(trigger.dataset.review);
+                fillSliders(trigger.dataset);
+            } else {
+                setReview('');
+                resetSliders();
+            }
+        });
+    })();
+</script>

@@ -30,5 +30,21 @@
         </div>
     </div>
 </div>
+<script>
+    (function () {
+        document.querySelectorAll('.install-tab').forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const modal = tab.closest('.modal');
+                const tabs = modal?.querySelectorAll('.install-tab') || [];
+                const contents = modal?.querySelectorAll('.install-tab-content') || [];
+                tabs.forEach((t) => t.classList.remove('active'));
+                contents.forEach((c) => c.classList.remove('active'));
+                tab.classList.add('active');
+                const target = modal?.querySelector('#tab-' + tab.dataset.tab);
+                if (target) target.classList.add('active');
+            });
+        });
+    })();
+</script>
 </body>
 </html>

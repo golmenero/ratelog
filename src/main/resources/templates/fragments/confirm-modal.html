@@ -15,3 +15,22 @@
         </div>
     </div>
 </div>
+<script>
+    (function () {
+        const modal = document.getElementById('confirmModal');
+        const acceptBtn = document.getElementById('btnAcceptConfirmModal');
+        if (!modal || !acceptBtn) return;
+
+        let pendingForm = null;
+        modal.addEventListener('modal:open', function (e) {
+            pendingForm = e.detail.trigger?.closest('form') || null;
+        });
+        modal.addEventListener('modal:close', function () {
+            pendingForm = null;
+        });
+        acceptBtn.addEventListener('click', function () {
+            if (pendingForm) pendingForm.submit();
+            window.Modals.close('confirmModal');
+        });
+    })();
+</script>
