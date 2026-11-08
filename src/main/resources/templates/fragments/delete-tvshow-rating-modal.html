@@ -1,4 +1,4 @@
-<div th:fragment="deleteTvShowSeasonRatingModal(show, season, modalId)" th:if="${show != null}" th:id="${modalId}" class="modal" th:attr="data-modal=${modalId}">
+<div th:fragment="deleteTvShowRatingModal(show)" th:if="${show != null}" id="deleteTvShowRatingModal" class="modal" data-modal="deleteTvShowRatingModal">
     <div>
         <div class="flex separate top">
             <h2 th:text="#{rating.delete.title}">Delete rating</h2>
@@ -11,7 +11,7 @@
 
         <form th:action="@{'/tvshows/delete/' + ${show.id}}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <input type="hidden" name="seasonNumber" th:value="${season.seasonNumber}" />
+            <input type="hidden" id="deleteSeasonNumber" name="seasonNumber" />
 
             <div class="confirm-modal-actions">
                 <button type="submit" class="danger w-100" th:text="#{modal.confirm}">Confirm</button>
@@ -19,4 +19,14 @@
             </div>
         </form>
     </div>
+
+    <script>
+        const modal = document.getElementById('deleteTvShowRatingModal');
+
+        modal.addEventListener('modal:open', function (e) {
+            const input = modal.querySelector('input[name="seasonNumber"]');
+            const season = e.detail.trigger?.dataset.season;
+            if (input && season !== undefined && season !== null && season !== '') input.value = season;
+        });
+    </script>
 </div>

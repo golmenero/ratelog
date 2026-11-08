@@ -88,16 +88,16 @@
                                 th:aria-label="#{tvshow.detail.edit.rating}">
                             <i data-lucide="pencil"></i>
                         </button>
-                        <button type="button" class="delete-rating-btn" th:data-open-modal="${'deleteTvShowRatingModal-' + season.seasonNumber}" th:aria-label="#{tvshow.detail.delete.rating}">
+                        <button type="button" class="delete-rating-btn" data-open-modal="deleteTvShowRatingModal" th:data-season="${season.seasonNumber}" th:aria-label="#{tvshow.detail.delete.rating}">
                             <i data-lucide="trash"></i>
                         </button>
                     </div>
                 </div>
-                <div th:replace="~{fragments/delete-tvshow-rating-modal :: deleteTvShowSeasonRatingModal(${show}, ${season}, 'deleteTvShowRatingModal-' + ${season.seasonNumber})}"></div>
             </div>
         </div>
 
         <div th:replace="~{fragments/rate-tvshow-modal :: rateTvShowModal(${show})}"></div>
+        <div th:replace="~{fragments/delete-tvshow-rating-modal :: deleteTvShowRatingModal(${show})}"></div>
         <div th:replace="~{fragments/add-to-list-modal :: addToListModal(${show.id}, 'tvshow')}"></div>
     </div>
 </body>
