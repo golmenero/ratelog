@@ -242,7 +242,6 @@ a.link.secondary {
 }
 
 .help-text {
-  font-size: 1rem;
   color: var(--text-soft);
   margin-bottom: 16px;
   line-height: 1.5;
@@ -252,7 +251,6 @@ a.link.secondary {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1rem;
   color: #eab308;
   background: rgba(234, 179, 8, 0.1);
   padding: 10px 12px;

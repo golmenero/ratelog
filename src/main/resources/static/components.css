@@ -96,7 +96,6 @@
 
       .result-overview {
         line-height: 1.5;
-        font-size: 0.82rem;
         display: -webkit-box;
         -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
@@ -565,13 +564,6 @@ form.inline {
   flex-direction: column;
   gap: 8px;
   margin-bottom: 16px;
-}
-
-.confirm-modal-message {
-  margin: 20px 0 0;
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: var(--text-soft);
 }
 
 .confirm-modal-actions {
