@@ -27,7 +27,7 @@
                             <span class="tag" th:each="genreId : ${movie.genres}" th:text="#{${'genre.' + genreId}}">Genre</span>
                         </div>
                         <div class="flex gap-lg">
-                            <button th:if="${!movie.hasRating}" id="btnOpenRateModal">
+                            <button th:if="${!movie.hasRating}" type="button" data-open-modal="rateMovieModal" data-modal-mode="create">
                                 <i data-lucide="star"></i>
                             </button>
                             <form th:action="@{/movie/follow}" method="post">
@@ -37,7 +37,7 @@
                                     <i data-lucide="heart"></i>
                                 </button>
                             </form>
-                            <button id="btnOpenAddToListModal">
+                            <button type="button" data-open-modal="addToListModal">
                                 <i data-lucide="list-plus"></i>
                             </button>
                         </div>
@@ -70,6 +70,8 @@
             </div>
             <div class="rating-actions">
                 <button type="button" class="edit-rating-btn"
+                        data-open-modal="rateMovieModal"
+                        data-modal-mode="edit"
                         th:data-directing="${movie.directing}"
                         th:data-cinematography="${movie.cinematography}"
                         th:data-acting="${movie.acting}"
@@ -81,7 +83,7 @@
                 </button>
                 <form th:action="@{'/movies/delete/' + ${movie.id}}" method="post" class="rating-delete-form">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <button type="submit" class="delete-rating-btn" th:aria-label="#{movie.detail.delete.rating}">
+                    <button type="button" class="delete-rating-btn" data-open-modal="confirmModal" th:aria-label="#{movie.detail.delete.rating}">
                         <i data-lucide="trash"></i>
                     </button>
                 </form>
@@ -93,29 +95,4 @@
         <div th:replace="~{fragments/add-to-list-modal :: addToListModal(${movie.id}, 'movie')}"></div>
     </div>
 </body>
-<script>
-    const btnOpenAddToListModal = document.getElementById('btnOpenAddToListModal');
-    const btnCloseAddToListModal = document.getElementById('btnCloseAddToListModal');
-    const addToListModal = document.getElementById('addToListModal');
-
-    if (btnOpenAddToListModal) {
-        btnOpenAddToListModal.addEventListener('click', () => {
-            addToListModal.classList.add('visible');
-        });
-    }
-
-    if (btnCloseAddToListModal) {
-        btnCloseAddToListModal.addEventListener('click', () => {
-            addToListModal.classList.remove('visible');
-        });
-    }
-
-    if (addToListModal) {
-        addToListModal.addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                addToListModal.classList.remove('visible');
-            }
-        });
-    }
-</script>
 </html>

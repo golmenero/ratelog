@@ -1,8 +1,8 @@
-<div th:fragment="confirmModal(titleKey, messageKey)" class="modal" id="confirmModal">
+<div th:fragment="confirmModal(titleKey, messageKey)" class="modal" id="confirmModal" data-modal="confirmModal">
     <div>
         <div class="flex separate top">
             <h2 th:text="#{${titleKey}}">Confirm</h2>
-            <button id="btnCloseConfirmModal" type="button" th:aria-label="#{modal.close}">
+            <button type="button" data-close-modal th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
         </div>

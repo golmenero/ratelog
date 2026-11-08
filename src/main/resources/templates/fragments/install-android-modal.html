@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <body>
-<div th:fragment="installAndroidModal" id="installAndroidModal" class="modal">
+<div th:fragment="installAndroidModal" id="installAndroidModal" class="modal" data-modal="installAndroidModal">
     <div class="modal-content">
         <div class="flex separate">
             <h2>Android</h2>
-            <button id="btnCloseAndroidModal" th:aria-label="#{modal.close}">
+            <button type="button" data-close-modal th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
         </div>

@@ -1,8 +1,8 @@
-<div th:fragment="letterboxdImportModal" id="letterboxdImportModal" class="modal">
+<div th:fragment="letterboxdImportModal" id="letterboxdImportModal" class="modal" data-modal="letterboxdImportModal">
     <div>
         <div class="flex separate top">
             <h2 th:text="#{import.letterboxd.title}">Import from Letterboxd</h2>
-            <button id="btnCloseLetterboxdModal" type="button">
+            <button type="button" data-close-modal>
                 <i data-lucide="x"></i>
             </button>
         </div>

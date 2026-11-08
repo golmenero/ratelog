@@ -1,8 +1,8 @@
-<div th:fragment="editUserModal(action, withRole)" id="editUserModal" class="modal">
+<div th:fragment="editUserModal(action, withRole)" id="editUserModal" class="modal" data-modal="editUserModal">
     <div class="modal-content card">
         <div class="flex separate">
             <h3 class="m-0" th:text="#{admin.user.edit}">Edit user</h3>
-            <button id="btnCloseEditUserModal" type="button" th:aria-label="#{modal.close}">
+            <button type="button" data-close-modal th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
         </div>

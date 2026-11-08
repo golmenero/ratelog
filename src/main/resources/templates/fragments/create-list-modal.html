@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <body>
-<div th:fragment="createListModal" id="createListModal" class="modal">
+<div th:fragment="createListModal" id="createListModal" class="modal" data-modal="createListModal">
     <div class="modal-content">
         <div class="flex separate">
             <h2 th:text="#{list.create}">Create List</h2>
-            <button id="btnCloseCreateListModal" th:aria-label="#{modal.close}">
+            <button type="button" data-close-modal th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
         </div>

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <body>
-<div th:fragment="editListModal(list)" id="editModal" class="modal">
+<div th:fragment="editListModal(list)" id="editModal" class="modal" data-modal="editModal">
     <div class="modal-content">
         <div class="flex separate">
             <h2 th:text="#{list.edit}">Edit List</h2>
-            <button id="btnCloseEditModal" th:aria-label="#{modal.close}">
+            <button type="button" data-close-modal th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
         </div>

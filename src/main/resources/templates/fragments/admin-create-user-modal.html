@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <body>
-<div th:fragment="createUserModal" id="createUserModal" class="modal">
+<div th:fragment="createUserModal" id="createUserModal" class="modal" data-modal="createUserModal">
     <div class="modal-content card">
         <div class="flex separate">
             <h3 class="m-0" th:text="#{admin.user.create}">Create user</h3>
-            <button id="btnCloseCreateUserModal" type="button" th:aria-label="#{modal.close}">
+            <button type="button" data-close-modal th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
         </div>

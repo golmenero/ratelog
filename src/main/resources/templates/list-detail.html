@@ -16,7 +16,7 @@
             </div>
             <span th:if="${list.isPublic}" class="tag" th:text="#{list.public}">Public</span>
             <div th:if="${isOwner}" class="flex gap">
-                <button id="btnOpenEditModal" th:aria-label="#{list.edit}">
+                <button type="button" data-open-modal="editModal" th:aria-label="#{list.edit}">
                     <i data-lucide="pencil"></i>
                 </button>
                 <form th:action="@{'/list/' + ${list.id.value} + '/delete'}" method="post" th:onsubmit="'return confirm(#{list.delete.confirm})'">
@@ -59,29 +59,4 @@
     <div th:if="${isOwner}" th:replace="~{fragments/edit-list-modal :: editListModal(${list})}"></div>
 </div>
 </body>
-<script>
-    const btnOpenEditModal = document.getElementById('btnOpenEditModal');
-    const btnCloseEditModal = document.getElementById('btnCloseEditModal');
-    const editModal = document.getElementById('editModal');
-
-    if (btnOpenEditModal) {
-        btnOpenEditModal.addEventListener('click', () => {
-            editModal.classList.add('visible');
-        });
-    }
-
-    if (btnCloseEditModal) {
-        btnCloseEditModal.addEventListener('click', () => {
-            editModal.classList.remove('visible');
-        });
-    }
-
-    if (editModal) {
-        editModal.addEventListener('click', (e) => {
-            if (e.target === editModal) {
-                editModal.classList.remove('visible');
-            }
-        });
-    }
-</script>
 </html>

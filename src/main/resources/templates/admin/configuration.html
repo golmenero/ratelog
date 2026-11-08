@@ -59,6 +59,7 @@
                         <i data-lucide="eye"></i>
                     </a>
                     <button type="button" class="open-edit-user"
+                            data-open-modal="editUserModal"
                             th:data-id="${u.id.value}"
                             th:data-username="${u.username.value}"
                             th:data-email="${u.email.value}"
@@ -85,7 +86,7 @@
             </div>
         </div>
 
-        <button id="btnOpenCreateUserModal" type="button" class="user-card-add" th:aria-label="#{admin.user.create}">
+        <button type="button" class="user-card-add" data-open-modal="createUserModal" th:aria-label="#{admin.user.create}">
             <i data-lucide="user-plus"></i>
             <span th:text="#{admin.user.create}">Create user</span>
         </button>
@@ -95,51 +96,12 @@
 <div th:replace="~{fragments/admin-create-user-modal :: createUserModal}"></div>
 <div th:replace="~{fragments/edit-user-modal :: editUserModal('/admin/users/0', true)}"></div>
 <script>
-    (function() {
-        var editForm = document.getElementById('editUserForm');
-        var roleSection = document.getElementById('editRoleSection');
-
-        document.querySelectorAll('.open-edit-user').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var modal = document.getElementById('editUserModal');
-                if (!modal) return;
-                var id = btn.dataset.id;
-                if (editForm) editForm.action = '/admin/users/' + id;
-                modal.querySelector('input[name="username"]').value = btn.dataset.username;
-                modal.querySelector('input[name="email"]').value = btn.dataset.email;
-                modal.querySelectorAll('input[name="currentPassword"], input[name="newPassword"]').forEach(function(input) {
-                    input.value = '';
-                });
-                var roleSelect = modal.querySelector('select[name="role"]');
-                var isSuperadminTarget = btn.dataset.role === 'SUPERADMIN';
-                if (roleSelect) {
-                    roleSelect.disabled = isSuperadminTarget;
-                    if (!isSuperadminTarget) roleSelect.value = btn.dataset.role;
-                }
-                if (roleSection) roleSection.style.display = isSuperadminTarget ? 'none' : '';
-                modal.classList.add('visible');
-            });
+    document.querySelectorAll('.delete-user-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            var msg = form.dataset.confirm;
+            if (msg && !confirm(msg)) e.preventDefault();
         });
-
-        var create = document.getElementById('createUserModal');
-        var openCreate = document.getElementById('btnOpenCreateUserModal');
-        var closeCreate = document.getElementById('btnCloseCreateUserModal');
-        if (openCreate && create) openCreate.addEventListener('click', function() { create.classList.add('visible'); });
-        if (closeCreate && create) closeCreate.addEventListener('click', function() { create.classList.remove('visible'); });
-        if (create) create.addEventListener('click', function(e) { if (e.target === create) create.classList.remove('visible'); });
-
-        var edit = document.getElementById('editUserModal');
-        var closeEdit = document.getElementById('btnCloseEditUserModal');
-        if (closeEdit && edit) closeEdit.addEventListener('click', function() { edit.classList.remove('visible'); });
-        if (edit) edit.addEventListener('click', function(e) { if (e.target === edit) edit.classList.remove('visible'); });
-
-        document.querySelectorAll('.delete-user-form').forEach(function(form) {
-            form.addEventListener('submit', function(e) {
-                var msg = form.dataset.confirm;
-                if (msg && !confirm(msg)) e.preventDefault();
-            });
-        });
-    })();
+    });
 </script>
 </body>
 </html>

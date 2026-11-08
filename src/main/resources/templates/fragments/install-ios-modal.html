@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <body>
-<div th:fragment="installIosModal" id="installIosModal" class="modal">
+<div th:fragment="installIosModal" id="installIosModal" class="modal" data-modal="installIosModal">
     <div class="modal-content">
         <div class="flex separate">
             <h2>iOS</h2>
-            <button id="btnCloseIosModal" th:aria-label="#{modal.close}">
+            <button type="button" data-close-modal th:aria-label="#{modal.close}">
                 <i data-lucide="x"></i>
             </button>
         </div>
