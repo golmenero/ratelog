@@ -134,7 +134,7 @@
 }
 
 .tag {
-  font-size: 0.9rem;
+  font-size: 1rem;
   padding: 4px 10px;
   border-radius: 999px;
   background: var(--tag-bg);
@@ -149,7 +149,7 @@
   align-items: center;
   gap: 6px;
   color: var(--text);
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 600;
   padding: 8px;
   border-radius: 8px;
