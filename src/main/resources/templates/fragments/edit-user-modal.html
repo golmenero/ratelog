@@ -43,35 +43,36 @@
             <button type="submit" class="primary w-100" th:text="#{admin.user.save}">Save</button>
         </form>
     </div>
-</div>
-<script>
-    (function () {
-        const modal = document.getElementById('editUserModal');
-        if (!modal) return;
 
-        modal.addEventListener('modal:open', function (e) {
-            const trigger = e.detail.trigger;
-            if (!trigger || !trigger.dataset.id) return;
+    <script>
+        (function () {
+            const modal = document.getElementById('editUserModal');
+            if (!modal) return;
 
-            const form = modal.querySelector('#editUserForm');
-            const roleSection = modal.querySelector('#editRoleSection');
+            modal.addEventListener('modal:open', function (e) {
+                const trigger = e.detail.trigger;
+                if (!trigger || !trigger.dataset.id) return;
 
-            if (form) form.action = '/admin/users/' + trigger.dataset.id;
-            const usernameInput = modal.querySelector('input[name="username"]');
-            const emailInput = modal.querySelector('input[name="email"]');
-            if (usernameInput) usernameInput.value = trigger.dataset.username || '';
-            if (emailInput) emailInput.value = trigger.dataset.email || '';
-            modal.querySelectorAll('input[name="currentPassword"], input[name="newPassword"]').forEach((input) => {
-                input.value = '';
+                const form = modal.querySelector('#editUserForm');
+                const roleSection = modal.querySelector('#editRoleSection');
+
+                if (form) form.action = '/admin/users/' + trigger.dataset.id;
+                const usernameInput = modal.querySelector('input[name="username"]');
+                const emailInput = modal.querySelector('input[name="email"]');
+                if (usernameInput) usernameInput.value = trigger.dataset.username || '';
+                if (emailInput) emailInput.value = trigger.dataset.email || '';
+                modal.querySelectorAll('input[name="currentPassword"], input[name="newPassword"]').forEach((input) => {
+                    input.value = '';
+                });
+
+                const roleSelect = modal.querySelector('select[name="role"]');
+                const isSuperadminTarget = trigger.dataset.role === 'SUPERADMIN';
+                if (roleSelect) {
+                    roleSelect.disabled = isSuperadminTarget;
+                    if (!isSuperadminTarget) roleSelect.value = trigger.dataset.role || 'USER';
+                }
+                if (roleSection) roleSection.style.display = isSuperadminTarget ? 'none' : '';
             });
-
-            const roleSelect = modal.querySelector('select[name="role"]');
-            const isSuperadminTarget = trigger.dataset.role === 'SUPERADMIN';
-            if (roleSelect) {
-                roleSelect.disabled = isSuperadminTarget;
-                if (!isSuperadminTarget) roleSelect.value = trigger.dataset.role || 'USER';
-            }
-            if (roleSection) roleSection.style.display = isSuperadminTarget ? 'none' : '';
-        });
-    })();
-</script>
+        })();
+    </script>
+</div>
