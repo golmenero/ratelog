@@ -111,22 +111,24 @@
   }
 
   function bindOverallSummary() {
-    const overall = document.getElementById('ratingOverallValue');
-    if (!overall) return;
-    const sliders = document.querySelectorAll('#rateModal .rate-slider');
-    if (!sliders.length) return;
+    document.querySelectorAll('.modal').forEach((modal) => {
+      const sliders = modal.querySelectorAll('.rate-slider');
+      if (!sliders.length) return;
+      const overall = modal.querySelector('.rating-overall-value');
+      if (!overall) return;
 
-    function updateOverall() {
-      const values = Array.from(sliders).map((s) => parseFloat(s.dataset.value) || 0);
-      const avg = values.reduce((sum, v) => sum + v, 0) / values.length;
-      overall.textContent = avg.toFixed(2);
-    }
+      function updateOverall() {
+        const values = Array.from(sliders).map((s) => parseFloat(s.dataset.value) || 0);
+        const avg = values.reduce((sum, v) => sum + v, 0) / values.length;
+        overall.textContent = avg.toFixed(2);
+      }
 
-    const observer = new MutationObserver(updateOverall);
-    sliders.forEach((s) => {
-      observer.observe(s, { attributes: true, attributeFilter: ['data-value'] });
+      const observer = new MutationObserver(updateOverall);
+      sliders.forEach((s) => {
+        observer.observe(s, { attributes: true, attributeFilter: ['data-value'] });
+      });
+      updateOverall();
     });
-    updateOverall();
   }
 
   window.rateLogSliders = {
