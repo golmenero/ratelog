@@ -147,6 +147,7 @@ a.btn {
   border-radius: 10px;
   transition: color 0.2s ease;
   box-shadow: none;
+  font-size: 1rem;
 
   svg {
     width: 20px;
