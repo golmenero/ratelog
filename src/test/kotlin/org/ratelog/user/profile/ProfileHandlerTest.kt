@@ -49,7 +49,7 @@ class ProfileHandlerTest {
         tmdbId = TmdbId(tmdbId),
         title = Title("Some title"),
         score = Score(5.0),
-        text = null,
+        review = null,
         username = Username("testuser"),
         createdAtEpochMs = createdAtEpochMs,
         mediaType = MediaType.movie,

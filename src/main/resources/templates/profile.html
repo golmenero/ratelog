@@ -58,8 +58,17 @@
 
                         <span class="date" th:text="${item.ratedAt}">date</span>
                     </div>
+                    <div class="review-feed" th:if="${item.reviewText != null}">
+                        <p th:if="${item.reviewTitle != null}" class="rating-review-title" th:text="${item.reviewTitle}"></p>
+                        <p class="rating-review-text" th:text="${item.reviewTextPreview}">Review preview</p>
+                        <button type="button" class="link"
+                                data-open-modal="reviewDetailModal"
+                                th:data-review-title="${item.reviewTitle}"
+                                th:data-review-text="${item.reviewText}"
+                                th:text="#{community.review.full}">Read full review</button>
+                    </div>
                     <div class="flex separate">
-                        <p th:text="${item.reviewText}">Review text</p>
+                        <span></span>
                         <span class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
                     </div>
                     <div class="separator"></div>
@@ -136,6 +145,7 @@
     <div th:replace="~{fragments/edit-user-modal :: editUserModal('/edit-profile', false)}"></div>
     <div th:if="${isLoggedUser}" th:replace="~{fragments/letterboxd-import-modal :: letterboxdImportModal}"></div>
     <div th:if="${isLoggedUser}" th:replace="~{fragments/create-list-modal :: createListModal}"></div>
+    <div th:replace="~{fragments/review-detail-modal :: reviewDetailModal}"></div>
 </div>
 </body>
 <script>

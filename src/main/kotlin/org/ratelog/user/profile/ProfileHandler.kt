@@ -42,7 +42,10 @@ data class ProfileRating(
     val mediaType: String,
     val seasonNumber: Int?,
     val score: Double,
+    val reviewTitle: String?,
     val reviewText: String?,
+    val reviewTextPreview: String?,
+    val hasFullReview: Boolean,
     val ratedAt: String,
     val createdAtEpochMs: Long,
 )
@@ -86,7 +89,10 @@ class ProfileHandler(
         mediaType = rating.mediaType.name,
         seasonNumber = rating.seasonNumber?.value,
         score = rating.score?.value ?: 0.0,
-        reviewText = rating.text,
+        reviewTitle = rating.review?.title?.value,
+        reviewText = rating.review?.text?.value,
+        reviewTextPreview = rating.review?.text?.value?.take(250),
+        hasFullReview = rating.review?.text?.value?.let { it.length > 250 } ?: false,
         ratedAt = rating.createdAtEpochMs.toDateString(),
         createdAtEpochMs = rating.createdAtEpochMs,
     )
