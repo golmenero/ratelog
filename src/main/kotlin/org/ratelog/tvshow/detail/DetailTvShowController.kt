@@ -32,7 +32,8 @@ data class SeasonResponse(
     val soundtrack: Double?,
     val screenplay: Double?,
     val score: Double?,
-    val review: String?,
+    val reviewTitle: String?,
+    val reviewText: String?,
 )
 
 @Controller
@@ -85,7 +86,8 @@ class DetailTvShowController(
                     soundtrack = s.rating?.soundtrack,
                     screenplay = s.rating?.screenplay,
                     score = s.rating?.score,
-                    review = s.rating?.review,
+                    reviewTitle = s.rating?.reviewTitle,
+                    reviewText = s.rating?.reviewText,
                 )
             },
             overallScore = result.overallScore,

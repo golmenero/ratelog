@@ -23,7 +23,8 @@ data class MovieDetailResponse(
     val soundtrack: Double?,
     val screenplay: Double?,
     val score: Double?,
-    val review: String?,
+    val reviewTitle: String?,
+    val reviewText: String?,
     val isFollowed: Boolean,
     val hasRating: Boolean,
 )
@@ -74,7 +75,8 @@ class DetailMovieController(
             soundtrack = result.soundtrack,
             screenplay = result.screenplay,
             score = result.score,
-            review = result.review,
+            reviewTitle = result.reviewTitle,
+            reviewText = result.reviewText,
             isFollowed = result.isFollowed,
             hasRating = result.isRated,
         )
