@@ -1,7 +1,9 @@
 package org.ratelog.tvshow.rating
 
-import org.ratelog.Review
 import org.ratelog.Rank
+import org.ratelog.Review
+import org.ratelog.ReviewText
+import org.ratelog.ReviewTitle
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
 import org.ratelog.tvshow.TvShow
@@ -89,7 +91,7 @@ class TvRatingRepositoryImpl(
             screenplay = Score(screenplay),
             score = Score(score),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
-            review = reviewText?.takeIf { it.isNotBlank() }?.let(::Review),
+            review = toReview(reviewTitle, reviewText),
         )
     }
 
@@ -106,7 +108,14 @@ class TvRatingRepositoryImpl(
             screenplay = screenplay.value,
             score = score.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
-            reviewText = review?.value,
+            reviewTitle = review?.title?.value,
+            reviewText = review?.text?.value,
         )
+    }
+
+    private fun toReview(reviewTitle: String?, reviewText: String?): Review? {
+        val title = reviewTitle?.takeIf { it.isNotBlank() }?.let(::ReviewTitle)
+        val text = reviewText?.takeIf { it.isNotBlank() }?.let(::ReviewText)
+        return if (title == null && text == null) null else Review(title, text)
     }
 }
