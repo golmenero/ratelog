@@ -18,8 +18,8 @@ import org.ratelog.TmdbId
 import org.ratelog.Username
 import org.ratelog.feed.FeedRepository
 import org.ratelog.test.UserFactory
-import org.ratelog.user.User
 import org.ratelog.feed.FeedItem as FeedRow
+import org.ratelog.user.User
 import org.ratelog.user.UserRepository
 import java.time.Instant
 
