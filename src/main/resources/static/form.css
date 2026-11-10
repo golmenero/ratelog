@@ -14,6 +14,7 @@ textarea {
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-family: var(--font);
+  font-size: 1rem;
   box-sizing: border-box;
   resize: vertical;
   min-height: 80px;
@@ -38,6 +39,7 @@ select {
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-family: var(--font);
+  font-size: 1rem;
   box-sizing: border-box;
   accent-color: var(--accent);
 
