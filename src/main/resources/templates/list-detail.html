@@ -19,12 +19,9 @@
                 <button type="button" data-open-modal="editModal" th:aria-label="#{list.edit}">
                     <i data-lucide="pencil"></i>
                 </button>
-                <form th:action="@{'/list/' + ${list.id.value} + '/delete'}" method="post" th:onsubmit="'return confirm(#{list.delete.confirm})'">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <button type="submit" th:aria-label="#{list.delete}">
-                        <i data-lucide="trash"></i>
-                    </button>
-                </form>
+                <button type="button" data-open-modal="deleteListModal" th:aria-label="#{list.delete}">
+                    <i data-lucide="trash"></i>
+                </button>
             </div>
         </div>
 
@@ -57,6 +54,7 @@
     </div>
 
     <div th:if="${isOwner}" th:replace="~{fragments/edit-list-modal :: editListModal(${list})}"></div>
+    <div th:if="${isOwner}" th:replace="~{fragments/delete-list-modal :: deleteListModal(${list})}"></div>
 </div>
 </body>
 </html>
