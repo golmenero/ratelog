@@ -31,12 +31,12 @@ class CommunityHandler(
     @Transactional
     fun handle(query: FeedQuery): Either<CommunityHandlerError, FeedResult> = either {
         val followedUsers = userRepository.findFollowingByUserId(query.userId)
-        if (followedUsers.isEmpty()) return@either FeedResult(emptyList(), emptyList(),false)
-
         val followedIds = followedUsers.mapNotNull { it.id }
-        val items = feedRepository.findAll(followedIds, query.lang, query.limit)
+        val userIds = followedIds + query.userId
 
-        val totalCount = feedRepository.count(followedIds)
+        val items = feedRepository.findAll(userIds, query.lang, query.limit)
+        val totalCount = feedRepository.count(userIds)
+
         FeedResult(followedUsers, items, totalCount > query.limit)
     }
 }

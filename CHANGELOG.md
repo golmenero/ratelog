@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Typography now uses the Crimson Pro font, replacing the previous Sentient font. H1 and H2 use Bold, the remaining headings use SemiBold.
 - Modified modal structure to be common and unified.
 - Redesigned list items in "Add to list" modal and profile: lists are now shown as bordered, transparent rows instead of primary buttons/card links.
+- Include logged user reviews in the community feed
 ### 🔧 Fixed
 
 ## Release v2.3.1
