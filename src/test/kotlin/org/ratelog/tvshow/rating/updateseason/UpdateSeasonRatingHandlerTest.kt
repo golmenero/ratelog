@@ -39,7 +39,7 @@ class UpdateSeasonRatingHandlerTest {
                         soundtrack = 5.0,
                         screenplay = 5.0,
                         createdAt = Instant.now(),
-                        review = null
+                        reviewTitle = null, reviewText = null
                     ),
                     TvRatingFactory.aSeasonRating(
                         id = 2,
@@ -52,7 +52,7 @@ class UpdateSeasonRatingHandlerTest {
                         soundtrack = 6.0,
                         screenplay = 6.0,
                         createdAt = Instant.now(),
-                        review = null
+                        reviewTitle = null, reviewText = null
                     )
                 )
             )
@@ -76,7 +76,7 @@ class UpdateSeasonRatingHandlerTest {
                 acting = 8.0,
                 soundtrack = 9.0,
                 screenplay = 10.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -110,7 +110,7 @@ class UpdateSeasonRatingHandlerTest {
                 acting = 10.0,
                 soundtrack = 10.0,
                 screenplay = 10.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -139,7 +139,8 @@ class UpdateSeasonRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = "Great season!"
+                reviewTitle = "Great season",
+                reviewText = "Great season!"
             )
         )
 
@@ -148,7 +149,8 @@ class UpdateSeasonRatingHandlerTest {
         val updated = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
         assertNotNull(updated)
         val season = updated!!.seasonRatings.first { it.seasonNumber == SeasonNumber(1) }
-        assertEquals("Great season!", season.review!!.value)
+        assertEquals("Great season", season.review!!.title!!.value)
+        assertEquals("Great season!", season.review.text!!.value)
     }
 
     @Test
@@ -167,7 +169,8 @@ class UpdateSeasonRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = "<script>alert('xss')</script>Good season"
+                reviewTitle = null,
+                reviewText = "<script>alert('xss')</script>Good season"
             )
         )
 
@@ -176,7 +179,7 @@ class UpdateSeasonRatingHandlerTest {
         val updated = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
         assertNotNull(updated)
         val season = updated!!.seasonRatings.first { it.seasonNumber == SeasonNumber(1) }
-        assertEquals("alert('xss')Good season", season.review!!.value)
+        assertEquals("alert('xss')Good season", season.review!!.text!!.value)
     }
 
     @Test
@@ -194,7 +197,8 @@ class UpdateSeasonRatingHandlerTest {
                         seasonNumber = 1,
                         userId = User.Id(1),
                         createdAt = Instant.now(),
-                        review = "Old review"
+                        reviewTitle = "Old review",
+                        reviewText = "Old review"
                     )
                 )
             )
@@ -211,7 +215,8 @@ class UpdateSeasonRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = "   "
+                reviewTitle = "   ",
+                reviewText = "   "
             )
         )
 
@@ -239,7 +244,7 @@ class UpdateSeasonRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -264,7 +269,7 @@ class UpdateSeasonRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -289,7 +294,7 @@ class UpdateSeasonRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 

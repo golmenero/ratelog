@@ -25,7 +25,8 @@ class UpdateSeasonRatingController(
         @RequestParam("acting") acting: Double,
         @RequestParam("soundtrack") soundtrack: Double,
         @RequestParam("screenplay") screenplay: Double,
-        @RequestParam("review", required = false) review: String?,
+        @RequestParam("reviewTitle", required = false) reviewTitle: String?,
+        @RequestParam("reviewText", required = false) reviewText: String?,
         redirectAttributes: RedirectAttributes
     ): String =
         UpdateSeasonRating(
@@ -37,7 +38,8 @@ class UpdateSeasonRatingController(
             acting = acting,
             soundtrack = soundtrack,
             screenplay = screenplay,
-            review = review?.takeIf { it.isNotBlank() },
+            reviewTitle = reviewTitle?.takeIf { it.isNotBlank() },
+            reviewText = reviewText?.takeIf { it.isNotBlank() },
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(
@@ -55,5 +57,7 @@ class UpdateSeasonRatingController(
         UpdateSeasonRatingHandlerError.InvalidRatingValue -> "error.rating.invalid"
         UpdateSeasonRatingHandlerError.RatingNotFound,
         UpdateSeasonRatingHandlerError.SeasonRatingNotFound -> "error.rating.update.failed"
+        UpdateSeasonRatingHandlerError.InvalidReviewTitle -> "error.review.title.invalid"
+        UpdateSeasonRatingHandlerError.InvalidReviewText -> "error.review.text.invalid"
     }
 }

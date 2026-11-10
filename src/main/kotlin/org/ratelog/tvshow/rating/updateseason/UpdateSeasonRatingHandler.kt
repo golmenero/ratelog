@@ -21,7 +21,8 @@ data class UpdateSeasonRating(
     val acting: Double,
     val soundtrack: Double,
     val screenplay: Double,
-    val review: String?,
+    val reviewTitle: String?,
+    val reviewText: String?,
 )
 
 @Component
@@ -47,6 +48,8 @@ class UpdateSeasonRatingHandler(
             UpdateSeasonRatingHandlerError.SeasonRatingNotFound
         }
 
+        val review = parseReview(command.reviewTitle, command.reviewText).bind()
+
         tvRating.updateSeasonRating(
             seasonNumber = command.seasonNumber,
             directing = Score(command.directing),
@@ -54,7 +57,17 @@ class UpdateSeasonRatingHandler(
             acting = Score(command.acting),
             soundtrack = Score(command.soundtrack),
             screenplay = Score(command.screenplay),
-            review = command.review?.takeIf { it.isNotBlank() }?.let(Review::sanitize),
+            review = review,
         ).let(tvRatingRepository::save)
     }
+
+    private fun parseReview(title: String?, text: String?): Either<UpdateSeasonRatingHandlerError, Review?> =
+        Review.parse(title, text)
+            .mapLeft { error ->
+                when (error) {
+                    org.ratelog.ParseError.InvalidReviewTitle -> UpdateSeasonRatingHandlerError.InvalidReviewTitle
+                    org.ratelog.ParseError.InvalidReviewText -> UpdateSeasonRatingHandlerError.InvalidReviewText
+                    else -> UpdateSeasonRatingHandlerError.InvalidReviewText
+                }
+            }
 }
