@@ -32,7 +32,7 @@ class AddSeasonRatingHandlerTest {
             acting = org.ratelog.Score(7.0),
             soundtrack = org.ratelog.Score(8.0),
             screenplay = org.ratelog.Score(9.0),
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command)
@@ -55,7 +55,7 @@ class AddSeasonRatingHandlerTest {
             acting = org.ratelog.Score(5.0),
             soundtrack = org.ratelog.Score(5.0),
             screenplay = org.ratelog.Score(5.0),
-            review = null
+            reviewTitle = null, reviewText = null
         )
         handler.handle(command1)
 
@@ -68,7 +68,7 @@ class AddSeasonRatingHandlerTest {
             acting = org.ratelog.Score(8.0),
             soundtrack = org.ratelog.Score(8.0),
             screenplay = org.ratelog.Score(8.0),
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command2)
@@ -90,7 +90,8 @@ class AddSeasonRatingHandlerTest {
             acting = org.ratelog.Score(7.0),
             soundtrack = org.ratelog.Score(8.0),
             screenplay = org.ratelog.Score(9.0),
-            review = "Great season!"
+            reviewTitle = "Great season",
+            reviewText = "Great season!"
         )
 
         val result = handler.handle(command)
@@ -99,7 +100,8 @@ class AddSeasonRatingHandlerTest {
         val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
         assertNotNull(savedRating)
         assertEquals(1, savedRating!!.seasonRatings.size)
-        assertEquals("Great season!", savedRating.seasonRatings[0].review!!.value)
+        assertEquals("Great season", savedRating.seasonRatings[0].review!!.title!!.value)
+        assertEquals("Great season!", savedRating.seasonRatings[0].review!!.text!!.value)
     }
 
     @Test
@@ -113,7 +115,8 @@ class AddSeasonRatingHandlerTest {
             acting = org.ratelog.Score(5.0),
             soundtrack = org.ratelog.Score(5.0),
             screenplay = org.ratelog.Score(5.0),
-            review = "<script>alert('xss')</script>Good season"
+            reviewTitle = null,
+            reviewText = "<script>alert('xss')</script>Good season"
         )
 
         val result = handler.handle(command)
@@ -121,7 +124,7 @@ class AddSeasonRatingHandlerTest {
         assertTrue(result.isRight())
         val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
         assertNotNull(savedRating)
-        assertEquals("alert('xss')Good season", savedRating!!.seasonRatings[0].review!!.value)
+        assertEquals("alert('xss')Good season", savedRating!!.seasonRatings[0].review!!.text!!.value)
     }
 
     @Test
@@ -135,7 +138,8 @@ class AddSeasonRatingHandlerTest {
             acting = org.ratelog.Score(5.0),
             soundtrack = org.ratelog.Score(5.0),
             screenplay = org.ratelog.Score(5.0),
-            review = "   "
+            reviewTitle = "   ",
+            reviewText = "   "
         )
 
         val result = handler.handle(command)

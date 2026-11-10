@@ -23,7 +23,8 @@ data class AddSeasonRating(
     val acting: Score,
     val soundtrack: Score,
     val screenplay: Score,
-    val review: String?,
+    val reviewTitle: String?,
+    val reviewText: String?,
 )
 
 @Component
@@ -44,6 +45,12 @@ class AddSeasonRatingHandler(
 
         val tvRating = tvRatingRepository.findByTvShowIdAndUserId(command.tvShowId, command.userId) ?: TvRating.create(command.tvShowId, command.userId, Instant.now())
 
+        ensure(tvRating.seasonRatings.none { it.seasonNumber == command.seasonNumber }) {
+            AddSeasonRatingHandlerError.RatingAlreadyExists
+        }
+
+        val review = parseReview(command.reviewTitle, command.reviewText).bind()
+
         tvRating.addSeasonRating(
             seasonNumber = command.seasonNumber,
             directing = command.directing,
@@ -52,7 +59,17 @@ class AddSeasonRatingHandler(
             soundtrack = command.soundtrack,
             screenplay = command.screenplay,
             createdAt = Instant.now(),
-            review = command.review?.takeIf { it.isNotBlank() }?.let(Review::sanitize),
+            review = review,
         ).let(tvRatingRepository::save)
     }
+
+    private fun parseReview(title: String?, text: String?): Either<AddSeasonRatingHandlerError, Review?> =
+        Review.parse(title, text)
+            .mapLeft { error ->
+                when (error) {
+                    org.ratelog.ParseError.InvalidReviewTitle -> AddSeasonRatingHandlerError.InvalidReviewTitle
+                    org.ratelog.ParseError.InvalidReviewText -> AddSeasonRatingHandlerError.InvalidReviewText
+                    else -> AddSeasonRatingHandlerError.InvalidReviewText
+                }
+            }
 }
