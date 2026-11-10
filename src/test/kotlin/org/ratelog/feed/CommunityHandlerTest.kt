@@ -32,6 +32,7 @@ class CommunityHandlerTest {
     private val userId = User.Id(1)
     private val followedId = User.Id(2)
     private val followedUser = UserFactory.aUser(id = 2, username = "followeduser")
+    private val userIds = listOf(followedId, userId)
 
     @BeforeEach
     fun setUp() {
@@ -70,23 +71,26 @@ class CommunityHandlerTest {
     }
 
     @Test
-    fun `should return empty list when user follows no one`() {
+    fun `should include own posts when user follows no one`() {
         stubFollowing(emptyList())
+        val row = aFeedRow(username = "currentuser")
+        whenever(feedRepository.findAll(listOf(userId), Lang.en, 10)).thenReturn(listOf(row))
+        whenever(feedRepository.count(listOf(userId))).thenReturn(1L)
 
         val result = handler.handle(FeedQuery(userId, 10, Lang.en))
 
         assertTrue(result.isRight())
         val feedResult = result.getOrElse { fail("expected Right") }
-        assertEquals(0, feedResult.feed.size)
+        assertEquals(1, feedResult.feed.size)
         assertFalse(feedResult.hasMore)
     }
 
     @Test
-    fun `should return feed items from followed users movie ratings`() {
+    fun `should return feed items from followed users and own ratings`() {
         stubFollowing(listOf(followedUser))
         val row = aFeedRow(mediaType = MediaType.movie, seasonNumber = null)
-        whenever(feedRepository.findAll(listOf(followedId), Lang.en, 10)).thenReturn(listOf(row))
-        whenever(feedRepository.count(listOf(followedId))).thenReturn(1L)
+        whenever(feedRepository.findAll(userIds, Lang.en, 10)).thenReturn(listOf(row))
+        whenever(feedRepository.count(userIds)).thenReturn(1L)
 
         val result = handler.handle(FeedQuery(userId, 10, Lang.en))
 
@@ -104,8 +108,8 @@ class CommunityHandlerTest {
     fun `should return feed items from followed users tv ratings`() {
         stubFollowing(listOf(followedUser))
         val row = aFeedRow(mediaType = MediaType.tvshow, seasonNumber = 1)
-        whenever(feedRepository.findAll(listOf(followedId), Lang.en, 10)).thenReturn(listOf(row))
-        whenever(feedRepository.count(listOf(followedId))).thenReturn(1L)
+        whenever(feedRepository.findAll(userIds, Lang.en, 10)).thenReturn(listOf(row))
+        whenever(feedRepository.count(userIds)).thenReturn(1L)
 
         val result = handler.handle(FeedQuery(userId, 10, Lang.en))
 
@@ -122,8 +126,8 @@ class CommunityHandlerTest {
     fun `should return feed items with review text when rating has review`() {
         stubFollowing(listOf(followedUser))
         val row = aFeedRow(reviewTitle = "Great movie", reviewText = "Great movie!")
-        whenever(feedRepository.findAll(listOf(followedId), Lang.en, 10)).thenReturn(listOf(row))
-        whenever(feedRepository.count(listOf(followedId))).thenReturn(1L)
+        whenever(feedRepository.findAll(userIds, Lang.en, 10)).thenReturn(listOf(row))
+        whenever(feedRepository.count(userIds)).thenReturn(1L)
 
         val result = handler.handle(FeedQuery(userId, 10, Lang.en))
 
@@ -139,8 +143,8 @@ class CommunityHandlerTest {
     fun `should return 10 items and hasMore when there are more than 10 items`() {
         stubFollowing(listOf(followedUser))
         val rows = (1 until 11).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
-        whenever(feedRepository.findAll(listOf(followedId), Lang.en, 10)).thenReturn(rows)
-        whenever(feedRepository.count(listOf(followedId))).thenReturn(15L)
+        whenever(feedRepository.findAll(userIds, Lang.en, 10)).thenReturn(rows)
+        whenever(feedRepository.count(userIds)).thenReturn(15L)
 
         val result = handler.handle(FeedQuery(userId, limit = 10, Lang.en))
 
@@ -154,8 +158,8 @@ class CommunityHandlerTest {
     fun `should return 20 items and hasMore when there are more than 20 items`() {
         stubFollowing(listOf(followedUser))
         val rows = (1 until 21).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
-        whenever(feedRepository.findAll(listOf(followedId), Lang.en, 20)).thenReturn(rows)
-        whenever(feedRepository.count(listOf(followedId))).thenReturn(25L)
+        whenever(feedRepository.findAll(userIds, Lang.en, 20)).thenReturn(rows)
+        whenever(feedRepository.count(userIds)).thenReturn(25L)
 
         val result = handler.handle(FeedQuery(userId, limit = 20, Lang.en))
 
@@ -169,8 +173,8 @@ class CommunityHandlerTest {
     fun `should return all items and hasMore false when limit exceeds total`() {
         stubFollowing(listOf(followedUser))
         val rows = (1 until 6).map { i -> aFeedRow(tmdbId = i, createdAtEpochMs = Instant.now().minusSeconds(i.toLong() * 60).toEpochMilli()) }
-        whenever(feedRepository.findAll(listOf(followedId), Lang.en, 10)).thenReturn(rows)
-        whenever(feedRepository.count(listOf(followedId))).thenReturn(5L)
+        whenever(feedRepository.findAll(userIds, Lang.en, 10)).thenReturn(rows)
+        whenever(feedRepository.count(userIds)).thenReturn(5L)
 
         val result = handler.handle(FeedQuery(userId, limit = 10, Lang.en))
 
