@@ -209,8 +209,12 @@ data class ReviewText(val value: String) {
         private const val MAX_LENGTH = 5000
 
         fun parse(raw: String): Either<ParseError, ReviewText> = either {
-            val sanitized = raw.replace(Regex("<[^>]*>"), "")
+            val sanitized = raw
+                .replace("\r\n", "\n")
+                .replace("\r", "\n")
+                .replace(Regex("<[^>]*>"), "")
                 .replace(Regex("&[^;]+;"), "")
+                .replace(Regex("\n{3,}"), "\n\n")
                 .trim()
             if (sanitized.length > MAX_LENGTH) {
                 raise(ParseError.InvalidReviewText)

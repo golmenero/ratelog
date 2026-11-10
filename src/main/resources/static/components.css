@@ -228,6 +228,14 @@
     position: relative;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   }
+
+  &.medium > div:first-child {
+    max-width: 400px;
+  }
+
+  &.large > div:first-child {
+    max-width: 680px;
+  }
 }
 
 .poster-frame {
