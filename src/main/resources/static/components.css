@@ -560,7 +560,7 @@ form.inline {
 }
 
 .rating-modal-summary-max {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--text-soft);
   opacity: 0.6;
 }
@@ -599,7 +599,7 @@ form.inline {
   background: transparent;
   color: var(--text);
   font-family: var(--font);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
@@ -623,7 +623,7 @@ form.inline {
   background: rgba(255, 255, 255, 0.03);
   color: var(--text);
   font-family: var(--font);
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.55;
   resize: vertical;
   min-height: 96px;
