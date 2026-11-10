@@ -34,7 +34,7 @@ class UpdateRatingHandlerTest {
                 soundtrack = 5.0,
                 screenplay = 5.0,
                 createdAt = Instant.now(),
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -48,7 +48,7 @@ class UpdateRatingHandlerTest {
                 acting = 8.0,
                 soundtrack = 9.0,
                 screenplay = 10.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -73,7 +73,7 @@ class UpdateRatingHandlerTest {
                 movieId = Movie.Id(1),
                 userId = User.Id(1),
                 createdAt = Instant.now(),
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -87,7 +87,8 @@ class UpdateRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = "Great movie!"
+                reviewTitle = "Great movie",
+                reviewText = "Great movie!"
             )
         )
 
@@ -95,7 +96,8 @@ class UpdateRatingHandlerTest {
         assertTrue(result.isRight())
         val updated = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
         assertNotNull(updated)
-        assertEquals("Great movie!", updated!!.review!!.value)
+        assertEquals("Great movie", updated!!.review!!.title!!.value)
+        assertEquals("Great movie!", updated.review.text!!.value)
     }
 
     @Test
@@ -107,7 +109,7 @@ class UpdateRatingHandlerTest {
                 movieId = Movie.Id(1),
                 userId = User.Id(1),
                 createdAt = Instant.now(),
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -121,7 +123,8 @@ class UpdateRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = "<script>alert('xss')</script>Good movie"
+                reviewTitle = null,
+                reviewText = "<script>alert('xss')</script>Good movie"
             )
         )
 
@@ -129,7 +132,7 @@ class UpdateRatingHandlerTest {
         assertTrue(result.isRight())
         val updated = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
         assertNotNull(updated)
-        assertEquals("alert('xss')Good movie", updated!!.review!!.value)
+        assertEquals("alert('xss')Good movie", updated!!.review!!.text!!.value)
     }
 
     @Test
@@ -141,7 +144,8 @@ class UpdateRatingHandlerTest {
                 movieId = Movie.Id(1),
                 userId = User.Id(1),
                 createdAt = Instant.now(),
-                review = "Old review"
+                reviewTitle = "Old review",
+                reviewText = "Old review"
             )
         )
 
@@ -155,7 +159,8 @@ class UpdateRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = "   "
+                reviewTitle = "   ",
+                reviewText = "   "
             )
         )
 
@@ -180,7 +185,7 @@ class UpdateRatingHandlerTest {
                 soundtrack = 5.0,
                 screenplay = 5.0,
                 createdAt = Instant.now(),
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -194,7 +199,7 @@ class UpdateRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -217,7 +222,7 @@ class UpdateRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -235,7 +240,7 @@ class UpdateRatingHandlerTest {
                 movieId = Movie.Id(1),
                 userId = User.Id(2),
                 createdAt = Instant.now(),
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
@@ -249,7 +254,7 @@ class UpdateRatingHandlerTest {
                 acting = 5.0,
                 soundtrack = 5.0,
                 screenplay = 5.0,
-                review = null
+                reviewTitle = null, reviewText = null
             )
         )
 
