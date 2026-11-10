@@ -183,6 +183,32 @@ class UpdateSeasonRatingHandlerTest {
     }
 
     @Test
+    fun `given a rated season when updating it with line breaks then more than two consecutive newlines are collapsed`() {
+        givenRatingWithSeasons()
+
+        val result = handler.handle(
+            UpdateSeasonRating(
+                tvShowId = TvShow.Id(1),
+                seasonNumber = SeasonNumber(1),
+                userId = User.Id(1),
+                directing = 5.0,
+                cinematography = 5.0,
+                acting = 5.0,
+                soundtrack = 5.0,
+                screenplay = 5.0,
+                reviewTitle = null,
+                reviewText = "Line1\n\nLine2\n\n\nLine3"
+            )
+        )
+
+        assertTrue(result.isRight())
+        val updated = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
+        assertNotNull(updated)
+        val season = updated!!.seasonRatings.first { it.seasonNumber == SeasonNumber(1) }
+        assertEquals("Line1\n\nLine2\n\nLine3", season.review!!.text!!.value)
+    }
+
+    @Test
     fun `given a rated season with a review when updating it with a blank review then the review is removed`() {
         // Given
         tvRatingRepository.save(

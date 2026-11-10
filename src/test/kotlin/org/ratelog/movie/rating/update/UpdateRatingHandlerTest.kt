@@ -136,6 +136,38 @@ class UpdateRatingHandlerTest {
     }
 
     @Test
+    fun `given an existing rating when updating it with line breaks then more than two consecutive newlines are collapsed`() {
+        ratingRepository.save(
+            RatingFactory.aRating(
+                id = 1,
+                movieId = Movie.Id(1),
+                userId = User.Id(1),
+                createdAt = Instant.now(),
+                reviewTitle = null, reviewText = null
+            )
+        )
+
+        val result = handler.handle(
+            UpdateRating(
+                movieId = Movie.Id(1),
+                userId = User.Id(1),
+                directing = 5.0,
+                cinematography = 5.0,
+                acting = 5.0,
+                soundtrack = 5.0,
+                screenplay = 5.0,
+                reviewTitle = null,
+                reviewText = "Line1\n\nLine2\n\n\nLine3"
+            )
+        )
+
+        assertTrue(result.isRight())
+        val updated = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
+        assertNotNull(updated)
+        assertEquals("Line1\n\nLine2\n\nLine3", updated!!.review!!.text!!.value)
+    }
+
+    @Test
     fun `given an existing rating with a review when updating it with a blank review then the review is removed`() {
         // Given
         ratingRepository.save(

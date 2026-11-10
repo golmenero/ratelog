@@ -128,6 +128,29 @@ class AddSeasonRatingHandlerTest {
     }
 
     @Test
+    fun `should allow line breaks in season review text and collapse more than two consecutive`() {
+        val command = AddSeasonRating(
+            tvShowId = TvShow.Id(1),
+            seasonNumber = SeasonNumber(1),
+            userId = User.Id(1),
+            directing = org.ratelog.Score(5.0),
+            cinematography = org.ratelog.Score(5.0),
+            acting = org.ratelog.Score(5.0),
+            soundtrack = org.ratelog.Score(5.0),
+            screenplay = org.ratelog.Score(5.0),
+            reviewTitle = null,
+            reviewText = "Line1\n\nLine2\n\n\nLine3"
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isRight())
+        val savedRating = tvRatingRepository.findByTvShowIdAndUserId(TvShow.Id(1), User.Id(1))
+        assertNotNull(savedRating)
+        assertEquals("Line1\n\nLine2\n\nLine3", savedRating!!.seasonRatings[0].review!!.text!!.value)
+    }
+
+    @Test
     fun `should not save season review when review is blank`() {
         val command = AddSeasonRating(
             tvShowId = TvShow.Id(1),

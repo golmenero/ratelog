@@ -234,6 +234,28 @@ class AddRatingHandlerTest {
     }
 
     @Test
+    fun `should allow line breaks in review text and collapse more than two consecutive`() {
+        val command = AddRating(
+            movieId = Movie.Id(1),
+            userId = User.Id(1),
+            directing = 5.0,
+            cinematography = 5.0,
+            acting = 5.0,
+            soundtrack = 5.0,
+            screenplay = 5.0,
+            reviewTitle = null,
+            reviewText = "Line1\n\nLine2\n\n\nLine3"
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isRight())
+        val savedRating = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
+        assertNotNull(savedRating)
+        assertEquals("Line1\n\nLine2\n\nLine3", savedRating!!.review!!.text!!.value)
+    }
+
+    @Test
     fun `should return InvalidReviewText when review text exceeds max length`() {
         val command = AddRating(
             movieId = Movie.Id(1),
