@@ -23,7 +23,8 @@ class AddRatingController(
         @RequestParam("acting") acting: Double,
         @RequestParam("soundtrack") soundtrack: Double,
         @RequestParam("screenplay") screenplay: Double,
-        @RequestParam("review", required = false) review: String?,
+        @RequestParam("reviewTitle", required = false) reviewTitle: String?,
+        @RequestParam("reviewText", required = false) reviewText: String?,
         redirectAttributes: RedirectAttributes
     ): String =
         AddRating(
@@ -34,7 +35,8 @@ class AddRatingController(
             acting = acting,
             soundtrack = soundtrack,
             screenplay = screenplay,
-            review = review?.takeIf { it.isNotBlank() },
+            reviewTitle = reviewTitle?.takeIf { it.isNotBlank() },
+            reviewText = reviewText?.takeIf { it.isNotBlank() },
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(
@@ -52,5 +54,7 @@ class AddRatingController(
         AddRatingHandlerError.InvalidRatingValue -> "error.rating.invalid"
         AddRatingHandlerError.RatingAlreadyExists -> "error.rating.exists.movie"
         AddRatingHandlerError.MovieNotFound -> "error.load.movie"
+        AddRatingHandlerError.InvalidReviewTitle -> "error.review.title.invalid"
+        AddRatingHandlerError.InvalidReviewText -> "error.review.text.invalid"
     }
 }

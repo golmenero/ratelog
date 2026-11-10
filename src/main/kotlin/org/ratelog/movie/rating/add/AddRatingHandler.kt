@@ -21,7 +21,8 @@ data class AddRating(
     val acting: Double,
     val soundtrack: Double,
     val screenplay: Double,
-    val review: String?,
+    val reviewTitle: String?,
+    val reviewText: String?,
 )
 
 @Component
@@ -43,6 +44,8 @@ class AddRatingHandler(
         val existingRating = ratingRepository.findByMovieIdAndUserId(command.movieId, command.userId)
         ensure(existingRating == null) { AddRatingHandlerError.RatingAlreadyExists }
 
+        val review = parseReview(command.reviewTitle, command.reviewText).bind()
+
         Rating(
             id = null,
             movieId = command.movieId,
@@ -53,7 +56,17 @@ class AddRatingHandler(
             soundtrack = Score(command.soundtrack),
             screenplay = Score(command.screenplay),
             createdAt = Instant.now(),
-            review = command.review?.takeIf { it.isNotBlank() }?.let(Review::sanitize),
+            review = review,
         ).updateScore().let(ratingRepository::save)
     }
+
+    private fun parseReview(title: String?, text: String?): Either<AddRatingHandlerError, Review?> =
+        Review.parse(title, text)
+            .mapLeft { error ->
+                when (error) {
+                    org.ratelog.ParseError.InvalidReviewTitle -> AddRatingHandlerError.InvalidReviewTitle
+                    org.ratelog.ParseError.InvalidReviewText -> AddRatingHandlerError.InvalidReviewText
+                    else -> AddRatingHandlerError.InvalidReviewText
+                }
+            }
 }

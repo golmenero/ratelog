@@ -31,7 +31,7 @@ class AddRatingHandlerTest {
             acting = 7.0,
             soundtrack = 8.0,
             screenplay = 9.0,
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command)
@@ -52,7 +52,7 @@ class AddRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = 5.0,
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command)
@@ -71,7 +71,7 @@ class AddRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = 5.0,
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command)
@@ -89,7 +89,7 @@ class AddRatingHandlerTest {
             acting = -0.5,
             soundtrack = 5.0,
             screenplay = 5.0,
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command)
@@ -107,7 +107,7 @@ class AddRatingHandlerTest {
             acting = 5.0,
             soundtrack = 15.0,
             screenplay = 5.0,
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command)
@@ -125,7 +125,7 @@ class AddRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = -1.0,
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command)
@@ -145,7 +145,7 @@ class AddRatingHandlerTest {
             soundtrack = 5.0,
             screenplay = 5.0,
             createdAt = Instant.now(),
-            review = null
+            reviewTitle = null, reviewText = null
         )
         ratingRepository.save(existingRating)
 
@@ -157,7 +157,7 @@ class AddRatingHandlerTest {
             acting = 7.0,
             soundtrack = 7.0,
             screenplay = 7.0,
-            review = null
+            reviewTitle = null, reviewText = null
         )
 
         val result = handler.handle(command)
@@ -176,7 +176,8 @@ class AddRatingHandlerTest {
             acting = 7.0,
             soundtrack = 8.0,
             screenplay = 9.0,
-            review = "Great movie!"
+            reviewTitle = "Great movie",
+            reviewText = "Great movie!"
         )
 
         val result = handler.handle(command)
@@ -184,7 +185,8 @@ class AddRatingHandlerTest {
         assertTrue(result.isRight())
         val savedRating = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
         assertNotNull(savedRating)
-        assertEquals("Great movie!", savedRating!!.review!!.value)
+        assertEquals("Great movie", savedRating!!.review!!.title!!.value)
+        assertEquals("Great movie!", savedRating.review.text!!.value)
     }
 
     @Test
@@ -197,7 +199,8 @@ class AddRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = 5.0,
-            review = "<script>alert('xss')</script>Good movie"
+            reviewTitle = null,
+            reviewText = "<script>alert('xss')</script>Good movie"
         )
 
         val result = handler.handle(command)
@@ -205,7 +208,7 @@ class AddRatingHandlerTest {
         assertTrue(result.isRight())
         val savedRating = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
         assertNotNull(savedRating)
-        assertEquals("alert('xss')Good movie", savedRating!!.review!!.value)
+        assertEquals("alert('xss')Good movie", savedRating!!.review!!.text!!.value)
     }
 
     @Test
@@ -218,7 +221,8 @@ class AddRatingHandlerTest {
             acting = 5.0,
             soundtrack = 5.0,
             screenplay = 5.0,
-            review = "   "
+            reviewTitle = "   ",
+            reviewText = "   "
         )
 
         val result = handler.handle(command)
@@ -227,5 +231,45 @@ class AddRatingHandlerTest {
         val savedRating = ratingRepository.findByMovieIdAndUserId(Movie.Id(1), User.Id(1))
         assertNotNull(savedRating)
         assertNull(savedRating!!.review)
+    }
+
+    @Test
+    fun `should return InvalidReviewText when review text exceeds max length`() {
+        val command = AddRating(
+            movieId = Movie.Id(1),
+            userId = User.Id(1),
+            directing = 5.0,
+            cinematography = 5.0,
+            acting = 5.0,
+            soundtrack = 5.0,
+            screenplay = 5.0,
+            reviewTitle = null,
+            reviewText = "a".repeat(5001)
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isLeft())
+        assertEquals(AddRatingHandlerError.InvalidReviewText, result.fold({ it }, { fail("Should not return success") }))
+    }
+
+    @Test
+    fun `should return InvalidReviewTitle when review title exceeds max length`() {
+        val command = AddRating(
+            movieId = Movie.Id(1),
+            userId = User.Id(1),
+            directing = 5.0,
+            cinematography = 5.0,
+            acting = 5.0,
+            soundtrack = 5.0,
+            screenplay = 5.0,
+            reviewTitle = "a".repeat(101),
+            reviewText = null
+        )
+
+        val result = handler.handle(command)
+
+        assertTrue(result.isLeft())
+        assertEquals(AddRatingHandlerError.InvalidReviewTitle, result.fold({ it }, { fail("Should not return success") }))
     }
 }
