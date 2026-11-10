@@ -67,7 +67,7 @@
             <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{movies.rating.category.screenplay}">Screenplay</span>
             <div class="rating-detail-footer">
                 <p th:if="${movie.reviewTitle}" th:text="${movie.reviewTitle}"></p>
-                <p th:if="${movie.reviewText}" class="rating-review-text" th:text="${movie.reviewText}"></p>
+                <p th:if="${movie.reviewText}" class="t-long" th:text="${movie.reviewText}"></p>
             </div>
             <div class="rating-actions">
                 <button type="button" class="edit-rating-btn"

@@ -35,9 +35,14 @@ h6 {
 }
 
 p {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.55;
-  color: var(--text-soft);
+  color: var(--text);
+
+  &.t-long {
+    color: var(--text-soft);
+    font-size: 1rem;
+  }
 }
 
 
