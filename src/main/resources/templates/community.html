@@ -27,8 +27,17 @@
                             </div>
                             <span class="date" th:text="${item.ratedAt}">date</span>
                         </div>
+                        <div class="review-feed" th:if="${item.reviewText != null}">
+                            <p th:if="${item.reviewTitle != null}" class="rating-review-title" th:text="${item.reviewTitle}"></p>
+                            <p class="rating-review-text" th:text="${item.reviewTextPreview}">Review preview</p>
+                            <button type="button" class="link"
+                                    data-open-modal="reviewDetailModal"
+                                    th:data-review-title="${item.reviewTitle}"
+                                    th:data-review-text="${item.reviewText}"
+                                    th:text="#{community.review.full}">Read full review</button>
+                        </div>
                         <div class="flex separate">
-                            <p th:text="${item.reviewText}">Review text</p>
+                            <span></span>
                             <span class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(item.score, 1, 2), ',', '.')}">0.00</span>
                         </div>
                         <div class="separator"></div>
@@ -59,6 +68,7 @@
             </div>
         </div>
     </div>
+    <div th:replace="~{fragments/review-detail-modal :: reviewDetailModal}"></div>
     <script src="/usersearch.js" defer></script>
 </body>
 </html>

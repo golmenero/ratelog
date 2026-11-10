@@ -8,6 +8,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.ratelog.Lang
 import org.ratelog.MediaType
+import org.ratelog.Review
+import org.ratelog.ReviewText
+import org.ratelog.ReviewTitle
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
 import org.ratelog.Title
@@ -15,8 +18,8 @@ import org.ratelog.TmdbId
 import org.ratelog.Username
 import org.ratelog.feed.FeedRepository
 import org.ratelog.test.UserFactory
-import org.ratelog.feed.FeedItem as FeedRow
 import org.ratelog.user.User
+import org.ratelog.feed.FeedItem as FeedRow
 import org.ratelog.user.UserRepository
 import java.time.Instant
 
@@ -43,7 +46,8 @@ class CommunityHandlerTest {
         tmdbId: Int = 1,
         title: String = "Some title",
         score: Double? = 3.0,
-        text: String? = null,
+        reviewTitle: String? = null,
+        reviewText: String? = null,
         username: String = "followeduser",
         createdAtEpochMs: Long = Instant.now().toEpochMilli(),
         mediaType: MediaType = MediaType.movie,
@@ -52,12 +56,18 @@ class CommunityHandlerTest {
         tmdbId = TmdbId(tmdbId),
         title = Title(title),
         score = score?.let(::Score),
-        text = text,
+        review = toReview(reviewTitle, reviewText),
         username = Username(username),
         createdAtEpochMs = createdAtEpochMs,
         mediaType = mediaType,
         seasonNumber = seasonNumber?.let(::SeasonNumber),
     )
+
+    private fun toReview(reviewTitle: String?, reviewText: String?): Review? {
+        val title = reviewTitle?.takeIf { it.isNotBlank() }?.let(::ReviewTitle)
+        val text = reviewText?.takeIf { it.isNotBlank() }?.let(::ReviewText)
+        return if (title == null && text == null) null else Review(title, text)
+    }
 
     @Test
     fun `should return empty list when user follows no one`() {
@@ -85,7 +95,7 @@ class CommunityHandlerTest {
         assertEquals(1, feedResult.feed.size)
         assertEquals(Username("followeduser"), feedResult.feed[0].username)
         assertEquals(MediaType.movie, feedResult.feed[0].mediaType)
-        assertNull(feedResult.feed[0].text)
+        assertNull(feedResult.feed[0].review)
         assertNull(feedResult.feed[0].seasonNumber)
         assertFalse(feedResult.hasMore)
     }
@@ -111,7 +121,7 @@ class CommunityHandlerTest {
     @Test
     fun `should return feed items with review text when rating has review`() {
         stubFollowing(listOf(followedUser))
-        val row = aFeedRow(text = "Great movie!")
+        val row = aFeedRow(reviewTitle = "Great movie", reviewText = "Great movie!")
         whenever(feedRepository.findAll(listOf(followedId), Lang.en, 10)).thenReturn(listOf(row))
         whenever(feedRepository.count(listOf(followedId))).thenReturn(1L)
 
@@ -120,7 +130,8 @@ class CommunityHandlerTest {
         assertTrue(result.isRight())
         val feedResult = result.getOrElse { fail("expected Right") }
         assertEquals(1, feedResult.feed.size)
-        assertEquals("Great movie!", feedResult.feed[0].text)
+        assertEquals("Great movie", feedResult.feed[0].review?.title?.value)
+        assertEquals("Great movie!", feedResult.feed[0].review?.text?.value)
         assertFalse(feedResult.hasMore)
     }
 

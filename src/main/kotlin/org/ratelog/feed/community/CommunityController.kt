@@ -18,7 +18,10 @@ data class FeedResponse(
     val type: String,
     val seasonNumber: Int?,
     val score: Double,
+    val reviewTitle: String?,
     val reviewText: String?,
+    val reviewTextPreview: String?,
+    val hasFullReview: Boolean,
     val ratedAt: String,
     val createdAtEpochMs: Long,
 )
@@ -60,7 +63,10 @@ class CommunityController(
         type = row.mediaType.name,
         seasonNumber = row.seasonNumber?.value,
         score = row.score?.value ?: 0.0,
-        reviewText = row.text,
+        reviewTitle = row.review?.title?.value,
+        reviewText = row.review?.text?.value,
+        reviewTextPreview = row.review?.text?.value?.take(250),
+        hasFullReview = row.review?.text?.value?.let { it.length > 250 } ?: false,
         ratedAt = row.createdAtEpochMs.toDateString(),
         createdAtEpochMs = row.createdAtEpochMs,
     )
