@@ -77,7 +77,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   color: var(--text-soft);
   opacity: 0.5;
   font-variant-numeric: tabular-nums;
