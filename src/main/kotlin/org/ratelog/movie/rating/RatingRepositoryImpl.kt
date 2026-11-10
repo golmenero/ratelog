@@ -1,7 +1,9 @@
 package org.ratelog.movie.rating
 
-import org.ratelog.Review
 import org.ratelog.Rank
+import org.ratelog.Review
+import org.ratelog.ReviewText
+import org.ratelog.ReviewTitle
 import org.ratelog.Score
 import org.ratelog.movie.Movie
 import org.ratelog.user.User
@@ -41,7 +43,7 @@ class RatingRepositoryImpl(
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
             score = score?.let(::Score),
-            review = reviewText?.takeIf { it.isNotBlank() }?.let(::Review),
+            review = toReview(reviewTitle, reviewText),
         )
     }
 
@@ -57,7 +59,7 @@ class RatingRepositoryImpl(
             screenplay = Score(screenplay),
             createdAt = Instant.ofEpochMilli(createdAtEpochMs),
             score = score?.let(::Score),
-            review = reviewText?.takeIf { it.isNotBlank() }?.let(::Review),
+            review = toReview(reviewTitle, reviewText),
         )
     }
 
@@ -73,7 +75,14 @@ class RatingRepositoryImpl(
             screenplay = screenplay.value,
             createdAtEpochMs = createdAt.toEpochMilli(),
             score = score?.value,
-            reviewText = review?.value,
+            reviewTitle = review?.title?.value,
+            reviewText = review?.text?.value,
         )
+    }
+
+    private fun toReview(reviewTitle: String?, reviewText: String?): Review? {
+        val title = reviewTitle?.takeIf { it.isNotBlank() }?.let(::ReviewTitle)
+        val text = reviewText?.takeIf { it.isNotBlank() }?.let(::ReviewText)
+        return if (title == null && text == null) null else Review(title, text)
     }
 }

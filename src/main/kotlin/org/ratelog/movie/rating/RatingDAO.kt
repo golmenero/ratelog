@@ -19,6 +19,7 @@ data class RatingEntity(
     val screenplay: Double,
     @Column("created_at_epoch_ms") val createdAtEpochMs: Long,
     val score: Double?,
+    @Column("review_title") val reviewTitle: String?,
     @Column("review_text") val reviewText: String?,
 )
 
@@ -33,6 +34,7 @@ data class RatedMovieRow(
     val screenplay: Double,
     val createdAtEpochMs: Long,
     val score: Double?,
+    val reviewTitle: String?,
     val reviewText: String?,
     val rank: Long,
 )
@@ -45,7 +47,7 @@ interface RatingDAO : CrudRepository<RatingEntity, Long> {
         """
         WITH ranked AS (
             SELECT r.id, r.movie_id, r.user_id, r.directing, r.cinematography, r.acting,
-                   r.soundtrack, r.screenplay, r.created_at_epoch_ms, r.score, r.review_text,
+                   r.soundtrack, r.screenplay, r.created_at_epoch_ms, r.score, r.review_title, r.review_text,
                    ROW_NUMBER() OVER (
                        ORDER BY CASE :ratingCategory
                            WHEN 'directing' THEN r.directing

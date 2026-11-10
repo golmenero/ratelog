@@ -2,6 +2,7 @@ package org.ratelog.feed
 
 import org.ratelog.Lang
 import org.ratelog.MediaType
+import org.ratelog.Review
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
 import org.ratelog.Title
@@ -14,7 +15,7 @@ data class FeedItem(
     val tmdbId: TmdbId,
     val title: Title,
     val score: Score?,
-    val text: String?,
+    val review: Review?,
     val username: Username,
     val createdAtEpochMs: Long,
     val mediaType: MediaType,

@@ -1,7 +1,7 @@
 package org.ratelog.movie.rating
 
-import org.ratelog.Review
 import org.ratelog.Rank
+import org.ratelog.Review
 import org.ratelog.Score
 import org.ratelog.movie.Movie
 import org.ratelog.user.User

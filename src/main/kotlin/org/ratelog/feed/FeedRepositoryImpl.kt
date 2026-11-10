@@ -2,6 +2,9 @@ package org.ratelog.feed
 
 import org.ratelog.Lang
 import org.ratelog.MediaType
+import org.ratelog.Review
+import org.ratelog.ReviewText
+import org.ratelog.ReviewTitle
 import org.ratelog.Score
 import org.ratelog.SeasonNumber
 import org.ratelog.Title
@@ -25,9 +28,15 @@ class FeedRepositoryImpl(
         title = Title(title),
         score = score?.let(::Score),
         username = username.let(::Username),
-        text = text,
+        review = toReview(reviewTitle, reviewText),
         createdAtEpochMs = date,
         mediaType = MediaType.valueOf(mediaType),
         seasonNumber = seasonNumber?.let(::SeasonNumber)
     )
+
+    private fun toReview(reviewTitle: String?, reviewText: String?): Review? {
+        val title = reviewTitle?.takeIf { it.isNotBlank() }?.let(::ReviewTitle)
+        val text = reviewText?.takeIf { it.isNotBlank() }?.let(::ReviewText)
+        return if (title == null && text == null) null else Review(title, text)
+    }
 }
