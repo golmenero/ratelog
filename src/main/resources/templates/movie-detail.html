@@ -66,7 +66,7 @@
             <span class="visually-hidden" data-i18n-key="soundtrack" th:text="#{movies.rating.category.soundtrack}">Soundtrack</span>
             <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{movies.rating.category.screenplay}">Screenplay</span>
             <div class="rating-detail-footer">
-                <p th:if="${movie.reviewTitle}" class="rating-review-title" th:text="${movie.reviewTitle}"></p>
+                <p th:if="${movie.reviewTitle}" th:text="${movie.reviewTitle}"></p>
                 <p th:if="${movie.reviewText}" class="rating-review-text" th:text="${movie.reviewText}"></p>
             </div>
             <div class="rating-actions">

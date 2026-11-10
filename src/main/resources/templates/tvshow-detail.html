@@ -72,7 +72,7 @@
                     <span class="visually-hidden" data-i18n-key="soundtrack" th:text="#{tvshows.rating.category.soundtrack}">Soundtrack</span>
                     <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{tvshows.rating.category.screenplay}">Screenplay</span>
                     <div class="rating-detail-footer">
-                        <p th:if="${season.reviewTitle}" class="rating-review-title" th:text="${season.reviewTitle}"></p>
+                        <p th:if="${season.reviewTitle}" th:text="${season.reviewTitle}"></p>
                         <p th:if="${season.reviewText}" class="rating-review-text" th:text="${season.reviewText}"></p>
                     </div>
                     <div class="rating-actions">
