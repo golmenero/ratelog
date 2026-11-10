@@ -50,7 +50,7 @@
                             <div class="avatar sm" th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</div>
                             <div>
                                 <a th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
-                                    <span class="title italic" th:text="${item.title}">Title</span>
+                                    <h4 th:text="${item.title}">Title</h4>
                                 </a>
                                 <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
                             </div>
@@ -62,7 +62,8 @@
                          data-open-modal="reviewDetailModal"
                          th:data-review-title="${item.reviewTitle}"
                          th:data-review-text="${item.reviewText}">
-                        <p th:if="${item.reviewTitle != null}" th:text="${item.reviewTitle}"></p>
+                        <div class="separator"></div>
+                        <h4 th:if="${item.reviewTitle != null}" th:text="${item.reviewTitle}"></h4>
                         <p class="t-long" th:text="${item.reviewTextPreview}">Review preview</p>
                     </div>
                     <div class="flex separate">
@@ -91,7 +92,7 @@
             <div th:unless="${#lists.isEmpty(lists)}" class="flex" style="flex-direction: column; gap: 8px;">
                 <a th:each="list : ${lists}" th:href="@{'/list/' + ${list.id.value}}" class="card">
                     <div class="flex separate">
-                        <span class="title" th:text="${list.name.value}">List Name</span>
+                        <h4 th:text="${list.name.value}">List Name</h4>
                         <span th:if="${list.isPublic}" class="tag" th:text="#{list.public}">Public</span>
                     </div>
                 </a>

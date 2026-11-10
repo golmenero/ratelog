@@ -42,7 +42,7 @@
             <div class="flex centered gap">
                 <div class="avatar sm" th:text="${#strings.toUpperCase(#strings.substring(u.username.value, 0, 1))}">U</div>
                 <div class="flex-1 user-card-info ellipsis">
-                    <span class="title" th:text="${u.username.value}">username</span>
+                    <h4 th:text="${u.username.value}">username</h4>
                     <span class="date" th:text="${u.email.value}">email@example.com</span>
                 </div>
                 <th:block th:switch="${u.role.name()}">

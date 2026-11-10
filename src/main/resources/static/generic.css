@@ -43,6 +43,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   font-family: var(--font);
+  font-size: 1rem;
   color: var(--text);
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 28%),
@@ -137,6 +138,14 @@ body {
 }
 
 .flex-1 {
+  flex: 1;
+}
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
   flex: 1;
 }
 

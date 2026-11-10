@@ -20,7 +20,7 @@
                                     <span class="username" th:text="${item.username}"></span>
                                     <br>
                                     <a th:href="${item.mediaType == 'movie'} ? @{'/movie/' + ${item.tmdbId}} : @{'/tv/' + ${item.tmdbId}}">
-                                        <span class="title italic" th:text="${item.title}">Title</span>
+                                        <h4 th:text="${item.title}">Title</h4>
                                     </a>
                                     <span class="season" th:if="${item.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">S1</span>
                                 </div>
@@ -31,7 +31,8 @@
                              data-open-modal="reviewDetailModal"
                              th:data-review-title="${item.reviewTitle}"
                              th:data-review-text="${item.reviewText}">
-                            <p th:if="${item.reviewTitle != null}" th:text="${item.reviewTitle}"></p>
+                            <div class="separator"></div>
+                            <h4 th:if="${item.reviewTitle != null}" th:text="${item.reviewTitle}"></h4>
                             <p class="t-long" th:text="${item.reviewTextPreview}">Review preview</p>
                         </div>
                         <div class="flex separate">

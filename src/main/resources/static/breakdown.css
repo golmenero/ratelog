@@ -20,7 +20,6 @@
 .rating-breakdown .breakdown-label {
   flex: 0 0 110px;
   font-family: var(--font);
-  font-size: 1rem;
   font-weight: 500;
   color: var(--text-soft);
   text-align: left;

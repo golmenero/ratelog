@@ -14,7 +14,6 @@ textarea {
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-family: var(--font);
-  font-size: 1rem;
   box-sizing: border-box;
   resize: vertical;
   min-height: 80px;
@@ -39,7 +38,6 @@ select {
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-family: var(--font);
-  font-size: 1rem;
   box-sizing: border-box;
   accent-color: var(--accent);
 
@@ -87,7 +85,6 @@ input[type="file"] {
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
   font-family: var(--font);
-  font-size: 1rem;
 
   i, svg {
     width: 18px;
@@ -114,7 +111,6 @@ input[type="file"]:focus + .file-upload-label {
 
   label {
     margin: 0;
-    font-size: 1rem;
     cursor: pointer;
   }
 }
@@ -147,7 +143,6 @@ a.btn {
   border-radius: 10px;
   transition: color 0.2s ease;
   box-shadow: none;
-  font-size: 1rem;
 
   svg {
     width: 20px;
@@ -297,7 +292,6 @@ a.link.secondary {
   color: var(--text);
   text-decoration: none;
   font-family: var(--font);
-  font-size: 1rem;
   transition: background 0.15s ease;
   cursor: pointer;
 }
@@ -314,5 +308,4 @@ a.link.secondary {
   padding: 10px 18px;
   color: var(--text-soft);
   font-family: var(--font);
-  font-size: 1rem;
 }

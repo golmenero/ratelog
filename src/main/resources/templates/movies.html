@@ -63,8 +63,10 @@
                     <div class="flex gap-lg">
                         <img th:src="@{'https://image.tmdb.org/t/p/w185' + ${m.posterPath}}" th:alt="'Poster of ' + ${m.title}">
                         <div>
-                            <span class="rank" th:text="${m.rank}">#1</span>
-                            <span class="title" th:text="${m.title}">Title</span>
+                            <h4>
+                                <span class="rank" th:text="${m.rank}">#1</span>
+                                <span th:text="${m.title}">Title</span>
+                            </h4>
                             <span class="year" th:text="${m.releaseYear != null} ? ${m.releaseYear} : #{movies.year.unknown}">Year</span>
                             <br>
                             <br>
@@ -93,7 +95,7 @@
                         </th:block>
                     </div>
                     <div class="flex ellipsis gap">
-                        <span class="title ellipsis" th:text="${item.title}">Title</span>
+                        <h4 class="ellipsis" th:text="${item.title}">Title</h4>
                     </div>
                 </a>
             </div>

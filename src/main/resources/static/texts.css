@@ -1,5 +1,5 @@
 h1 {
-  font-size: clamp(2.3rem, 4vw, 4.3rem);
+  font-size: 2.5rem;
   font-weight: 700;
   line-height: 0.96;
   letter-spacing: -0.06em;
@@ -30,18 +30,18 @@ h3 {
 h4,
 h5,
 h6 {
+  font-size: 1.2rem;
   font-weight: 600;
   font-family: var(--font);
 }
 
 p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   line-height: 1.55;
   color: var(--text);
 
   &.t-long {
     color: var(--text-soft);
-    font-size: 1rem;
     white-space: pre-line;
   }
 }
@@ -83,34 +83,7 @@ span {
     margin-right: 10px;
   }
 
-  &.title {
-    font-size: 1.4rem;
-    line-height: 1.15;
-    letter-spacing: -0.04em;
-    font-family: var(--font);
-    color: var(--text);
-    overflow: hidden;
-    word-break: break-word;
-    white-space: normal;
-    text-overflow: ellipsis;
-    text-decoration: none;
-    display: inline;
-
-    &.ellipsis {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      min-width: 0;
-      flex: 1;
-      display: block;
-    }
-
-    &.italic {
-      font-style: italic;
-    }
-  }
-
   &.season {
-    font-size: 1rem;
     font-weight: 600;
     color: var(--accent);
   }
