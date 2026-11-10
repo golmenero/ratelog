@@ -190,14 +190,47 @@ enum class Role {
     }
 }
 
-data class Review(val value: String) {
+data class ReviewTitle(val value: String) {
     companion object {
-        fun sanitize(raw: String): Review = Review(
-            raw.replace(Regex("<[^>]*>"), "")
+        private const val MAX_LENGTH = 100
+
+        fun parse(value: String): Either<ParseError, ReviewTitle> = either {
+            val trimmed = value.trim()
+            if (trimmed.length > MAX_LENGTH) {
+                raise(ParseError.InvalidReviewTitle)
+            }
+            ReviewTitle(trimmed)
+        }
+    }
+}
+
+data class ReviewText(val value: String) {
+    companion object {
+        private const val MAX_LENGTH = 5000
+
+        fun parse(raw: String): Either<ParseError, ReviewText> = either {
+            val sanitized = raw.replace(Regex("<[^>]*>"), "")
                 .replace(Regex("&[^;]+;"), "")
                 .trim()
-                .take(2000)
-        )
+            if (sanitized.length > MAX_LENGTH) {
+                raise(ParseError.InvalidReviewText)
+            }
+            ReviewText(sanitized)
+        }
+    }
+}
+
+data class Review(val title: ReviewTitle?, val text: ReviewText?) {
+    init {
+        require(title != null || text != null) { "Review must have at least title or text" }
+    }
+
+    companion object {
+        fun parse(title: String?, text: String?): Either<ParseError, Review?> = either {
+            val parsedTitle = title?.takeIf { it.isNotBlank() }?.let { ReviewTitle.parse(it).bind() }
+            val parsedText = text?.takeIf { it.isNotBlank() }?.let { ReviewText.parse(it).bind() }
+            if (parsedTitle == null && parsedText == null) null else Review(parsedTitle, parsedText)
+        }
     }
 }
 
@@ -220,4 +253,6 @@ sealed interface ParseError {
     data object InvalidListName : ParseError
     data object InvalidRole : ParseError
     data object InvalidConfigKey : ParseError
+    data object InvalidReviewTitle : ParseError
+    data object InvalidReviewText : ParseError
 }
