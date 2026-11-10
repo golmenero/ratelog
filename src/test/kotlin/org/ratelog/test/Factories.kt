@@ -15,6 +15,12 @@ import java.time.Instant
 import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicLong
 
+private fun toReview(reviewTitle: String?, reviewText: String?): Review? {
+    val title = reviewTitle?.takeIf { it.isNotBlank() }?.let(::ReviewTitle)
+    val text = reviewText?.takeIf { it.isNotBlank() }?.let(::ReviewText)
+    return if (title == null && text == null) null else Review(title, text)
+}
+
 object UserFactory {
     private val idGenerator = AtomicLong(1)
 
@@ -110,7 +116,8 @@ object RatingFactory {
         soundtrack: Double = 5.0,
         screenplay: Double = 5.0,
         createdAt: Instant = Instant.now(),
-        review: String?
+        reviewTitle: String? = null,
+        reviewText: String? = null,
     ) = Rating(
         id = id?.let { Rating.Id(it) },
         movieId = movieId,
@@ -122,7 +129,7 @@ object RatingFactory {
         screenplay = Score(screenplay),
         createdAt = createdAt,
         score = Score((directing + cinematography + acting + soundtrack + screenplay) / 5.0),
-        review = review?.let(::Review)
+        review = toReview(reviewTitle, reviewText)
     )
 }
 
@@ -159,7 +166,8 @@ object TvRatingFactory {
         soundtrack: Double = 5.0,
         screenplay: Double = 5.0,
         createdAt: Instant = Instant.now(),
-        review: String?
+        reviewTitle: String? = null,
+        reviewText: String? = null,
     ) = SeasonRating(
         id = id?.let { SeasonRating.Id(it) },
         tvShowId = tvShowId,
@@ -172,6 +180,6 @@ object TvRatingFactory {
         screenplay = Score(screenplay),
         score = Score((directing + cinematography + acting + soundtrack + screenplay) / 5.0),
         createdAt = createdAt,
-        review = review?.let(::Review)
+        review = toReview(reviewTitle, reviewText)
     )
 }

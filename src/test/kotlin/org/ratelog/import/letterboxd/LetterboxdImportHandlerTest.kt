@@ -77,7 +77,7 @@ class LetterboxdImportHandlerTest {
             soundtrack = 5.0,
             screenplay = 5.0,
             createdAt = Instant.now(),
-            review = null,
+            reviewTitle = null, reviewText = null,
         )
         ratingRepository.save(existingRating)
 
