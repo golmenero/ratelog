@@ -116,6 +116,10 @@ body {
     align-items: start;
   }
 
+  &.col {
+    flex-direction: column;
+  }
+
   &.gap {
     gap: 8px;
   }
@@ -135,6 +139,10 @@ body {
   &.ellipsis {
     min-width: 0;
   }
+}
+
+.text-soft {
+  color: var(--text-soft) !important;
 }
 
 .flex-1 {

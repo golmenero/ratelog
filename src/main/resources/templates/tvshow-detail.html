@@ -57,7 +57,7 @@
             <div th:each="season : ${show.seasons}" class="card season-card"
                  th:classappend="${season.hasRating} ? 'clickable expandable' : ''">
                 <div class="season-card-header flex separate">
-                    <span class="season" th:if="${season.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">S1</span>
+                    <span class="text-soft" th:if="${season.seasonNumber != null}" th:text="#{tvshows.season.prefix} + ${season.seasonNumber}">Season 1</span>
                     <span th:if="${season.hasRating}" class="rating sm" th:text="${#strings.replace(#numbers.formatDecimal(season.score, 1, 2), ',', '.')}">5.73</span>
                     <button th:unless="${season.hasRating}" type="button" class="season-rate-btn" style="padding: 0;" data-open-modal="rateTvShowModal" data-modal-mode="create" th:data-season="${season.seasonNumber}">
                         <i data-lucide="star"></i>

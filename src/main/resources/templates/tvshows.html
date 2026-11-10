@@ -100,9 +100,9 @@
                             <span class="year" th:text="${#temporals.format(item.releaseDate, 'yyyy')}">2025</span>
                         </th:block>
                     </div>
-                    <div class="flex ellipsis gap">
-                        <span class="season" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">T1</span>
+                    <div class="flex col ellipsis">
                         <h4 class="ellipsis" th:text="${item.name}">Title</h4>
+                        <span class="text-soft" th:text="#{tvshows.season.prefix} + ${item.seasonNumber}">Season 1</span>
                     </div>
                 </a>
             </div>
