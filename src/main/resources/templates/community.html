@@ -27,14 +27,12 @@
                             </div>
                             <span class="date" th:text="${item.ratedAt}">date</span>
                         </div>
-                        <div class="rating-detail-footer" th:if="${item.reviewText != null}">
+                        <div class="rating-detail-footer" th:if="${item.reviewText != null}" style="cursor: pointer;"
+                             data-open-modal="reviewDetailModal"
+                             th:data-review-title="${item.reviewTitle}"
+                             th:data-review-text="${item.reviewText}">
                             <p th:if="${item.reviewTitle != null}" th:text="${item.reviewTitle}"></p>
                             <p class="rating-review-text" th:text="${item.reviewTextPreview}">Review preview</p>
-                            <a href="#" class="link"
-                               data-open-modal="reviewDetailModal"
-                               th:data-review-title="${item.reviewTitle}"
-                               th:data-review-text="${item.reviewText}"
-                               th:text="#{community.review.full}">Read full review</a>
                         </div>
                         <div class="flex separate">
                             <span></span>

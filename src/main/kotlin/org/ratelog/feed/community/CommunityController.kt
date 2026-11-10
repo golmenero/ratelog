@@ -65,7 +65,7 @@ class CommunityController(
         score = row.score?.value ?: 0.0,
         reviewTitle = row.review?.title?.value,
         reviewText = row.review?.text?.value,
-        reviewTextPreview = row.review?.text?.value?.take(250),
+        reviewTextPreview = row.review?.text?.value?.let { if (it.length > 250) it.take(250) + "..." else it },
         hasFullReview = row.review?.text?.value?.let { it.length > 250 } ?: false,
         ratedAt = row.createdAtEpochMs.toDateString(),
         createdAtEpochMs = row.createdAtEpochMs,
