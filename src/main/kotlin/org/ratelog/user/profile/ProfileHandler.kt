@@ -91,7 +91,7 @@ class ProfileHandler(
         score = rating.score?.value ?: 0.0,
         reviewTitle = rating.review?.title?.value,
         reviewText = rating.review?.text?.value,
-        reviewTextPreview = rating.review?.text?.value?.take(250),
+        reviewTextPreview = rating.review?.text?.value?.let { if (it.length > 250) it.take(250) + "..." else it },
         hasFullReview = rating.review?.text?.value?.let { it.length > 250 } ?: false,
         ratedAt = rating.createdAtEpochMs.toDateString(),
         createdAtEpochMs = rating.createdAtEpochMs,
