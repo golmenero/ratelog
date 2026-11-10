@@ -26,8 +26,13 @@
             <div th:replace="~{fragments/rate-slider :: rateSlider('screenplay', 'tvshows.rating.category.screenplay')}"></div>
 
             <div class="rate-modal-review">
-                <label for="review" class="rate-modal-label" th:text="#{modal.review}">Review</label>
-                <textarea id="review" name="review" rows="4" maxlength="1000" th:placeholder="#{modal.review.placeholder}"></textarea>
+                <label for="reviewTitle" class="rate-modal-label" th:text="#{modal.review.title}">Title</label>
+                <input type="text" id="reviewTitle" name="reviewTitle" maxlength="100" th:placeholder="#{modal.review.title.placeholder}">
+            </div>
+
+            <div class="rate-modal-review">
+                <label for="reviewText" class="rate-modal-label" th:text="#{modal.review.text}">Review</label>
+                <textarea id="reviewText" name="reviewText" rows="4" maxlength="5000" th:placeholder="#{modal.review.text.placeholder}"></textarea>
             </div>
 
             <button class="primary w-100" type="submit" th:text="#{profile.save}">Save</button>
@@ -55,9 +60,14 @@
                 CATEGORIES.forEach((name) => setSlider(name, data[name]));
             }
 
-            function setReview(value) {
-                const review = modal.querySelector('textarea[name="review"]');
-                if (review) review.value = value || '';
+            function setReviewTitle(value) {
+                const reviewTitle = modal.querySelector('input[name="reviewTitle"]');
+                if (reviewTitle) reviewTitle.value = value || '';
+            }
+
+            function setReviewText(value) {
+                const reviewText = modal.querySelector('textarea[name="reviewText"]');
+                if (reviewText) reviewText.value = value || '';
             }
 
             function setSeason(value) {
@@ -77,10 +87,12 @@
                 setSeason(trigger?.dataset.season);
 
                 if (mode === 'edit' && trigger) {
-                    setReview(trigger.dataset.review);
+                    setReviewTitle(trigger.dataset.reviewTitle);
+                    setReviewText(trigger.dataset.reviewText);
                     fillSliders(trigger.dataset);
                 } else {
-                    setReview('');
+                    setReviewTitle('');
+                    setReviewText('');
                     resetSliders();
                 }
             });

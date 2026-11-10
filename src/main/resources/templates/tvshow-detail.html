@@ -72,7 +72,8 @@
                     <span class="visually-hidden" data-i18n-key="soundtrack" th:text="#{tvshows.rating.category.soundtrack}">Soundtrack</span>
                     <span class="visually-hidden" data-i18n-key="screenplay" th:text="#{tvshows.rating.category.screenplay}">Screenplay</span>
                     <div class="rating-detail-footer">
-                        <p th:if="${season.review}" class="rating-review-text" th:text="${season.review}"></p>
+                        <p th:if="${season.reviewTitle}" class="rating-review-title" th:text="${season.reviewTitle}"></p>
+                        <p th:if="${season.reviewText}" class="rating-review-text" th:text="${season.reviewText}"></p>
                     </div>
                     <div class="rating-actions">
                         <button type="button" class="edit-rating-btn"
@@ -84,7 +85,8 @@
                                 th:data-acting="${season.acting}"
                                 th:data-soundtrack="${season.soundtrack}"
                                 th:data-screenplay="${season.screenplay}"
-                                th:data-review="${season.review}"
+                                th:data-review-title="${season.reviewTitle}"
+                                th:data-review-text="${season.reviewText}"
                                 th:aria-label="#{tvshow.detail.edit.rating}">
                             <i data-lucide="pencil"></i>
                         </button>

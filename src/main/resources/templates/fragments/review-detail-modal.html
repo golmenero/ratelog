@@ -1,0 +1,28 @@
+<div th:fragment="reviewDetailModal" id="reviewDetailModal" class="modal" data-modal="reviewDetailModal">
+    <div>
+        <div class="flex separate top">
+            <h2 id="reviewDetailTitle"></h2>
+            <button type="button" data-close-modal th:aria-label="#{modal.close}">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <p id="reviewDetailText"></p>
+    </div>
+
+    <script>
+        (function () {
+            const modal = document.getElementById('reviewDetailModal');
+            if (!modal) return;
+
+            const titleEl = document.getElementById('reviewDetailTitle');
+            const textEl = document.getElementById('reviewDetailText');
+
+            modal.addEventListener('modal:open', function (e) {
+                const trigger = e.detail.trigger;
+                if (!trigger) return;
+                if (titleEl) titleEl.textContent = trigger.dataset.reviewTitle || '';
+                if (textEl) textEl.textContent = trigger.dataset.reviewText || '';
+            });
+        })();
+    </script>
+</div>
