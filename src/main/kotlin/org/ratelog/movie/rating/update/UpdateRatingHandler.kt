@@ -19,7 +19,8 @@ data class UpdateRating(
     val acting: Double,
     val soundtrack: Double,
     val screenplay: Double,
-    val review: String?,
+    val reviewTitle: String?,
+    val reviewText: String?,
 )
 
 @Component
@@ -41,13 +42,25 @@ class UpdateRatingHandler(
         val rating = ratingRepository.findByMovieIdAndUserId(command.movieId, command.userId)
             ?: raise(UpdateRatingHandlerError.RatingNotFound)
 
+        val review = parseReview(command.reviewTitle, command.reviewText).bind()
+
         rating.copy(
             directing = Score(command.directing),
             cinematography = Score(command.cinematography),
             acting = Score(command.acting),
             soundtrack = Score(command.soundtrack),
             screenplay = Score(command.screenplay),
-            review = command.review?.takeIf { it.isNotBlank() }?.let(Review::sanitize),
+            review = review,
         ).updateScore().let(ratingRepository::save)
     }
+
+    private fun parseReview(title: String?, text: String?): Either<UpdateRatingHandlerError, Review?> =
+        Review.parse(title, text)
+            .mapLeft { error ->
+                when (error) {
+                    org.ratelog.ParseError.InvalidReviewTitle -> UpdateRatingHandlerError.InvalidReviewTitle
+                    org.ratelog.ParseError.InvalidReviewText -> UpdateRatingHandlerError.InvalidReviewText
+                    else -> UpdateRatingHandlerError.InvalidReviewText
+                }
+            }
 }

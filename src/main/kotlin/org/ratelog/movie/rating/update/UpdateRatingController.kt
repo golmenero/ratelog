@@ -23,7 +23,8 @@ class UpdateRatingController(
         @RequestParam("acting") acting: Double,
         @RequestParam("soundtrack") soundtrack: Double,
         @RequestParam("screenplay") screenplay: Double,
-        @RequestParam("review", required = false) review: String?,
+        @RequestParam("reviewTitle", required = false) reviewTitle: String?,
+        @RequestParam("reviewText", required = false) reviewText: String?,
         redirectAttributes: RedirectAttributes
     ): String =
         UpdateRating(
@@ -34,7 +35,8 @@ class UpdateRatingController(
             acting = acting,
             soundtrack = soundtrack,
             screenplay = screenplay,
-            review = review?.takeIf { it.isNotBlank() },
+            reviewTitle = reviewTitle?.takeIf { it.isNotBlank() },
+            reviewText = reviewText?.takeIf { it.isNotBlank() },
         ).let(handler::handle)
             .mapLeft(::mapError)
             .fold(
@@ -51,5 +53,7 @@ class UpdateRatingController(
     private fun mapError(error: UpdateRatingHandlerError): String = when (error) {
         UpdateRatingHandlerError.InvalidRatingValue -> "error.rating.invalid"
         UpdateRatingHandlerError.RatingNotFound -> "error.rating.update.failed"
+        UpdateRatingHandlerError.InvalidReviewTitle -> "error.review.title.invalid"
+        UpdateRatingHandlerError.InvalidReviewText -> "error.review.text.invalid"
     }
 }
