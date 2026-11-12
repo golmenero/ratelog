@@ -7,8 +7,14 @@ description: Use when the user wants to create a new release. Handles changelog 
 
 ## Workflow
 
-### 0. Integration checking
-Execute 'mvn test' and ensure all tests pass successfully. If there are test failures, **stop** and warn the user.
+### 0. Preconditions
+1. **Branch check**: ensure the current branch is `master`.
+   - Run `git branch --show-current`.
+   - If it is not `master`, **stop** and warn the user that releases must be created from `master`.
+2. **Sync check**: ensure `master` is up to date with `origin/master`.
+   - Run `git fetch origin` and compare `master` with `origin/master`.
+   - If they differ, **stop** and warn the user to pull/push `master` first.
+3. **Integration checking**: execute `mvn test` and ensure all tests pass successfully. If there are test failures, **stop** and warn the user.
 
 ### 1. Ask version type
 Ask the user if the release is `major`, `minor`, `patch` or `beta`.
