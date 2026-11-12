@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### ➕ Added
+### ⚡ Changed
+### 🔧 Fixed
+
+## Release v2.4.0
+### ➕ Added
 - Ratings can now be edited (movies and TV show seasons): an edit icon next to delete opens the rating modal prefilled with the current scores and review, and saving updates the existing rating.
 - A confirmation modal is now shown before deleting a rating.
 - A confirmation modal is now shown before deleting a list.
